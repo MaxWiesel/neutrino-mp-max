@@ -2605,6 +2605,12 @@ bool CFrontend::isHybrid(void)
 	return false;
 }
 
+void CFrontend::setName(const char* _name)
+{
+	memset(info.name, '\0', sizeof(info.name));
+	snprintf(info.name, sizeof(info.name)-1, "%s", _name);
+}
+
 bool CFrontend::supportsDelivery(delivery_system_t delsys)
 {
 	return (deliverySystemMask & delsys) != 0;
