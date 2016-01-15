@@ -71,6 +71,10 @@
 #endif
 #include <string>
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "rbtree.h"
 #include <system/helpers.h>
 #include <system/localize.h>
