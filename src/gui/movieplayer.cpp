@@ -390,19 +390,6 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 	if (parent)
 		parent->hide();
 
-#if 0
-	if (actionKey == "fileplayback" || actionKey == "tsmoviebrowser")
-	{
-		if(actionKey == "fileplayback") {
-			printf("[movieplayer] wakeup_hdd(%s) for %s\n", g_settings.network_nfs_moviedir.c_str(), actionKey.c_str());
-			wakeup_hdd(g_settings.network_nfs_moviedir.c_str(),true);
-		}
-		else {
-			printf("[movieplayer] wakeup_hdd(%s) for %s\n", g_settings.network_nfs_recordingdir.c_str(), actionKey.c_str());
-			wakeup_hdd(g_settings.network_nfs_recordingdir.c_str(),true);
-		}
-	}
-#endif
 	if (!access(MOVIEPLAYER_START_SCRIPT, X_OK)) {
 		puts("[movieplayer.cpp] executing " MOVIEPLAYER_START_SCRIPT ".");
 		if (my_system(MOVIEPLAYER_START_SCRIPT) != 0)
@@ -790,9 +777,7 @@ bool CMoviePlayerGui::SelectFile()
 		Path_local = g_settings.network_nfs_moviedir;
 
 	printf("CMoviePlayerGui::SelectFile: isBookmark %d timeshift %d isMovieBrowser %d\n", isBookmark, timeshift, isMovieBrowser);
-#if 0
-	wakeup_hdd(g_settings.network_nfs_recordingdir.c_str());
-#endif
+
 	if (timeshift != TSHIFT_MODE_OFF) {
 		t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
 		p_movie_info = CRecordManager::getInstance()->GetMovieInfo(live_channel_id);
@@ -1604,9 +1589,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 {
 	bool first_start = true;
 	bool update_lcd = true;
-#if 0
 	neutrino_msg_t lastmsg = 0;
-#endif
 	int ss,mm,hh;
 #if HAVE_COOL_HARDWARE
 	int eof = 0;
@@ -1616,11 +1599,11 @@ void CMoviePlayerGui::PlayFileLoop(void)
 	bool at_eof = !(playstate >= CMoviePlayerGui::PLAY);;
 	keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_NORMAL;
 
-#if 0	//bisectional jumps
+	// bisectional jumps
 	int bisection_jump = g_settings.movieplayer_bisection_jump * 60;
 	int bisection_loop = -1;
 	int bisection_loop_max = 5;
-#endif
+
 	while (playstate >= CMoviePlayerGui::PLAY)
 	{
 #ifdef ENABLE_GRAPHLCD
@@ -1645,12 +1628,12 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		neutrino_msg_data_t data;
 		g_RCInput->getMsg(&msg, &data, 10);	// 1 secs..
 
-#if 0		//bisectional jumps
+		// bisectional jumps
 		if (bisection_loop > -1)
 			bisection_loop++;
 		if (bisection_loop > bisection_loop_max)
 			bisection_loop = -1;
-#endif
+
 		if ((playstate >= CMoviePlayerGui::PLAY) && (timeshift != TSHIFT_MODE_OFF || (playstate != CMoviePlayerGui::PAUSE))) {
 			if (playback->GetPosition(position, duration)) {
 				FileTimeOSD->update(position, duration);
@@ -2003,12 +1986,13 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			SetPosition(duration/2, true);
 		} else if (msg == CRCInput::RC_8) {	// goto end
 			SetPosition(duration - 60 * 1000, true);
+#if 0
 		} else if (msg == CRCInput::RC_page_up) {
 			SetPosition(10 * 1000);
 		} else if (msg == CRCInput::RC_page_down) {
 			SetPosition(-10 * 1000);
-#if 0
-		//- bisectional jumps
+#endif
+		// bisectional jumps
 		} else if (msg == CRCInput::RC_page_up || msg == CRCInput::RC_page_down) {
 			int direction = (msg == CRCInput::RC_page_up) ? 1 : -1;
 			int jump = 10;
@@ -2025,7 +2009,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			}
 
 			SetPosition(direction*jump * 1000);
-#endif
 		} else if (msg == CRCInput::RC_0) {	// cancel bookmark jump
 			handleMovieBrowser(CRCInput::RC_0, position);
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_goto) {
@@ -2152,10 +2135,8 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #endif
 			}
 		}
-#if 0
 		if (msg < CRCInput::RC_MaxRC)
 			lastmsg = msg;
-#endif
 	}
 	printf("CMoviePlayerGui::PlayFile: exit, isMovieBrowser %d p_movie_info %p\n", isMovieBrowser, p_movie_info);
 	playstate = CMoviePlayerGui::STOPPED;
@@ -2301,12 +2282,14 @@ void CMoviePlayerGui::callInfoViewer(bool init_vzap_it)
 
 		g_InfoViewer->showMovieTitle(playstate, mi->epgId >>16, channelName, mi->epgTitle, mi->epgInfo1,
 			duration, position, repeat_mode, init_vzap_it ? 0 /*IV_MODE_DEFAULT*/ : 1 /*IV_MODE_VIRTUAL_ZAP*/);
+		unlink("/tmp/cover.jpg");
 		return;
 	}
 
 	/* not moviebrowser => use the filename as title */
 	CVFD::getInstance()->ShowText(pretty_name.c_str());
 	g_InfoViewer->showMovieTitle(playstate, 0, pretty_name, info_1, info_2, duration, position, repeat_mode);
+	unlink("/tmp/cover.jpg");
 }
 
 bool CMoviePlayerGui::getAudioName(int apid, std::string &apidtitle)
