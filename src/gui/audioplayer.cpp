@@ -1013,7 +1013,6 @@ bool CAudioPlayerGui::shufflePlaylist(void)
 void CAudioPlayerGui::addUrl2Playlist(const char *url, const char *name, const char *logo, const time_t bitrate)
 {
 	CAudiofileExt mp3(url, CFile::STREAM_AUDIO);
-	//tmp = tmp.substr(0,tmp.length()-4);	//remove .url
 	//printf("[addUrl2Playlist], name = %s, url = %s\n", name, url);
 	if (name != NULL)
 		mp3.MetaData.title = name;
@@ -1032,6 +1031,8 @@ void CAudioPlayerGui::addUrl2Playlist(const char *url, const char *name, const c
 		mp3.MetaData.total_time = bitrate;
 	else
 		mp3.MetaData.total_time = 0;
+
+	mp3.MetaData.url = url;
 
 	if (url[0] != '#')
 		addToPlaylist(mp3);
