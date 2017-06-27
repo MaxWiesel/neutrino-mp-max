@@ -163,12 +163,12 @@ class CAudioPlayerGui : public CMenuTarget
 		/**
 		 * Adds an url (shoutcast, ...) to the to the audioplayer playlist
 		 */
-		void addUrl2Playlist(const char *url, const char *name = NULL, const time_t bitrate = 0);
+		void addUrl2Playlist(const char *url, const char *name = NULL, const char *logo = NULL, const time_t bitrate = 0);
 
 		/**
 		 * Adds a url which points to an .m3u format (playlist, ...) to the audioplayer playlist
 		 */
-		void processPlaylistUrl(const char *url, const char *name = NULL, const time_t bitrate = 0);
+		void processPlaylistUrl(const char *url, const char *name = NULL, const char *logo = NULL, const time_t bitrate = 0);
 
 		/**
 		 * Loads a given XML file of internet audiostreams or playlists and processes them
