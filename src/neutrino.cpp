@@ -709,6 +709,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 		g_settings.network_nfs[i].mac = configfile.getString("network_nfs_mac_" + i_str, "11:22:33:44:55:66");
 	}
 	g_settings.network_nfs_audioplayerdir = configfile.getString( "network_nfs_audioplayerdir", "/media/hdd/music" );
+	g_settings.network_nfs_streamripperdir = configfile.getString( "network_nfs_streamripperdir", "/media/hdd/music/streamripper" );
 	g_settings.network_nfs_picturedir = configfile.getString( "network_nfs_picturedir", "/media/hdd/pictures" );
 	g_settings.network_nfs_moviedir = configfile.getString( "network_nfs_moviedir", "/media/hdd/movie" );
 	g_settings.network_nfs_recordingdir = configfile.getString( "network_nfs_recordingdir", "/media/hdd/movie" );
@@ -1588,6 +1589,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 		configfile.setString(cfg_key, g_settings.network_nfs[i].mac);
 	}
 	configfile.setString( "network_nfs_audioplayerdir", g_settings.network_nfs_audioplayerdir);
+	configfile.setString( "network_nfs_streamripperdir", g_settings.network_nfs_streamripperdir);
 	configfile.setString( "network_nfs_picturedir", g_settings.network_nfs_picturedir);
 	configfile.setString( "network_nfs_moviedir", g_settings.network_nfs_moviedir);
 	configfile.setString( "network_nfs_recordingdir", g_settings.network_nfs_recordingdir);
