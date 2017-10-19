@@ -48,14 +48,16 @@ install_DATA =	accept.png \
 		popup.png \
 		properties.png \
 		radio.png \
+		rc_910.jpg \
 		rc_cst_v1.jpg \
 		rc_cst_v2.png \
 		rc_cst_v3.png \
 		rc_cst_v4.png \
 		rc_cst_v5.png \
 		rc_cst_v6.png \
-		rc_dbox_nokia_old.png \
-		rc_dbox_philips.png \
+		rc_spark_old.jpg \
+		rc_spark_new.jpg \
+		rc_hd51.png \
 		record.png \
 		reload.png \
 		remove.png \

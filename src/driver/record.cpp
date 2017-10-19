@@ -51,6 +51,7 @@
 
 
 #include <driver/record.h>
+#include <driver/display.h>
 #include <driver/radiotext.h>
 #include <driver/streamts.h>
 #include <driver/abstime.h>
@@ -174,6 +175,18 @@ void CRecordInstance::WaitRecMsg(time_t StartTime, time_t WaitTime)
 		usleep(100000);
 }
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+void recordingFailureHelper(void *data)
+{
+	CRecordInstance *inst = (CRecordInstance *) data;
+	std::string errormsg = std::string(g_Locale->getText(LOCALE_RECORDING_FAILED)) + "\n" + std::string(inst->GetFileName());
+	CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, errormsg.c_str());
+	hintBox.paint();
+	sleep(3);
+	hintBox.hide();
+}
+#endif
+
 int CRecordInstance::GetStatus()
 {
 	if (record)
@@ -248,8 +261,15 @@ record_error_msg_t CRecordInstance::Start(CZapitChannel * channel)
 		apids[numpids++] = allpids.PIDs.pmtpid;
 #endif
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	if(record == NULL) {
+		record = new cRecord(channel->getRecordDemux(), g_settings.recording_bufsize_dmx * 1024 * 1024, g_settings.recording_bufsize * 1024 * 1024);
+		record->setFailureCallback(&recordingFailureHelper, this);
+	}
+#else
 	if(record == NULL)
 		record = new cRecord(channel->getRecordDemux() /*RECORD_DEMUX*/);
+#endif
 
 	record->Open();
 
@@ -1210,6 +1230,11 @@ void CRecordManager::StopInstance(CRecordInstance * inst, bool remove_event)
 
 	if(inst->Timeshift())
 		autoshift = false;
+#ifdef HAVE_SPARK_HARDWARE
+		CVFD::getInstance()->SetIcons(SPARK_TIMESHIFT, false);
+#elif defined(BOXMODEL_FORTIS_HDBOX)
+		CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, false);
+#endif
 
 	delete inst;
 }
@@ -1352,6 +1377,11 @@ void CRecordManager::StartTimeshift()
 		std::string tmode = "ptimeshift"; // already recording, pause
 		bool res = true;
 		t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
+#ifdef HAVE_SPARK_HARDWARE
+		CVFD::getInstance()->SetIcons(SPARK_TIMESHIFT, true);
+#elif defined(BOXMODEL_FORTIS_HDBOX)
+		CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, true);
+#endif
 		bool tstarted = false;
 		/* start temporary timeshift if enabled and not running, but dont start second record */
 		if (g_settings.temp_timeshift) {
@@ -2006,6 +2036,8 @@ bool CStreamRec::Stop(bool remove_event)
 	if (stopped)
 		return false;
 
+	av_log(NULL, AV_LOG_QUIET, "%s", "");
+
 	time_t end_time = time_monotonic();
 	CHintBox hintBox(LOCALE_MESSAGEBOX_INFO, rec_stop_msg.c_str());
 	if ((!(autoshift && g_settings.auto_timeshift)) && g_settings.recording_startstop_msg)
@@ -2122,16 +2154,24 @@ bool CStreamRec::Open(CZapitChannel * channel)
 	avformat_network_init();
 	printf("%s: Open input [%s]....\n", __FUNCTION__, url.c_str());
 
+	av_log_set_flags(AV_LOG_SKIP_REPEATED);
 	AVDictionary *options = NULL;
+	av_dict_set(&options, "auth_type", "basic", 0);
 	if (!headers.empty())//add cookies
+	{
+		headers += "\r\n";
 		av_dict_set(&options, "headers", headers.c_str(), 0);
+	}
 
+	av_log_set_level(AV_LOG_DEBUG);
 	if (avformat_open_input(&ifcx, url.c_str(), NULL, &options) != 0) {
 		printf("%s: Cannot open input [%s]!\n", __FUNCTION__, url.c_str());
+		av_log_set_level(AV_LOG_INFO);
 		if (!headers.empty())
 			av_dict_free(&options);
 		return false;
 	}
+	av_log_set_level(AV_LOG_INFO);
 	if (!headers.empty())
 		av_dict_free(&options);
 
@@ -2240,7 +2280,11 @@ void CStreamRec::run()
 			AVPacket newpkt = pkt;
 #if (LIBAVCODEC_VERSION_INT < AV_VERSION_INT( 57,52,100 ))
 			if (av_bitstream_filter_filter(bsfc, codec, NULL, &newpkt.data, &newpkt.size, pkt.data, pkt.size, pkt.flags & AV_PKT_FLAG_KEY) >= 0) {
+#if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
 				av_packet_unref(&pkt);
+#else
+				av_free_packet(&pkt);
+#endif
 				newpkt.buf = av_buffer_create(newpkt.data, newpkt.size, av_buffer_default_free, NULL, 0);
 				pkt = newpkt;
 			}
@@ -2264,7 +2308,11 @@ void CStreamRec::run()
 		pkt.dts = av_rescale_q(pkt.dts, ifcx->streams[pkt.stream_index]->time_base, ofcx->streams[pkt.stream_index]->time_base);
 
 		av_write_frame(ofcx, &pkt);
+#if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
 		av_packet_unref(&pkt);
+#else
+		av_free_packet(&pkt);
+#endif
 
 		if (pkt.stream_index == stream_index) {
 			total += (double) 1000 * pkt.duration * av_q2d(ifcx->streams[stream_index]->time_base);

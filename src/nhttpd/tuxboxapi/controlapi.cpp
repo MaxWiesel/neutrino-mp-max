@@ -33,6 +33,7 @@
 #include <configfile.h>
 #include <system/configure_network.h>
 #include <cs_api.h>
+#include <global.h>
 #include <gui/plugins.h>//for relodplugins
 #include <neutrino.h>
 #include <driver/screenshot.h>
@@ -56,7 +57,13 @@ extern cVideo * videoDecoder;
 
 extern CPlugins *g_Plugins;//for relodplugins
 extern CBouquetManager *g_bouquetManager;
+#if HAVE_DUCKBOX_HARDWARE
+#define EVENTDEV "/dev/input/event0"
+#elif HAVE_SPARK_HARDWARE
+#define EVENTDEV "/dev/input/nevis_ir"
+#else
 #define EVENTDEV "/dev/input/input0"
+#endif
 
 //-----------------------------------------------------------------------------
 //=============================================================================
@@ -185,9 +192,7 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[]=
 	{"reloadsetup",		&CControlAPI::ReloadNeutrinoSetupCGI,	""},
 	{"reloadplugins",	&CControlAPI::ReloadPluginsCGI,		""},
 	{"reloadchannels",	&CControlAPI::ReloadChannelsCGI,	""},
-#ifdef SCREENSHOT
 	{"screenshot",		&CControlAPI::ScreenshotCGI,		""},
-#endif
 	// boxcontrol - devices
 	{"volume",		&CControlAPI::VolumeCGI,		"text/plain"},
 	{"lcd",			&CControlAPI::LCDAction,		"text/plain"},
@@ -224,6 +229,7 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[]=
 	{"xmltv.m3u",		&CControlAPI::xmltvm3uCGI,		""},
 	// utils
 	{"build_live_url",	&CControlAPI::build_live_url,		""},
+	{"build_playlist",	&CControlAPI::build_playlist,		""},
 	{"get_logo",		&CControlAPI::logoCGI,			"text/plain"},
 	// settings
 	{"config",		&CControlAPI::ConfigCGI,		"text/plain"},
@@ -2073,7 +2079,6 @@ void CControlAPI::ReloadChannelsCGI(CyhookHandler *hh)
 	hh->SendOk();
 }
 
-#ifdef SCREENSHOT
 void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 {
 	bool enableOSD = true;
@@ -2091,6 +2096,10 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 	if(screenshot){
 		screenshot->EnableOSD(enableOSD);
 		screenshot->EnableVideo(enableVideo);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+		screenshot->Start();
+		hh->SendOk();
+#else
 #if 0
 	screenshot->Start();
 	hh->SendOk(); // FIXME what if screenshot->Start() failed?
@@ -2100,10 +2109,10 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 		else
 			hh->SendError();
 #endif
+#endif
 		delete screenshot;
 	}
 }
-#endif
 
 //-----------------------------------------------------------------------------
 void CControlAPI::ZaptoCGI(CyhookHandler *hh)
@@ -3273,6 +3282,7 @@ void CControlAPI::xmltvm3uCGI(CyhookHandler *hh)
     hh->SendResult(result);
 }
 //-------------------------------------------------------------------------
+#if 0
 // audio_no : (optional) audio channel
 // host : (optional) ip of dbox
 void CControlAPI::build_live_url(CyhookHandler *hh)
@@ -3337,6 +3347,82 @@ void CControlAPI::build_live_url(CyhookHandler *hh)
 		hh->SetHeader(HTTP_OK, "text/html; charset=UTF-8");
 		hh->Write(url);
 	}
+}
+#else
+void CControlAPI::build_live_url(CyhookHandler *hh)
+{
+	int mode = NeutrinoAPI->Zapit->getMode();
+	// build url
+	std::string url = "";
+	if(!hh->ParamList["host"].empty())
+		url = "http://"+hh->ParamList["host"];
+	else
+		url = "http://"+hh->HeaderList["Host"];
+	/* strip off optional custom port */
+	if (url.rfind(":") != 4)
+		url = url.substr(0, url.rfind(":"));
+
+	url += ":31339/id=";
+
+	// response url
+	if(!hh->ParamList["vlc_link"].empty())
+	{
+		write_to_file("/tmp/vlc.m3u", "#EXTM3U\n");
+		for (int i = 0; i < (int) g_bouquetManager->Bouquets.size(); i++) {
+			ZapitChannelList chanlist;
+			if (mode == CZapitClient::MODE_RADIO)
+				g_bouquetManager->Bouquets[i]->getRadioChannels(chanlist);
+			else
+				g_bouquetManager->Bouquets[i]->getTvChannels(chanlist);
+			if(!chanlist.empty() && !g_bouquetManager->Bouquets[i]->bHidden && g_bouquetManager->Bouquets[i]->bUser) {
+				for(int j = 0; j < (int) chanlist.size(); j++) {
+					CZapitChannel * channel = chanlist[j];
+					//printf("---> %s/n",channel->getName().c_str());
+					write_to_file("/tmp/vlc.m3u", "#EXTINF:-1,"+channel->getName()+"\n",true);
+					write_to_file("/tmp/vlc.m3u", url+string_printf(PRINTF_CHANNEL_ID_TYPE_NO_LEADING_ZEROS, channel->getChannelID())+"\n",true);
+				}
+			}
+		}
+		hh->SendRedirect("/tmp/vlc.m3u");
+	} else
+		hh->SendError();
+}
+#endif
+//-------------------------------------------------------------------------
+void CControlAPI::build_playlist(CyhookHandler *hh)
+{
+	// build url
+	std::string url = "";
+	if(!hh->ParamList["host"].empty())
+		url = "http://"+hh->ParamList["host"];
+	else
+		url = "http://"+hh->HeaderList["Host"];
+	/* strip off optional custom port */
+	if (url.rfind(":") != 4)
+		url = url.substr(0, url.rfind(":"));
+
+	url += ":31339/id=";
+
+	if(!hh->ParamList["id"].empty()) {
+		url += hh->ParamList["id"];
+		t_channel_id channel_id;
+		sscanf(hh->ParamList["id"].c_str(), SCANF_CHANNEL_ID_TYPE, &channel_id);
+		std::string chan_name = NeutrinoAPI->Zapit->getChannelName(channel_id);
+		std::string illegalChars = "\\/:?\"<>|+ ";
+		std::string::iterator it;
+		for (it = chan_name.begin() ; it < chan_name.end() ; ++it){
+		    bool found = illegalChars.find(*it) != std::string::npos;
+	    	if(found){
+	        	*it = '_';
+	    	}
+		}
+		std::string m3u = "/tmp/" + chan_name + ".m3u";
+		write_to_file(m3u, "#EXTM3U\n");
+		write_to_file(m3u, "#EXTINF:-1,"+NeutrinoAPI->Zapit->getChannelName(channel_id)+"\n",true);
+		write_to_file(m3u, url, true);
+		hh->SendRedirect(m3u);
+	} else
+		hh->SendError();
 }
 //-------------------------------------------------------------------------
 void CControlAPI::logoCGI(CyhookHandler *hh)

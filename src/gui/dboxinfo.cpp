@@ -312,7 +312,7 @@ void CDBoxInfoWidget::paint()
 	height += mounts.size() * mheight;	// file systems
 	height += mheight/2;			// space
 
-	//int offsetw = satWidth+ (sizeWidth+10)*3 +10+percWidth+10;
+	//int offsetw = nameWidth+ (sizeWidth+10)*3 +10+percWidth+10;
 	int offsetw = satWidth+ (sizeWidth)*3 +percWidth;
 	width = offsetw + 10 + 120;
 

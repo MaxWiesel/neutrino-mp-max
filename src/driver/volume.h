@@ -29,7 +29,7 @@
 #include <gui/volumebar.h>
 
 class CFramebuffer;
-class CVolume : public CChangeObserver
+class CVolume
 {
 	private:
 		CFrameBuffer * frameBuffer;

@@ -60,6 +60,7 @@ CScreenShot::CScreenShot(const std::string fname, screenshot_format_t fmt)
 	format = fmt;
 	filename = fname;
 	pixel_data = NULL;
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !HAVE_ARM_HARDWARE
 	fd = NULL;
 	xres = 0;
 	yres = 0;
@@ -67,18 +68,28 @@ CScreenShot::CScreenShot(const std::string fname, screenshot_format_t fmt)
 	scs_thread = 0;
 	pthread_mutex_init(&thread_mutex, NULL);
 	pthread_mutex_init(&getData_mutex, NULL);
-	get_video = g_settings.screenshot_video;
-	get_osd = g_settings.screenshot_mode;
-	scale_to_video = g_settings.screenshot_scale;
+#endif
+	xres = 0;
+	yres = 0;
+	get_video = g_settings.screenshot_mode & 1;
+	get_osd = g_settings.screenshot_mode & 2;
+#if HAVE_GENERIC_HARDWARE
+	scale_to_video = (g_settings.screenshot_mode == 3);
+#else
+	scale_to_video = (g_settings.screenshot_mode == 3) & (g_settings.screenshot_res & 1);
+#endif
 }
 
 CScreenShot::~CScreenShot()
 {
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !HAVE_ARM_HARDWARE
 	pthread_mutex_destroy(&thread_mutex);
 	pthread_mutex_destroy(&getData_mutex);
+#endif
 //	printf("[CScreenShot::%s:%d] thread: %p\n", __func__, __LINE__, this);
 }
 
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !HAVE_ARM_HARDWARE
 #ifdef BOXMODEL_CS_HD2
 
 bool CScreenShot::mergeOsdScreen(uint32_t dx, uint32_t dy, fb_pixel_t* osdData)
@@ -161,7 +172,7 @@ bool CScreenShot::GetData()
 	}
 	else
 #endif
-#ifdef SCREENSHOT
+#if !HAVE_GENERIC_HARDWARE
 	res = videoDecoder->GetScreenImage(pixel_data, xres, yres, get_video, get_osd, scale_to_video);
 #endif
 
@@ -205,7 +216,9 @@ bool CScreenShot::startThread()
 	}
 	return true;
 }
+#endif
 
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !HAVE_ARM_HARDWARE
 void* CScreenShot::initThread(void *arg)
 {
 	CScreenShot *scs = static_cast<CScreenShot*>(arg);
@@ -238,7 +251,44 @@ void CScreenShot::cleanupThread(void *arg)
 //	printf("[CScreenShot::%s:%d] thread: %p\n", __func__, __LINE__, scs);
 	delete scs;
 }
+#endif
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+/* start ::run in new thread to save file in selected format */
+bool CScreenShot::Start(const std::string custom_cmd)
+{
+	std::string cmd = "/bin/grab ";
+	if (get_osd && !get_video)
+		cmd += "-o ";
+	else if (!get_osd && get_video)
+		cmd += "-v ";
+	switch (format) {
+		case FORMAT_PNG:
+			cmd += "-p "; break;
+		case FORMAT_JPG:
+			cmd += "-j 100"; break;
+		default:
+			;
+	}
+	if (!scale_to_video)
+		cmd += " -d";
+
+	if (xres) {
+		char tmp[10];
+		snprintf(tmp, sizeof(tmp), "%d", xres);
+		cmd += "-w " + std::string(tmp);
+	}
+
+	if (!custom_cmd.empty())
+		cmd = "/bin/grab " + custom_cmd;
+		
+	cmd += " '";
+	cmd += filename;
+	cmd += "'";
+	fprintf(stderr, "running: %s\n", cmd.c_str());
+	system(cmd.c_str());
+	return true;
+#else
 /* start ::run in new thread to save file in selected format */
 bool CScreenShot::Start()
 {
@@ -249,8 +299,10 @@ bool CScreenShot::Start()
 	else
 		delete this;
 	return ret;
+#endif
 }
 
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !HAVE_ARM_HARDWARE
 /* save file in sync mode, return true if save ok, or false */
 bool CScreenShot::StartSync()
 {
@@ -467,6 +519,7 @@ bool CScreenShot::SaveBmp()
 	return true;
 
 }
+#endif
 
 /* 
  * create filename member from channel name and its current EPG data,
@@ -499,6 +552,7 @@ void CScreenShot::MakeFileName(const t_channel_id channel_id)
 			}
 		}
 	}
+	if (g_settings.screenshot_cover != 1) {
 	pos = strlen(fname);
 
 	struct timeval tv;
@@ -506,6 +560,7 @@ void CScreenShot::MakeFileName(const t_channel_id channel_id)
 	strftime(&(fname[pos]), sizeof(fname) - pos - 1, "_%Y%m%d_%H%M%S", localtime(&tv.tv_sec));
 	pos = strlen(fname);
 	snprintf(&(fname[pos]), sizeof(fname) - pos - 1, "_%03d", (int) tv.tv_usec/1000);
+	}
 
 	switch (format) {
 	case FORMAT_PNG:

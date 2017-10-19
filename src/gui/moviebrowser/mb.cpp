@@ -483,7 +483,7 @@ void CMovieBrowser::initGlobalSettings(void)
 
 	m_settings.browserAdditional = 0;
 
-	m_settings.ts_only = 1;
+	m_settings.ts_only = 0;
 	m_settings.ytmode = cYTFeedParser::MOST_POPULAR;
 	m_settings.ytorderby = cYTFeedParser::ORDERBY_PUBLISHED;
 	m_settings.ytresults = 10;
@@ -605,7 +605,7 @@ bool CMovieBrowser::loadSettings(MB_SETTINGS* settings)
 	settings->lastRecordMaxItems = configfile.getInt32("mb_lastRecordMaxItems", NUMBER_OF_MOVIES_LAST);
 	settings->browser_serie_mode = configfile.getInt32("mb_browser_serie_mode", 0);
 	settings->serie_auto_create = configfile.getInt32("mb_serie_auto_create", 0);
-	settings->ts_only = configfile.getInt32("mb_ts_only", 1);
+	settings->ts_only = configfile.getInt32("mb_ts_only", 0);
 
 	settings->sorting.item = (MB_INFO_ITEM)configfile.getInt32("mb_sorting_item", MB_INFO_RECORDDATE);
 	settings->sorting.direction = (MB_DIRECTION)configfile.getInt32("mb_sorting_direction", MB_DIRECTION_UP);
@@ -835,6 +835,7 @@ int CMovieBrowser::exec(CMenuTarget* parent, const std::string & actionKey)
 	else if(actionKey == "show_menu")
 	{
 		showMenu(true);
+		saveSettings(&m_settings);
 	}
 	else if(actionKey == "show_ytmenu")
 	{
@@ -1542,11 +1543,12 @@ void CMovieBrowser::refreshDetailsLine(int pos)
 	}
 }
 
-void CMovieBrowser::info_hdd_level(bool paint_hdd)
+void CMovieBrowser::info_hdd_level(bool /* paint_hdd */)
 {
 	if (show_mode == MB_SHOW_YT)
 		return;
 
+/*
 	struct statfs s;
 	long	blocks_percent_used =0;
 	static long tmp_blocks_percent_used = 0;
@@ -1559,11 +1561,13 @@ void CMovieBrowser::info_hdd_level(bool paint_hdd)
 
 	if (tmp_blocks_percent_used != blocks_percent_used || paint_hdd) {
 		tmp_blocks_percent_used = blocks_percent_used;
+*/
+	if (g_settings.infobar_show_sysfs_hdd) {
 		const short pbw = 100;
 		const short border = m_cBoxFrameTitleRel.iHeight/4;
 		CProgressBar pb(m_cBoxFrame.iX+ m_cBoxFrameFootRel.iWidth - m_header->getContextBtnObject()->getWidth() - pbw - border, m_cBoxFrame.iY+m_cBoxFrameTitleRel.iY + border, pbw, m_cBoxFrameTitleRel.iHeight/2);
 		pb.setType(CProgressBar::PB_REDRIGHT);
-		pb.setValues(blocks_percent_used, 100);
+		pb.setValues(cHddStat::getInstance()->getPercent(), 100);
 		pb.paint(false);
 	}
 }
@@ -1989,6 +1993,7 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 	}
 	else if (msg == CRCInput::RC_left)
 	{
+		hideDetailsLine();
 		if (m_windowFocus == MB_FOCUS_MOVIE_INFO2 && m_settings.browserAdditional)
 			onSetFocusNext();
 		else if (show_mode != MB_SHOW_YT)
@@ -1996,6 +2001,7 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 	}
 	else if (msg == CRCInput::RC_right)
 	{
+		hideDetailsLine();
 		if (m_windowFocus == MB_FOCUS_BROWSER && m_settings.browserAdditional)
 			onSetFocusNext();
 		else if (show_mode != MB_SHOW_YT)
@@ -2198,6 +2204,7 @@ void CMovieBrowser::markItem(CListFrame *list)
 void CMovieBrowser::scrollBrowserItem(bool next, bool page)
 {
 	int mode = -1;
+	hideDetailsLine();
 	if (show_mode == MB_SHOW_YT && next && ytparser.HaveNext() && m_pcBrowser->getSelectedLine() == m_pcBrowser->getLines() - 1)
 		mode = cYTFeedParser::NEXT;
 	if (show_mode == MB_SHOW_YT && !next && ytparser.HavePrev() && m_pcBrowser->getSelectedLine() == 0)
@@ -2228,9 +2235,9 @@ bool CMovieBrowser::onButtonPressBrowserList(neutrino_msg_t msg)
 		scrollBrowserItem(false, false);
 	else if (msg == CRCInput::RC_down)
 		scrollBrowserItem(true, false);
-	else if (msg == (neutrino_msg_t)g_settings.key_pageup)
+	else if ((msg == (neutrino_msg_t)g_settings.key_pageup) || (msg == CRCInput::RC_left))
 		scrollBrowserItem(false, true);
-	else if (msg == (neutrino_msg_t)g_settings.key_pagedown)
+	else if ((msg == (neutrino_msg_t)g_settings.key_pagedown) || (msg == CRCInput::RC_right))
 		scrollBrowserItem(true, true);
 	else if (msg == CRCInput::RC_play)
 		markItem(m_pcBrowser);
@@ -2556,7 +2563,7 @@ void CMovieBrowser::onSetGUIWindow(MB_GUI gui)
 	TRACE("[mb]->onSetGUIWindow: gui %d -> %d\n", m_settings.gui, gui);
 	m_settings.gui = gui;
 
-	hideDetailsLine();
+	//hideDetailsLine();
 
 	m_showMovieInfo = true;
 	if (gui == MB_GUI_MOVIE_INFO) {
@@ -2782,7 +2789,7 @@ void CMovieBrowser::loadAllTsFileNamesFromStorage(void)
 	for (i=0; i < size;i++)
 	{
 		if (*m_dir[i].used == true){
-			OnGlobalProgress(i, size, m_dir[i].name);
+			OnGlobalProgress(i + 1, size, m_dir[i].name);
 			loadTsFileNamesFromDir(m_dir[i].name);
 		}
 	}

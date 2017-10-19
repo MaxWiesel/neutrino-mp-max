@@ -122,7 +122,7 @@ CFrameBuffer* CFrameBuffer::getInstance()
 	static CFrameBuffer* frameBuffer = NULL;
 
 	if (!frameBuffer) {
-#if HAVE_SPARK_HARDWARE
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 		frameBuffer = new CFbAccelSTi();
 #endif
 #if HAVE_COOL_HARDWARE
@@ -138,6 +138,9 @@ CFrameBuffer* CFrameBuffer::getInstance()
 #endif
 #if HAVE_TRIPLEDRAGON
 		frameBuffer = new CFbAccelTD();
+#endif
+#if HAVE_ARM_HARDWARE
+		frameBuffer = new CFbAccelARM();
 #endif
 		if (!frameBuffer)
 			frameBuffer = new CFrameBuffer();
@@ -383,6 +386,10 @@ void CFrameBuffer::setBlendMode(uint8_t /*mode*/)
 }
 
 void CFrameBuffer::setBlendLevel(int /*level*/)
+{
+}
+
+void CFrameBuffer::setMixerColor(uint32_t /*mixer_background*/)
 {
 }
 
@@ -1865,4 +1872,18 @@ void CFrameBuffer::mark(int , int , int , int )
 uint32_t CFrameBuffer::getWidth4FB_HW_ACC(const uint32_t /*x*/, const uint32_t w, const bool /*max*/)
 {
 	return w;
+}
+
+void CFrameBuffer::blitArea(int , int , int , int , int , int )
+{
+
+}
+
+CFrameBuffer::Mode3D CFrameBuffer::get3DMode()
+{
+	return Mode3D_off;
+}
+
+void CFrameBuffer::set3DMode(Mode3D m)
+{
 }

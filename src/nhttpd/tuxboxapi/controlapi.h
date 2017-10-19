@@ -128,6 +128,7 @@ private:
 	void xmltvepgCGI(CyhookHandler *hh);
 	void xmltvm3uCGI(CyhookHandler *hh);
 	void build_live_url(CyhookHandler *hh);
+	void build_playlist(CyhookHandler *hh);
 	void logoCGI(CyhookHandler *hh);
 	void ConfigCGI(CyhookHandler *hh);
 	void FileCGI(CyhookHandler *hh);

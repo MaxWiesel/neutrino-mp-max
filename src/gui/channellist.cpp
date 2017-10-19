@@ -1403,7 +1403,11 @@ CZapitChannel* CChannelList::getPrevNextChannel(int key, unsigned int &sl)
 		size_t cactive = sl;
 
 		printf("CChannelList::getPrevNextChannel: selected %d total %d active bouquet %d total %d\n", (int)cactive, (int)(*chanlist).size(), bactive, bsize);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		if ((key == g_settings.key_quickzap_down) || (key == CRCInput::RC_left) || (key == CRCInput::RC_page_down)) {
+#else
 		if ((key == g_settings.key_quickzap_down) || (key == CRCInput::RC_left)) {
+#endif
 			if(cactive == 0) {
 				bactive = getPrevNextBouquet(false);
 				if (bactive >= 0) {
@@ -1413,7 +1417,11 @@ CZapitChannel* CChannelList::getPrevNextChannel(int key, unsigned int &sl)
 			} else
 				--cactive;
 		}
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		else if ((key == g_settings.key_quickzap_up) || (key == CRCInput::RC_right) || (key == CRCInput::RC_page_up)) {
+#else
 		else if ((key == g_settings.key_quickzap_up) || (key == CRCInput::RC_right)) {
+#endif
 			cactive++;
 			if(cactive >= (*chanlist).size()) {
 				bactive = getPrevNextBouquet(true);
@@ -1428,13 +1436,21 @@ CZapitChannel* CChannelList::getPrevNextChannel(int key, unsigned int &sl)
 		printf("CChannelList::getPrevNextChannel: selected %d total %d active bouquet %d total %d channel %p (%s)\n",
 				(int)cactive, (int)(*chanlist).size(), bactive, bsize, channel, channel ? channel->getName().c_str(): "");
 	} else {
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		if ((key == g_settings.key_quickzap_down) || (key == CRCInput::RC_left) || (key == CRCInput::RC_page_down)) {
+#else
 		if ((key == g_settings.key_quickzap_down) || (key == CRCInput::RC_left)) {
+#endif
 			if(sl == 0)
 				sl = (*chanlist).size()-1;
 			else
 				sl--;
 		}
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		else if ((key == g_settings.key_quickzap_up) || (key == CRCInput::RC_right) || (key == CRCInput::RC_page_up)) {
+#else
 		else if ((key==g_settings.key_quickzap_up) || (key == CRCInput::RC_right)) {
+#endif
 			sl = (sl+1)%(*chanlist).size();
 		}
 		channel = (*chanlist)[sl];
@@ -1922,6 +1938,12 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 		if ((*chanlist)[curr]->getChannelID() == CZapit::getInstance()->GetPipChannelID())
 			pip_icon = NEUTRINO_ICON_PIP;
 #endif
+		//set HD/UHD icon
+		const char *hd_icon = NULL;
+		if(chan->isHD() && g_settings.channellist_hdicon)
+			hd_icon = NEUTRINO_ICON_RESOLUTION_HD;
+		if(chan->isUHD() && g_settings.channellist_hdicon)
+			hd_icon = NEUTRINO_ICON_RESOLUTION_UHD;
 
 		//set webtv icon
 		const char *webtv_icon = NULL;
@@ -1938,6 +1960,16 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 		int icon_h = 0;
 		int offset_right = OFFSET_INNER_MID;
 		int icon_x_right = x + width - SCROLLBAR_WIDTH - offset_right;
+
+		if (hd_icon)
+		{
+			frameBuffer->getIconSize(hd_icon, &icon_w, &icon_h);
+			if (frameBuffer->paintIcon(hd_icon, icon_x_right - icon_w, ypos, fheight))
+			{
+				offset_right += icon_w + OFFSET_INNER_MID;
+				icon_x_right -= icon_w + OFFSET_INNER_MID;
+			}
+		}
 
 		if (scramble_icon)
 		{

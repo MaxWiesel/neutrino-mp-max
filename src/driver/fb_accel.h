@@ -29,7 +29,7 @@
 #include <OpenThreads/Condition>
 #include "fb_generic.h"
 
-#if HAVE_SPARK_HARDWARE
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 #define PARTIAL_BLIT 1
 #endif
 
@@ -70,12 +70,14 @@ class CFbAccelSTi
 		void init(const char * const);
 		int setMode(unsigned int xRes, unsigned int yRes, unsigned int bpp);
 		void paintRect(const int x, const int y, const int dx, const int dy, const fb_pixel_t col);
+		void blitArea(int src_width, int src_height, int fb_x, int fb_y, int width, int height);
 		void blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp);
 		void waitForIdle(const char *func = NULL);
 		void mark(int x, int y, int dx, int dy);
 		fb_pixel_t * getBackBufferPointer() const;
 		void setBlendMode(uint8_t);
 		void setBlendLevel(int);
+		void setMixerColor(uint32_t mixer_background);
 };
 
 class CFbAccelCSHDx
@@ -207,6 +209,23 @@ class CFbAccelTD
 		fb_pixel_t * getBackBufferPointer() const;
 		void setBlendMode(uint8_t);
 		void setBlendLevel(int);
+};
+
+class CFbAccelARM
+	: public CFbAccel
+{
+	private:
+		fb_pixel_t *backbuffer;
+	public:
+		CFbAccelARM();
+		~CFbAccelARM();
+		fb_pixel_t * getBackBufferPointer() const;
+		int setMode(unsigned int xRes, unsigned int yRes, unsigned int bpp);
+		int scale2Res(int size);
+		bool fullHdAvailable();
+		void setOsdResolutions();
+		void set3DMode(Mode3D);
+		Mode3D get3DMode(void);
 };
 
 #endif

@@ -45,6 +45,7 @@
 #if ENABLE_UPNP
 #include <gui/upnpbrowser.h>
 #endif
+#include <gui/nfs.h>
 
 #include <gui/widget/icons.h>
 
@@ -149,33 +150,8 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 	fw_inet->setHint(NEUTRINO_ICON_HINT_INET_RADIO, LOCALE_MENU_HINT_INET_RADIO);
 	personalize->addItem(multimedia_menu, fw_inet, &g_settings.personalize[SNeutrinoSettings::P_MEDIA_INETPLAY]);
 
-		//init movieplayer submenu
-		CMenuWidget *movieplayer_menu = new CMenuWidget(LOCALE_MAINMENU_MOVIEPLAYER, NEUTRINO_ICON_MULTIMEDIA, width, MN_WIDGET_ID_MEDIA_MOVIEPLAYER);
-		personalize->addWidget(movieplayer_menu);
-		personalize->addIntroItems(movieplayer_menu);
-
-		//moviebrowser
-		CMenuForwarder *fw_mbrowser = new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, this, "moviebrowser", CRCInput::RC_red);
-		fw_mbrowser->setHint(NEUTRINO_ICON_HINT_MB, LOCALE_MENU_HINT_MB);
-		personalize->addItem(movieplayer_menu, fw_mbrowser, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_MBROWSER]);
-
-		//fileplayback
-		CMenuForwarder *fw_fileplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback", CRCInput::RC_green);
-		fw_fileplay->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
-		personalize->addItem(movieplayer_menu, fw_fileplay, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY]);
-
-		//ytplayback
-		CMenuForwarder *fw_ytplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_YTPLAYBACK, g_settings.youtube_enabled, NULL, &CMoviePlayerGui::getInstance(), "ytplayback", CRCInput::RC_yellow);
-		fw_ytplay->setHint(NEUTRINO_ICON_HINT_YTPLAY, LOCALE_MENU_HINT_YTPLAY);
-		personalize->addItem(movieplayer_menu, fw_ytplay, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_YTPLAY]);
-
-	//add movieplayer submenu
-	CMenuForwarder *fw_mp = new CMenuForwarder(LOCALE_MAINMENU_MOVIEPLAYER, enabled, NULL, movieplayer_menu, NULL, CRCInput::RC_yellow);
-	fw_mp->setHint(NEUTRINO_ICON_HINT_MOVIE, LOCALE_MENU_HINT_MOVIE);
-	personalize->addItem(multimedia_menu, fw_mp, &g_settings.personalize[SNeutrinoSettings::P_MEDIA_MPLAYER], false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
-
 	//pictureviewer
-	CMenuForwarder *fw_pviewer = new CMenuForwarder(LOCALE_MAINMENU_PICTUREVIEWER, true, NULL, new CPictureViewerGui(), NULL, CRCInput::RC_blue);
+	CMenuForwarder *fw_pviewer = new CMenuForwarder(LOCALE_MAINMENU_PICTUREVIEWER, true, NULL, new CPictureViewerGui(), NULL, CRCInput::RC_yellow);
 	fw_pviewer->setHint(NEUTRINO_ICON_HINT_PICVIEW, LOCALE_MENU_HINT_PICVIEW);
 	personalize->addItem(multimedia_menu, fw_pviewer, &g_settings.personalize[SNeutrinoSettings::P_MEDIA_PVIEWER]);
 
@@ -185,10 +161,46 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 	if (!upnpbrowsergui)
 		upnpbrowsergui = new CUpnpBrowserGui();
 
-	CMenuForwarder *fw_upnp = new CMenuForwarder(LOCALE_UPNPBROWSER_HEAD, enabled, NULL, upnpbrowsergui, NULL, CRCInput::RC_0);
+	CMenuForwarder *fw_upnp = new CMenuForwarder(LOCALE_UPNPBROWSER_HEAD, enabled, NULL, upnpbrowsergui, NULL, CRCInput::RC_blue);
 	fw_upnp->setHint(NEUTRINO_ICON_HINT_A_PIC, LOCALE_MENU_HINT_UPNP);
 	personalize->addItem(multimedia_menu, fw_upnp, &g_settings.personalize[SNeutrinoSettings::P_MEDIA_UPNP]);
 #endif
+
+	personalize->addSeparator(*multimedia_menu, LOCALE_MAINMENU_MOVIEPLAYER, true);
+//	//init movieplayer submenu
+//	CMenuWidget *movieplayer_menu = new CMenuWidget(LOCALE_MAINMENU_MOVIEPLAYER, NEUTRINO_ICON_MULTIMEDIA, width, MN_WIDGET_ID_MEDIA_MOVIEPLAYER);
+//	personalize->addWidget(movieplayer_menu);
+//	personalize->addIntroItems(movieplayer_menu);
+
+	//moviebrowser
+	CMenuForwarder *fw_mbrowser = new CMenuForwarder(LOCALE_MOVIEBROWSER_HEAD, true, NULL, this, "moviebrowser", CRCInput::RC_0);
+	fw_mbrowser->setHint(NEUTRINO_ICON_HINT_MB, LOCALE_MENU_HINT_MB);
+	personalize->addItem(multimedia_menu, fw_mbrowser, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_MBROWSER]);
+
+	//fileplayback
+	CMenuForwarder *fw_fileplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback", CRCInput::RC_1);
+	fw_fileplay->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
+	personalize->addItem(multimedia_menu, fw_fileplay, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY]);
+
+	//ytplayback
+	CMenuForwarder *fw_ytplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_YTPLAYBACK, g_settings.youtube_enabled, NULL, &CMoviePlayerGui::getInstance(), "ytplayback", CRCInput::RC_2);
+	fw_ytplay->setHint(NEUTRINO_ICON_HINT_YTPLAY, LOCALE_MENU_HINT_YTPLAY);
+	personalize->addItem(multimedia_menu, fw_ytplay, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_YTPLAY]);
+
+//	//add movieplayer submenu
+//	CMenuForwarder *fw_mp = new CMenuForwarder(LOCALE_MAINMENU_MOVIEPLAYER, enabled, NULL, movieplayer_menu, NULL, CRCInput::RC_yellow);
+//	fw_mp->setHint(NEUTRINO_ICON_HINT_MOVIE, LOCALE_MENU_HINT_MOVIE);
+//	personalize->addItem(multimedia_menu, fw_mp, &g_settings.personalize[SNeutrinoSettings::P_MEDIA_MPLAYER], false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
+
+	personalize->addSeparator(*multimedia_menu, LOCALE_NETWORKMENU_MOUNT, true);
+
+	CMenuForwarder * mf_mount = new CMenuForwarder(LOCALE_NFS_MOUNT , true, NULL, new CNFSMountGui(), NULL);
+	mf_mount->setHint("", LOCALE_MENU_HINT_NET_NFS_MOUNT);
+	personalize->addItem(multimedia_menu, mf_mount, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY]);
+
+	CMenuForwarder * mf_umount = new CMenuForwarder(LOCALE_NFS_UMOUNT, true, NULL, new CNFSUmountGui(), NULL);
+	mf_umount->setHint("", LOCALE_MENU_HINT_NET_NFS_UMOUNT);
+	personalize->addItem(multimedia_menu, mf_umount, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY]);
 
 	int res = menu_return::RETURN_NONE;
 	
@@ -203,7 +215,7 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 
 		res = multimedia_menu->exec(NULL, "");
 
-		delete movieplayer_menu;
+//		delete movieplayer_menu;
 		delete multimedia_menu;
 		delete personalize;
 	}

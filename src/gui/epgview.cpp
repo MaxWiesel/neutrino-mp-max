@@ -1119,7 +1119,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 						printf("timerd not available\n");
 				}
 				break;
-			case CRCInput::RC_help:
+			case CRCInput::RC_info:
 			{
 				if (g_settings.tmdb_enabled)
 				{
@@ -1202,7 +1202,8 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 				}
 				break;
 			}
-			case CRCInput::RC_info:
+#if 0
+			case CRCInput::RC_help:
 				bigFonts = bigFonts ? false : true;
 				ResetModules();
 				frameBuffer->paintBackgroundBoxRel(sx, sy, ox, oy);
@@ -1226,6 +1227,9 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 					show(channel_id, id, &startzeit, false, call_fromfollowlist);
 				showPos=0;
 				break;
+#else
+			case CRCInput::RC_help:
+#endif
 			case CRCInput::RC_ok:
 			case CRCInput::RC_timeout:
 				if(fader.StartFadeOut()) {

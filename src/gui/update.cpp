@@ -86,6 +86,28 @@ extern int allow_flash;
 #define gTmpPath "/tmp/"
 #define gUserAgent "neutrino/softupdater 1.0"
 
+#if HAVE_DUCKBOX_HARDWARE
+#define LIST_OF_UPDATES_LOCAL_FILENAME "update.list"
+#define UPDATE_LOCAL_FILENAME          "update.img"
+#define RELEASE_CYCLE                  "2.0"
+#define FILEBROWSER_UPDATE_FILTER      "img"
+#if BOXMODEL_UFS910 || BOXMODEL_FORTIS_HDBOX || BOXMODEL_OCTAGON1008
+#define MTD_OF_WHOLE_IMAGE              5
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd5"
+#elif BOXMODEL_CUBEREVO_MINI2
+#define MTD_OF_WHOLE_IMAGE              6
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd6"
+#elif BOXMODEL_CUBEREVO_3000HD
+#define MTD_OF_WHOLE_IMAGE              5
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd5"
+#elif BOXMODEL_UFS922
+#define MTD_OF_WHOLE_IMAGE              4
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd4"
+#else // update blocked with invalid data
+#define MTD_OF_WHOLE_IMAGE              999
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
+#endif
+#else
 #define LIST_OF_UPDATES_LOCAL_FILENAME "coolstream.list"
 #define UPDATE_LOCAL_FILENAME          "update.img"
 #define RELEASE_CYCLE                  "2.0"
@@ -96,6 +118,7 @@ extern int allow_flash;
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd0"
 #else
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd3"
+#endif
 #endif
 int pinghost  (const std::string &hostname, std::string *ip = NULL);
 
@@ -492,11 +515,13 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 	menu_ret = menu_return::RETURN_REPAINT;
 	paint();
 
+#if !HAVE_DUCKBOX_HARDWARE
 	if(sysfs.size() < 8) {
 		ShowHint(LOCALE_MESSAGEBOX_ERROR, LOCALE_FLASHUPDATE_CANTOPENMTD);
 		hide();
 		return menu_return::RETURN_REPAINT;
 	}
+#endif
 	if(!checkVersion4Update()) {
 		hide();
 		return menu_ret;
@@ -528,7 +553,11 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 	showGlobalStatus(40);
 
 	CFlashTool ft;
+#if HAVE_DUCKBOX_HARDWARE
+	ft.setMTDDevice(MTD_DEVICE_OF_UPDATE_PART);
+#else
 	ft.setMTDDevice(sysfs);
+#endif
 	ft.setStatusViewer(this);
 
 	showStatusMessageUTF(g_Locale->getText(LOCALE_FLASHUPDATE_MD5CHECK));
@@ -812,12 +841,14 @@ void CFlashExpert::readmtd(int preadmtd)
 	}
 
 	bool skipCheck = false;
-#ifndef BOXMODEL_CS_HD2
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !BOXMODEL_CS_HD2
 	if ((std::string)g_settings.update_dir == "/tmp")
 		skipCheck = true;
 #else
+#if BOXMODEL_CS_HD2
 	if (forceOtherFilename)
 		filename = otherFilename;
+#endif
 #endif
 	if ((!skipCheck) && (!checkSize(preadmtd, filename)))
 		return;

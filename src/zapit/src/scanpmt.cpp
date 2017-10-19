@@ -93,7 +93,7 @@ bool CPmt::Parse(CZapitChannel * const channel)
 
 	ProgramMapSection pmt(buffer);
 
-	DBG("pcr pid: old 0x%x new 0x%x\n", channel->getPcrPid(), pmt.getPcrPid());
+	DBG("[pmt] pcr pid: old 0x%x new 0x%x\n", channel->getPcrPid(), pmt.getPcrPid());
 
 	channel->resetPids();
 
@@ -182,14 +182,14 @@ bool CPmt::ParseEsInfo(ElementaryStreamInfo *esinfo, CZapitChannel * const chann
 				TeletextDescriptor *td = (TeletextDescriptor*)d;
 				const VbiTeletextList *vbilist = td->getVbiTeletexts();
 				VbiTeletextConstIterator it;
-				DBG("teletext pid %04x\n", esinfo->getPid());
+				DBG("[pmt] teletext pid %04x\n", esinfo->getPid());
 				for (it = vbilist->begin(); it != vbilist->end(); ++it) {
 					VbiTeletext * vbi = *it;
 
 					std::string lang = vbi->getIso639LanguageCode();
 					uint8_t page = vbi->getTeletextPageNumber();
 					uint8_t magazine = vbi->getTeletextMagazineNumber();
-					DBG("teletext type %d mag %d page %d lang [%s]\n",
+					DBG("[pmt] teletext type %d mag %d page %d lang [%s]\n",
 							vbi->getTeletextType(), magazine, page, lang.c_str());
 					if (vbi->getTeletextType() == 0x01)
 						channel->setTeletextLang(lang);
@@ -263,29 +263,44 @@ bool CPmt::ParseEsInfo(ElementaryStreamInfo *esinfo, CZapitChannel * const chann
 		}
 	}
 	switch (stream_type) {
-	case 0x01:
-	case 0x02:
-	case 0x24:
+	case 0x01: // MPEG1 Video
+	case 0x02: // MPEG2 Video (H262)
+		channel->setVideoPid(esinfo->getPid());
+		channel->type = CHANNEL_MPEG2;
+		DBG("[pmt] vpid %04x stream %d type %d\n", esinfo->getPid(), stream_type, channel->type);
+		break;
+	case 0x10: // AVC Video Stream (MPEG4 H263)
 	case 0x1b: // AVC Video Stream (MPEG4 H264)
 		channel->setVideoPid(esinfo->getPid());
-		channel->type = (stream_type == 0x1b) ? 1 : (stream_type == 0x24) ? 2 : 0; //FIXME
-		printf("[pmt] vpid %04x stream %d type %d\n", esinfo->getPid(), stream_type, channel->type);
+		channel->type = CHANNEL_MPEG4;
+		DBG("[pmt] vpid %04x stream %d type %d\n", esinfo->getPid(), stream_type, channel->type);
 		break;
-	case 0x03:
-	case 0x04:
+	case 0x24: // HEVC Video Stream (MPEG4 H265)
+	case 0x27: // SHVC Video Stream (MPEG4 H265 TS)
+		channel->setVideoPid(esinfo->getPid());
+		channel->type = CHANNEL_HEVC;
+		DBG("[pmt] vpid %04x stream %d type %d\n", esinfo->getPid(), stream_type, channel->type);
+		break;
+	case 0x42: // CAVS Video Stream (China)
+		channel->setVideoPid(esinfo->getPid());
+		channel->type = CHANNEL_CAVS;
+		DBG("[pmt] vpid %04x stream %d type %d\n", esinfo->getPid(), stream_type, channel->type);
+		break;
+	case 0x03: // MPEG1 Audio
+	case 0x04: // MPEG2 Audio
 		audio_type = CZapitAudioChannel::MPEG;
 		audio = true;
 		break;
-	case 0x06:
+	case 0x06: // MPEG2 Subtitiles
 		if(audio_type != CZapitAudioChannel::UNKNOWN)
 			audio = true;
 		break;
-	case 0x0F: // AAC ADTS
-	case 0x11: // AAC LATM
+	case 0x0F: // AAC ADTS (MPEG2)
+	case 0x11: // AAC LATM (MPEG4)
 		audio_type = CZapitAudioChannel::AAC;
 		audio = true;
 		break;
-	case 0x81:
+	case 0x81: // Dolby Digital
 		audio_type = CZapitAudioChannel::AC3;
 		audio = true;
 		break;
@@ -302,7 +317,7 @@ bool CPmt::ParseEsInfo(ElementaryStreamInfo *esinfo, CZapitChannel * const chann
 			snprintf(str, DESC_MAX_LEN, "Unknown");
 			description = str;
 		}
-		DBG("apid %04x stream %02x type %d [%s]\n", esinfo->getPid(), stream_type,
+		DBG("[pmt] apid %04x stream %02x type %d [%s]\n", esinfo->getPid(), stream_type,
 				(int) audio_type, description.c_str());
 		if(CServiceScan::getInstance()->Scanning()) {
 			if(channel->getPreAudioPid() == 0)
@@ -398,7 +413,7 @@ int pmt_set_update_filter(CZapitChannel * const channel, int * fd)
 
 int pmt_stop_update_filter(int * fd)
 {
-	DBG("\n");
+	DBG("[pmt] stop update filter\n");
 #if HAVE_TRIPLEDRAGON
 	if (pmtDemux)
 		delete pmtDemux;

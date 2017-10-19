@@ -63,6 +63,10 @@
 #include <sectionsdclient/sectionsdclient.h>
 #include <cs_api.h>
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#include <gui/cec_setup.h>
+#endif
+
 //#define RCDEBUG
 
 #define ENABLE_REPEAT_CHECK
@@ -86,10 +90,11 @@ static struct timespec devinput_mtime = { 0, 0 };
 *	Constructor - opens rc-input device, selects rc-hardware and starts threads
 *
 *********************************************************************************/
-CRCInput::CRCInput()
+CRCInput::CRCInput(bool &_timer_wakeup)
 {
 	timerid= 1;
 	repeatkeys = NULL;
+	timer_wakeup = &_timer_wakeup;
 	longPressAny = false;
 
 	// pipe for internal event-queue
@@ -1377,6 +1382,15 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 
 				if (ev.value) {
 					d_printf("rc_last_key %04x rc_last_repeat_key %04x\n\n", rc_last_key, rc_last_repeat_key);
+					if (*timer_wakeup) {
+						unlink("/tmp/.timer_wakeup");
+						*timer_wakeup = false;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+						CCECSetup cecsetup;
+						cecsetup.setCECSettings(true);
+#endif
+						CTimerManager::getInstance()->cancelShutdownOnWakeup();
+					}
 					bool keyok = true;
 #if 0
 					uint64_t now_pressed;
@@ -1386,7 +1400,13 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 					if (trkey == rc_last_key) {
 						/* only allow selected keys to be repeated */
 						if (mayRepeat(trkey, bAllowRepeatLR) ||
-						    (g_settings.shutdown_real_rcdelay && ((trkey == RC_standby) && (g_info.hw_caps->can_shutdown))))
+						    (g_settings.shutdown_real_rcdelay && ((trkey == RC_standby) &&
+#if HAVE_COOL_HARDWARE
+						    (cs_get_revision() > 7)
+#else
+						    (g_info.hw_caps->can_shutdown)
+#endif
+						)))
 						{
 #ifdef ENABLE_REPEAT_CHECK
 							if (rc_last_repeat_key != trkey) {
@@ -1416,6 +1436,12 @@ void CRCInput::getMsg_us(neutrino_msg_t * msg, neutrino_msg_data_t * data, uint6
 						{
 							last_keypress = now_pressed;
 
+							FILE* rclocked = fopen("/tmp/rc.locked", "r");
+							if (rclocked)
+							{
+								fclose(rclocked);
+								continue;
+							}
 							*msg = trkey;
 							*data = 0; /* <- button pressed */
 							return;
@@ -1632,7 +1658,11 @@ const char * CRCInput::getSpecialKeyName(const unsigned int key)
 			case RC_timeshift:
 				return "timeshift";
 			case RC_mode:
+#if HAVE_SPARK_HARDWARE
+				return "v.format";
+#else
 				return "mode";
+#endif
 			case RC_record:
 				return "record";
 			case RC_pause:
@@ -1663,12 +1693,54 @@ const char * CRCInput::getSpecialKeyName(const unsigned int key)
 				return "analog off";
 			case RC_www:
 				return "www";
+			case RC_find:
+				return "find";
+			case RC_pip:
+				return "pip";
+			case RC_archive:
+				return "archive";
+			case RC_slow:
+				return "slow";
+			case RC_fastforward:
+				return "fast";
+			case RC_playmode:
+				return "play mode";
+			case RC_usb:
+				return "usb";
+			case RC_timer:
+				return "time";
+			case RC_f1:
+				return "f1";
+			case RC_f2:
+				return "f2";
+			case RC_f3:
+				return "f3";
+			case RC_f4:
+				return "f4";
+			case RC_prog1:
+				return "prog1";
+			case RC_prog2:
+				return "prog2";
+			case RC_prog3:
+				return "prog3";
+			case RC_aux:
+#if HAVE_SPARK_HARDWARE
+				return "tv/sat";
+#else
+				return "aux";
+#endif
+			case RC_prog4:
+				return "prog4";
 			case RC_sub:
 				return "sub";
 			case RC_pos:
 				return "pos";
 			case RC_sleep:
 				return "sleep";
+			case RC_media:
+				return "media";
+			case RC_search:
+				return "search";
 			default:
 				printf("unknown key: %d (0x%x) \n", key, key);
 				return "unknown";
@@ -1702,12 +1774,26 @@ const char *CRCInput::getKeyNameC(const unsigned int key)
 **************************************************************************/
 int CRCInput::translate(int code)
 {
+	if (code == g_settings.key_help)
+		return RC_help;
 	switch(code)
 	{
+		case KEY_EXIT:
+			return RC_home;
+		case KEY_FASTFORWARD:
+			return RC_forward;
 		case 0x100: // FIXME -- needed?
 			return RC_up;
 		case 0x101: // FIXME -- needed?
 			return RC_down;
+		case KEY_PLAYPAUSE:
+			return RC_play;
+		case KEY_PROGRAM:
+			return RC_timer;
+		case KEY_NEXTSONG:
+			return RC_next;
+		case KEY_PREVIOUSSONG:
+			return RC_prev;
 #ifdef HAVE_AZBOX_HARDWARE
 		case KEY_HOME:
 			return RC_favorites;

@@ -48,6 +48,8 @@
 
 #ifdef BOXMODEL_CS_HD2
 #define VIDEOMENU_VIDEOMODE_OPTION_COUNT 16
+#elif HAVE_ARM_HARDWARE
+#define VIDEOMENU_VIDEOMODE_OPTION_COUNT 17
 #else
 #define VIDEOMENU_VIDEOMODE_OPTION_COUNT 13
 #endif
@@ -182,6 +184,17 @@ struct SNeutrinoSettings
 	int analog_mode1;
 	int analog_mode2;
 	int video_43mode;
+
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+	int hdmi_mode;
+	int psi_contrast;
+	int psi_saturation;
+	int psi_brightness;
+	int psi_tint;
+	int psi_step;
+	uint32_t video_mixer_color;
+#endif
+
 #ifdef BOXMODEL_CS_HD2
 	int brightness;
 	int contrast;
@@ -230,6 +243,15 @@ struct SNeutrinoSettings
 	//audio
 	int audio_AnalogMode;
 	int audio_DolbyDigital;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	int audio_mixer_volume_analog;
+	int audio_mixer_volume_spdif;
+	int audio_mixer_volume_hdmi;
+#endif
+#if HAVE_ARM_HARDWARE
+	int ac3_pass;
+	int dts_pass;
+#endif // HAVE_ARM_HARDWARE
 	int auto_lang;
 	int auto_subs;
 	int srs_enable;
@@ -247,6 +269,9 @@ struct SNeutrinoSettings
 	int hdmi_cec_mode;
 	int hdmi_cec_view_on;
 	int hdmi_cec_standby;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	int hdmi_cec_broadcast;
+#endif
 	int enabled_video_modes[VIDEOMENU_VIDEOMODE_OPTION_COUNT];
 	int enabled_auto_modes[VIDEOMENU_VIDEOMODE_OPTION_COUNT];
 	int cpufreq;
@@ -264,9 +289,11 @@ struct SNeutrinoSettings
 	int ci_clock;
 	int ci_ignore_messages;
 	int ci_save_pincode;
+	int ci_check_live;
 	int ci_tuner;
 	std::string ci_pincode;
 	int radiotext_enable;
+	std::string radiotext_rass_dir;
 
 	//screen saver
 	int screensaver_delay;
@@ -349,6 +376,7 @@ struct SNeutrinoSettings
 		P_MSET_SETTINGS_MANAGER,
 		P_MSET_VIDEO,
 		P_MSET_AUDIO,
+		P_MSET_PARENTALLOCK,
 		P_MSET_NETWORK,
 		P_MSET_RECORDING,
 		P_MSET_OSDLANG,
@@ -368,6 +396,7 @@ struct SNeutrinoSettings
 		P_MSER_RESET_CHANNELS,
 		P_MSER_RESTART,
 		P_MSER_RELOAD_PLUGINS,
+		P_MSER_RESTART_TUNER,
 		P_MSER_SERVICE_INFOMENU,
 		P_MSER_SOFTUPDATE,
 
@@ -382,6 +411,7 @@ struct SNeutrinoSettings
 		//movieplayer menu
 		P_MPLAYER_MBROWSER,
 		P_MPLAYER_FILEPLAY,
+		P_MPLAYER_INETPLAY,
 		P_MPLAYER_YTPLAY,
 
 		//feature keys
@@ -461,6 +491,10 @@ struct SNeutrinoSettings
 	int recording_audio_pids_std;
 	int recording_audio_pids_alt;
 	int recording_audio_pids_ac3;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	int recording_bufsize;
+	int recording_bufsize_dmx;
+#endif
 	int recording_stream_vtxt_pid;
 	int recording_stream_subtitle_pids;
 	int recording_stream_pmt_pid;
@@ -501,6 +535,7 @@ struct SNeutrinoSettings
 	int key_channelList_addrecord;
 	int key_channelList_addremind;
 
+	int key_playbutton;
 	int key_quickzap_up;
 	int key_quickzap_down;
 	int key_bouquet_up;
@@ -513,6 +548,7 @@ struct SNeutrinoSettings
 	int key_list_end;
 	int key_power_off;
 	int menu_left_exit;
+	int audio_run_player;
 	int timeshift_pause;
 	int auto_timeshift;
 	int temp_timeshift;
@@ -554,8 +590,14 @@ struct SNeutrinoSettings
 	int screenshot_format;
 	int screenshot_cover;
 	int screenshot_mode;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+	int screenshot_res;
+	int screenshot_png_compression;
+	int screenshot_backbuffer;
+#else
 	int screenshot_video;
 	int screenshot_scale;
+#endif
 	int auto_cover;
 	std::string screenshot_dir;
 
@@ -607,6 +649,7 @@ struct SNeutrinoSettings
 	int channellist_foot;
 	int channellist_new_zap_mode;
 	int channellist_sort_mode;
+	int channellist_hdicon;
 	int channellist_numeric_adjust;
 	int channellist_show_channellogo;
 	int channellist_show_infobox;
@@ -615,6 +658,9 @@ struct SNeutrinoSettings
 	int repeat_genericblocker;
 #define LONGKEYPRESS_OFF 499
 	int longkeypress_duration;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	int accept_other_remotes;
+#endif
 	int remote_control_hardware;
 	int audiochannel_up_down_enable;
 
@@ -640,12 +686,19 @@ struct SNeutrinoSettings
 	int screen_EndX_lcd_1;
 	int screen_EndY_lcd_1;
 	int osd_resolution;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	int screen_StartX_int;
+	int screen_StartY_int;
+	int screen_EndX_int;
+	int screen_EndY_int;
+#endif
 	int screen_preset;
 	int screen_width;
 	int screen_height;
 
 	//Software-update
 	int softupdate_mode;
+	std::string image_settings_backup_path;
 	std::string softupdate_url_file;
 	std::string softupdate_proxyserver;
 	std::string softupdate_proxyusername;
@@ -731,12 +784,19 @@ struct SNeutrinoSettings
 #if HAVE_TRIPLEDRAGON || USE_STB_HAL
 		LCD_EPGMODE            ,
 #endif
+#if HAVE_SPARK_HARDWARE
+		LCD_DISPLAYMODE        ,
+		LCD_STANDBY_DISPLAYMODE,
+#endif
 		LCD_SETTING_COUNT
 	};
 	int lcd_setting[LCD_SETTING_COUNT];
 	int lcd_info_line;
 	std::string lcd_setting_dim_time;
 	int lcd_setting_dim_brightness;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	int lcd_vfd_scroll;
+#endif
 	int led_tv_mode;
 	int led_standby_mode;
 	int led_deep_mode;
@@ -773,6 +833,7 @@ struct SNeutrinoSettings
 	int filebrowser_showrights;
 	int filebrowser_sortmethod;
 	int filebrowser_denydirectoryleave;
+	int filebrowser_use_filter;
 
 	//movieplayer
 	int   movieplayer_repeat_on;
@@ -804,6 +865,7 @@ struct SNeutrinoSettings
 
 	std::string	font_file;
 	std::string	ttx_font_file;
+	std::string	sub_font_file;
 
 	int font_scaling_x;
 	int font_scaling_y;
@@ -858,6 +920,8 @@ struct SNeutrinoSettings
 		ITEM_SWUPDATE = 30,
 		ITEM_LIVESTREAM_RESOLUTION = 31,
 		ITEM_ADZAP = 32,
+		ITEM_RASS = 33,
+		ITEM_TUNER_RESTART = 34,
 		ITEM_MAX // MUST be always the last in the list
 	} USER_ITEM;
 
@@ -921,6 +985,13 @@ const time_settings_struct_t timing_setting[SNeutrinoSettings::TIMING_SETTING_CO
 #define DEFAULT_LCD_INVERSE			0x00
 #define DEFAULT_LCD_AUTODIMM			0x00
 #define DEFAULT_LCD_SHOW_VOLUME			0x01
+#if HAVE_SPARK_HARDWARE
+#define LCD_DISPLAYMODE_OFF			0
+#define LCD_DISPLAYMODE_ON			1
+#define LCD_DISPLAYMODE_TIMEONLY		2
+#define LCD_DISPLAYMODE_TIMEOFF			3
+#define DEFAULT_LCD_DISPLAYMODE			LCD_DISPLAYMODE_ON
+#endif
 
 #define CORNER_RADIUS_LARGE	CFrameBuffer::getInstance()->scale2Res(11)
 #define CORNER_RADIUS_MID	CFrameBuffer::getInstance()->scale2Res(7)

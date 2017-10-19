@@ -1,5 +1,9 @@
+if ENABLE_UPNP
 AM_CPPFLAGS = -fno-rtti -D__STDC_FORMAT_MACROS
 #AM_CPPFLAGS = -fno-rtti
+else
+AM_CPPFLAGS = -fno-rtti -fno-exceptions -D__STDC_FORMAT_MACROS
+endif
 BUILT_SOURCES = version.h
 version.h:
 	@rm -f $@; \
@@ -121,12 +125,27 @@ libneutrino_gui_a_SOURCES += \
 	test_menu.cpp
 endif
 
+if BOXTYPE_SPARK
+libneutrino_gui_a_SOURCES += \
+	psisetup.cpp
+endif
+
+if BOXTYPE_DUCKBOX
+libneutrino_gui_a_SOURCES += \
+	psisetup.cpp
+endif
+
 libneutrino_gui2_a_SOURCES = \
-	cam_menu.cpp \
 	color.cpp \
 	hdd_menu.cpp \
 	infoclock.cpp \
+	kerneloptions.cpp \
 	motorcontrol.cpp
+
+if !BOXTYPE_SPARK
+libneutrino_gui2_a_SOURCES += \
+	cam_menu.cpp
+endif
 
 if ENABLE_UPNP
 libneutrino_gui2_a_SOURCES += \

@@ -44,9 +44,11 @@
 #endif
 
 #include <driver/screen_max.h>
+#if !HAVE_SPARK_HARDWARE
 #include "gui/cam_menu.h"
 
 extern CCAMMenuHandler * g_CamHandler;
+#endif
 
 CInfoMenu::CInfoMenu()
 {

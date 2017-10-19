@@ -37,6 +37,7 @@
 
 #include "debug.h"
 #include "timermanager.h"
+#include <system/set_threadname.h>
 
 int timerd_debug = 0;
 
@@ -480,6 +481,7 @@ bool timerd_parse_command(CBasicMessage::Header &rmsg, int connfd)
 
 int timerd_main_thread(void *data)
 {
+	set_threadname(__func__);
 	pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, 0);
 	set_threadname("n:timerd");
 	printf("timerd startup, tid %ld\n", syscall(__NR_gettid));
@@ -493,9 +495,9 @@ int timerd_main_thread(void *data)
 
 	// Start timer thread
 	CTimerManager::getInstance();
-	CTimerManager::getInstance()->wakeup = !!(*(long *)data);
+	CTimerManager::getInstance()->wakeup =(bool *)data;
 
-	*(long *)data = -1; /* signal we're up and running */
+	*(bool *)data = true; /* signal we're up and running */
 
 	timerd_server.run(timerd_parse_command, CTimerdMsg::ACTVERSION);
 	printf("timerd shutdown complete\n");

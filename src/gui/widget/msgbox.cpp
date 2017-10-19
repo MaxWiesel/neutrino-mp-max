@@ -214,13 +214,13 @@ void CMsgBox::initButtons()
 	Refresh();
 
 	//set the 1st button as default selected button
-	ccw_footer->setSelectedButton(0);
+	ccw_footer->setSelectedButton(0, COL_MENUCONTENTSELECTED_PLUS_2, COL_MENUCONTENT_TEXT);
 
 	//define default selected button from default_result
 	if (v_buttons.size() > 1){
 		for (size_t i = 0; i< v_buttons.size(); i++){
 			if (v_buttons[i].btn_result == result){
-				ccw_footer->setSelectedButton(i);
+				ccw_footer->setSelectedButton(i, COL_MENUCONTENTSELECTED_PLUS_2, COL_MENUCONTENT_TEXT);
 				break;
 			}
 		}

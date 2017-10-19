@@ -126,7 +126,8 @@ neutrino_LDADD = \
 	-ljpeg \
 	-lutil \
 	-lOpenThreads \
-	-lrt -lpthread
+	-lrt -lpthread \
+	-ldl -lblkid
 
 if ENABLE_GIFLIB
 neutrino_LDADD += -lgif
@@ -179,12 +180,21 @@ neutrino_LDFLAGS = \
 	$(STB_HAL_LIB)
 endif
 
+if BOXTYPE_SPARK
+neutrino_LDADD += -lass
+endif
+
+if BOXTYPE_DUCKBOX
+neutrino_LDADD += -lass
+endif
+
 if BOXTYPE_TRIPLE
 neutrino_LDADD += \
 	$(top_builddir)/src/lcddisplay/liblcddisplay.a
 endif
 
 neutrino_LDADD += \
+	@SWRESAMPLE_LIBS@ \
 	@AVFORMAT_LIBS@ \
 	@AVUTIL_LIBS@ \
 	@AVCODEC_LIBS@

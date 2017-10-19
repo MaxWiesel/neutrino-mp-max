@@ -387,7 +387,10 @@ bool CMovieInfo::parseXmlTree(std::string &_text, MI_MOVIE_INFO *movie_info)
 				}
 			}
 			//printf("MOVIE INFO: apid %d type %d name %s selected %d\n", audio_pids.AudioPid, audio_pids.atype, audio_pids.AudioPidName.c_str(), audio_pids.selected);
-			movie_info->audioPids.push_back(audio_pids);
+			unsigned int j, asize = movie_info->audioPids.size();
+			for (j = 0; j < asize && audio_pids.AudioPid != movie_info->audioPids[j].AudioPid; j++);
+			if (j == asize)
+				movie_info->audioPids.push_back(audio_pids);
 		}
 		/* parse bookmarks */
 		GET_XML_DATA_INT(text, pos, MI_XML_TAG_BOOKMARK_START, movie_info->bookmarks.start)

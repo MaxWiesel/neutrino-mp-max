@@ -540,7 +540,11 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	average_bitrate_offset = spaceoffset;
 	int box_width2 = box_width-(spaceoffset+xpos);
 
+#if BOXMODEL_UFS910
+	if(channel->getVideoPid() || IS_WEBTV(channel->getChannelID())) {
+#else
 	if((channel->getVideoPid() || IS_WEBTV(channel->getChannelID())) && !(videoDecoder->getBlank())){
+#endif
 		 videoDecoder->getPictureInfo(xres, yres, framerate);
 		 if (yres == 1088)
 		 	yres = 1080;
@@ -644,6 +648,9 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 	snprintf(buf, sizeof(buf), "%s:", g_Locale->getText (LOCALE_STREAMINFO_AUDIOTYPE));
 	g_Font[font_info]->RenderString (xpos, ypos, box_width, buf, COL_MENUCONTENT_TEXT);
 
+	snprintf(buf, sizeof(buf), "%s", mp ? mp->getAPIDDesc(mp->getAPID()).c_str() : g_RemoteControl->current_PIDs.APIDs[g_RemoteControl->current_PIDs.PIDs.selected_apid].desc);
+
+#if 0
 	int type = 0, layer = 0, freq = 0, mode = 0, lbitrate = 0;
 	/*
 	   audioDecoder->getAudioInfo() seems broken in libcoolstream2.
@@ -714,6 +721,7 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 			 g_Locale->getText(LOCALE_STREAMINFO_AUDIOTYPE_UNKNOWN),
 			 freq, desc.c_str());
 	}
+#endif
 	g_Font[font_info]->RenderString (xpos+spaceoffset, ypos, box_width2, buf, COL_MENUCONTENT_TEXT);
 
 	if (mp) {
@@ -774,6 +782,12 @@ void CStreamInfo2::paint_techinfo(int xpos, int ypos)
 		int fontW = g_Font[font_small]->getWidth();
 		spaceoffset = 7 * fontW;
 		box_width2 = box_width-(spaceoffset+xpos);
+
+		//iconname
+		ypos+= sheight;
+		snprintf(buf, sizeof(buf), "%llx.png", channel->getChannelID() & 0xFFFFFFFFFFFFULL);
+		g_Font[font_small]->RenderString(xpos, ypos, box_width, "Iconname:" , COL_INFOBAR_TEXT);
+		g_Font[font_small]->RenderString(xpos+spaceoffset, ypos, box_width2, buf, COL_INFOBAR_TEXT);
 
 		//onid
 		ypos+= sheight;
@@ -871,6 +885,18 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 		caids[i] = false;
 	}
 
+	int acaid = 0;
+	FILE *f = fopen("/tmp/ecm.info", "rt");
+	if (f) {
+		char buf[80];
+		if (fgets(buf, sizeof(buf), f) != NULL) {
+			while (buf[i] != '0')
+				i++;
+			sscanf(&buf[i], "%X", &acaid);
+		}
+		fclose(f);
+	}
+
 	int spaceoffset = 0;
 
 	for(casys_map_iterator_t it = channel->camap.begin(); it != channel->camap.end(); ++it) {
@@ -927,7 +953,7 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 		if(caids[ca_id] == true){
 			if(cryptsysteme){
 				ypos += iheight;
-				g_Font[font_info]->RenderString(xpos , ypos, box_width, "Conditional access:" , COL_MENUCONTENT_TEXT);
+				g_Font[font_info]->RenderString(xpos , ypos, box_width, g_Locale->getText(LOCALE_STREAMINFO_CASYSTEMS), COL_MENUCONTENT_TEXT);
 				cryptsysteme = false;
 			}
 			ypos += sheight;
@@ -940,7 +966,13 @@ void CStreamInfo2::paintCASystem(int xpos, int ypos)
 			std::string::size_type last_pos = casys[ca_id].find_first_not_of(tok, 0);
 			std::string::size_type pos = casys[ca_id].find_first_of(tok, last_pos);
 			while (std::string::npos != pos || std::string::npos != last_pos){
-				g_Font[font_small]->RenderString(xpos + width_txt, ypos, box_width, casys[ca_id].substr(last_pos, pos - last_pos).c_str() , COL_MENUCONTENT_TEXT);
+				int col = COL_MENUCONTENT_TEXT;
+				if (index > 0) {
+					int id;
+					if (1 == sscanf(casys[ca_id].substr(last_pos, pos - last_pos).c_str(), "%X", &id) && acaid == id)
+						col = COL_MENUHEAD_TEXT;
+				}
+				g_Font[font_small]->RenderString(xpos + width_txt, ypos, box_width, casys[ca_id].substr(last_pos, pos - last_pos).c_str() , col);
 				if(index == 0)
 					width_txt = spaceoffset;
 				else
@@ -1006,7 +1038,7 @@ int CStreamInfo2::ts_setup ()
 			dmx = NULL;
 			return ret;
 		}
-		dmx->Open(DMX_TP_CHANNEL, NULL, 3 * 3008 * 62);
+		dmx->Open(DMX_TP_CHANNEL, NULL, 8 * 3 * 3008 * 62);
 
 		if(vpid > 0) {
 			dmx->pesFilter(vpid);

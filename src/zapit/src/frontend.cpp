@@ -40,8 +40,6 @@
 #include <driver/abstime.h>
 #include <linux/dvb/version.h>
 
-#include <hardware_caps.h>
-
 extern transponder_list_t transponders;
 extern int zapit_debug;
 
@@ -170,8 +168,6 @@ typedef enum dvb_fec {
 	fNone = 15
 } dvb_fec_t;
 
-static fe_sec_voltage_t unicable_lowvolt = SEC_VOLTAGE_13;
-
 #define TIME_STEP 200
 #define TIMEOUT_MAX_MS (feTimeout*100)
 
@@ -207,13 +203,6 @@ CFrontend::CFrontend(int Number, int Adapter)
 	feTimeout = 40;
 	currentVoltage = SEC_VOLTAGE_OFF;
 	currentToneMode = SEC_TONE_ON;
-	/* some broken hardware (a coolstream neo on my desk) does not lower
-	 * the voltage below 18V without enough DC load on the coax cable.
-	 * with unicable bus setups, there is no DC load on the coax... leading
-	 * to a completely blocked bus due to this broken hardware.
-	 * Switching off the voltage completely works around this issue */
-	if (getenv("UNICABLE_BROKEN_FRONTEND") != NULL)
-		unicable_lowvolt = SEC_VOLTAGE_OFF;
 	memset(&info, 0, sizeof(info));
 
 	deliverySystemMask = UNKNOWN_DS;
@@ -330,7 +319,9 @@ void CFrontend::getFEInfo(void)
 		switch (info.type) {
 		case FE_QPSK:
 			deliverySystemMask |= DVB_S;
-			if (info.caps & FE_CAN_2G_MODULATION || get_hwcaps()->force_tuner_2G)
+#if !BOXMODEL_CS_HD1 && !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+			if (info.caps & FE_CAN_2G_MODULATION)
+#endif
 				deliverySystemMask |= DVB_S2;
 			break;
 		case FE_OFDM:
@@ -902,7 +893,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 		}
 		break;
 	default:
-		INFO("unknown delsys %d!", delsys);
+		INFO("[frontend] unknown delsys %d!", delsys);
 		sys = "UNKNOWN";
 		mod = "UNKNOWN";
 		break;
@@ -945,7 +936,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 		break;
 #endif
 	default:
-		INFO("unknown FEC: %d!", f);
+		INFO("[frontend] getDelSys: unknown FEC: %d !!!", f);
 	case FEC_AUTO:
 		fec = "AUTO";
 		break;
@@ -1139,7 +1130,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		break;
 #endif
 	default:
-		INFO("[fe%d] unknown FEC: %d", fenumber, fec_inner);
+		INFO("[fe%d] DEMOD: unknown FEC: %d", fenumber, fec_inner);
 	case FEC_AUTO:
 		fec = FEC_AUTO;
 		break;
@@ -1205,7 +1196,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		cmdseq.props[BANDWIDTH].u.data		= getFEBandwidth(feparams->bandwidth);
 		break;
 	default:
-		INFO("unknown frontend type, exiting");
+		INFO("[frontend] unknown frontend type, exiting");
 		return false;
 	}
 
@@ -1317,10 +1308,10 @@ void CFrontend::secSetVoltage(const fe_sec_voltage_t voltage, const uint32_t ms)
 		return;
 
 	if (zapit_debug) printf("[fe%d] voltage %s\n", fenumber, voltage == SEC_VOLTAGE_OFF ? "OFF" : voltage == SEC_VOLTAGE_13 ? "13" : "18");
-	if (config.diseqcType == DISEQC_UNICABLE && voltage != SEC_VOLTAGE_OFF) {
+	if (config.diseqcType == DISEQC_UNICABLE) {
 		/* see my comment in secSetTone... */
 		currentVoltage = voltage; /* need to know polarization for unicable */
-		fop(ioctl, FE_SET_VOLTAGE, unicable_lowvolt); /* voltage must not be 18V */
+		fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_13); /* voltage must not be 18V */
 		return;
 	}
 
@@ -1400,7 +1391,7 @@ void CFrontend::setDiseqcType(const diseqc_t newDiseqcType, bool force)
 
 	if (newDiseqcType == DISEQC_UNICABLE || newDiseqcType == DISEQC_UNICABLE2) {
 		secSetTone(SEC_TONE_OFF, 0);
-		secSetVoltage(unicable_lowvolt, 0);
+		secSetVoltage(SEC_VOLTAGE_13, 0);
 	}
 	else if ((force && (newDiseqcType != NO_DISEQC)) ||
 		 ((config.diseqcType <= MINI_DISEQC) && (newDiseqcType > MINI_DISEQC))) {
@@ -1529,50 +1520,36 @@ void CFrontend::setInput(t_satellite_position satellitePosition, uint32_t freque
 
 /* frequency is the IF-frequency (950-2100), what a stupid spec...
    high_band, horizontal, bank are actually bool (0/1)
-   bank specifies the "switch bank" (as in Mini-DiSEqC A/B)
-   bank == 2 => send standby command */
+   bank specifies the "switch bank" (as in Mini-DiSEqC A/B) */
 uint32_t CFrontend::sendEN50494TuningCommand(const uint32_t frequency, const int high_band,
 					     const int horizontal, const int bank)
 {
 	uint32_t bpf = config.uni_qrg;
-	int pin = config.uni_pin;
-	if (config.uni_scr < 0 || config.uni_scr > 7) {
-		WARN("uni_scr out of range (%d)", config.uni_scr);
-		return 0;
-	}
-
 	struct dvb_diseqc_master_cmd cmd = {
 		{0xe0, 0x10, 0x5a, 0x00, 0x00, 0x00}, 5
 	};
 	unsigned int t = (frequency / 1000 + bpf + 2) / 4 - 350;
-	if (bank < 2 && t >= 1024)
+	if (t < 1024 && config.uni_scr >= 0 && config.uni_scr < 8)
 	{
-		WARN("ooops. t > 1024? (%d)", t);
-		return 0;
-	}
-	if (pin >= 0 && pin < 0x100) {
-		cmd.msg[2] = 0x5c;
-		cmd.msg[5] = config.uni_pin;
-		cmd.msg_len = 6;
-	}
-	uint32_t ret = (t + 350) * 4000 - frequency;
-	INFO("[fe%d] 18V=%d 22k=%d freq=%d qrg=%d scr=%d bank=%d pin=%d ret=%d",
-		fenumber, horizontal, high_band, frequency, bpf, config.uni_scr, bank, pin, ret);
-	if (!slave && info.type == FE_QPSK) {
-		cmd.msg[3] = (config.uni_scr << 5);		/* adress */
-		if (bank < 2) { /* bank = 0/1 => tune, bank = 2 => standby */
-			cmd.msg[3] |= (t >> 8)		|	/* highest 3 bits of t */
+		uint32_t ret = (t + 350) * 4000 - frequency;
+		INFO("[unicable] 18V=%d TONE=%d, freq=%d qrg=%d scr=%d bank=%d ret=%d", currentVoltage == SEC_VOLTAGE_18, currentToneMode == SEC_TONE_ON, frequency, bpf, config.uni_scr, bank, ret);
+		if (!slave && info.type == FE_QPSK) {
+			cmd.msg[3] = (t >> 8)		|	/* highest 3 bits of t */
+				(config.uni_scr << 5)	|	/* adress */
 				(bank << 4)		|	/* input 0/1 */
 				(horizontal << 3)	|	/* horizontal == 0x08 */
 				(high_band) << 2;		/* high_band  == 0x04 */
 			cmd.msg[4] = t & 0xFF;
+			fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_18);
+			usleep(15 * 1000);		/* en50494 says: >4ms and < 22 ms */
+			sendDiseqcCommand(&cmd, 50);	/* en50494 says: >2ms and < 60 ms */
+			fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_13);
 		}
-		fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_18);
-		usleep(15 * 1000);		/* en50494 says: >4ms and < 22 ms */
-		sendDiseqcCommand(&cmd, 50);	/* en50494 says: >2ms and < 60 ms */
-		fop(ioctl, FE_SET_VOLTAGE, unicable_lowvolt);
+		return ret;
 	}
-	return ret;
+
+	WARN("ooops. t > 1024? (%d) or uni_scr out of range? (%d)", t, config.uni_scr);
+	return 0;
 }
 
 uint32_t CFrontend::sendEN50607TuningCommand(const uint32_t frequency, const int high_band, const int horizontal, const int bank)
@@ -1780,6 +1757,14 @@ void CFrontend::setDiseqc(int sat_no, const uint8_t pol, const uint32_t frequenc
 
 			delay = 100;	// delay for 1.0 after 1.1 command
 			cmd.msg[2] = 0x39;	/* port group = uncommited switches */
+			/* new code */ 
+			sat_no &= 0x0F;
+			cmd.msg[3] = 0xF0 | sat_no;
+			sendDiseqcCommand(&cmd, delay);	
+			cmd.msg[2] = 0x38;	/* port group = commited switches */
+			cmd.msg[3] = 0xF0 | ((pol & 1) ? 0 : 2) | (high_band ? 1 : 0);
+			sendDiseqcCommand(&cmd, delay);	
+#if 0			/* old code */
 #if 1
 			/* for 16 inputs */
 			cmd.msg[3] = 0xF0 | ((sat_no / 4) & 0x03);
@@ -1796,9 +1781,10 @@ void CFrontend::setDiseqc(int sat_no, const uint8_t pol, const uint32_t frequenc
 			cmd.msg[3] &= 0xCF;
 			sendDiseqcCommand(&cmd, 100);	/* send the command to setup second uncommited switch and wait 100 ms !!! */
 #endif
+#endif
 		}
 
-		if (config.diseqcType >= DISEQC_1_0) {	/* DISEQC 1.0 */
+		if (config.diseqcType == DISEQC_1_0) {	/* DISEQC 1.0 */
 			usleep(delay * 1000);
 			//cmd.msg[0] |= 0x01;	/* repeated transmission */
 			cmd.msg[2] = 0x38;	/* port group = commited switches */

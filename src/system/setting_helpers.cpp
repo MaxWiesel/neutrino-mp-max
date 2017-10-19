@@ -49,11 +49,13 @@
 
 #include <config.h>
 
+#include <playback.h>
 #include <global.h>
 #include <neutrino.h>
 #include <gui/widget/stringinput.h>
 #include <gui/infoclock.h>
 #include <gui/infoviewer.h>
+#include <gui/movieplayer.h>
 #include <driver/display.h>
 #include <driver/volume.h>
 #include <system/helpers.h>
@@ -288,7 +290,11 @@ bool CColorSetupNotifier::changeNotify(const neutrino_locale_t, void *)
 	return false;
 }
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void *data)
+#else
 bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void *)
+#endif
 {
 	//printf("notify: %d\n", OptionName);
 #if 0 //FIXME to do ? manual audio delay
@@ -304,6 +310,12 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 		audioDecoder->SetHdmiDD((HDMI_ENCODED_MODE) g_settings.hdmi_dd);
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_SPDIF_DD)) {
 		audioDecoder->SetSpdifDD(g_settings.spdif_dd ? true : false);
+#if HAVE_ARM_HARDWARE
+	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_AC3)) {
+		audioDecoder->SetHdmiDD(g_settings.ac3_pass ? true : false);
+	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_DTS)) {
+		audioDecoder->SetSpdifDD(g_settings.dts_pass ? true : false);
+#endif
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_AVSYNC)) {
 		videoDecoder->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
 		audioDecoder->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
@@ -313,6 +325,14 @@ bool CAudioSetupNotifier::changeNotify(const neutrino_locale_t OptionName, void 
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_CLOCKREC)) {
 		//.Clock recovery enable/disable
 		// FIXME add code here.
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_ANALOG)) {
+			audioDecoder->setMixerVolume("Analog", (long)(*((int *)(data))));
+	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_HDMI)) {
+			audioDecoder->setMixerVolume("HDMI", (long)(*((int *)(data))));
+	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIOMENU_MIXER_VOLUME_SPDIF)) {
+			audioDecoder->setMixerVolume("SPDIF", (long)(*((int *)(data))));
+#endif
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIO_SRS_ALGO) ||
 			ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIO_SRS_NMGR) ||
 			ARE_LOCALES_EQUAL(OptionName, LOCALE_AUDIO_SRS_VOLUME)) {
@@ -338,9 +358,19 @@ bool CFontSizeNotifier::changeNotify(const neutrino_locale_t, void *)
 int CSubtitleChangeExec::exec(CMenuTarget* /*parent*/, const std::string & actionKey)
 {
 printf("CSubtitleChangeExec::exec: action %s\n", actionKey.c_str());
+
+	CMoviePlayerGui *mp = &CMoviePlayerGui::getInstance();
+	bool is_mp = mp->Playing();
+
 	if(actionKey == "off") {
 		tuxtx_stop_subtitle();
-		dvbsub_stop();
+		if (!is_mp && dvbsub_getpid() > 0)
+			dvbsub_stop();
+		if (is_mp && playback) {
+			playback->SetSubtitlePid(0);
+			playback->SetTeletextPid(0);
+			mp->setCurrentTTXSub("");
+		}
 		return menu_return::RETURN_EXIT;
 	}
 	if(!strncmp(actionKey.c_str(), "DVB", 3)) {
@@ -349,7 +379,7 @@ printf("CSubtitleChangeExec::exec: action %s\n", actionKey.c_str());
 		tuxtx_stop_subtitle();
 		dvbsub_pause();
 		dvbsub_start(pid);
-	} else {
+	} else if (!strncmp(actionKey.c_str(), "TTX", 3)) {
 		char const * ptr = strchr(actionKey.c_str(), ':');
 		ptr++;
 		int pid = atoi(ptr);
@@ -362,7 +392,25 @@ printf("CSubtitleChangeExec::exec: TTX, pid %x page %x lang %s\n", pid, page, pt
 		tuxtx_stop_subtitle();
 		tuxtx_set_pid(pid, page, ptr);
 		dvbsub_stop();
-		tuxtx_main(pid, page);
+		if (is_mp) {
+			playback->SetSubtitlePid(0);
+			playback->SetTeletextPid(pid);
+			tuxtx_set_pid(pid, page, ptr);
+			tuxtx_main(pid, page, 0);
+			mp->setCurrentTTXSub(actionKey.c_str());
+		} else {
+			tuxtx_set_pid(pid, page, ptr);
+			tuxtx_main(pid, page);
+		}
+	} else if (is_mp && !strncmp(actionKey.c_str(), "SUB", 3)) {
+		tuxtx_stop_subtitle();
+		dvbsub_stop();
+		playback->SetSubtitlePid(0);
+		playback->SetTeletextPid(0);
+		mp->setCurrentTTXSub("");
+		char const * pidptr = strchr(actionKey.c_str(), ':');
+		int pid = atoi(pidptr+1);
+		playback->SetSubtitlePid(pid);
 	}
         return menu_return::RETURN_EXIT;
 }
@@ -587,6 +635,62 @@ void CFanControlNotifier::setSpeed(unsigned int speed)
 
 	close(cfd);
 #endif
+}
+
+bool CFanControlNotifier::changeNotify(const neutrino_locale_t, void * data)
+{
+	unsigned int speed = * (int *) data;
+	setSpeed(speed);
+	return false;
+}
+#elif HAVE_DUCKBOX_HARDWARE
+void CFanControlNotifier::setSpeed(unsigned int speed)
+{
+	int cfd;
+
+	printf("FAN Speed %d\n", speed);
+#if defined (BOXMODEL_IPBOX9900) || defined (BOXMODEL_IPBOX99)
+	cfd = open("/proc/stb/misc/fan", O_WRONLY);
+	if(cfd < 0) {
+		perror("Cannot open /proc/stb/misc/fan");
+#else
+	cfd = open("/proc/stb/fan/fan_ctrl", O_WRONLY);
+	if(cfd < 0) {
+		perror("Cannot open /proc/stb/fan/fan_ctrl");
+#endif
+		return;
+	}
+
+	switch (speed)
+
+#if defined (BOXMODEL_IPBOX9900) || defined (BOXMODEL_IPBOX99)
+	{
+	case 0:
+		write(cfd,"0",1);
+		break;
+	case 1:
+		write(cfd,"1",1);
+		break;
+	}
+#else
+	{
+	case 1:
+		write(cfd,"115",3);
+		break;
+	case 2:
+		write(cfd,"130",3);
+		break;
+	case 3:
+		write(cfd,"145",3);
+		break;
+	case 4:
+		write(cfd,"160",3);
+		break;
+	case 5:
+		write(cfd,"170",3);
+	}
+#endif
+	close(cfd);
 }
 
 bool CFanControlNotifier::changeNotify(const neutrino_locale_t, void * data)

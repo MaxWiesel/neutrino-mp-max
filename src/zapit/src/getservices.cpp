@@ -388,7 +388,7 @@ void CServiceManager::ParseTransponders(xmlNodePtr node, t_satellite_position sa
 			else
 				feparams.frequency = (int) 1000 * (int) round ((double) feparams.frequency / (double) 1000);
 			/* TODO: add xml tag ? */
-			feparams.pilot = ZPILOT_AUTO;
+			feparams.pilot = ZPILOT_AUTO_SW;
 		}
 		else if (CFrontend::isTerr(delsys)) {
 			//<TS id="0001" on="7ffd" frq="650000" inv="2" bw="3" hp="9" lp="9" con="6" tm="2" gi="0" hi="4" sys="6">
@@ -617,7 +617,7 @@ void CServiceManager::ParseSatTransponders(delivery_system_t delsys, xmlNodePtr 
 			const char *rolloff = xmlGetAttribute(tps, "rolloff");
 
 			/* TODO: add xml tag ? */
-			feparams.pilot = ZPILOT_AUTO;
+			feparams.pilot = ZPILOT_AUTO_SW;
 			if (system) {
 				uint32_t s = xmlGetNumericAttribute(tps, "system", 0);
 				switch (s) {
@@ -753,9 +753,6 @@ int CServiceManager::LoadMotorPositions(void)
 		while(!feof(fd)) {
 			sscanf(buffer, "%d %d %d %d %d %d %d %d %d %d %d", &spos, &mpos, &diseqc, &com, &uncom, &offL, &offH, &sw, &inuse, &usals, &input);
 
-			int configured = 0;
-			if (diseqc != -1 || com != -1 || uncom != -1 || usals != 0 || mpos != 0)
-				configured = 1;
 			satellitePosition = spos;
 			sat_iterator_t sit = satellitePositions.find(satellitePosition);
 			if(sit != satellitePositions.end()) {
@@ -770,7 +767,6 @@ int CServiceManager::LoadMotorPositions(void)
 				sit->second.use_usals = usals;
 				sit->second.input = input;
 				sit->second.position = satellitePosition;
-				sit->second.configured = configured;
 			}
 			fgets(buffer, 255, fd);
 		}

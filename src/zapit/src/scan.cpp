@@ -62,7 +62,9 @@ CServiceScan::CServiceScan()
 	running = false;
 
 	cable_nid = 0;
+#ifdef ENABLE_FASTSCAN
 	fst_version = 0;
+#endif
 
 	frontend = CFEManager::getInstance()->getFE(0);
 }
@@ -113,14 +115,18 @@ void CServiceScan::run()
 
 	switch(scan_mode) {
 		case SCAN_PROVIDER:
+#if ENABLE_FASTSCAN
 			fst_version = 0;
+#endif
 			ScanProviders();
 			break;
 		case SCAN_TRANSPONDER:
+#if ENABLE_FASTSCAN
 			fst_version = 0;
+#endif
 			ScanTransponder();
 			break;
-#if 0
+#if ENABLE_FASTSCAN
 		case SCAN_FAST:
 			ScanFast();
 			break;
@@ -157,22 +163,8 @@ bool CServiceScan::tuneFrequency(FrontendParameters *feparams, t_satellite_posit
 				return false;
 		}
 	}
-	/* for unicable, retry tuning two times before assuming it failed */
-	int retry = (frontend->getDiseqcType() == DISEQC_UNICABLE) * 2 + 1;
-	do {
-		ret = frontend->tuneFrequency(feparams, false);
-		if (ret)
-			return true;
-		if (abort_scan)
-			break;
-		retry--;
-		if (retry) {
-			int rand_us = (rand() * 1000000LL / RAND_MAX);
-			printf("[scan] SCR retrying tune, retry=%d after %dms\n", retry, rand_us/1000);
-			usleep(rand_us);
-		}
-	} while (retry > 0);
-	return false;
+
+	return frontend->tuneFrequency(feparams, false);
 }
 
 bool CServiceScan::AddTransponder(transponder_id_t TsidOnid, FrontendParameters *feparams,  bool fromnit)
@@ -684,10 +676,8 @@ bool CServiceScan::ReplaceTransponderParams(freq_id_t freq, t_satellite_position
 void CServiceScan::SendTransponderInfo(transponder &t)
 {
 	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_REPORT_NUM_SCANNED_TRANSPONDERS, &processed_transponders, sizeof(processed_transponders));
-#if 0
 	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_PROVIDER, (void *) " ", 2);
 	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_SERVICENAME, (void *) " ", 2);
-#endif
 	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_REPORT_FREQUENCYP, &t.feparams, sizeof(FrontendParameters));
 }
 

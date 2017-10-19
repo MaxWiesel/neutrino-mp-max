@@ -196,6 +196,7 @@ int CUpnpBrowserGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/
 
 	m_frameBuffer->stopFrame();
 	topbox.kill();
+	g_Zapit->startPlayBack();
 
 	CZapit::getInstance()->EnablePlayback(true);
 	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE , m_LastMode);
@@ -833,6 +834,7 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 					}
 					else if (mime.substr(0,6) == "image/")
 					{
+						videoDecoder->StopPicture();
 						videoDecoder->setBlank(true);
 						showPicture((*entries)[selected - liststart].resources[preferred].url);
 						m_playid = selected;
@@ -858,6 +860,7 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 						}
 						m_frameBuffer->Clear();
 						videoDecoder->setBlank(false);
+						videoDecoder->ShowPicture(DATADIR "/neutrino/icons/mp3.jpg");
 						refresh = true;
 					}
 				}

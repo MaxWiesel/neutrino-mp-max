@@ -73,7 +73,7 @@
 #define ENABLE_MULTI_CHANNEL
 
 #define TS_SIZE 188
-#define DMX_BUFFER_SIZE (2048*TS_SIZE)
+#define DMX_BUFFER_SIZE (5*2048*TS_SIZE)
 #define IN_SIZE (250*TS_SIZE)
 
 CStreamInstance::CStreamInstance(int clientfd, t_channel_id chid, stream_pids_t &_pids)
@@ -85,6 +85,7 @@ CStreamInstance::CStreamInstance(int clientfd, t_channel_id chid, stream_pids_t 
 	running = false;
 	dmx = NULL;
 	buf = NULL;
+	frontend = NULL;
 }
 
 CStreamInstance::~CStreamInstance()
@@ -201,12 +202,25 @@ void CStreamInstance::run()
 
 	CCamManager::getInstance()->Start(channel_id, CCamManager::STREAM);
 
+#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+	CFrontend *live_fe = CZapit::getInstance()->GetLiveFrontend();
+	if(live_fe)
+		CFEManager::getInstance()->unlockFrontend(live_fe);
+	if(frontend)
+		CFEManager::getInstance()->lockFrontend(frontend);
+	//CZapit::getInstance()->SetRecordMode(true);
+#endif
 	while (running) {
 		ssize_t r = dmx->Read(buf, IN_SIZE, 100);
 		if (r > 0)
 			Send(r);
 	}
 
+#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+	if(frontend)
+		CFEManager::getInstance()->unlockFrontend(frontend);
+	//CZapit::getInstance()->SetRecordMode(false);
+#endif
 	CCamManager::getInstance()->Stop(channel_id, CCamManager::STREAM);
 
 	printf("CStreamInstance::run: exiting %" PRIx64 " (%d fds)\n", channel_id, (int)fds.size());
@@ -298,7 +312,7 @@ CFrontend * CStreamManager::FindFrontend(CZapitChannel * channel)
 
 	t_channel_id chid = channel->getChannelID();
 	if (CRecordManager::getInstance()->RecordingStatus(chid)) {
-		printf("CStreamManager::%s: channel %" PRIx64 " recorded, aborting..\n", __func__, chid);
+		printf("CStreamManager::FindFrontend: channel %" PRIx64 " recorded, aborting..\n", chid);
 		return frontend;
 	}
 
@@ -357,7 +371,11 @@ CFrontend * CStreamManager::FindFrontend(CZapitChannel * channel)
 	for (std::set<CFrontend*>::iterator ft = frontends.begin(); ft != frontends.end(); ++ft)
 		CFEManager::getInstance()->unlockFrontend(*ft);
 
+#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+	if (unlock && !frontend)
+#else
 	if (unlock)
+#endif
 		CFEManager::getInstance()->unlockFrontend(live_fe);
 
 	CFEManager::getInstance()->Unlock();
@@ -424,6 +442,7 @@ bool CStreamManager::Parse(int fd, stream_pids_t &pids, t_channel_id &chid, CFro
 	if (sscanf(bp, "id=%" SCNx64, &tmpid) == 1) {
 		channel = CServiceManager::getInstance()->FindChannel(tmpid);
 		chid = tmpid;
+		pids.clear(); // to catch and stream all pids later !
 	}
 #endif
 	if (!channel)
@@ -459,7 +478,7 @@ void CStreamManager::AddPids(int fd, CZapitChannel *channel, stream_pids_t &pids
 	for (stream_pids_t::iterator it = pids.begin(); it != pids.end(); ++it) {
 		if (*it == channel->getVideoPid()) {
 			printf("CStreamManager::AddPids: genpsi vpid %x (%d)\n", *it, channel->type);
-			psi.addPid(*it, channel->type == 1 ? EN_TYPE_AVC : channel->type == 2 ? EN_TYPE_HEVC : EN_TYPE_VIDEO, 0);
+			psi.addPid(*it, channel->type == CHANNEL_MPEG4 ? EN_TYPE_AVC : channel->type == CHANNEL_HEVC ? EN_TYPE_HEVC : EN_TYPE_VIDEO, 0);
 		} else {
 			for (int i = 0; i <  channel->getAudioChannelCount(); i++) {
 				if (*it == channel->getAudioChannel(i)->pid) {
@@ -801,15 +820,23 @@ bool CStreamStream::Open()
 
 	printf("%s: Open input [%s]....\n", __FUNCTION__, url.c_str());
 
+	av_log_set_flags(AV_LOG_SKIP_REPEATED);
 	AVDictionary *options = NULL;
+	av_dict_set(&options, "auth_type", "basic", 0);
 	if (!headers.empty())
+	{
+		headers += "\r\n";
 		av_dict_set(&options, "headers", headers.c_str(), 0);
+	}
+	av_log_set_level(AV_LOG_DEBUG);
 	if (avformat_open_input(&ifcx, url.c_str(), NULL, &options) != 0) {
 		printf("%s: Cannot open input [%s]!\n", __FUNCTION__, channel->getUrl().c_str());
+		av_log_set_level(AV_LOG_INFO);
 		if (!headers.empty())
 			av_dict_free(&options);
 		return false;
 	}
+	av_log_set_level(AV_LOG_INFO);
 	if (!headers.empty())
 		av_dict_free(&options);
 
@@ -900,6 +927,8 @@ bool CStreamStream::Stop()
 	if (stopped)
 		return false;
 
+	av_log(NULL, AV_LOG_QUIET, "%s", "");
+
 	printf("%s: Stopping...\n", __FUNCTION__);
 	interrupt = true;
 	stopped = true;
@@ -934,7 +963,11 @@ void CStreamStream::run()
 			AVPacket newpkt = pkt;
 #if (LIBAVCODEC_VERSION_INT < AV_VERSION_INT( 57,52,100 ))
 			if (av_bitstream_filter_filter(bsfc, codec, NULL, &newpkt.data, &newpkt.size, pkt.data, pkt.size, pkt.flags & AV_PKT_FLAG_KEY) >= 0) {
+#if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
 				av_packet_unref(&pkt);
+#else
+				av_free_packet(&pkt);
+#endif
 				newpkt.buf = av_buffer_create(newpkt.data, newpkt.size, av_buffer_default_free, NULL, 0);
 				pkt = newpkt;
 			}
@@ -958,7 +991,11 @@ void CStreamStream::run()
 		pkt.dts = av_rescale_q(pkt.dts, ifcx->streams[pkt.stream_index]->time_base, ofcx->streams[pkt.stream_index]->time_base);
 
 		av_write_frame(ofcx, &pkt);
+#if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
 		av_packet_unref(&pkt);
+#else
+		av_free_packet(&pkt);
+#endif
 	}
 
 	av_read_pause(ifcx);

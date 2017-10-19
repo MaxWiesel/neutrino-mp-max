@@ -71,16 +71,14 @@ static OpenThreads::Mutex mutex;
 
 static int cover_count = 0;
 
-#if 0
 static void log_callback(void *, int, const char *format, va_list ap)
 {
 	vfprintf(stderr, format, ap);
 }
-#endif
 
 CFfmpegDec::CFfmpegDec(void)
 {
-	//av_log_set_callback(log_callback);
+	av_log_set_callback(log_callback);
 	meta_data_valid = false;
 	buffer_size = 0x1000;
 	buffer = NULL;
@@ -118,7 +116,7 @@ static int64_t seek_packet(void *opaque, int64_t offset, int whence)
 	return ((CFfmpegDec *) opaque)->Seek(offset, whence);
 }
 
-bool CFfmpegDec::Init(void *_in, const CFile::FileType /* ft */)
+bool CFfmpegDec::Init(void *_in, const CFile::FileType ft)
 {
         title = "";
         artist = "";
@@ -148,7 +146,7 @@ bool CFfmpegDec::Init(void *_in, const CFile::FileType /* ft */)
 	if (is_stream)
 		avc->probesize = 128 * 1024;
 
-	av_opt_set_int(avc, "analyzeduration", 1000000, 0);
+	av_opt_set_int(avc, "analyzeduration", 1 * AV_TIME_BASE, 0);
 
 	avioc = avio_alloc_context (buffer, buffer_size, 0, this, read_packet, NULL, seek_packet);
 	if (!avioc) {
@@ -161,7 +159,6 @@ bool CFfmpegDec::Init(void *_in, const CFile::FileType /* ft */)
 
 	AVInputFormat *input_format = NULL;
 
-#if 0
 	switch (ft) {
 	case CFile::FILE_OGG:
 		input_format = av_find_input_format("ogg");
@@ -181,7 +178,6 @@ bool CFfmpegDec::Init(void *_in, const CFile::FileType /* ft */)
 	default:
 		break;
 	}
-#endif
 
 	int r = avformat_open_input(&avc, "", input_format, NULL);
 	if (r) {
@@ -257,7 +253,11 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 
 	mSampleRate = samplerate;
 	mChannels = av_get_channel_layout_nb_channels(AV_CH_LAYOUT_STEREO);
+#if __BYTE_ORDER == __LITTLE_ENDIAN
 	audioDecoder->PrepareClipPlay(mChannels, mSampleRate, 16, 1);
+#else
+	audioDecoder->PrepareClipPlay(mChannels, mSampleRate, 16, 0);
+#endif
 
 	AVFrame *frame = NULL;
 	AVPacket rpacket;
@@ -324,7 +324,11 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 		}
 
 		if (rpacket.stream_index != best_stream) {
+#if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
 			av_packet_unref(&rpacket);
+#else
+			av_free_packet(&rpacket);
+#endif
 			continue;
 		}
 
@@ -403,7 +407,11 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 		}
 		if (time_played && avc->streams[best_stream]->time_base.den)
 			*time_played = (pts - start_pts) * avc->streams[best_stream]->time_base.num / avc->streams[best_stream]->time_base.den;
+#if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
 		av_packet_unref(&rpacket);
+#else
+		av_free_packet(&rpacket);
+#endif
 	} while (*state!=STOP_REQ && Status==OK);
 
 	audioDecoder->StopClip();
@@ -411,7 +419,11 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 
 	swr_free(&swr);
 	av_free(outbuf);
+#if (LIBAVFORMAT_VERSION_MAJOR == 57 && LIBAVFORMAT_VERSION_MINOR == 25)
 	av_packet_unref(&rpacket);
+#else
+	av_free_packet(&rpacket);
+#endif
 	av_frame_free(&frame);
 	avcodec_close(c);
 	//av_free(avcc);

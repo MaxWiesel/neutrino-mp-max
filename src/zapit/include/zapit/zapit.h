@@ -61,6 +61,8 @@ typedef struct Zapit_config {
         int useGotoXX;
         /* FE common */
         int feTimeout;
+        int feRetries;
+        int noSameFE;
         int gotoXXLaDirection;
         int gotoXXLoDirection;
         double gotoXXLatitude;
@@ -69,6 +71,9 @@ typedef struct Zapit_config {
         /* FE specific */
         int highVoltage;
         int motorRotationSpeed;
+        int uni_scr;
+	int uni_qrg;       /* the unicable frequency in MHz */
+	int uni_lnb;       /* the input (0/1) of a twin-position switch */
 } t_zapit_config;
 
 
@@ -100,6 +105,7 @@ class CZapit : public OpenThreads::Thread
 		};
 
 		OpenThreads::ReentrantMutex	mutex;
+		OpenThreads::Mutex zapit_mutex;
 		bool started;
 		bool event_mode;
 		bool firstzap;
@@ -226,7 +232,9 @@ class CZapit : public OpenThreads::Thread
 		bool PrepareChannels();
 		bool StartScan(int scan_mode);
 		bool StartScanTP(TP_params * TPparams);
+#ifdef ENABLE_FASTSCAN
 		bool StartFastScan(int scan_mode, int opid);
+#endif
 
 		void addChannelToBouquet(const unsigned int bouquet, const t_channel_id channel_id);
 		void SetConfig(Zapit_config * Cfg);

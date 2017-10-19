@@ -251,7 +251,6 @@ void CFileBrowser::commonInit()
 	sc_init_dir = "/legacy/genrelist?k="  + g_settings.shoutcast_dev_id;
 
 	Filter = NULL;
-	use_filter = true;
 	Multi_Select = false;
 	Dirs_Selectable = false;
 	Dir_Mode = false;
@@ -326,7 +325,7 @@ void CFileBrowser::ChangeDir(const std::string & filename, int selection)
 	CFileList::iterator file = allfiles.begin();
 	for(; file != allfiles.end() ; ++file)
 	{
-		if (Filter != NULL && !file->isDir() && use_filter)
+		if (Filter != NULL && !file->isDir() && g_settings.filebrowser_use_filter)
 		{
 			if (!Filter->matchFilter(file->Name))
 				continue;
@@ -625,7 +624,10 @@ bool CFileBrowser::exec(const char * const dirname)
 	}
 #endif
 
-	name = dirname;
+	if (!*dirname)
+		name = "/";
+	else
+		name = dirname;
 	std::replace(name.begin(), name.end(), '\\', '/');
 
 	fontInit();
@@ -659,7 +661,7 @@ bool CFileBrowser::exec(const char * const dirname)
 		{
 			if(Filter != NULL)
 			{
-				use_filter = !use_filter;
+				g_settings.filebrowser_use_filter = !g_settings.filebrowser_use_filter;
 				ChangeDir(Path);
 			}
 		}
@@ -1159,7 +1161,7 @@ void CFileBrowser::addRecursiveDir(CFileList * re_filelist, std::string rpath, b
 			std::string basename = tmplist[i].Name.substr(tmplist[i].Name.rfind('/')+1);
 			if( basename != ".." )
 			{
-				if(Filter != NULL && (!tmplist[i].isDir()) && use_filter)
+				if(Filter != NULL && (!tmplist[i].isDir()) && g_settings.filebrowser_use_filter)
 				{
 					if(!Filter->matchFilter(tmplist[i].Name))
 						continue;
@@ -1409,7 +1411,7 @@ int CFileBrowser::paintFoot(bool show)
 	sort_text_len += len;
 
 	neutrino_locale_t locale_filebrowser_filter = LOCALE_FILEBROWSER_FILTER_INACTIVE;
-	if (Filter != NULL && use_filter)
+	if (Filter != NULL && g_settings.filebrowser_use_filter)
 		locale_filebrowser_filter = LOCALE_FILEBROWSER_FILTER_ACTIVE;
 
 	button_label_ext buttons_playlistmode[] = {

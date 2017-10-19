@@ -1,4 +1,5 @@
-AUDIOSelectMenue.head Audio Selection
+AUDIOSelectMenue.head Audio and subtitles
+AUDIOSelectMenue.volume Audio selection and volume adjustment
 EPGMenu.epgplus Eventlist overview
 EPGMenu.eventinfo Details current program
 EPGMenu.eventlist Eventlist current programm
@@ -138,6 +139,10 @@ audiomenu.dolbydigital Prefer Dolby Digital
 audiomenu.hdmi_dd Encoded DD on HDMI
 audiomenu.hdmi_dd_auto auto
 audiomenu.hdmi_dd_force force
+audiomenu.mixer_volume Mixer volume
+audiomenu.mixer_volume_analog Analog
+audiomenu.mixer_volume_hdmi HDMI
+audiomenu.mixer_volume_spdif S/PDIF
 audiomenu.monoleft mono left
 audiomenu.monoright mono right
 audiomenu.pref_lang Prefered language
@@ -253,6 +258,7 @@ channellist.foot_sort_alpha Sorted[Alpha]
 channellist.foot_sort_chnum Sorted[Number]
 channellist.foot_sort_freq Sorted[Freq]
 channellist.foot_sort_sat Sorted[Sat]
+channellist.hdicon Show HD/UHD icon
 channellist.head All Services
 channellist.history History
 channellist.history_clear Clear History
@@ -279,6 +285,7 @@ channellist.show_empty_favs Show empty Favorites Bouquets
 channellist.show_infobox Show Bottom Infobox
 channellist.since Since
 channellist.start Starts
+ci.check_live_slot Check CI-slot for live-tv use
 ci.clock CI clock (Mhz)
 ci.empty No CAM in slot
 ci.ignore_msg Ignore CA messages
@@ -318,6 +325,7 @@ colormenu.background Background
 colormenu.clock_textcolor Digit color
 colormenu.fade Fade GUI
 colormenu.font Select GUI font
+colormenu.font_sub Select Subtitle font
 colormenu.font_ttx Select Teletext font
 colormenu.menucolors Colors
 colormenu.osd_preset TV preset
@@ -461,6 +469,8 @@ extra.lodirection LoDirection
 extra.longitude Longitude
 extra.menu_left_exit "Left" = menu back
 extra.north North
+extra.record_bufsize Write buffer size
+extra.record_bufsize_dmx DMX buffer size
 extra.record_time Maximal recording duration
 extra.record_time_ts Maximal timeshift duration
 extra.rotor_swap Swap rotor east/west
@@ -556,6 +566,8 @@ extra.volume_pos Volumebar
 extra.volume_size Height of display
 extra.west West
 extra.zap_cycle Zap cycle
+extra.zapit_fe_no_same Different tuners when same transponder
+extra.zapit_fe_retries Tune retries
 extra.zapit_fe_timeout Tune timeout
 extra.zapit_hvoltage 18V for rotor moving 
 extra.zapit_motor_speed Motor moving speed
@@ -586,6 +598,7 @@ filebrowser.prevpage Prev. Page
 filebrowser.scan Scaning folder
 filebrowser.select Select
 filebrowser.showrights Show file rights
+filebrowser.start.dir Start directory
 filebrowser.sort.date Date
 filebrowser.sort.name Name
 filebrowser.sort.namedirsfirst Name, dirs first
@@ -764,7 +777,11 @@ hdd_fast Fast
 hdd_format Format device
 hdd_format_failed Formating failed! Make sure device not in use, reboot and try again
 hdd_format_warn All data on device will be lost ! Continue with format ?
+hdd_fmt_label HDD label
+hdd_fmt_mountpoint Directory for mountpoint
 hdd_fs Filesystem used to format
+hdd_label_hint1 Put in disc label and press save
+hdd_label_hint2 Only if RECORD (default disc label for recording) the necassary folders were written to disc
 hdd_manage Manage device
 hdd_middle Mid
 hdd_mount Mount
@@ -810,6 +827,16 @@ infoviewer.subchan_infobar Full infobar
 infoviewer.waittime Waiting for time ...
 ipsetup.hint_1 Use 0..9, or use Up/Down,
 ipsetup.hint_2 OK saves, Exit aborts
+kerneloptions.apply Apply
+kerneloptions.head Kernel Options
+kerneloptions.hint.disabled_loaded The kernel module is still loaded.
+kerneloptions.hint.disabled_not_loaded The kernel module isn't loaded.
+kerneloptions.hint.enabled_loaded The kernel module is loaded and may be used.
+kerneloptions.hint.enabled_not_loaded Apply the settings to load the module.
+kerneloptions.modules Kernel modules
+kerneloptions.reset Reset settings
+keybindingmenu.RC Tune Remote-Control
+keybindingmenu.accept_other_remotes Accept other remote controls
 keybindingmenu.addrecord add record timer
 keybindingmenu.addremind add zapto timer
 keybindingmenu.allchannels_on_ok all-services
@@ -838,6 +865,12 @@ keybindingmenu.pagedown page down
 keybindingmenu.pageup page up
 keybindingmenu.poweroff Power toggle
 keybindingmenu.quickzap Quickzap
+keybindingmenu.remotecontrol_code Remote control code
+keybindingmenu.remotecontrol_code_change Change remote control code
+keybindingmenu.remotecontrol_code_msg1 For changing the remote control code please press the buttons: back +
+keybindingmenu.remotecontrol_code_msg2 at the same time, after that press the button: OK for leaving the infobox.
+keybindingmenu.remotecontrol_code_not_save The remote control code has not been changed !
+keybindingmenu.remotecontrol_code_save Save new code
 keybindingmenu.remotecontrol_hardware Hardware
 keybindingmenu.remotecontrol_hardware_coolstream CST
 keybindingmenu.remotecontrol_hardware_dbox d-box Nokia (old)
@@ -882,6 +915,7 @@ lcdmenu.statusline status line
 lcdmenu.statusline.both volume and playtime
 lcdmenu.statusline.playtime playtime
 lcdmenu.statusline.volume volume
+lcdmenu.vfd_scroll Scrolling
 ledcontroler.backlight Buttons backlight
 ledcontroler.backlight.tv TV mode
 ledcontroler.blink Blink in deep standby, if timer set
@@ -954,6 +988,7 @@ mbkey.truncate Truncate movie
 menu.back Back
 menu.cancel Cancel
 menu.hint_a_pic Configure audio player and picture viewer
+menu.hint_accept_other_remotes Disable to ignore other remote controls
 menu.hint_adzap AdZap will switch back to the current channel when the selected time is up
 menu.hint_adzap_active AdZap is active. With a new call it will be deactivated.
 menu.hint_adzap_writedata Write data according to adzap status to /tmp/adzap.data
@@ -999,6 +1034,7 @@ menu.hint_channellist_epg_align EPG event align
 menu.hint_channellist_extended Show current event progress bar
 menu.hint_channellist_fonts Change channel list font sizes
 menu.hint_channellist_foot Show additional information\nin bottom box
+menu.hint_channellist_hdicon Show HD/UHD icons in channel list
 menu.hint_channellist_mode Use the selected channel list mode on startup if last mode is TV
 menu.hint_channellist_mode_radio Use the selected channel list mode on startup if last mode is Radio
 menu.hint_channellist_setup Configure channel list GUI options
@@ -1050,10 +1086,12 @@ menu.hint_fade Fade GUI windows
 menu.hint_fan_speed Control fan speed
 menu.hint_filebrowser_denydirectoryleave Deny filebrowser to leave initial directory
 menu.hint_filebrowser_showrights Show file permissions in file browser
+menu.hint_filebrowser_startdir Adjust start directory
 menu.hint_fileplay Play various video files
 menu.hint_filesystem_is_utf8 Filebrowser filesystem encoding
 menu.hint_font_gui Select font file to use for GUI
 menu.hint_font_scaling Set global vertical and horizontal\nGUI font scaling
+menu.hint_font_sub Select font file to use for Movieplayer subtitles
 menu.hint_font_ttx Select font file to use for teletext
 menu.hint_fonts Configure GUI fonts and font sizes
 menu.hint_foot_back Change GUI footer background color
@@ -1064,6 +1102,8 @@ menu.hint_hdd_apply Apply sleep/noise parameters
 menu.hint_hdd_check Check filesystem (fsck)
 menu.hint_hdd_fmt Select the data storage format
 menu.hint_hdd_format Create HDD partition and format it
+menu.hint_hdd_label Type in your HDD label
+menu.hint_hdd_mountpoint Choose the HDD mountpoint
 menu.hint_hdd_noise Set Automatic Acoustic Management\nnot all drives support this
 menu.hint_hdd_sleep Select time to stop hdd on inactivity
 menu.hint_hdd_statfs Specify when the recording directory fill level in infoviewer and, if available, on VFD, may be updated
@@ -1179,10 +1219,12 @@ menu.hint_menus Configure menu options
 menu.hint_message_fonts Change message text font sizes
 menu.hint_misc_cec HDMI-CEC Options
 menu.hint_misc_channellist HD/New/Removed channel lists\nZap cycle
+menu.hint_misc_cpufreq Set the CPU frequency
 menu.hint_misc_energy Enable soft-standby, delayed shutdown\ninactivity timers
 menu.hint_misc_epg Save/load EPG options, EPG cache options\nEPG save directory
 menu.hint_misc_filebrowser Filesystem encoding, file rights\ndeny directory leave
 menu.hint_misc_general Start to standby, cache teletext, swp rotor\nplugin hdd dir
+menu.hint_misc_kerneloptions Select the kernel modules to be loaded in addition to the standard ones
 menu.hint_misc_onlineservices Configure and control online services like YouTube, SHOUTCast and TMDb
 menu.hint_misc_zapit Initial TV/Radio channels
 menu.hint_movie Play movies
@@ -1266,6 +1308,7 @@ menu.hint_progressbar_timescale_red Choose the red portion of colored progressba
 menu.hint_progressbar_timescale_yellow Choose the yellow portion of colored progressbars
 menu.hint_protection Protect content by PIN code\nDefault PIN 0000
 menu.hint_radiomode Switch box to radio mode
+menu.hint_rass Switch to interactive Rass (radio screen show) mode.
 menu.hint_reboot Reboot box\nNo confirmation
 menu.hint_record_already_found_check Checks before setting a new record timer if an eponymous title already exists
 menu.hint_record_apid_ac3 Record AC3 audio pids
@@ -1276,7 +1319,7 @@ menu.hint_record_apply Apply record options
 menu.hint_record_auto_cover Auto-create movie thumbnail for movie browser on record playback
 menu.hint_record_chandir Create directory with name of channel\nto store recording
 menu.hint_record_data Record (VideoText, subtitles) data streams
-menu.hint_record_data_dvbsub subtitle stream
+menu.hint_record_data_dvbsub Subtitle stream
 menu.hint_record_data_vtxt VideoText stream
 menu.hint_record_dir Select directory to store recordings
 menu.hint_record_end Stop direct record after maximal time or after current event end time
@@ -1299,7 +1342,10 @@ menu.hint_record_zap_pre_time For ZapTo timers, switch channel\nbefore event sta
 menu.hint_recording Recording and timeshift options\nTimers safety, audio pids options
 menu.hint_reload_channels Reload channels from flash
 menu.hint_reload_plugins Reload plugins from flash
+menu.hint_remote_code For changing the code of the remote controls for Kathrein UFS912/13 models. It is possible to use four different codes ( 1 to 4 )
+menu.hint_remote_code_save Save and activate the new choosen code for remote control
 menu.hint_reset Reset GUI settings to defaults\nTuner config and channels not affected
+menu.hint_restart_tuner Restart the internal tuner. This may help if you're experiencing reception problems
 menu.hint_restore Restore files from selected backup
 menu.hint_rotor_swap Swap rotor east/west directions\nin motor control
 menu.hint_rounded_corners Draw round or rectangular windows corners 
@@ -1327,6 +1373,8 @@ menu.hint_scan_fastupdate Enable/disable fast scan auto-update
 menu.hint_scan_fec Select transponder FEC
 menu.hint_scan_felink Select tuner to link tuner to
 menu.hint_scan_femode Select tuner connection type
+menu.hint_scan_fenosame For two same CI+ units:\nUse same tuner only at the same service-id
+menu.hint_scan_feretries Number of retries on tuning failure
 menu.hint_scan_fesetup Configure tuner(s)
 menu.hint_scan_fetimeout Time to wait for signal, in 1/10 of second
 menu.hint_scan_freq Enter transponder frequency
@@ -1388,6 +1436,7 @@ menu.hint_screenshot_count When no GUI on screen, you can save 1-5\nscreenshot s
 menu.hint_screenshot_cover ON: When playing record, overwrite single\nscreenshot to show inside MovieBrowser
 menu.hint_screenshot_dir Select directory to save screenshots
 menu.hint_screenshot_format File format to save screenshot
+menu.hint_screenshot_planes Select what the screenshot should cover.
 menu.hint_screenshot_res Screenshot size: current channel's video size\nor OSD size (1280x720)
 menu.hint_screenshot_scale For video+OSD screenshots, scale to video size
 menu.hint_screenshot_setup Configure screenshots options
@@ -1448,19 +1497,27 @@ menu.hint_vfd_scroll Enable or disable text scrolling on VFD
 menu.hint_vfd_statusline Choose what to display in short\nVFD status line
 menu.hint_video Video output, resolution, format\nAspect ratio, fast mode switch options
 menu.hint_video_43mode Display mode for 4:3 content\non 16:9 TV
-menu.hint_video_analog_mode Select analog output mode\nfor SCART and CINCH connectors
+menu.hint_video_analog_mode Select analog output mode\nfor SCART and RCA connectors
 menu.hint_video_brightness Change picture brightness
 menu.hint_video_cinch_mode Select analog output mode for\ncomposite video out
+menu.hint_video_colorformat_analog Select color space for analog output (SCART/RCA)
+menu.hint_video_colorformat_hdmi Select color space for digital output (HDMI)
 menu.hint_video_contrast Change picture contrast
 menu.hint_video_dbdr MPEG2 enhancement filters
 menu.hint_video_format TV aspect ratio
+menu.hint_video_mask Define a channel-specific border to hide unwanted screen content
+menu.hint_video_mixer_color This color will be used for the background if there is no signal available.
 menu.hint_video_mode HDMI output video mode
 menu.hint_video_modes VF key will cycle between enabled modes 
 menu.hint_video_modes_auto Enable modes to auto-select based on content
 menu.hint_video_pip Picture in picture size and position
+menu.hint_video_psi On-screen menu for changing color, contrast and more
+menu.hint_video_psi_step Set the increment for the on-screen menu
 menu.hint_video_saturation Change picture saturation
 menu.hint_video_scart_mode Select analog output mode for SCART connectors
 menu.hint_video_sdosd Enable/disable OSD display on SD output (scart, cinch)
+menu.hint_video_three_d Change the channel-specific 3D settings
+menu.hint_video_tint Change picture tint
 menu.hint_volume Configure Volume GUI options
 menu.hint_volume_digits Numeric display of the volumebar on/off
 menu.hint_volume_pos Select volume indicator position
@@ -1473,6 +1530,7 @@ menu.hint_ytplay Play selected YouTube feeds
 menu.hint_ytplay_setup Configure YouTube-specific options, e.g. an upper limit for search results
 menu.hint_zap_cycle When swithing channels, stay in current bouquet
 menu.next Next
+messagebox.accept Do you want to keep the changes?
 messagebox.back Back
 messagebox.cancel Cancel
 messagebox.discard Discard changes?
@@ -1490,6 +1548,7 @@ miscsettings.colored_events_1 current
 miscsettings.colored_events_2 next
 miscsettings.colored_events_channellist In channellist
 miscsettings.colored_events_infobar In infobar
+miscsettings.cpu CPU
 miscsettings.energy Energy
 miscsettings.epg_cache EPG-Cache (Days)
 miscsettings.epg_cache_hint1 How long will EPG-Data in the future cached?
@@ -1833,12 +1892,13 @@ movieplayer.plugin Movieplayer plugin
 movieplayer.starting Starting playback ...
 movieplayer.titles Titles
 movieplayer.toomanybookmarks There are too many bookmarks.\nYou need to delete one of them first.
-movieplayer.tsplayback Play TS
+movieplayer.tsplayback Play
 movieplayer.ytplayback YouTube videoplayer
 mpkey.audio Audiotracks
 mpkey.bookmark Bookmarks
 mpkey.forward Forward
 mpkey.goto Enter playtime
+mpkey.next3dmode next 3D mode
 mpkey.next_repeat_mode Next repeat mode
 mpkey.pause Pause
 mpkey.play Play
@@ -2045,12 +2105,14 @@ plugintype.game Game
 plugintype.lua Lua plugin
 plugintype.script Script
 plugintype.tool Tool
+rass.head Radio Screen Show
 rclock.locked Locked
 rclock.lockmsg Remote control will be locked.\nTo unlock, press\n[red] followed by [%s]\non your remote control.
 rclock.title Lock remote control
 rclock.unlockmsg Remote control unlocked
 recording.already_found %s\nwas already found. Nevertheless start record?
 recording.already_found_check Check recordings
+recording.failed Recording failed!
 recording.is_running This channel already recording. Start new record?
 recording.start Start recording, please wait ...
 recording.startstop_msg Message when recording is start/stop
@@ -2227,17 +2289,26 @@ screensaver.off Screensaver off
 screensaver.random Random Images
 screensaver.timeout Change interval
 screensetup.lowerright green = setup lower right
+screensetup.remove remove mask
 screensetup.upperleft red = setup upper left
-screenshot.count Count
+screenshot.backbuffer Secondary buffer (back buffer)
+screenshot.count Screenshot count
 screenshot.cover Create Moviecover for Moviebrowser
 screenshot.defdir Destination directory
 screenshot.format Format
 screenshot.info Screenshot key is unused
 screenshot.menu Screenshot
-screenshot.osd OSD resolution
+screenshot.osd OSD
+screenshot.plane.all OSD and Video
+screenshot.plane.osd OSD only
+screenshot.plane.video Video only
+screenshot.planes Screenshot mode
+screenshot.please_wait Creating video screenshot, please wait ...
+screenshot.please_wait_cover Creating video cover, please wait ...
+screenshot.png_compression PNG compression level
 screenshot.res Resolution
 screenshot.scale Scale
-screenshot.tv TV resolution
+screenshot.tv Video
 screenshot.video Video in the background
 servicemenu.getplugins Reload plugins
 servicemenu.getplugins_hint Reloading plugins,\nplease be patient.
@@ -2248,6 +2319,8 @@ servicemenu.reload_hint Reloading channel lists,\nplease be patient.
 servicemenu.restart Soft restart
 servicemenu.restart_hint Restarting, please wait ...
 servicemenu.restart_refused_recording Cant restart, recording in progress
+servicemenu.restart_tuner Restart tuner
+servicemenu.restarting_tuner Restarting tuner
 servicemenu.scants Servicescan
 servicemenu.update Software Update
 settings.backup Image-Settings: Backup
@@ -2284,6 +2357,7 @@ streaminfo.audiotype Audiotype
 streaminfo.audiotype_unknown unknown
 streaminfo.average_bitrate Average
 streaminfo.bitrate Bitrate
+streaminfo.casystems Conditional access systems
 streaminfo.framerate Framerate
 streaminfo.framerate_unknown unknown
 streaminfo.head Stream-Information
@@ -2307,6 +2381,13 @@ subtitles.head Subtitles
 subtitles.stop Stop subtitles
 terrestrialsetup.area Area
 terrestrialsetup.provider Terrestrial Provider
+three.d.off Inactive
+three.d.save Remember for this channel
+three.d.settings 3D Settings
+three.d.settings.general Variant
+three.d.sideside Side-by-Side
+three.d.tile Tile
+three.d.topbottom Top-and-Bottom
 timer.eventrecord.msg The event is scheduled for recording.\nTo edit the schedule open the timer list.
 timer.eventrecord.title Schedule Record
 timer.eventtimed.msg The event is scheduled.\nThe box will power on and \nswitch to this channel at the given time.
@@ -2413,7 +2494,7 @@ usermenu.button_red User menu red
 usermenu.button_yellow User menu yellow
 usermenu.head User menu
 usermenu.item_adzap Adzap
-usermenu.item_bar ---- Boarder ----
+usermenu.item_bar ---- Border ----
 usermenu.item_epg_misc EPG functions
 usermenu.item_none (empty)
 usermenu.item_plugin_types Plugin types
@@ -2449,6 +2530,15 @@ videomenu.analog_sd_yprpb_scart YPbPr on scart (SD)
 videomenu.auto Auto
 videomenu.brightness Brightness
 videomenu.cinch Cinch
+videomenu.colorformat Color space
+videomenu.colorformat.cvbs CVBS
+videomenu.colorformat.rgb RGB
+videomenu.colorformat.svideo S-Video (Y/C)
+videomenu.colorformat.ycbcr422 YCbCr 4:2:2
+videomenu.colorformat.ycbcr444 YCbCr 4:4:4
+videomenu.colorformat.yuv YUV
+videomenu.colorformat_analog Cinch/Scart
+videomenu.colorformat_hdmi HDMI
 videomenu.contrast Contrast
 videomenu.dbdr MPEG2 de-block/de-ring
 videomenu.dbdr_both de-block+de-ring
@@ -2457,19 +2547,30 @@ videomenu.dbdr_none none
 videomenu.enabled_modes VF key enabled modes
 videomenu.enabled_modes_auto Auto-select enabled modes
 videomenu.fullscreen Full screen
-videomenu.hdmi_cec CSTLink (HDMI-CEC)
-videomenu.hdmi_cec_mode Receiver to use
+videomenu.hdmi_cec HDMI-CEC
+videomenu.hdmi_cec_broadcast Send to all devices
+videomenu.hdmi_cec_mode Enable
 videomenu.hdmi_cec_mode_off no
 videomenu.hdmi_cec_mode_recorder as Sat/Cable PVR
 videomenu.hdmi_cec_mode_tuner as Sat/Cable STB
 videomenu.hdmi_cec_standby Enable CEC standby
+videomenu.hdmi_cec_standby_not_timer unless timer-wakeup
 videomenu.hdmi_cec_view_on Enable CEC View on
 videomenu.hue Hue
 videomenu.letterbox Letterbox
+videomenu.masksetup Mask Setup
+videomenu.mixer_color Background color
 videomenu.panscan Pan & Scan
 videomenu.panscan2 14:9 Pan & Scan
 videomenu.pip PiP setup
 videomenu.pip_error PiP start failed
+videomenu.psi Color settings
+videomenu.psi.brightness Brightness
+videomenu.psi.contrast Contrast
+videomenu.psi.reset Standard settings
+videomenu.psi.saturation Saturation
+videomenu.psi.step Video slider step size
+videomenu.psi.tint Tint
 videomenu.saturation Saturation
 videomenu.scart Scart
 videomenu.screensetup Screen Setup
@@ -2486,6 +2587,7 @@ webtv.head WebTV
 webtv.xml WebTV XML files
 webtv.xml.add Add XML file
 webtv.xml.del Remove XML file
+webtv.xml.reload Reload XML files
 window_size Window size in %
 wizard.initial_settings Initial settings found
 wizard.install_settings Do you want to install channels for Astra 19.2°E?

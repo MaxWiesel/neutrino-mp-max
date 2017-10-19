@@ -117,7 +117,11 @@ void CFbAccelSTi::init(const char * const)
 	}
 	backbuf_sz = 1280 * 720 * sizeof(fb_pixel_t);
 	BPAMemAllocMemData bpa_data;
+#if BOXMODEL_OCTAGON1008 || BOXMODEL_FORTIS_HDBOX || BOXMODEL_CUBEREVO || BOXMODEL_CUBEREVO_MINI || BOXMODEL_CUBEREVO_MINI2 || BOXMODEL_CUBEREVO_250HD || BOXMODEL_CUBEREVO_2000HD || BOXMODEL_CUBEREVO_3000HD || BOXMODEL_IPBOX9900 || BOXMODEL_IPBOX99 || BOXMODEL_IPBOX55 || BOXMODEL_TF7700 || BOXMODEL_HL101
+	bpa_data.bpa_part = (char *)"LMI_SYS";
+#else
 	bpa_data.bpa_part = (char *)"LMI_VID";
+#endif
 	bpa_data.mem_size = backbuf_sz;
 	int res;
 	res = ioctl(bpafd, BPAMEMIO_ALLOCMEM, &bpa_data);
@@ -276,6 +280,36 @@ void CFbAccelSTi::paintRect(const int x, const int y, const int dx, const int dy
 	if (ioctl(fd, STMFBIO_BLT, &bltData ) < 0)
 		fprintf(stderr, "blitRect FBIO_BLIT: %m x:%d y:%d w:%d h:%d s:%d\n", xx,yy,width,height,stride);
 	blit();
+}
+
+void CFbAccelSTi::blitArea(int src_width, int src_height, int fb_x, int fb_y, int width, int height)
+{
+	if (!src_width || !src_height)
+		return;
+	STMFBIO_BLT_EXTERN_DATA blt_data;
+	memset(&blt_data, 0, sizeof(STMFBIO_BLT_EXTERN_DATA));
+	blt_data.operation  = BLT_OP_COPY;
+	blt_data.ulFlags    = BLT_OP_FLAGS_BLEND_SRC_ALPHA | BLT_OP_FLAGS_BLEND_DST_MEMORY;	// we need alpha blending
+	blt_data.srcPitch   = src_width * 4;
+	blt_data.dstOffset  = lbb_off;
+	blt_data.dstPitch   = stride;
+	blt_data.src_right  = src_width;
+	blt_data.src_bottom = src_height;
+	blt_data.dst_left   = fb_x;
+	blt_data.dst_top    = fb_y;
+	blt_data.dst_right  = fb_x + width;
+	blt_data.dst_bottom = fb_y + height;
+	blt_data.srcFormat  = SURF_ARGB8888;
+	blt_data.dstFormat  = SURF_ARGB8888;
+	blt_data.srcMemBase = (char *)backbuffer;
+	blt_data.dstMemBase = (char *)lfb;
+	blt_data.srcMemSize = backbuf_sz;
+	blt_data.dstMemSize = stride * DEFAULT_YRES + lbb_off;
+
+	msync(backbuffer, blt_data.srcPitch * src_height, MS_SYNC);
+
+	if(ioctl(fd, STMFBIO_BLT_EXTERN, &blt_data) < 0)
+		perror("blitArea FBIO_BLIT");
 }
 
 void CFbAccelSTi::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp)
@@ -550,6 +584,18 @@ void CFbAccelSTi::setBlendLevel(int level)
 	v.opacity = 0xff - (level * 0xff / 100);
 	if (ioctl(fd, STMFBIO_SET_VAR_SCREENINFO_EX, &v) < 0)
 		perror(LOGTAG "setBlendLevel STMFBIO");
+}
+
+void CFbAccelSTi::setMixerColor(uint32_t mixer_background)
+{
+	struct stmfbio_output_configuration outputConfig;
+	memset(&outputConfig, 0, sizeof(outputConfig));
+	outputConfig.outputid = STMFBIO_OUTPUTID_MAIN;
+	outputConfig.activate = STMFBIO_ACTIVATE_IMMEDIATE;
+	outputConfig.caps = STMFBIO_OUTPUT_CAPS_MIXER_BACKGROUND;
+	outputConfig.mixer_background = mixer_background;
+	if(ioctl(fd, STMFBIO_SET_OUTPUT_CONFIG, &outputConfig) < 0)
+		perror("setting output configuration failed");
 }
 
 #if 0

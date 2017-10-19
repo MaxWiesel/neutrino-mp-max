@@ -58,6 +58,7 @@
 #include <pthread.h>
 #include <ctype.h>
 #include <config.h>
+#include <math.h>
 
 #if 0
 #ifdef HAVE_TRIPLEDRAGON
@@ -82,6 +83,12 @@
 #include <system/set_threadname.h>
 #include <neutrino.h>
 #include <gui/color.h>
+#include <system/set_threadname.h>
+#include <video.h>
+#include <libmd5sum/libmd5sum.h>
+#include <driver/rcinput.h>
+#include <driver/pictureviewer/pictureviewer.h>
+#include <OpenThreads/ScopedLock>
 
 #include "radiotext.h"
 #include "radiotools.h"
@@ -96,18 +103,12 @@ char RDS_PSText[12][9];
 // plugin audiorecorder service
 bool ARec_Receive = false, ARec_Record = false;
 
-#if ENABLE_RASS
 // ... Gallery (1..999)
 #define RASS_GALMAX 999
 bool Rass_Gallery[RASS_GALMAX+1];
 int Rass_GalStart, Rass_GalEnd, Rass_GalCount, Rass_SlideFoto;
-#endif
 
-#define floor
-const char *DataDir = "./";
-//cRadioAudio *RadioAudio;
-//cRadioTextOsd *RadioTextOsd;
-//cRDSReceiver *RDSReceiver;
+#define DataDir g_settings.radiotext_rass_dir.c_str()
 
 // RDS-Chartranslation: 0x80..0xff
 unsigned char rds_addchar[128] = {
@@ -349,9 +350,9 @@ if (i < 0) { fprintf(stderr, "RT %s: i < 0 (%d)\n", __FUNCTION__, i); break; }
 									RDS_PsPtynDecode(false, mtext, index);	// PS
 									break;
 								case 0xda:
-#if ENABLE_RASS
+									if (S_Verbose >= 2)
+										printf("(RDS-RASS '%02x') -> RassDecode - %d\n", mec, index);
 									RassDecode(mtext, index);		// Rass
-#endif
 									break;
 								}
 							}
@@ -389,7 +390,7 @@ void CRadioText::RadiotextDecode(unsigned char *mtext, int len)
 		}
 		// byte 9 = RT-Status bitcodet (0=AB-flagcontrol, 1-4=Transmission-Number, 5+6=Buffer-Config,
 		//				    ingnored, always 0x01 ?)
-fprintf(stderr, "MEC=0x%02x DSN=0x%02x PSN=0x%02x MEL=%02d STATUS=0x%02x MFL=%02d\n", mtext[5], mtext[6], mtext[7], mtext[8], mtext[9], mtext[4]);
+//fprintf(stderr, "MEC=0x%02x DSN=0x%02x PSN=0x%02x MEL=%02d STATUS=0x%02x MFL=%02d\n", mtext[5], mtext[6], mtext[7], mtext[8], mtext[9], mtext[4]);
 		char temptext[RT_MEL];
 		memset(temptext, 0x20, RT_MEL-1);
 		temptext[RT_MEL - 1] = '\0';
@@ -689,14 +690,13 @@ void CRadioText::RadioStatusMsg(void)
 }
 
 
-#if ENABLE_RASS
 // add <names> of DVB Radio Slides Specification 1.0, 20061228
 void CRadioText::RassDecode(unsigned char *mtext, int len)
 {
 	static uint splfd = 0, spmax = 0, index = 0;
 	static uint afiles, slidenumr, slideelem, filemax, fileoffp;
 	static int filetype, fileoffb;
-	static bool slideshow = false, slidesave = false, slidecan = false, slidedel = false, start = false;
+	static bool slideshow = false, slidesave = false, slidecan = false, slidedel = false, dstart = false;
 	static uchar daten[65536];	// mpegs-stills defined <= 50kB
 	FILE *fd;
 
@@ -755,44 +755,44 @@ void CRadioText::RassDecode(unsigned char *mtext, int len)
 			if (fileoffp == 0) {	// First
 				if (S_Verbose >= 2)
 					printf("Rass-Start@0 ...\n");
-				start = true;
+				dstart = true;
 				index = 0;
 				for (int i=fileoffb; i < len-2; i++) {
 					if (index < filemax)
 						daten[index++] = mtext[i];
 					else
-						start = false;
+						dstart = false;
 				}
 			}
 			splfd = plfd;
 		}
 		else if (plfd < pmax && plfd == splfd+1) {		// Between
 			splfd = plfd;
-			if (!start && fileoffp == plfd) {	// Data start, <with Rfu no more necesssary>
+			if (!dstart && fileoffp == plfd) {	// Data dstart, <with Rfu no more necesssary>
 				if (S_Verbose >= 2)
 					printf("Rass-Start@%d ...\n", fileoffp);
-				start = true;
+				dstart = true;
 				index = 0;
 			}
 			else
 				fileoffb = 15;
-			if (start) {
+			if (dstart) {
 				for (int i=fileoffb; i < len-2; i++) {
 					if (index < filemax)
 						daten[index++] = mtext[i];
 					else
-					start = false;
+					dstart = false;
 				}
 			}
 		}
 		else if (plfd == pmax && plfd == splfd+1) {		// Last
 			fileoffb = 15;
-			if (start) {
+			if (dstart) {
 				for (int i=fileoffb; i < len-4; i++) {
 					if (index <= filemax)
 						daten[index++] = mtext[i];
 					else {
-						start = false;
+						dstart = false;
 						return;
 					}
 				}
@@ -806,7 +806,7 @@ void CRadioText::RassDecode(unsigned char *mtext, int len)
 				if (crc16 != (mtext[len-4]<<8)+mtext[len-3]) {
 					if ((S_Verbose && 0x0f) >= 1)
 						printf("Rass-Error: wrong CRC # calc = %04x <> transmit = %02x%02x\n", crc16, mtext[len-4], mtext[len-3]);
-					start = false;
+					dstart = false;
 					return;
 				}
 			}
@@ -816,18 +816,26 @@ void CRadioText::RassDecode(unsigned char *mtext, int len)
 				if (slideshow || (slidecan && Rass_Show == -1)) {
 					if (filetype == 1) {	// show only mpeg-still
 						char *filepath;
-						asprintf(&filepath, "%s/%s", DataDir, "Rass_show.mpg");
-						if ((fd = fopen(filepath, "wb")) != NULL) {
+						asprintf(&filepath, "%s/%s", DataDir, "Rass_show.m2v");
+						char *filepath_tmp;
+						asprintf(&filepath_tmp, "%s.tmp", filepath);
+						if ((fd = fopen(filepath_tmp, "wb")) != NULL) {
 							fwrite(daten, 1, filemax, fd);
 							//fflush(fd);		// for test in replaymode
 							fclose(fd);
+							rename(filepath_tmp, filepath);
+							if (!Rass_interactive_mode)
+								RassShow(filepath);
 							Rass_Show = 1;
 							if (S_Verbose >= 2)
 								printf("Rass-File: ready for displaying :-)\n");
 						}
 						else
-							printf("ERROR vdr-radio: writing imagefile failed '%s'", filepath);
+							printf("ERROR %s: writing imagefile failed '%s'", __func__, filepath);
 						free(filepath);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+						free(filepath_tmp);
+#endif
 					}
 				}
 				if (slidesave || slidedel || slidenumr < RASS_GALMAX) {
@@ -839,10 +847,22 @@ void CRadioText::RassDecode(unsigned char *mtext, int len)
 					//
 					char *filepath = NULL;
 					(filetype == 2) ? asprintf(&filepath, "%s/Rass_%d.def", DataDir, slidenumr)
-							: asprintf(&filepath, "%s/Rass_%d.mpg", DataDir, slidenumr);
-					if ((fd = fopen(filepath, "wb")) != NULL) {
+							: asprintf(&filepath, "%s/Rass_%d.m2v", DataDir, slidenumr);
+					char *filepath_tmp;
+					asprintf(&filepath_tmp, "%s.tmp", filepath);
+					if (filetype == 1 && (slideshow || (slidecan && Rass_Show == -1))) {
+						char *showpath;
+						asprintf(&showpath, "%s/%s", DataDir, "Rass_show.m2v");
+						link(showpath, filepath_tmp);
+						free(showpath);
+					} else if ((fd = fopen(filepath_tmp, "wb")) != NULL) {
 						fwrite(daten, 1, filemax, fd);
 						fclose(fd);
+					}
+					rename(filepath_tmp, filepath);
+					if (true) {
+						if (filetype == 1)
+							RassUpdate(filepath, slidenumr);
 						if (S_Verbose >= 1)
 							printf("Rass-File: saving '%s'\n", filepath);
 						// archivemarker mpeg-stills
@@ -851,7 +871,7 @@ void CRadioText::RassDecode(unsigned char *mtext, int len)
 							if (slidenumr == 0 || slidenumr > RASS_GALMAX) {
 								if (slidenumr == 0) {
 									Rass_Flags[0][0] = !slidedel;
-									(RT_Info > 0) ? : RT_Info = 0;	// open RadioTextOsd for ArchivTip
+									if (RT_Info < 0) RT_Info = 0;	// open RadioTextOsd for ArchivTip
 								}
 								else {
 									int islide = (int) floor(slidenumr/1000);
@@ -886,22 +906,21 @@ void CRadioText::RassDecode(unsigned char *mtext, int len)
 						free(filepath);
 				}
 			}
-			start = false;
+			dstart = false;
 			splfd = spmax = 0;
 		}
 		else {
-			start = false;
+			dstart = false;
 			splfd = spmax = 0;
 		}
 	}
 	else {
-		start = false;
+		dstart = false;
 		splfd = spmax = 0;
 		if (S_Verbose >= 1)
 			printf("RDS-Error: [Rass] Length not correct !\n");
 	}
 }
-#endif
 
 #if 0
 void cRadioAudio::EnableRadioTextProcessing(const char *Titel, bool replay)
@@ -2290,6 +2309,13 @@ eOSState cRTplusList::ProcessKey(eKeys Key)
 CRadioText::CRadioText(void)
 {
 	pid = 0;
+	lastRassPid = 0;
+	Rass_interactive_mode = false;
+	Rass_current_slide = -1;
+	Rass_first_slide = 100000;
+	memset(last_md5sum, 0, 16);
+	framebuffer = CFrameBuffer::getInstance();
+	framebuffer->getIconSize(NEUTRINO_ICON_RED_1, &iconWidth, &iconHeight);
 	audioDemux = NULL;
 	init();
 
@@ -2337,11 +2363,10 @@ void CRadioText::init()
 		RT_Text[i][0] = 0;
 	RDS_PTYN[0] = 0;
 
-#if ENABLE_RASS
 	// Rass ...
 	Rass_Show = -1;		// -1=No, 0=Yes, 1=display
 	Rass_Archiv = -1;	// -1=Off, 0=Index, 1000-9990=Slidenr.
-#endif
+
 	RT_MsgShow = false; // clear entries from old channel
 	have_radiotext	= false;
 }
@@ -2404,6 +2429,15 @@ void CRadioText::run()
 				pid = 0;
 				printf("CRadioText::run: ###################### failed to start PES filter ######################\n");
 			}
+			if (lastRassPid) {
+				extern cVideo *videoDecoder;
+				videoDecoder->ShowPicture(DATADIR "/neutrino/icons/radiomode.jpg");
+				lastRassPid = 0;
+				Rass_current_slide = -1;
+				Rass_first_slide = 100000;
+				slides.clear();
+				memset(last_md5sum, 0, 16);
+			}
 		}
 		mutex.unlock();
 		if (pid) {
@@ -2457,4 +2491,269 @@ void CRadioText::run()
 	delete audioDemux;
 	audioDemux = NULL;
 	printf("CRadioText::run: ###################### exit ######################\n");
+}
+
+bool CRadioText::RASS_slides::set(int slide, CRadioText::slideinfo si)
+{
+	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
+	std::map<int, slideinfo>::iterator it = sim.find(slide);
+	if (it != sim.end() && !memcmp((*it).second.md5sum, si.md5sum, 16))
+		return false;
+	sim[slide] = si;
+	return true;
+}
+
+unsigned char *CRadioText::RASS_slides::exists(int slide)
+{
+	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
+	std::map<int, slideinfo>::iterator it = sim.find(slide);
+	if (it != sim.end())
+		return (*it).second.md5sum;
+	return NULL;
+}
+
+void CRadioText::RASS_slides::clear(void)
+{
+	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(mutex);
+	sim.clear();
+}
+
+void CRadioText::RassShow(char *filename, unsigned char *md5sum)
+{
+	unsigned char _md5sum[16];
+	if (!md5sum) {
+		md5sum = _md5sum;
+		md5_file(filename, 1, md5sum);
+	}
+	if (memcmp(md5sum, last_md5sum, 16)) {
+		extern cVideo *videoDecoder;
+		videoDecoder->ShowPicture(filename);
+		lastRassPid = pid;
+		memcpy(last_md5sum, md5sum, 16);
+	}
+}
+
+void CRadioText::RassShow(int slidenumber, unsigned char *md5sum)
+{
+	char filename[255];
+	snprintf(filename, sizeof(filename), "%s/Rass_%d.m2v", DataDir, slidenumber);
+	RassShow(filename, md5sum);
+}
+
+void CRadioText::RassUpdate(char *filename, int slidenumber)
+{
+	if (slidenumber > -1 && slidenumber < Rass_first_slide)
+		Rass_first_slide = slidenumber;
+
+	slideinfo si;
+	md5_file(filename, 1, si.md5sum);
+	bool newslide = !slides.exists(slidenumber);
+	bool updated = slides.set(slidenumber, si);
+
+	if (Rass_interactive_mode) {
+		if ((Rass_current_slide == slidenumber) && updated)
+			RassShow(filename, si.md5sum);
+		if (newslide)
+			RassPaint(slidenumber);
+	}
+}
+
+neutrino_msg_t CRadioText::RassChangeSelection(int next) {
+	if (next != Rass_current_slide) {
+		int old = Rass_current_slide;
+		Rass_current_slide = next;
+		RassPaint(old, false);
+		RassPaint(next);
+		RassShow(Rass_current_slide, slides.exists(Rass_current_slide));
+	}
+	return CRCInput::convertDigitToKey(Rass_current_slide/1000);
+}
+
+static int seq[] = { 1000, 1100, 1110, 1111 };
+
+void CRadioText::RassPaint(int slide, bool blit)
+{
+	int x_start = framebuffer->getScreenX() + iconWidth;
+	int y = framebuffer->getScreenX() + (framebuffer->getScreenHeight() - 10 * iconHeight - 9 * iconHeight)/2;
+
+	if (slide > -1) {
+		int category = slide/1000;
+		char ic[10];
+		snprintf(ic, sizeof(ic), (slide == Rass_current_slide) ? "%d-red" : "%d-green", category);
+		int j;
+		for (j = 0; seq[j] * category != slide && j < 4; j++);
+		if (j < 4) {
+			int x = x_start + j * 2 * iconWidth;
+			y += category * 2 * iconHeight;
+			framebuffer->paintIcon(ic, x, y, iconHeight, 0, true, false);
+		}
+	} else for (int i = 0; i < 10; i++) {
+		int x = x_start;
+		char icon[10];
+		char icon_red[10];
+		char icon_green[10];
+		snprintf(icon, sizeof(icon), "%d", i);
+		snprintf(icon_red, sizeof(icon_red), "%d-red", i);
+		snprintf(icon_green, sizeof(icon_red), "%d-green", i);
+		for (int j = 0; j < 4; j++) {
+			char *ic = icon;
+			if (slides.exists(i * seq[j]))
+				ic = (i * seq[j] == Rass_current_slide) ? icon_red : icon_green;
+			framebuffer->paintIcon(ic, x, y, iconHeight, 0, true, false);
+			if (i == 0) {
+				x += 4 * iconWidth;
+				extern CPictureViewer *g_PicViewer;
+				const char *fname = DATADIR "/neutrino/icons/rass.png";
+				int w = 0, h = 0;
+				g_PicViewer->getSize(fname, &w, &h);
+				if (w && h)
+					g_PicViewer->DisplayImage(fname, x, y, 3 * iconWidth, (h * 3 * iconWidth) / w, CFrameBuffer::TM_EMPTY);
+				break;
+			}
+			x += 2 * iconWidth;
+		}
+		y += 2 * iconHeight;
+	}
+	if (blit)
+		framebuffer->blit();
+}
+
+neutrino_msg_t CRadioText::RassShow_prev(void)
+{
+	int next = Rass_current_slide;
+	int category = Rass_current_slide/1000;
+
+	for (int i = category - 1; next == Rass_current_slide && i > -1; i--)
+		for (int j = 0; next == Rass_current_slide && j < 4; j++)
+			if (slides.exists(i * seq[j]))
+				next = i * seq[j];
+	for (int i = 9; next == Rass_current_slide && i > category; i--)
+		for (int j = 0; next == Rass_current_slide && j < 4; j++)
+			if (slides.exists(i * seq[j]))
+				next = i * seq[j];
+
+	return RassChangeSelection(next);
+}
+
+neutrino_msg_t CRadioText::RassShow_next(void)
+{
+	int next = Rass_current_slide;
+	int category = Rass_current_slide/1000;
+
+	for (int i = 1 + category; next == Rass_current_slide && i < 10; i++)
+		for (int j = 0; next == Rass_current_slide && j < 4; j++)
+			if (slides.exists(i * seq[j]))
+				next = i * seq[j];
+	for (int i = 0; next == Rass_current_slide && i < category; i++)
+		for (int j = 0; next == Rass_current_slide && j < 4; j++)
+			if (slides.exists(i * seq[j]))
+				next = i * seq[j];
+
+	return RassChangeSelection(next);
+}
+
+neutrino_msg_t CRadioText::RassShow_left(void)
+{
+	int next = Rass_current_slide;
+	int category = Rass_current_slide/1000;
+
+	for (int i = 3; next == Rass_current_slide && i > -1; i--)
+		if (category * seq[i] < Rass_current_slide && slides.exists(category * seq[i]))
+			next = category * seq[i];
+	for (int i = 3; next == Rass_current_slide && i > -1; i--)
+		if (slides.exists(category * seq[i]))
+			next = category * seq[i];
+
+	return RassChangeSelection(next);
+}
+
+neutrino_msg_t CRadioText::RassShow_right(void)
+{
+	int next = Rass_current_slide;
+	int category = Rass_current_slide/1000;
+
+	for (int i = 0; next == Rass_current_slide && i < 4; i++)
+		if (category * seq[i] > Rass_current_slide && slides.exists(category * seq[i]))
+			next = category * seq[i];
+	for (int i = 0; next == Rass_current_slide && i < 4; i++)
+		if (slides.exists(category * seq[i]))
+			next = category * seq[i];
+
+	return RassChangeSelection(next);
+}
+
+neutrino_msg_t CRadioText::RassShow_category(int key)
+{
+	int next = Rass_current_slide;
+
+	for (int i = 0; next == Rass_current_slide && i < 4; i++)
+		if (slides.exists(key * seq[i]))
+			next = key * seq[i];
+
+	return RassChangeSelection(next);
+}
+
+void CRadioText::RASS_interactive_mode(void)
+{
+	framebuffer->Clear();
+	Rass_interactive_mode = true;
+	RassShow(Rass_first_slide);
+	Rass_current_slide = Rass_first_slide;
+	neutrino_msg_t msg_old = CRCInput::RC_nokey;
+	RassPaint();
+
+	while (Rass_interactive_mode) {
+		neutrino_msg_t msg;
+		neutrino_msg_data_t data;
+
+		g_RCInput->getMsg(&msg, &data, 100000);
+
+		switch (msg) {
+			case CRCInput::RC_down:
+				msg = RassShow_next();
+				break;
+			case CRCInput::RC_up:
+				msg = RassShow_prev();
+				break;
+			case CRCInput::RC_right:
+				msg = RassShow_right();
+				break;
+			case CRCInput::RC_left:
+				msg = RassShow_left();
+				break;
+			case CRCInput::RC_0:
+			case CRCInput::RC_1:
+			case CRCInput::RC_2:
+			case CRCInput::RC_3:
+			case CRCInput::RC_4:
+			case CRCInput::RC_5:
+			case CRCInput::RC_6:
+			case CRCInput::RC_7:
+			case CRCInput::RC_8:
+			case CRCInput::RC_9:
+				if (msg == msg_old)
+					RassShow_right();
+				else
+					msg = RassShow_category(CRCInput::getNumericValue(msg));
+				break;
+			case CRCInput::RC_home:
+				Rass_interactive_mode = false;
+				break;
+			case CRCInput::RC_plus:
+			case CRCInput::RC_minus:
+			case CRCInput::RC_mute_on:
+			case CRCInput::RC_mute_off:
+			case CRCInput::RC_spkr:
+				CNeutrinoApp::getInstance()->handleMsg(msg, data);
+				break;
+		}
+		msg_old = msg;
+	}
+
+	char *filepath;
+	asprintf(&filepath, "%s/%s", DataDir, "Rass_show.m2v");
+	RassShow (filepath);
+	free(filepath);
+	framebuffer->Clear();
+	framebuffer->blit();
 }

@@ -66,10 +66,16 @@
 #include <system/helpers.h>
 #include "cs_api.h"
 
+#if USE_STB_HAL
+#include <video_hal.h>
+#endif
+
 extern CRemoteControl * g_RemoteControl;
 
 extern const char * locale_real_names[];
 extern std::string ttx_font_file;
+extern std::string *sub_font_file;
+extern int sub_font_size;
 extern CTimeOSD *FileTimeOSD;
 
 COsdSetup::COsdSetup(int wizard_mode)
@@ -85,6 +91,7 @@ COsdSetup::COsdSetup(int wizard_mode)
 	submenu_menus = NULL;
 	mfFontFile = NULL;
 	mfTtxFontFile = NULL;
+	mfSubFontFile = NULL;
 	mfWindowSize = NULL;
 	win_demo = NULL;
 	osd_menu_colors = NULL;
@@ -225,6 +232,15 @@ font_sizes_struct neutrino_font[SNeutrinoSettings::FONT_TYPE_COUNT] =
 	{LOCALE_FONTSIZE_BUTTON_TEXT        ,  14, CNeutrinoFonts::FONT_STYLE_REGULAR, 0}
 };
 
+#if HAVE_GENERIC_HARDWARE
+#define SCREENSHOT_OPTION_COUNT 2
+const CMenuOptionChooser::keyval SCREENSHOT_OPTIONS[SCREENSHOT_OPTION_COUNT] =
+{
+	{ 0, LOCALE_SCREENSHOT_TV },
+	{ 1, LOCALE_SCREENSHOT_OSD }
+};
+#endif
+
 int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 {
 	dprintf(DEBUG_DEBUG, "init osd setup\n");
@@ -248,8 +264,8 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 			g_settings.font_file = fileBrowser.getSelectedFile()->Name;
 			printf("[neutrino] new font file %s\n", fileBrowser.getSelectedFile()->Name.c_str());
 			CNeutrinoApp::getInstance()->SetupFonts(CNeutrinoFonts::FONTSETUP_ALL);
-			osdFontFile = "(" + getBaseName(fileBrowser.getSelectedFile()->Name) + ")";
-			mfFontFile->setOption(osdFontFile.c_str());
+			osdFontFile = getBaseName(fileBrowser.getSelectedFile()->Name);
+			mfFontFile->setOption(osdFontFile);
 		}
 		return res;
 	}
@@ -265,8 +281,24 @@ int COsdSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 			ttx_font_file = fileBrowser.getSelectedFile()->Name;
 			printf("[neutrino] ttx font file %s\n", fileBrowser.getSelectedFile()->Name.c_str());
 			CNeutrinoApp::getInstance()->SetupFonts(CNeutrinoFonts::FONTSETUP_NEUTRINO_FONT | CNeutrinoFonts::FONTSETUP_NEUTRINO_FONT_INST);
-			osdTtxFontFile = "(" + getBaseName(fileBrowser.getSelectedFile()->Name) + ")";
-			mfTtxFontFile->setOption(osdTtxFontFile.c_str());
+			osdTtxFontFile = getBaseName(fileBrowser.getSelectedFile()->Name);
+			mfTtxFontFile->setOption(osdTtxFontFile);
+		}
+		return res;
+	}
+	else if(actionKey == "sub_font")
+	{
+		CFileBrowser fileBrowser;
+		CFileFilter fileFilter;
+		fileFilter.addFilter("ttf");
+		fileBrowser.Filter = &fileFilter;
+		if (fileBrowser.exec(FONTDIR) == true)
+		{
+			g_settings.sub_font_file = fileBrowser.getSelectedFile()->Name;
+			*sub_font_file = fileBrowser.getSelectedFile()->Name;
+			printf("[neutrino] sub font file %s\n", fileBrowser.getSelectedFile()->Name.c_str());
+			osdSubFontFile = getBaseName(fileBrowser.getSelectedFile()->Name);
+			mfSubFontFile->setOption(osdSubFontFile);
 		}
 		return res;
 	}
@@ -631,14 +663,12 @@ int COsdSetup::showOsdSetup()
 	mf->setHint("", LOCALE_MENU_HINT_INFOCLOCK_SETUP);
 	osd_menu->addItem(mf);
 
-#ifdef SCREENSHOT
 	//screenshot
 	CMenuWidget osd_menu_screenshot(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_OSDSETUP_SCREENSHOT);
 	showOsdScreenShotSetup(&osd_menu_screenshot);
 	mf = new CMenuForwarder(LOCALE_SCREENSHOT_MENU, true, NULL, &osd_menu_screenshot, NULL, CRCInput::convertDigitToKey(shortcut++));
 	mf->setHint("", LOCALE_MENU_HINT_SCREENSHOT_SETUP);
 	osd_menu->addItem(mf);
-#endif
 
 	//screensaver
 	CMenuWidget osd_menu_screensaver(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_OSDSETUP_SCREENSAVER);
@@ -725,12 +755,17 @@ int COsdSetup::showOsdSetup()
 	if (oldVolumeSize != g_settings.volume_size)
 		CVolumeHelper::getInstance()->refresh();
 
+	if (g_settings.screenshot_mode == 3)
+		g_settings.screenshot_mode = screenshot_res;
+
 	if (oldInfoClockSize != g_settings.infoClockFontSize) {
 		CInfoClock::getInstance()->setHeight(g_settings.infoClockFontSize);
 		CVolumeHelper::getInstance()->refresh();
 		if (CNeutrinoApp::getInstance()->isMuted())
 			CAudioMute::getInstance()->enableMuteIcon(true);
 	}
+
+	sub_font_size = CNeutrinoApp::getInstance()->getConfigFile()->getInt32("fontsize.subtitles", 24);
 
 	delete colorInfoclockNotifier;
 	delete screensaverNotifier;
@@ -1012,17 +1047,24 @@ void COsdSetup::showOsdFontSizeSetup(CMenuWidget *menu_fonts)
 
 	// select gui font file
 	osdFontFile = g_settings.font_file;
-	osdFontFile = "(" + getBaseName(osdFontFile) + ")";
+	osdFontFile = getBaseName(osdFontFile);
 	mfFontFile = new CMenuForwarder(LOCALE_COLORMENU_FONT, true, osdFontFile.c_str(), this, "select_font", CRCInput::RC_red);
 	mfFontFile->setHint("", LOCALE_MENU_HINT_FONT_GUI);
 	fontSettings->addItem(mfFontFile);
 
 	// select teletext font file
 	osdTtxFontFile = g_settings.ttx_font_file;
-	osdTtxFontFile = "(" + getBaseName(osdTtxFontFile) + ")";
+	osdTtxFontFile = getBaseName(osdTtxFontFile);
 	mfTtxFontFile = new CMenuForwarder(LOCALE_COLORMENU_FONT_TTX, true, osdTtxFontFile.c_str(), this, "ttx_font",  CRCInput::RC_green);
 	mfTtxFontFile->setHint("", LOCALE_MENU_HINT_FONT_TTX);
 	fontSettings->addItem(mfTtxFontFile);
+
+	// select subtitle font file
+	osdSubFontFile = g_settings.sub_font_file;
+	osdSubFontFile = getBaseName(osdSubFontFile);
+	mfSubFontFile = new CMenuForwarder(LOCALE_COLORMENU_FONT_SUB, true, osdSubFontFile.c_str(), this, "sub_font",  CRCInput::RC_yellow);
+	mfSubFontFile->setHint("", LOCALE_MENU_HINT_FONT_SUB);
+	fontSettings->addItem(mfSubFontFile);
 
 	fontSettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_FONTMENU_SIZES));
 
@@ -1269,6 +1311,11 @@ void COsdSetup::showOsdChanlistSetup(CMenuWidget *menu_chanlist)
 	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_EXTENDED);
 	menu_chanlist->addItem(mc);
 
+	// hd-icon
+	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_HDICON, &g_settings.channellist_hdicon, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_HDICON);
+	menu_chanlist->addItem(mc);
+
 	// show infobox
 	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_SHOW_INFOBOX, &g_settings.channellist_show_infobox, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, channellistNotifier);
 	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_SHOW_INFOBOX);
@@ -1493,6 +1540,18 @@ bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void * data)
 		CInfoClock::getInstance()->ClearDisplay();
 		FileTimeOSD->Init();
 	}
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_SCREENSHOT_PLANES)) {
+		if (g_settings.screenshot_mode == 3) {
+			screenshot_res = g_settings.screenshot_res;
+			screenshot_res_chooser->setActive(true);
+		} else {
+			screenshot_res = g_settings.screenshot_mode;
+			screenshot_res_chooser->setActive(false);
+		}
+		return true;
+	}
+#endif
 	return false;
 }
 
@@ -1538,7 +1597,6 @@ int COsdSetup::showContextChanlistMenu(CChannelList *parent_channellist)
 	return res;
 }
 
-#ifdef SCREENSHOT
 //screenshot
 #define SCREENSHOT_FMT_OPTION_COUNT 3
 const CMenuOptionChooser::keyval_ext SCREENSHOT_FMT_OPTIONS[SCREENSHOT_FMT_OPTION_COUNT] =
@@ -1547,11 +1605,19 @@ const CMenuOptionChooser::keyval_ext SCREENSHOT_FMT_OPTIONS[SCREENSHOT_FMT_OPTIO
 	{ CScreenShot::FORMAT_JPG,   NONEXISTANT_LOCALE, "JPEG" },
 	{ CScreenShot::FORMAT_BMP,   NONEXISTANT_LOCALE, "BMP" }
 };
-#define SCREENSHOT_OPTION_COUNT 2
-const CMenuOptionChooser::keyval SCREENSHOT_OPTIONS[SCREENSHOT_OPTION_COUNT] =
+#define SCREENSHOT_RES_OPTION_COUNT 2
+const CMenuOptionChooser::keyval SCREENSHOT_RES_OPTIONS[SCREENSHOT_RES_OPTION_COUNT] =
 {
-	{ 0, LOCALE_SCREENSHOT_TV },
-	{ 1, LOCALE_SCREENSHOT_OSD   }
+	{ 1, LOCALE_SCREENSHOT_TV },
+	{ 2, LOCALE_SCREENSHOT_OSD   }
+};
+
+#define SCREENSHOT_PLANE_OPTION_COUNT 3
+const CMenuOptionChooser::keyval SCREENSHOT_PLANE_OPTIONS[SCREENSHOT_PLANE_OPTION_COUNT] =
+{
+	{ 1, LOCALE_SCREENSHOT_PLANE_VIDEO },
+	{ 2, LOCALE_SCREENSHOT_PLANE_OSD },
+	{ 3, LOCALE_SCREENSHOT_PLANE_ALL }
 };
 
 void COsdSetup::showOsdScreenShotSetup(CMenuWidget *menu_screenshot)
@@ -1572,23 +1638,42 @@ void COsdSetup::showOsdScreenShotSetup(CMenuWidget *menu_screenshot)
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_FORMAT);
 	menu_screenshot->addItem(mc);
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_PLANES, &g_settings.screenshot_mode, SCREENSHOT_PLANE_OPTIONS, SCREENSHOT_PLANE_OPTION_COUNT, true, this);
+	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_PLANES);
+#else
 	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_RES, &g_settings.screenshot_mode, SCREENSHOT_OPTIONS, SCREENSHOT_OPTION_COUNT, true);
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_RES);
+#endif
 	menu_screenshot->addItem(mc);
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+	if (g_settings.screenshot_mode == 3)
+		screenshot_res = g_settings.screenshot_res;
+	else
+		screenshot_res = g_settings.screenshot_mode;
+#else
 	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_VIDEO, &g_settings.screenshot_video, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_VIDEO);
 	menu_screenshot->addItem(mc);
+#endif
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_RES, &screenshot_res, SCREENSHOT_RES_OPTIONS, SCREENSHOT_RES_OPTION_COUNT, g_settings.screenshot_mode == 3);
+	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_RES);
+#else
 	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_SCALE, &g_settings.screenshot_scale, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_SCALE);
+#endif
 	menu_screenshot->addItem(mc);
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+	screenshot_res_chooser = mc;
+#endif
 
 	mc = new CMenuOptionChooser(LOCALE_SCREENSHOT_COVER, &g_settings.screenshot_cover, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_COVER);
 	menu_screenshot->addItem(mc);
 }
-#endif
 
 #define SCREENSAVER_MODE_OPTION_COUNT 3
 const CMenuOptionChooser::keyval SCREENSAVER_MODE_OPTIONS[SCREENSAVER_MODE_OPTION_COUNT] =

@@ -109,6 +109,14 @@ const CMenuOptionChooser::keyval LCD_INFO_OPTIONS[LCD_INFO_OPTION_COUNT] =
 	{ 0, LOCALE_LCD_INFO_LINE_CHANNEL },
 	{ 1, LOCALE_LCD_INFO_LINE_CLOCK }
 };
+#if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
+#define OPTIONS_OFF_ON_OPTION_COUNT 2
+const CMenuOptionChooser::keyval OPTIONS_OFF_ON_OPTIONS[OPTIONS_OFF_ON_OPTION_COUNT] =
+{
+	{ 0, LOCALE_OPTIONS_OFF },
+	{ 1, LOCALE_OPTIONS_ON  }
+};
+#endif
 
 int CVfdSetup::showSetup()
 {
@@ -117,6 +125,7 @@ int CVfdSetup::showSetup()
 
 	CMenuForwarder * mf;
 
+#ifndef HAVE_DUCKBOX_HARDWARE
 	//led menu
 	if (cs_get_revision() > 7) // not HD1 and BSE
 	{
@@ -126,6 +135,7 @@ int CVfdSetup::showSetup()
 		mf->setHint("", LOCALE_MENU_HINT_POWER_LEDS);
 		vfds->addItem(mf);
 	}
+#endif
 
 	if (g_info.hw_caps->can_set_display_brightness)
 	{
@@ -157,9 +167,15 @@ int CVfdSetup::showSetup()
 		vfds->addItem(oj);
 		vfds->addItem(lcd_clock_channelname_menu);
 
+#if HAVE_DUCKBOX_HARDWARE
+		vfds->addItem(new CMenuOptionNumberChooser(LOCALE_LCDMENU_VFD_SCROLL, &g_settings.lcd_vfd_scroll, true, 0, 999, this, 0, 0, NONEXISTANT_LOCALE, true));
+#elif HAVE_SPARK_HARDWARE
+		vfds->addItem(new CMenuOptionNumberChooser(LOCALE_LCDMENU_VFD_SCROLL, &g_settings.lcd_vfd_scroll, (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT), 0, 999, this, 0, 0, NONEXISTANT_LOCALE, true));
+#else
 		oj = new CMenuOptionChooser(LOCALE_LCDMENU_SCROLL, &g_settings.lcd_scroll, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled);
 		oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
 		vfds->addItem(oj);
+#endif
 
 		oj = new CMenuOptionChooser(LOCALE_LCDMENU_NOTIFY_RCLOCK, &g_settings.lcd_notify_rclock, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled);
 		oj->setHint("", LOCALE_MENU_HINT_VFD_NOTIFY_RCLOCK);
@@ -236,6 +252,7 @@ int CVfdSetup::showBrightnessSetup()
 	return res;
 }
 
+#ifndef HAVE_DUCKBOX_HARDWARE
 void CVfdSetup::showLedSetup(CMenuWidget *mn_led_widget)
 {
 	CMenuOptionChooser * mc;
@@ -261,6 +278,7 @@ void CVfdSetup::showLedSetup(CMenuWidget *mn_led_widget)
 	mc->setHint("", LOCALE_MENU_HINT_LEDS_BLINK);
 	mn_led_widget->addItem(mc);
 }
+#endif
 
 void CVfdSetup::showBacklightSetup(CMenuWidget *mn_led_widget)
 {
@@ -291,8 +309,10 @@ bool CVfdSetup::changeNotify(const neutrino_locale_t OptionName, void * /* data 
 		CVFD::getInstance()->setBrightnessDeepStandby(brightnessdeepstandby);
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_DIM_BRIGHTNESS)) {
 		CVFD::getInstance()->setBrightness(g_settings.lcd_setting_dim_brightness);
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LEDCONTROLER_MODE_TV)) {
 		CVFD::getInstance()->setled();
+#endif
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LEDCONTROLER_BACKLIGHT_TV)) {
 		CVFD::getInstance()->setBacklight(g_settings.backlight_tv);
 	}

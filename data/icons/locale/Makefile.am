@@ -20,4 +20,4 @@ unmaintained = \
 	unmaintained/suomi.png \
 	unmaintained/svenska.png
 
-install_DATA += $(unmaintained)
+#install_DATA += $(unmaintained)

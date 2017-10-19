@@ -581,7 +581,11 @@ void CInfoViewerBB::showIcon_Resolution()
 #if 0
 	if ((scrambledNoSig) || ((!fta) && (scrambledErr)))
 #else
+#if BOXMODEL_UFS910
+	if (!g_InfoViewer->chanready)
+#else
 	if (!g_InfoViewer->chanready || videoDecoder->getBlank())
+#endif
 #endif
 	{
 		icon_name = NEUTRINO_ICON_RESOLUTION_000;
@@ -590,6 +594,9 @@ void CInfoViewerBB::showIcon_Resolution()
 		if (g_settings.infobar_show_res == 0) {//show resolution icon on infobar
 			videoDecoder->getPictureInfo(xres, yres, framerate);
 			switch (yres) {
+			case 2160:
+				icon_name = NEUTRINO_ICON_RESOLUTION_2160;
+				break;
 			case 1920:
 				icon_name = NEUTRINO_ICON_RESOLUTION_1920;
 				break;
@@ -637,7 +644,9 @@ void CInfoViewerBB::showIcon_Resolution()
 		}
 		if (g_settings.infobar_show_res == 1) {//show simple resolution icon on infobar
 			videoDecoder->getPictureInfo(xres, yres, framerate);
-			if (yres > 576)
+			if (yres > 1088)
+				icon_name = NEUTRINO_ICON_RESOLUTION_UHD;
+			else if (yres > 576)
 				icon_name = NEUTRINO_ICON_RESOLUTION_HD;
 			else if (yres > 0)
 				icon_name = NEUTRINO_ICON_RESOLUTION_SD;
@@ -698,7 +707,11 @@ void CInfoViewerBB::showSysfsHdd()
 		//sysFS info
 		int percent = 0;
 		uint64_t t, u;
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		if (get_fs_usage("/var", t, u))
+#else
 		if (get_fs_usage("/", t, u))
+#endif
 			percent = (int)((u * 100ULL) / t);
 		showBarSys(percent);
 
@@ -810,7 +823,9 @@ void CInfoViewerBB::showIcon_CA_Status(int notfirst)
 	int caids[] = {  0x900, 0xD00, 0xB00, 0x1800, 0x0500, 0x0100, 0x600,  0x2600, 0x4a00, 0x0E00 };
 	const char *white = "white";
 	const char *yellow = "yellow";
+	const char *green = "green";
 	int icon_space_offset = 0;
+	const char *ecm_info_f = "/tmp/ecm.info";
 
 	if(!g_InfoViewer->chanready) {
 		if (g_settings.infobar_casystem_display == 2) {
@@ -836,6 +851,40 @@ void CInfoViewerBB::showIcon_CA_Status(int notfirst)
 	}
 
 	if(!notfirst) {
+		FILE* fd = fopen (ecm_info_f, "r");
+		int ecm_caid = 0;
+		if (fd)
+		{
+			char *buffer = NULL;
+			size_t len = 0;
+			ssize_t read;
+			while ((read = getline(&buffer, &len, fd)) != -1)
+			{
+				if ((sscanf(buffer, "=%*[^9-0]%x", &ecm_caid) == 1) || (sscanf(buffer, "caid: %x", &ecm_caid) == 1))
+				{
+					continue;
+				}
+			}
+			fclose (fd);
+			if (buffer)
+				free (buffer);
+		}
+		if ((ecm_caid & 0xFF00) == 0x1700)
+		{
+			bool nagra_found = false;
+			bool beta_found = false;
+			for(casys_map_iterator_t it = channel->camap.begin(); it != channel->camap.end(); ++it) {
+				int caid = (*it) & 0xFF00;
+				if(caid == 0x1800)
+					nagra_found = true;
+				if (caid == 0x1700)
+					beta_found = true;
+			}
+			if(beta_found)
+				ecm_caid = 0x600;
+			else if(!beta_found && nagra_found)
+				ecm_caid = 0x1800;
+		}
 		for (int i = 0; i < (int)(sizeof(caids)/sizeof(int)); i++) {
 			bool found = false;
 			for(casys_map_iterator_t it = channel->camap.begin(); it != channel->camap.end(); ++it) {
@@ -846,9 +895,9 @@ void CInfoViewerBB::showIcon_CA_Status(int notfirst)
 					break;
 			}
 			if(g_settings.infobar_casystem_display == 0)
-				paint_ca_icons(caids[i], (found ? yellow : white), icon_space_offset);
+				paint_ca_icons(caids[i], (found ? (caids[i] == (ecm_caid & 0xFF00) ? green : yellow) : white), icon_space_offset);
 			else if(found)
-				paint_ca_icons(caids[i], yellow, icon_space_offset);
+				paint_ca_icons(caids[i], (caids[i] == (ecm_caid & 0xFF00) ? green : yellow), icon_space_offset);
 		}
 	}
 }

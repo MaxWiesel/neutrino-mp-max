@@ -101,7 +101,6 @@ private:
 	bool				favorites_changed;
 	bool				bouquets_changed;
 	bool				channels_init;
-	bool                            timer_wakeup;
 	int tvsort[LIST_MODE_LAST];
 	int radiosort[LIST_MODE_LAST];
 
@@ -121,7 +120,9 @@ private:
 	void standbyMode( bool bOnOff, bool fromDeepStandby = false );
 	void getAnnounceEpgName(CTimerd::RecordingInfo * eventinfo, std::string &name);
 
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	void ExitRun(int can_shutdown = 0);
+#endif
 	void RealRun();
 	void InitZapper();
 	void InitTimerdClient();
@@ -160,6 +161,14 @@ public:
 		norezap = 0x100
 	};
 
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+	enum {
+		SHUTDOWN,
+		REBOOT
+	};
+	void ExitRun(int can_shutdown = SHUTDOWN);
+#endif
+
 	CUserMenu usermenu;
 
 	void saveSetup(const char * fname);
@@ -180,6 +189,7 @@ public:
 	CChannelList			*TVchannelList;
 	CChannelList			*RADIOchannelList;
 	CChannelList			*channelList;
+	bool				timer_wakeup;
 
 	static CNeutrinoApp* getInstance();
 
