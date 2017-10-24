@@ -192,7 +192,7 @@ void CHDDMenuHandler::getBlkIds()
 		{
 			if (strncmp(mnt->mnt_fsname, "/dev/sd", 7) && strncmp(mnt->mnt_fsname, "/dev/hd", 7)
 #if HAVE_ARM_HARDWARE
-				&& (strncmp(mnt->mnt_fsname, "/dev/mmcblk", 11)
+				&& strncmp(mnt->mnt_fsname, "/dev/mmcblk", 11)
 #endif
 			)
 				continue;
