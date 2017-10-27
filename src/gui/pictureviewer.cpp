@@ -299,7 +299,7 @@ int CPictureViewerGui::show()
 				view(next);
 			}
 		}
-		else if (msg == CRCInput::RC_left)
+		else if (msg == CRCInput::RC_left || msg == CRCInput::RC_previoussong)
 		{
 			if (!playlist.empty())
 			{
@@ -318,7 +318,7 @@ int CPictureViewerGui::show()
 				}
 			}
 		}
-		else if (msg == CRCInput::RC_right)
+		else if (msg == CRCInput::RC_right || msg == CRCInput::RC_nextsong)
 		{
 			if (!playlist.empty())
 			{
