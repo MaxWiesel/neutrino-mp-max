@@ -185,7 +185,6 @@ class CMoviePlayerGui : public CMenuTarget
 	bool iso_file;
 	bool stopped;
 	CFileBrowser * filebrowser;
-	CFileFilter tsfilefilter;
 	CFileFilter filefilter_video;
 	CFileFilter filefilter_audio;
 	CFileList filelist;

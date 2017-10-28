@@ -212,6 +212,9 @@ void CMoviePlayerGui::Init(void)
 	filefilter_video.addFilter("vdr");
 	filefilter_video.addFilter("vob");
 	filefilter_video.addFilter("wmv");
+	// video playlists
+	filefilter_video.addFilter("m3u");
+	filefilter_video.addFilter("m3u8");
 
 	// audio files
 	filefilter_audio.addFilter("aac");
@@ -228,19 +231,9 @@ void CMoviePlayerGui::Init(void)
 	filefilter_audio.addFilter("mpa");
 	filefilter_audio.addFilter("ogg");
 	filefilter_audio.addFilter("wav");
-
-	// playlists
-	tsfilefilter.addFilter("m3u");
-	tsfilefilter.addFilter("m3u8");
-
-	for (unsigned int i = 0; i < filefilter_video.size(); i++)
-	{
-		tsfilefilter.addFilter(filefilter_video.getFilter(i));
-	}
-	for (unsigned int i = 0; i < filefilter_audio.size(); i++)
-	{
-		tsfilefilter.addFilter(filefilter_audio.getFilter(i));
-	}
+	// audio playlists
+	filefilter_audio.addFilter("m3u");
+	filefilter_audio.addFilter("m3u8");
 
 	if (g_settings.network_nfs_moviedir.empty())
 		Path_local = "/";
@@ -252,7 +245,7 @@ void CMoviePlayerGui::Init(void)
 	else
 		filebrowser = new CFileBrowser();
 
-	filebrowser->Filter = &tsfilefilter;
+	// filebrowser->Filter is set in exec() function
 	filebrowser->Hide_records = true;
 	filebrowser->Multi_Select = true;
 	filebrowser->Dirs_Selectable = true;
@@ -390,6 +383,23 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 	if (parent)
 		parent->hide();
 
+	//NI
+	if (actionKey == "fileplayback_video" || actionKey == "fileplayback_audio" || actionKey == "tsmoviebrowser")
+	{
+		if (actionKey == "fileplayback_video") {
+			printf("[movieplayer] wakeup_hdd(%s) for %s\n", g_settings.network_nfs_moviedir.c_str(), actionKey.c_str());
+			wakeup_hdd(g_settings.network_nfs_moviedir.c_str(), true);
+		}
+		else if (actionKey == "fileplayback_audio") {
+			printf("[movieplayer] wakeup_hdd(%s) for %s\n", g_settings.network_nfs_audioplayerdir.c_str(), actionKey.c_str());
+			wakeup_hdd(g_settings.network_nfs_audioplayerdir.c_str(), true);
+		}
+		else {
+			printf("[movieplayer] wakeup_hdd(%s) for %s\n", g_settings.network_nfs_recordingdir.c_str(), actionKey.c_str());
+			wakeup_hdd(g_settings.network_nfs_recordingdir.c_str(), true);
+		}
+	}
+
 	if (!access(MOVIEPLAYER_START_SCRIPT, X_OK)) {
 		puts("[movieplayer.cpp] executing " MOVIEPLAYER_START_SCRIPT ".");
 		if (my_system(MOVIEPLAYER_START_SCRIPT) != 0)
@@ -408,7 +418,7 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 	if (actionKey == "tsmoviebrowser") {
 		isMovieBrowser = true;
 		moviebrowser->setMode(MB_SHOW_RECORDS);
-		wakeup_hdd(g_settings.network_nfs_recordingdir.c_str());
+		//wakeup_hdd(g_settings.network_nfs_recordingdir.c_str());
 	}
 	else if (actionKey == "ytplayback") {
 		isMovieBrowser = true;

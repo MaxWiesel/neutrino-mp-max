@@ -177,13 +177,18 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 	fw_mbrowser->setHint(NEUTRINO_ICON_HINT_MB, LOCALE_MENU_HINT_MB);
 	personalize->addItem(multimedia_menu, fw_mbrowser, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_MBROWSER]);
 
-	//fileplayback
-	CMenuForwarder *fw_fileplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback", CRCInput::RC_1);
-	fw_fileplay->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
-	personalize->addItem(multimedia_menu, fw_fileplay, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY]);
+	//fileplayback video
+	CMenuForwarder *fw_fileplay_video = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK_VIDEO, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback_video", CRCInput::RC_1);
+	fw_fileplay_video->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
+	personalize->addItem(multimedia_menu, fw_fileplay_video, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY_VIDEO]);
+
+	//fileplayback audio
+	CMenuForwarder *fw_fileplay_audio = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK_AUDIO, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback_audio", CRCInput::2);
+	fw_fileplay_audio->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
+	personalize->addItem(multimedia_menu, fw_fileplay_audio, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY_AUDIO]);
 
 	//ytplayback
-	CMenuForwarder *fw_ytplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_YTPLAYBACK, g_settings.youtube_enabled, NULL, &CMoviePlayerGui::getInstance(), "ytplayback", CRCInput::RC_2);
+	CMenuForwarder *fw_ytplay = new CMenuForwarder(LOCALE_MOVIEPLAYER_YTPLAYBACK, g_settings.youtube_enabled, NULL, &CMoviePlayerGui::getInstance(), "ytplayback", CRCInput::RC_3);
 	fw_ytplay->setHint(NEUTRINO_ICON_HINT_YTPLAY, LOCALE_MENU_HINT_YTPLAY);
 	personalize->addItem(multimedia_menu, fw_ytplay, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_YTPLAY]);
 

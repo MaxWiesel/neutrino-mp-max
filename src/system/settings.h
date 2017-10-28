@@ -435,8 +435,8 @@ struct SNeutrinoSettings
 
 		//movieplayer menu
 		P_MPLAYER_MBROWSER,
-		P_MPLAYER_FILEPLAY,
-		P_MPLAYER_INETPLAY,
+		P_MPLAYER_FILEPLAY_VIDEO,
+		P_MPLAYER_FILEPLAY_AUDIO,
 		P_MPLAYER_YTPLAY,
 
 		//feature keys
@@ -927,7 +927,7 @@ struct SNeutrinoSettings
 		ITEM_GAMES = 20,
 		ITEM_SCRIPTS = 21,
 		ITEM_YOUTUBE = 22,
-		ITEM_FILEPLAY = 23,
+		ITEM_FILEPLAY_VIDEO = 23,
 		ITEM_TOOLS = 24,
 		ITEM_LUA = 25,
 		ITEM_HDDMENU = 26,
