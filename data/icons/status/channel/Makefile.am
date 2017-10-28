@@ -12,6 +12,7 @@ install_DATA = \
 	radiotextoff.png \
 	radiotextwait.png \
 	res_000.png \
+	res_2160.png \
 	res_1080.png \
 	res_1280.png \
 	res_1440.png \
@@ -25,6 +26,7 @@ install_DATA = \
 	res_576.png \
 	res_704.png \
 	res_720.png \
+	res_uhd.png \
 	res_hd.png \
 	res_sd.png \
 	subt.png \
