@@ -415,8 +415,17 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 		moviebrowser->setMode(MB_SHOW_YT);
 		isYT = true;
 	}
-	else if (actionKey == "fileplayback") {
-		wakeup_hdd(g_settings.network_nfs_moviedir.c_str());
+	else if (actionKey == "fileplayback_video") {
+		is_audio_playing = false;
+		if (filebrowser)
+			filebrowser->Filter = &filefilter_video;
+		//wakeup_hdd(g_settings.network_nfs_moviedir.c_str());
+	}
+	else if (actionKey == "fileplayback_audio") {
+		is_audio_playing = true;
+		if (filebrowser)
+			filebrowser->Filter = &filefilter_audio;
+		//wakeup_hdd(g_settings.network_nfs_audioplayerdir.c_str());
 	}
 	else if (actionKey == "timeshift") {
 		timeshift = TSHIFT_MODE_ON;
@@ -771,13 +780,22 @@ bool CMoviePlayerGui::SelectFile()
 	file_name.clear();
 	cookie_header.clear();
 	//reinit Path_local for webif reloadsetup
-	if (g_settings.network_nfs_moviedir.empty())
-		Path_local = "/";
+	Path_local = "/";
+	if (is_audio_playing)
+	{
+		if (!g_settings.network_nfs_audioplayerdir.empty())
+			Path_local = g_settings.network_nfs_audioplayerdir;
+	}
 	else
-		Path_local = g_settings.network_nfs_moviedir;
+	{
+		if (!g_settings.network_nfs_moviedir.empty())
+			Path_local = g_settings.network_nfs_moviedir;
+	}
 
-	printf("CMoviePlayerGui::SelectFile: isBookmark %d timeshift %d isMovieBrowser %d\n", isBookmark, timeshift, isMovieBrowser);
-
+	printf("CMoviePlayerGui::SelectFile: isBookmark %d timeshift %d isMovieBrowser %d is_audio_playing %d\n", isBookmark, timeshift, isMovieBrowser, is_audio_playing);
+#if 0
+	wakeup_hdd(g_settings.network_nfs_recordingdir.c_str());
+#endif
 	if (timeshift != TSHIFT_MODE_OFF) {
 		t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
 		p_movie_info = CRecordManager::getInstance()->GetMovieInfo(live_channel_id);
@@ -846,7 +864,8 @@ bool CMoviePlayerGui::SelectFile()
 		menu_ret = filebrowser->getMenuRet();
 		enableOsdElements(MUTE);
 	}
-	g_settings.network_nfs_moviedir = Path_local;
+	if (!is_audio_playing)
+		g_settings.network_nfs_moviedir = Path_local;
 
 	return ret;
 }
@@ -1302,9 +1321,7 @@ extern void MoviePlayerStop(void)
 void CMoviePlayerGui::stopPlayBack(void)
 {
 	printf("%s: stopping...\n", __func__);
-#if HAVE_SH4_HARDWARE
 	playback->RequestAbort();
-#endif
 
 	repeat_mode = REPEAT_OFF;
 	if (bgThread) {
@@ -1744,9 +1761,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 
 		if (msg == (neutrino_msg_t) g_settings.mpkey_plugin) {
 			g_Plugins->startPlugin_by_name(g_settings.movieplayer_plugin.c_str ());
-#if 0
-		} else if ((msg == (neutrino_msg_t) g_settings.mpkey_stop) || msg == CRCInput::RC_home) {
-#endif
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_stop) {
 			playstate = CMoviePlayerGui::STOPPED;
 			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP;
@@ -1758,7 +1772,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			pfile = &(*filelist_it);
 			int selected = std::distance( filelist.begin(), filelist_it );
 			filelist_it = filelist.end();
-			if (playlist->playlist_manager(filelist, selected))
+			if (playlist->playlist_manager(filelist, selected, is_audio_playing))
 			{
 				playstate = CMoviePlayerGui::STOPPED;
 				CFile *sfile = NULL;
@@ -1848,7 +1862,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				CFile *pfile = NULL;
 				int selected = std::distance( filelist.begin(), filelist_it );
 				filelist_it = filelist.end();
-				if (playlist->playlist_manager(filelist, selected))
+				if (playlist->playlist_manager(filelist, selected, is_audio_playing))
 				{
 					playstate = CMoviePlayerGui::STOPPED;
 					CFile *sfile = NULL;
@@ -2511,9 +2525,6 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 		newComHintBox.movePosition(newx, newy);
 		return;
 	}
-#if 0
-	else if ((msg == (neutrino_msg_t) g_settings.mpkey_stop) || msg == CRCInput::RC_home) {
-#endif
 	else if (msg == (neutrino_msg_t) g_settings.mpkey_stop) {
 		// if we have a movie information, try to save the stop position
 		printf("CMoviePlayerGui::handleMovieBrowser: stop, isMovieBrowser %d p_movie_info %p\n", isMovieBrowser, p_movie_info);
