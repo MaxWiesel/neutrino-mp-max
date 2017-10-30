@@ -144,7 +144,7 @@ static void display(const char *s, bool update_timestamp = true)
 	int len = strlen(s);
 	if (fd < 0)
 		return;
-printf("%s '%s'\n", __func__, s);
+	printf("%s '%s'\n", __func__, s);
 	write(fd, s, len);
 	close(fd);
 	if (update_timestamp)
@@ -230,7 +230,7 @@ void CLCD::init(const char *, const char *, const char *, const char *, const ch
 	setMode(MODE_TVRADIO);
 	thread_running = true;
 	if (pthread_create (&thrTime, NULL, TimeThread, NULL) != 0 ) {
-		perror("[neutino] CLCD::init pthread_create(TimeThread)");
+		perror("[neutino] CLCD::init() pthread_create(TimeThread)");
 		thread_running = false;
 		return ;
 	}
@@ -271,7 +271,7 @@ void CLCD::setled(int red, int green)
 	if (fd < 0)
 		return;
 
-	// printf("%s red:%d green:%d\n", __func__, red, green);
+	printf("CLCD::%s red:%d green:%d\n", __func__, red, green);
 
 	for (i = 0; i < 2; i++)
 	{
@@ -280,7 +280,7 @@ void CLCD::setled(int red, int green)
 		d.u.led.led_nr = i;
 		d.u.led.on = leds[i];
 		if (ioctl(fd, VFDSETLED, &d) < 0)
-			fprintf(stderr, "[neutrino] %s setled VFDSETLED: %m\n", __func__);
+			fprintf(stderr, "[neutrino] CLCD::%s VFDSETLED: %m\n", __func__);
 	}
 	close(fd);
 }
@@ -305,7 +305,7 @@ void CLCD::setled(int red, int green)
 	sprintf(s, "%c\n", col);
 	write(fd, s, 3);
 	close(fd);
-	//printf("%s(%d, %d): %c\n", __func__, red, green, col);
+	//printf("CLCD::%s(%d, %d): %c\n", __func__, red, green, col);
 }
 #else
 void CLCD::setled(int /*red*/, int /*green*/)
@@ -548,7 +548,7 @@ void CLCD::setBrightness(int dimm)
 		d.u.brightness.level = dimm;
 
 		if (ioctl(fd, VFDBRIGHTNESS, &d) < 0)
-			fprintf(stderr, "[neutrino] %s set brightness VFDBRIGHTNESS: %m\n", __func__);
+			fprintf(stderr, "[neutrino] CLCD::%s VFDBRIGHTNESS: %m\n", __func__);
 
 		close(fd);
 	}
@@ -617,7 +617,7 @@ void CLCD::togglePower(void)
 
 void CLCD::setMuted(bool mu)
 {
-printf("spark_led:%s %d\n", __func__, mu);
+	printf("CLCD::%s %d\n", __func__, mu);
 	muted = mu;
 	showVolume(volume, false);
 }
@@ -646,14 +646,14 @@ void CLCD::Clear()
 		return;
 	int ret = ioctl(fd, VFDDISPLAYCLR);
 	if(ret < 0)
-		perror("[neutrino] spark_led Clear() VFDDISPLAYCLR");
+		perror("[neutrino] CLCD::clear() VFDDISPLAYCLR");
 	close(fd);
 	if (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT) {
 		SetIcons(SPARK_ALL, false);
 		SetIcons(SPARK_CLOCK, timer_icon);
 	}
 	servicename.clear();
-printf("spark_led:%s\n", __func__);
+	printf("CLCD::%s\n", __func__);
 }
 #else
 void CLCD::Clear()
@@ -701,7 +701,7 @@ void CLCD::setlcdparameter(int dimm, const int power)
 
 	brightness = dimm;
 
-printf("CLCD::setlcdparameter dimm %d power %d\n", dimm, power);
+	printf("CLCD::%s(dimm %d power %d)\n", __func__, dimm, power);
 	setBrightness(dimm);
 }
 
@@ -719,7 +719,7 @@ void CLCD::SetIcons(int icon, bool on)
 		if (fd < 0)
 			return;
 		if (ioctl(fd, VFDICONDISPLAYONOFF, &d) <0)
-			perror("[neutrino] SetIcons() VFDICONDISPLAYONOFF");
+			perror("[neutrino] CLCD::SetIcons() VFDICONDISPLAYONOFF");
 		close(fd);
 	}
 #else
