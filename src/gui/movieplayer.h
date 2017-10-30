@@ -102,8 +102,6 @@ class CMoviePlayerGui : public CMenuTarget
 	CFrameBuffer * frameBuffer;
 	int            m_LastMode;
 
-	std::string	file_name;
-	std::string	pretty_name;
 	std::string	cookie_header;
 	std::string	info_1, info_2;
 	std::string    	currentaudioname;
@@ -188,10 +186,13 @@ class CMoviePlayerGui : public CMenuTarget
 
 	/* playback from file */
 	bool is_file_player;
+	bool is_audio_playing;
 	bool iso_file;
 	bool stopped;
 	CFileBrowser * filebrowser;
 	CFileFilter tsfilefilter;
+	CFileFilter filefilter_video;
+	CFileFilter filefilter_audio;
 	CFileList filelist;
 	CFileList::iterator filelist_it;
 	CFileList::iterator vzap_it;
@@ -267,6 +268,8 @@ class CMoviePlayerGui : public CMenuTarget
 	static CMoviePlayerGui& getInstance(bool background = false);
 
 	MI_MOVIE_INFO * p_movie_info;
+	std::string	file_name;
+	std::string	pretty_name;
 	int exec(CMenuTarget* parent, const std::string & actionKey);
 	bool Playing() { return playing; };
 	std::string CurrentAudioName() { return currentaudioname; };
@@ -314,6 +317,7 @@ class CMoviePlayerGui : public CMenuTarget
 	void setLuaInfoFunc(lua_State* L, bool func) { luaState = L; haveLuaInfoFunc = func; };
 	void getLivestreamInfo(std::string *i1, std::string *i2) { *i1=livestreamInfo1; *i2=livestreamInfo2; };
 	bool getLiveUrl(const std::string &url, const std::string &script, std::string &realUrl, std::string &_pretty_name, std::string &info1, std::string &info2, std::string &header);
+	bool IsAudioPlaying() { return is_audio_playing; };
 };
 
 #endif
