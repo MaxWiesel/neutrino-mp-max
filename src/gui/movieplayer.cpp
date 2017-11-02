@@ -3257,6 +3257,7 @@ void CMoviePlayerGui::makeScreenShot(bool autoshot, bool forcover)
 	if (autoshot && (autoshot_done || !g_settings.auto_cover))
 		return;
 
+#ifdef SCREENSHOT
 	bool cover = autoshot || g_settings.screenshot_cover || forcover;
 	char ending[(sizeof(int)*2) + 6] = ".jpg";
 	if (!cover)
@@ -3307,6 +3308,9 @@ void CMoviePlayerGui::makeScreenShot(bool autoshot, bool forcover)
 		}
 	}
 	sc->Start("-r 320 -j 75");
+#else
+	(void)forcover;
+#endif
 	if (autoshot)
 		autoshot_done = true;
 }

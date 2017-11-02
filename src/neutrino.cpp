@@ -2884,9 +2884,10 @@ void CNeutrinoApp::RealRun()
 				numericZap( msg );
 				InfoClock->enableInfoClock(true);
 			}
+#ifdef SCREENSHOT
 			else if (msg == (neutrino_msg_t) g_settings.key_screenshot) {
 				for(int i = 0; i < g_settings.screenshot_count; i++) {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
 					CVFD::getInstance()->ShowText("SCREENSHOT");
 					CHintBox *hintbox = NULL;
 					if (g_settings.screenshot_mode == 1)
@@ -2897,7 +2898,7 @@ void CNeutrinoApp::RealRun()
 					CScreenShot * sc = new CScreenShot("", (CScreenShot::screenshot_format_t)g_settings.screenshot_format);
 					sc->MakeFileName(CZapit::getInstance()->GetCurrentChannelID());
 					sc->Start();
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
 					if (hintbox) {
 						hintbox->hide();
 						delete hintbox;
@@ -2905,6 +2906,7 @@ void CNeutrinoApp::RealRun()
 #endif
 				}
 			}
+#endif
 			else if( msg == (neutrino_msg_t) g_settings.key_lastchannel ) {
 				// Quick Zap
 				numericZap( msg );
@@ -3588,6 +3590,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		delete sleepTimer;
 		return messages_return::handled;
 	}
+#ifdef SCREENSHOT
 	else if (msg == (neutrino_msg_t) g_settings.key_screenshot) {
 		//video+osd scaled to osd size
 		CScreenShot * sc = new CScreenShot("", (CScreenShot::screenshot_format_t)g_settings.screenshot_format);
@@ -3595,6 +3598,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		sc->MakeFileName(CZapit::getInstance()->GetCurrentChannelID());
 		sc->Start();
 	}
+#endif
 
 	/* ================================== MESSAGES ================================================ */
 	else if (msg == NeutrinoMessages::EVT_VOLCHANGED) {

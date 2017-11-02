@@ -663,12 +663,14 @@ int COsdSetup::showOsdSetup()
 	mf->setHint("", LOCALE_MENU_HINT_INFOCLOCK_SETUP);
 	osd_menu->addItem(mf);
 
+#ifdef SCREENSHOT
 	//screenshot
 	CMenuWidget osd_menu_screenshot(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_OSDSETUP_SCREENSHOT);
 	showOsdScreenShotSetup(&osd_menu_screenshot);
 	mf = new CMenuForwarder(LOCALE_SCREENSHOT_MENU, true, NULL, &osd_menu_screenshot, NULL, CRCInput::convertDigitToKey(shortcut++));
 	mf->setHint("", LOCALE_MENU_HINT_SCREENSHOT_SETUP);
 	osd_menu->addItem(mf);
+#endif
 
 	//screensaver
 	CMenuWidget osd_menu_screensaver(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_OSDSETUP_SCREENSAVER);
@@ -1597,6 +1599,7 @@ int COsdSetup::showContextChanlistMenu(CChannelList *parent_channellist)
 	return res;
 }
 
+#ifdef SCREENSHOT
 //screenshot
 #define SCREENSHOT_FMT_OPTION_COUNT 3
 const CMenuOptionChooser::keyval_ext SCREENSHOT_FMT_OPTIONS[SCREENSHOT_FMT_OPTION_COUNT] =
@@ -1674,6 +1677,7 @@ void COsdSetup::showOsdScreenShotSetup(CMenuWidget *menu_screenshot)
 	mc->setHint("", LOCALE_MENU_HINT_SCREENSHOT_COVER);
 	menu_screenshot->addItem(mc);
 }
+#endif
 
 #define SCREENSAVER_MODE_OPTION_COUNT 3
 const CMenuOptionChooser::keyval SCREENSAVER_MODE_OPTIONS[SCREENSAVER_MODE_OPTION_COUNT] =

@@ -192,7 +192,9 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[]=
 	{"reloadsetup",		&CControlAPI::ReloadNeutrinoSetupCGI,	""},
 	{"reloadplugins",	&CControlAPI::ReloadPluginsCGI,		""},
 	{"reloadchannels",	&CControlAPI::ReloadChannelsCGI,	""},
+#ifdef SCREENSHOT
 	{"screenshot",		&CControlAPI::ScreenshotCGI,		""},
+#endif
 	// boxcontrol - devices
 	{"volume",		&CControlAPI::VolumeCGI,		"text/plain"},
 	{"lcd",			&CControlAPI::LCDAction,		"text/plain"},
@@ -2079,6 +2081,7 @@ void CControlAPI::ReloadChannelsCGI(CyhookHandler *hh)
 	hh->SendOk();
 }
 
+#ifdef SCREENSHOT
 void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 {
 	bool enableOSD = true;
@@ -2113,6 +2116,7 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 		delete screenshot;
 	}
 }
+#endif
 
 //-----------------------------------------------------------------------------
 void CControlAPI::ZaptoCGI(CyhookHandler *hh)

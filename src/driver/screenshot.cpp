@@ -172,7 +172,7 @@ bool CScreenShot::GetData()
 	}
 	else
 #endif
-#if !HAVE_GENERIC_HARDWARE
+#ifdef SCREENSHOT
 	res = videoDecoder->GetScreenImage(pixel_data, xres, yres, get_video, get_osd, scale_to_video);
 #endif
 
