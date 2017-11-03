@@ -276,6 +276,9 @@ void CMoviePlayerGui::cutNeutrino()
 	if (isUPNP)
 		return;
 
+#if 0
+	CZapit::getInstance()->setMoviePlayer(true);// let CCamManager::SetMode know, the call is from MoviePlayer
+#endif
 	g_Zapit->lockPlayBack();
 
 #ifdef HAVE_AZBOX_HARDWARE
@@ -350,6 +353,19 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 	if (parent)
 		parent->hide();
 
+#if 0
+	if (actionKey == "fileplayback" || actionKey == "tsmoviebrowser")
+	{
+		if(actionKey == "fileplayback") {
+			printf("[movieplayer] wakeup_hdd(%s) for %s\n", g_settings.network_nfs_moviedir.c_str(), actionKey.c_str());
+			wakeup_hdd(g_settings.network_nfs_moviedir.c_str(),true);
+		}
+		else {
+			printf("[movieplayer] wakeup_hdd(%s) for %s\n", g_settings.network_nfs_recordingdir.c_str(), actionKey.c_str());
+			wakeup_hdd(g_settings.network_nfs_recordingdir.c_str(),true);
+		}
+	}
+#endif
 	if (!access(MOVIEPLAYER_START_SCRIPT, X_OK)) {
 		puts("[movieplayer.cpp] executing " MOVIEPLAYER_START_SCRIPT ".");
 		if (my_system(MOVIEPLAYER_START_SCRIPT) != 0)
@@ -735,7 +751,9 @@ bool CMoviePlayerGui::SelectFile()
 		Path_local = g_settings.network_nfs_moviedir;
 
 	printf("CMoviePlayerGui::SelectFile: isBookmark %d timeshift %d isMovieBrowser %d\n", isBookmark, timeshift, isMovieBrowser);
-
+#if 0
+	wakeup_hdd(g_settings.network_nfs_recordingdir.c_str());
+#endif
 	if (timeshift != TSHIFT_MODE_OFF) {
 		t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
 		p_movie_info = CRecordManager::getInstance()->GetMovieInfo(live_channel_id);
@@ -1510,6 +1528,9 @@ void CMoviePlayerGui::PlayFileLoop(void)
 {
 	bool first_start = true;
 	bool update_lcd = true;
+#if 0
+	neutrino_msg_t lastmsg = 0;
+#endif
 	int ss,mm,hh;
 #if HAVE_COOL_HARDWARE
 	int eof = 0;
@@ -1519,6 +1540,11 @@ void CMoviePlayerGui::PlayFileLoop(void)
 	bool at_eof = !(playstate >= CMoviePlayerGui::PLAY);;
 	keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_NORMAL;
 
+#if 0	//bisectional jumps
+	int bisection_jump = g_settings.movieplayer_bisection_jump * 60;
+	int bisection_loop = -1;
+	int bisection_loop_max = 5;
+#endif
 	while (playstate >= CMoviePlayerGui::PLAY)
 	{
 		if (update_lcd) {
@@ -1535,6 +1561,12 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		neutrino_msg_data_t data;
 		g_RCInput->getMsg(&msg, &data, 10);	// 1 secs..
 
+#if 0		//bisectional jumps
+		if (bisection_loop > -1)
+			bisection_loop++;
+		if (bisection_loop > bisection_loop_max)
+			bisection_loop = -1;
+#endif
 		if ((playstate >= CMoviePlayerGui::PLAY) && (timeshift != TSHIFT_MODE_OFF || (playstate != CMoviePlayerGui::PAUSE))) {
 			if (playback->GetPosition(position, duration)) {
 				FileTimeOSD->update(position, duration);
@@ -1643,6 +1675,9 @@ void CMoviePlayerGui::PlayFileLoop(void)
 
 		if (msg == (neutrino_msg_t) g_settings.mpkey_plugin) {
 			g_Plugins->startPlugin_by_name(g_settings.movieplayer_plugin.c_str ());
+#if 0
+		} else if ((msg == (neutrino_msg_t) g_settings.mpkey_stop) || msg == CRCInput::RC_home) {
+#endif
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_stop) {
 			playstate = CMoviePlayerGui::STOPPED;
 			keyPressed = CMoviePlayerGui::PLUGIN_PLAYSTATE_STOP;
@@ -1882,12 +1917,11 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			SetPosition(duration/2, true);
 		} else if (msg == CRCInput::RC_8) {	// goto end
 			SetPosition(duration - 60 * 1000, true);
-#if 0
 		} else if (msg == CRCInput::RC_page_up) {
 			SetPosition(10 * 1000);
 		} else if (msg == CRCInput::RC_page_down) {
 			SetPosition(-10 * 1000);
-
+#if 0
 		//- bisectional jumps
 		} else if (msg == CRCInput::RC_page_up || msg == CRCInput::RC_page_down) {
 			int direction = (msg == CRCInput::RC_page_up) ? 1 : -1;
@@ -2030,6 +2064,10 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #endif
 			}
 		}
+#if 0
+		if (msg < CRCInput::RC_MaxRC)
+			lastmsg = msg;
+#endif
 	}
 	printf("CMoviePlayerGui::PlayFile: exit, isMovieBrowser %d p_movie_info %p\n", isMovieBrowser, p_movie_info);
 	playstate = CMoviePlayerGui::STOPPED;
@@ -2392,6 +2430,9 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 		newComHintBox.movePosition(newx, newy);
 		return;
 	}
+#if 0
+	else if ((msg == (neutrino_msg_t) g_settings.mpkey_stop) || msg == CRCInput::RC_home) {
+#endif
 	else if (msg == (neutrino_msg_t) g_settings.mpkey_stop) {
 		// if we have a movie information, try to save the stop position
 		printf("CMoviePlayerGui::handleMovieBrowser: stop, isMovieBrowser %d p_movie_info %p\n", isMovieBrowser, p_movie_info);
