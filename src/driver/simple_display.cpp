@@ -77,7 +77,7 @@ static int proc_put(const char *path, bool state)
 	return ret;
 }
 #else
-static int proc_put(const char, bool) {}
+static int proc_put(const char *path, bool state) {return 0;}
 #endif
 
 static char volume = 0;
@@ -220,6 +220,16 @@ void* CLCD::TimeThread(void *)
 				CLCD::getInstance()->wake_up();
 		} else
 			CLCD::getInstance()->showTime();
+#if 0
+		/* hack, just if we missed the blit() somewhere
+		 * this will update the framebuffer once per second */
+		if (getenv("SPARK_NOBLIT") == NULL) {
+			CFrameBuffer *fb = CFrameBuffer::getInstance();
+			/* plugin start locks the framebuffer... */
+			if (!fb->Locked())
+				fb->blit();
+		}
+#endif
 	}
 	return NULL;
 }
@@ -345,8 +355,8 @@ void CLCD::showTime(bool force)
 		if (force || last_display || (switch_name_time_cnt == 0 && ((hour != t->tm_hour) || (minute != t->tm_min)))) {
 			hour = t->tm_hour;
 			minute = t->tm_min;
-#if HAVE_SPARK_HARDWARE
 			int ret = -1;
+#if HAVE_SPARK_HARDWARE
 			now += t->tm_gmtoff;
 			int fd = dev_open();
 #if 0 /* VFDSETTIME is broken and too complicated anyway -> use VFDSETTIME2 */
