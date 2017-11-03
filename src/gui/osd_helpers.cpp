@@ -146,10 +146,12 @@ int COsdHelpers::isVideoSystem1080(int res)
 	    (res == VIDEO_STD_1080P2997))
 		return true;
 #endif
+
 #if HAVE_DUCKBOX_HARDWARE || HAVE_SPARK_HARDWARE
 	if ((res == VIDEO_STD_1080P50))
 		return true;
 #endif
+
 #if HAVE_ARM_HARDWARE
 	if ((res == VIDEO_STD_1080P50) ||
 	    (res == VIDEO_STD_1080P60) ||

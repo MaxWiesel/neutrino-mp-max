@@ -274,7 +274,6 @@ class CLCD
 		void setBrightnessDeepStandby(int) { return ; };
 		int getBrightnessDeepStandby() { return 0; };
 		void repaintIcons() { return; };
-
 		void setMuted(bool);
 
 		void resume();

@@ -255,7 +255,7 @@ void CLCD::showServicename(std::string name, bool)
 	if (g_info.hw_caps->display_type == HW_DISPLAY_LED_NUM)
 		return;
 	servicename = name;
-	if (mode != MODE_TVRADIO)
+	if (mode != MODE_TVRADIO && mode != MODE_AUDIO)
 		return;
 	replace_umlauts(name);
 	strncpy(display_text, name.c_str(), sizeof(display_text) - 1);
@@ -345,8 +345,8 @@ void CLCD::showTime(bool force)
 		if (force || last_display || (switch_name_time_cnt == 0 && ((hour != t->tm_hour) || (minute != t->tm_min)))) {
 			hour = t->tm_hour;
 			minute = t->tm_min;
-			int ret = -1;
 #if HAVE_SPARK_HARDWARE
+			int ret = -1;
 			now += t->tm_gmtoff;
 			int fd = dev_open();
 #if 0 /* VFDSETTIME is broken and too complicated anyway -> use VFDSETTIME2 */
@@ -444,7 +444,6 @@ void CLCD::showVolume(const char vol, const bool update)
 	if (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT)
 		sprintf(s,"%.*s", volume*g_info.hw_caps->display_xres/100, "================");
 #endif
-
 	display(s);
 #if HAVE_ARM_HARDWARE
 	wake_up();
@@ -516,7 +515,6 @@ void CLCD::setMode(const MODES m, const char * const)
 		break;
 	case MODE_SHUTDOWN:
 		showclock = false;
-		showTime();
 		Clear();
 		break;
 	case MODE_STANDBY:
@@ -759,6 +757,7 @@ void CLCD::SetIcons(int, bool)
 {
 }
 #endif
+
 void CLCD::ShowDiskLevel()
 {
 #if !HAVE_GENERIC_HARDWARE && !HAVE_ARM_HARDWARE
@@ -768,7 +767,7 @@ void CLCD::ShowDiskLevel()
 	if (get_fs_usage(g_settings.network_nfs_recordingdir.c_str(), t, u))
 	{
 		SetIcons(SPARK_HDD, true);
-		percent = (int)((u * 1000ULL) / t + 60); 
+		percent = (int)((u * 1000ULL) / t + 60);
 		digits = percent / 125;
 		if (percent > 1050)
 			digits = 9;
@@ -777,7 +776,7 @@ void CLCD::ShowDiskLevel()
 		{
 			for (i=0; i<digits; i++)
 				SetIcons(hdd_icons[i], true);
-						
+
 			for (j=i; j < 9; j++)
 				SetIcons(hdd_icons[j], false);
 		}

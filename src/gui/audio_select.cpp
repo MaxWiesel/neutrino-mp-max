@@ -40,7 +40,6 @@
 #include <gui/widget/icons.h>
 #include <gui/widget/menue.h>
 #include <driver/screen_max.h>
-#include <driver/volume.h>
 #include <zapit/zapit.h>
 #include <system/helpers.h>
 
@@ -151,7 +150,9 @@ int CAudioSelectMenuHandler::doMenu ()
 	AudioSelector->addKey(CRCInput::RC_right, this, "+");
 	AudioSelector->addKey(CRCInput::RC_left, this, "-");
 	AudioSelector->addKey(CRCInput::RC_red, this, "x");
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 	AudioSelector->addKey(CRCInput::RC_green, this, "x");
+#endif
 	AudioSelector->addKey(CRCInput::RC_yellow, this, "x");
 	AudioSelector->addKey(CRCInput::RC_blue, this, "x");
 
@@ -175,7 +176,7 @@ int CAudioSelectMenuHandler::doMenu ()
 	{
 		if (is_mp) {
 			mp->getAPID(i, apid[i], is_ac3[i]);
-			perc_val[i] = (is_ac3[i] > 2) ? g_settings.audio_volume_percent_ac3 : g_settings.audio_volume_percent_pcm;
+			perc_val[i] = (is_ac3[i] == 1) ? g_settings.audio_volume_percent_ac3 : g_settings.audio_volume_percent_pcm;
 		} else {
 			apid[i] = g_RemoteControl->current_PIDs.APIDs[i].pid;
 			is_ac3[i] = g_RemoteControl->current_PIDs.APIDs[i].is_ac3;
@@ -183,7 +184,7 @@ int CAudioSelectMenuHandler::doMenu ()
 		}
 		perc_str[i] = to_string(perc_val[i]) + "%";
 
-		CMenuForwarder *fw = new CMenuForwarder(is_mp ? mp->getAPIDDesc(i).c_str() : g_RemoteControl->current_PIDs.APIDs[i].desc, 
+		CMenuForwarder *fw = new CMenuForwarder(is_mp ? mp->getAPIDDesc(i).c_str() : g_RemoteControl->current_PIDs.APIDs[i].desc,
 				true, perc_str[i], this, "s", CRCInput::convertDigitToKey(i + 1));
 		fw->setItemButton(NEUTRINO_ICON_BUTTON_OKAY, true);
 		fw->setMarked(sel_apid == i);
@@ -293,6 +294,14 @@ int CAudioSelectMenuHandler::doMenu ()
 					&percent[i], i == g_RemoteControl->current_PIDs.PIDs.selected_apid,
 					0, 999, CVolume::getInstance()));
 	}
+#endif
+
+	//tonbug
+	AudioSelector->addItem(GenericMenuSeparatorLine);
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
+	AudioSelector->addItem(new CMenuForwarder(LOCALE_CI_RESET, true, NULL, CNeutrinoApp::getInstance(), "tonbug", CRCInput::convertDigitToKey(++shortcut_num)));
+#else
+	AudioSelector->addItem(new CMenuForwarder(LOCALE_CI_RESET, true, NULL, CNeutrinoApp::getInstance(), "tonbug", CRCInput::RC_green));
 #endif
 
 	int res = AudioSelector->exec(NULL, "");

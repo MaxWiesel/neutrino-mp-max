@@ -49,7 +49,6 @@ class CAudioSelectMenuHandler : public CMenuTarget
 		std::string *perc_str;
 		CMenuWidget *AudioSelector;
 		t_channel_id chan;
-		
 	public:
 		CAudioSelectMenuHandler();
 		~CAudioSelectMenuHandler();

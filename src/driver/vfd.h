@@ -97,10 +97,11 @@ class CVFD
 		int                             last_toggle_state_power;
 		bool				clearClock;
 		unsigned int                    timeout_cnt;
-		unsigned int                    switch_name_time_cnt;		
+		unsigned int                    switch_name_time_cnt;
 		int fd;
 		int brightness;
 		std::string text;
+		char 				g_str[64];
 
 		void count_down();
 
@@ -130,7 +131,7 @@ class CVFD
 		void setMode(const MODES m, const char * const title = "");
 
 		void showServicename(const std::string & name, int number = -1); // UTF-8
-		void setEPGTitle(const std::string) { return; };
+		void setEPGTitle(const std::string) { return; }
 		void showTime(bool force = false);
 		/** blocks for duration seconds */
 		void showRCLock(int duration = 2);

@@ -1796,6 +1796,8 @@ int CRCInput::translate(int code)
 			return RC_down;
 		case KEY_PLAYPAUSE:
 			return RC_play;
+		case KEY_PROGRAM:
+			return RC_timer;
 		case KEY_CHANNELUP:
 			return RC_page_up;
 		case KEY_CHANNELDOWN:

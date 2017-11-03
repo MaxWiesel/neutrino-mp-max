@@ -21,6 +21,14 @@ if test "$DEBUG" = "yes"; then
 	AC_DEFINE(DEBUG,1,[Enable debug messages])
 fi
 
+AC_ARG_WITH(libcoolstream-static-dir,
+	[  --with-libcoolstream-static-dir=PATH  path for static libcoolstream],
+	[LIBCOOLSTREAM_STATIC_DIR="$withval"],[LIBCOOLSTREAM_STATIC_DIR=""])
+
+AC_ARG_ENABLE(libcoolstream-static,
+	AS_HELP_STRING(--enable-libcoolstream-static,[libcoolstream static linked for testing]))
+AM_CONDITIONAL(ENABLE_LIBCOOLSTREAM_STATIC,test "$enable_libcoolstream_static" = "yes")
+
 AC_ARG_ENABLE(reschange,
        AS_HELP_STRING(--enable-reschange,enable change the osd resolution (default for hd2)))
 
@@ -143,6 +151,9 @@ TUXBOX_APPS_DIRECTORY_ONE(datadir,DATADIR,datadir,/share,/tuxbox,
 TUXBOX_APPS_DIRECTORY_ONE(fontdir,FONTDIR,datadir,/share,/fonts,
 	[--with-fontdir=PATH           ],[where to find the fonts])
 
+TUXBOX_APPS_DIRECTORY_ONE(fontdir_var,FONTDIR_VAR,localstatedir,/var,/tuxbox/fonts,
+	[--with-fontdir_var=PATH       ],[where to find the fonts in /var])
+
 TUXBOX_APPS_DIRECTORY_ONE(gamesdir,GAMESDIR,localstatedir,/var,/tuxbox/games,
 	[--with-gamesdir=PATH          ],[where games data is stored])
 
@@ -157,6 +168,9 @@ TUXBOX_APPS_DIRECTORY_ONE(plugindir_var,PLUGINDIR_VAR,localstatedir,/var,/tuxbox
 
 TUXBOX_APPS_DIRECTORY_ONE(webtvdir_var,WEBTVDIR_VAR,localstatedir,/var,/tuxbox/plugins/webtv,
 	[--with-webtvdir_var=PATH      ],[where to find the livestreamScriptPath in /var])
+
+TUXBOX_APPS_DIRECTORY_ONE(webtvdir,WEBTVDIR,datadir,/share,/tuxbox/neutrino/webtv,
+	[--with-webtvdir=PATH          ],[where to find the webtv content])
 
 TUXBOX_APPS_DIRECTORY_ONE(plugindir_mnt,PLUGINDIR_MNT,mntdir,/mnt,/plugins,
 	[--with-plugindir_mnt=PATH     ],[where to find the the extern plugins])
@@ -185,11 +199,14 @@ TUXBOX_APPS_DIRECTORY_ONE(iconsdir_var,ICONSDIR_VAR,localstatedir,/var,/tuxbox/i
 TUXBOX_APPS_DIRECTORY_ONE(private_httpddir,PRIVATE_HTTPDDIR,datadir,/share,/tuxbox/neutrino/httpd,
 	[--with-private_httpddir=PATH  ],[where to find the the private httpd files])
 
-TUXBOX_APPS_DIRECTORY_ONE(public_httpddir,PUBLIC_HTTPDDIR,localstatedir,/var,/httpd,
+TUXBOX_APPS_DIRECTORY_ONE(public_httpddir,PUBLIC_HTTPDDIR,localstatedir,/var,/tuxbox/httpd,
 	[--with-public_httpddir=PATH   ],[where to find the the public httpd files])
 
 TUXBOX_APPS_DIRECTORY_ONE(hosted_httpddir,HOSTED_HTTPDDIR,mntdir,/mnt,/hosted,
 	[--with-hosted_httpddir=PATH   ],[where to find the the hosted files])
+
+TUXBOX_APPS_DIRECTORY_ONE(flagdir,FLAGDIR,localstatedir,/var,/etc,
+	[--with-flagdir=PATH           ],[where to find flagfiles])
 ])
 
 dnl automake <= 1.6 needs this specifications
@@ -197,6 +214,7 @@ AC_SUBST(CONFIGDIR)
 AC_SUBST(DATADIR)
 AC_SUBST(FONTDIR)
 AC_SUBST(FONTDIR_VAR)
+AC_SUBST(FLAGDIR)
 AC_SUBST(GAMESDIR)
 AC_SUBST(LIBDIR)
 AC_SUBST(MNTDIR)

@@ -100,7 +100,7 @@ class CMoviePlayerGui : public CMenuTarget
 	std::string livestreamInfo2;
 
 	CFrameBuffer * frameBuffer;
-	int            m_LastMode;	
+	int            m_LastMode;
 
 	std::string	file_name;
 	std::string	pretty_name;
@@ -163,9 +163,9 @@ class CMoviePlayerGui : public CMenuTarget
 #if 0
 	/* subtitles vars */
 	unsigned short numsubs;
-	std::string    slanguage[MAX_PLAYBACK_PIDS];
-	unsigned short spids[MAX_PLAYBACK_PIDS];
-	unsigned short sub_supported[MAX_PLAYBACK_PIDS];
+	std::string    slanguage[REC_MAX_APIDS];
+	unsigned short spids[REC_MAX_APIDS];
+	unsigned short sub_supported[REC_MAX_APIDS];
 	int currentspid;
 	int min_x, min_y, max_x, max_y;
 	int64_t end_time;
@@ -182,7 +182,6 @@ class CMoviePlayerGui : public CMenuTarget
 	bool isYT;
 	bool showStartingHint;
 	static CMovieBrowser* moviebrowser;
-	MI_MOVIE_INFO * p_movie_info;
 	MI_MOVIE_INFO movie_info;
 	P_MI_MOVIE_LIST milist;
 	const static short MOVIE_HINT_BOX_TIMER = 5;	// time to show bookmark hints in seconds
@@ -267,6 +266,7 @@ class CMoviePlayerGui : public CMenuTarget
 
 	static CMoviePlayerGui& getInstance(bool background = false);
 
+	MI_MOVIE_INFO * p_movie_info;
 	int exec(CMenuTarget* parent, const std::string & actionKey);
 	bool Playing() { return playing; };
 	std::string CurrentAudioName() { return currentaudioname; };
