@@ -2524,7 +2524,8 @@ TIMER_START();
 	/* later on, we'll crash anyway, so tell about it. */
 	if (! zapit_init)
 		DisplayErrorMessage("Zapit initialization failed. This is a fatal error, sorry.");
-#if 0
+
+#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE
 #ifndef ASSUME_MDEV
 	mkdir("/media/sda1", 0755);
 	mkdir("/media/sdb1", 0755);
@@ -2621,12 +2622,7 @@ TIMER_STOP("################################## after all #######################
 	}
 	RealRun();
 
-
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 	ExitRun(CNeutrinoApp::REBOOT);
-#else
-	ExitRun(g_info.hw_caps->can_shutdown);
-#endif
 
 	return 0;
 }
@@ -3850,10 +3846,8 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		if(!skipShutdownTimer) {
 #if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 			timer_wakeup = true;
-			ExitRun(CNeutrinoApp::SHUTDOWN);
-#else
-			ExitRun(g_info.hw_caps->can_shutdown);
 #endif
+			ExitRun(CNeutrinoApp::SHUTDOWN);
 		}
 		else {
 			skipShutdownTimer=false;
@@ -3863,11 +3857,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 	else if( msg == NeutrinoMessages::REBOOT ) {
 		FILE *f = fopen("/tmp/.reboot", "w");
 		fclose(f);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 		ExitRun(CNeutrinoApp::REBOOT);
-#else
-		ExitRun();
-#endif
 	}
 	else if (msg == NeutrinoMessages::EVT_POPUP || msg == NeutrinoMessages::EVT_EXTMSG) {
 		if (mode != mode_scart && mode != mode_standby) {
@@ -4645,21 +4635,14 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		ShowMsg(LOCALE_SETTINGS_HELP, LOCALE_RECORDINGMENU_HELP, CMsgBox::mbrBack, CMsgBox::mbBack);
 	}
 	else if(actionKey=="shutdown") {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 		ExitRun(CNeutrinoApp::SHUTDOWN);
-#else
-		ExitRun(1);
-#endif
 	}
 	else if(actionKey=="reboot")
 	{
 		FILE *f = fopen("/tmp/.reboot", "w");
-		fclose(f);
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+		if (f)
+			fclose(f);
 		ExitRun(CNeutrinoApp::REBOOT);
-#else
-		ExitRun();
-#endif
 		unlink("/tmp/.reboot");
 		returnval = menu_return::RETURN_NONE;
 	}
@@ -4948,11 +4931,7 @@ void sighandler (int signum)
 		delete CVFD::getInstance();
 		delete SHTDCNT::getInstance();
 		stop_video();
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
 		exit(CNeutrinoApp::SHUTDOWN);
-#else
-		exit(0);
-#endif
 	default:
 		break;
 	}
