@@ -193,7 +193,8 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 //	personalize->addItem(multimedia_menu, fw_mp, &g_settings.personalize[SNeutrinoSettings::P_MEDIA_MPLAYER], false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
 
 #ifdef ENABLE_GUI_MOUNT
-	personalize->addSeparator(*multimedia_menu, LOCALE_NETWORKMENU_MOUNT, true);
+	if (g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY])
+		personalize->addSeparator(*multimedia_menu, LOCALE_NETWORKMENU_MOUNT, true); 
 
 	CMenuForwarder * mf_mount = new CMenuForwarder(LOCALE_NFS_MOUNT , true, NULL, new CNFSMountGui(), NULL);
 	mf_mount->setHint("", LOCALE_MENU_HINT_NET_NFS_MOUNT);
