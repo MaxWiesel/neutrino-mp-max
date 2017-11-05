@@ -4070,101 +4070,15 @@ void CNeutrinoApp::ExitRun(int can_shutdown)
 	g_settings.shutdown_timer_record_type = timer_is_rec;
 	saveSetup(NEUTRINO_SETTINGS_FILE);
 
-#if 0
-	if (can_shutdown)
-	{
-#endif
-		puts("[neutrino.cpp] executing " NEUTRINO_ENTER_DEEPSTANDBY_SCRIPT ".");
-		if (my_system(NEUTRINO_ENTER_DEEPSTANDBY_SCRIPT) != 0)
-			perror(NEUTRINO_ENTER_DEEPSTANDBY_SCRIPT " failed");
+	puts("[neutrino.cpp] executing " NEUTRINO_ENTER_DEEPSTANDBY_SCRIPT ".");
+	if (my_system(NEUTRINO_ENTER_DEEPSTANDBY_SCRIPT) != 0)
+		perror(NEUTRINO_ENTER_DEEPSTANDBY_SCRIPT " failed");
 
-		printf("entering off state\n");
-		printf("timer_minutes: %ld\n", timer_minutes);
-		mode = mode_off;
-		//CVFD::getInstance()->ShowText(g_Locale->getText(LOCALE_MAINMENU_SHUTDOWN));
+	printf("entering off state\n");
+	printf("timer_minutes: %ld\n", timer_minutes);
+	mode = mode_off;
+	//CVFD::getInstance()->ShowText(g_Locale->getText(LOCALE_MAINMENU_SHUTDOWN));
 
-#if 0
-		fp_standby_data_t standby;
-		time_t mtime = time(NULL);
-		struct tm *tmtime = localtime(&mtime);
-		time_t fp_timer = 0;
-
-		if (timer_minutes)
-		{
-			fp_timer = timer_minutes - mtime/60;
-			if (fp_timer < 1)
-				fp_timer = 1;
-		}
-		printf("now: %ld, timer %ld, FP timer %ldmin\n", mtime/60, timer_minutes, fp_timer);fflush(stdout);
-		int leds = 0x40;
-		switch (g_settings.led_deep_mode)
-		{
-			case 0:
-				leds = 0x0; //off  leds
-				break;
-			case 1:
-				leds = 0x60; //on led1 & 2
-				break;
-			case 2:
-				leds = 0x20; //led1 on , 2 off
-				break;
-			case 3:
-				leds = 0x40; //led2 off, 2 on
-				break;
-			default:
-				break;
-		}
-		if (leds && g_settings.led_blink && fp_timer)
-			leds |= 0x80;
-
-		standby.brightness          = cs_get_revision() == 10 ? 0 : g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS];
-		standby.flags               = leds;
-		standby.current_hour        = tmtime->tm_hour;
-		standby.current_minute      = tmtime->tm_min;
-		standby.timer_minutes_hi    = fp_timer >> 8;;
-		standby.timer_minutes_lo    = fp_timer & 0xFF;
-
-		my_system("/etc/init.d/rcK");
-		sync();
-		CFSMounter::umount(); // unreachable NFS server
-		my_system(2,"/bin/umount", "-a");
-		sleep(1);
-
-		stop_video();
-
-		int fd = open("/dev/display", O_RDONLY);
-		if (fd < 0)
-		{
-			perror("/dev/display");
-			reboot(LINUX_REBOOT_CMD_RESTART);
-		}
-		else
-		{
-			if (ioctl(fd, IOC_FP_STANDBY, (fp_standby_data_t *)  &standby))
-			{
-				perror("IOC_FP_STANDBY");
-				reboot(LINUX_REBOOT_CMD_RESTART);
-			}
-			else
-			{
-				while (true)
-					sleep(1);
-			}
-		}
-	}
-	else
-	{
-		delete g_RCInput;
-		my_system("/etc/init.d/rcK");
-		//fan speed
-		if (g_info.hw_caps->has_fan)
-			CFanControlNotifier::setSpeed(0);
-		stop_video();
-		Cleanup();
-		//_exit(0);
-		exit(0);
-	}
-#endif
 	int leds = 0;
 	int bright = 0;
 #if HAVE_COOL_HARDWARE
