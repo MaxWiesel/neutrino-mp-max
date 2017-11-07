@@ -324,10 +324,11 @@ void CMoviePlayerGui::restoreNeutrino()
 
 	if (isUPNP)
 		return;
-
+#if ! HAVE_COOL_HARDWARE
 	g_Zapit->unlockPlayBack();
-	//CZapit::getInstance()->EnablePlayback(true);
-
+#else
+	CZapit::getInstance()->EnablePlayback(true);
+#endif
 	printf("%s: restore mode %x\n", __func__, m_LastMode);fflush(stdout);
 #if 0
 	if (m_LastMode == NeutrinoMessages::mode_tv)
