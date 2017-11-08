@@ -89,7 +89,7 @@ fb_pixel_t * simple_resize32(uint8_t * orgin, uint32_t * colors, int nb_colors, 
 
 void cDvbSubtitleBitmaps::Draw(int &min_x, int &min_y, int &max_x, int &max_y)
 {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 #define DEFAULT_XRES 1280	// backbuffer width
 #define DEFAULT_YRES 720	// backbuffer height
 
@@ -209,7 +209,7 @@ cDvbSubtitleConverter::cDvbSubtitleConverter(void)
 	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK_NP);
 	pthread_mutex_init(&mutex, &attr);
 	running = false;
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	painted = false;
 #endif
 
@@ -274,7 +274,7 @@ void cDvbSubtitleConverter::Pause(bool pause)
 
 void cDvbSubtitleConverter::Clear(void)
 {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 	if (running && painted) {
 		CFrameBuffer::getInstance()->Clear();
 		painted = false;
@@ -388,7 +388,7 @@ int cDvbSubtitleConverter::Action(void)
 				}
 				if(sb->Count()) {
 					WaitMs = MIN_DISPLAY_TIME;
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 					painted = true;
 #endif
 				}

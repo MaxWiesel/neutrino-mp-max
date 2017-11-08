@@ -60,7 +60,7 @@ CScreenShot::CScreenShot(const std::string fname, screenshot_format_t fmt)
 	format = fmt;
 	filename = fname;
 	pixel_data = NULL;
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !HAVE_ARM_HARDWARE
+#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWARE
 	fd = NULL;
 	xres = 0;
 	yres = 0;
@@ -82,14 +82,14 @@ CScreenShot::CScreenShot(const std::string fname, screenshot_format_t fmt)
 
 CScreenShot::~CScreenShot()
 {
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !HAVE_ARM_HARDWARE
+#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWARE
 	pthread_mutex_destroy(&thread_mutex);
 	pthread_mutex_destroy(&getData_mutex);
 #endif
 //	printf("[CScreenShot::%s:%d] thread: %p\n", __func__, __LINE__, this);
 }
 
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !HAVE_ARM_HARDWARE
+#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWARE
 #ifdef BOXMODEL_CS_HD2
 
 bool CScreenShot::mergeOsdScreen(uint32_t dx, uint32_t dy, fb_pixel_t* osdData)
@@ -219,7 +219,7 @@ bool CScreenShot::startThread()
 }
 #endif
 
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !HAVE_ARM_HARDWARE
+#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWARE
 void* CScreenShot::initThread(void *arg)
 {
 	CScreenShot *scs = static_cast<CScreenShot*>(arg);
@@ -254,7 +254,7 @@ void CScreenShot::cleanupThread(void *arg)
 }
 #endif
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 /* start ::run in new thread to save file in selected format */
 bool CScreenShot::Start(const std::string custom_cmd)
 {
@@ -303,7 +303,7 @@ bool CScreenShot::Start()
 #endif
 }
 
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !HAVE_ARM_HARDWARE
+#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWARE
 /* save file in sync mode, return true if save ok, or false */
 bool CScreenShot::StartSync()
 {

@@ -29,7 +29,7 @@
 #define KEY_TTZOOM	KEY_FN_2
 #define KEY_REVEAL	KEY_FN_D
 
-#if defined(HAVE_SPARK_HARDWARE) || defined(HAVE_DUCKBOX_HARDWARE)
+#if HAVE_SH4_HARDWARE
 #define MARK_FB(a, b, c, d) if (p == lfb) CFrameBuffer::getInstance()->mark(a, b, (a) + (c), (b) + (d))
 #else
 #define MARK_FB(a, b, c, d)
@@ -2301,22 +2301,26 @@ int GetTeletextPIDs()
 	/* show infobar */
 	RenderMessage(ShowInfoBar);
 
-        unsigned char filter[DMX_FILTER_SIZE];
-        unsigned char mask[DMX_FILTER_SIZE];
+	unsigned char filter[DMX_FILTER_SIZE];
+	unsigned char mask[DMX_FILTER_SIZE];
 	int res;
 
-        cDemux * dmx = new cDemux(1);
+#if HAVE_SH4_HARDWARE
+	cDemux * dmx = new cDemux(0); // live demux
+#else
+	cDemux * dmx = new cDemux(1);
+#endif
 	dmx->Open(DMX_PSI_CHANNEL);
 
-        memset(filter, 0x00, DMX_FILTER_SIZE);
-        memset(mask, 0x00, DMX_FILTER_SIZE);
+	memset(filter, 0x00, DMX_FILTER_SIZE);
+	memset(mask, 0x00, DMX_FILTER_SIZE);
 
         //filter[0] = 0x00;
         //mask[0] = 0xFF;
-        mask[0] = 0xFF;
-        mask[4] = 0xFF;
+	mask[0] = 0xFF;
+	mask[4] = 0xFF;
 
-        dmx->sectionFilter(0, filter, mask, 1);
+	dmx->sectionFilter(0, filter, mask, 1);
 	res = dmx->Read(bufPAT, sizeof(bufPAT));
 	dmx->Stop();
 	if(res <= 0) {
@@ -5528,7 +5532,7 @@ void CopyBB2FB()
 {
 	fb_pixel_t *src, *dst, *topsrc;
 	int fillcolor, i, screenwidth, swtmp;
-#if defined(HAVE_SPARK_HARDWARE) || defined(HAVE_DUCKBOX_HARDWARE) || defined(HAVE_COOL_HARDWARE)
+#if HAVE_SH4_HARDWARE || HAVE_COOL_HARDWARE
 	CFrameBuffer *f = CFrameBuffer::getInstance();
 #endif
 
@@ -5539,7 +5543,7 @@ void CopyBB2FB()
 	/* copy backbuffer to framebuffer */
 	if (!zoommode)
 	{
-#if defined(HAVE_SPARK_HARDWARE) || defined(HAVE_DUCKBOX_HARDWARE)
+#if HAVE_SH4_HARDWARE
 		f->blit2FB(lbb, var_screeninfo.xres, var_screeninfo.yres, 0, 0, 0, 0, true);
 #elif defined(HAVE_COOL_HARDWARE)
 		f->fbCopyArea(var_screeninfo.xres, var_screeninfo.yres, 0, 0, 0, var_screeninfo.yres);
@@ -5590,13 +5594,11 @@ void CopyBB2FB()
 	if (screenmode == 1)
 	{
 		screenwidth = ( TV43STARTX );
-#if defined(HAVE_SPARK_HARDWARE) || defined(HAVE_DUCKBOX_HARDWARE)
+#if HAVE_SH4_HARDWARE
 		int cx = var_screeninfo.xres - TV43STARTX;	/* x start */
 		int cw = TV43STARTX;				/* width */
 		int cy = StartY;
 		int ch = 24*fontheight;
-#endif
-#if defined(HAVE_SPARK_HARDWARE) || defined(HAVE_DUCKBOX_HARDWARE)
 		f->blit2FB(lbb, cw, ch, cx, cy, cx, cy, true);
 #else
 		fb_pixel_t *topdst = dst;
@@ -5637,7 +5639,7 @@ void CopyBB2FB()
 		for (swtmp=0; swtmp<= screenwidth;swtmp++)
 			*(dst + stride * (fontheight + i) + swtmp) =  bgra[fillcolor];
 	}
-#ifdef HAVE_SPARK_HARDWARE
+#if HAVE_SH4_HARDWARE
 	f->mark(0, 0, var_screeninfo.xres, var_screeninfo.yres);
 #endif
 }
@@ -6271,8 +6273,6 @@ void DecodePage()
 		int o = 0;
 		char bitmask ;
 
-
-
 		for (r = 0; r < 25; r++)
 		{
 			for (c = 0; c < 40; c++)
@@ -6342,11 +6342,3 @@ int GetRCCode()
 	}
 	return 0;
 }
-
-/* Local Variables: */
-/* indent-tabs-mode:t */
-/* tab-width:3 */
-/* c-basic-offset:3 */
-/* comment-column:0 */
-/* fill-column:120 */
-/* End: */

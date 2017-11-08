@@ -122,7 +122,7 @@ CFrameBuffer* CFrameBuffer::getInstance()
 	static CFrameBuffer* frameBuffer = NULL;
 
 	if (!frameBuffer) {
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 		frameBuffer = new CFbAccelSTi();
 #endif
 #if HAVE_COOL_HARDWARE

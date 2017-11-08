@@ -29,7 +29,7 @@
 #include <OpenThreads/Condition>
 #include "fb_generic.h"
 
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_SH4_HARDWARE
 #define PARTIAL_BLIT 1
 #endif
 

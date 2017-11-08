@@ -312,9 +312,9 @@ _TUXBOX_APPS_LIB_PKGCONFIG($1,$2)
 
 AC_DEFUN([TUXBOX_BOXTYPE],[
 AC_ARG_WITH(boxtype,
-	[  --with-boxtype          valid values: tripledragon,coolstream,spark,azbox,generic,duckbox,spark7162,armbox],
+	[  --with-boxtype          valid values: tripledragon,coolstream,spark,azbox,generic,armbox,duckbox,spark7162],
 	[case "${withval}" in
-		tripledragon|coolstream|azbox|generic)
+		tripledragon|coolstream|azbox|generic|armbox)
 			BOXTYPE="$withval"
 			;;
 		spark|spark7162)
@@ -503,12 +503,14 @@ elif test "$BOXTYPE" = "coolstream"; then
 	AC_DEFINE(HAVE_COOL_HARDWARE, 1, [building for a coolstream])
 elif test "$BOXTYPE" = "spark"; then
 	AC_DEFINE(HAVE_SPARK_HARDWARE, 1, [building for a goldenmedia 990 or edision pingulux])
+	AC_DEFINE(HAVE_SH4_HARDWARE, 1, [building for a sh4 box])
 elif test "$BOXTYPE" = "armbox"; then
 	AC_DEFINE(HAVE_ARM_HARDWARE, 1, [building for a armbox])
 elif test "$BOXTYPE" = "generic"; then
 	AC_DEFINE(HAVE_GENERIC_HARDWARE, 1, [building for a generic device like a standard PC])
 elif test "$BOXTYPE" = "duckbox"; then
 	AC_DEFINE(HAVE_DUCKBOX_HARDWARE, 1, [building for a duckbox])
+	AC_DEFINE(HAVE_SH4_HARDWARE, 1, [building for a sh4 box])
 fi
 
 # TODO: do we need more defines?
@@ -569,12 +571,14 @@ elif test "$BOXMODEL" = "tf7700"; then
 	AC_DEFINE(BOXMODEL_TF7700, 1, [tf7700])
 elif test "$BOXMODEL" = "hl101"; then
 	AC_DEFINE(BOXMODEL_HL101, 1, [hl101])
-elif test "$BOXMODEL" = "raspi"; then
-	AC_DEFINE(BOXMODEL_RASPI, 1, [Raspberry pi])
 elif test "$BOXMODEL" = "hd51"; then
-	AC_DEFINE(BOXMODEL_HD51, 1, [HD51 / AX51])
+	AC_DEFINE(BOXMODEL_HD51, 1, [hd51])
+	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION,1,[enable change the osd resolution])
 elif test "$BOXMODEL" = "vusolo4k"; then
 	AC_DEFINE(BOXMODEL_VUSOLO4K, 1, [vusolo4k])
+	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION,1,[enable change the osd resolution])
+elif test "$BOXMODEL" = "raspi"; then
+	AC_DEFINE(BOXMODEL_RASPI, 1, [Raspberry pi])
 fi
 ])
 

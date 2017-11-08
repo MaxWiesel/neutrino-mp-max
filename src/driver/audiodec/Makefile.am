@@ -10,16 +10,11 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/libconfigfile \
 	@SIGC_CFLAGS@ \
 	@FREETYPE_CFLAGS@ \
-	@VORBISIDEC_CFLAGS@ \
 	@AVFORMAT_CFLAGS@ \
 	@LUA_CFLAGS@ \
 	@HWLIB_CFLAGS@
 
 noinst_LIBRARIES = libneutrino_driver_audiodec.a
-
-if ENABLE_FLAC
-FLACdec= flacdec.cpp
-endif
 
 if ENABLE_FFMPEGDEC
 ASOURCES = ffmpegdec.cpp
@@ -27,7 +22,7 @@ else
 ASOURCES = cdrdec.cpp \
 	ffmpegdec.cpp \
 	crc.c \
-	$(FLACdec) \
+	flacdec.cpp \
 	mp3dec.cpp \
 	oggdec.cpp \
 	tag.c \

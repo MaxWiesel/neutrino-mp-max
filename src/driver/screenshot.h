@@ -48,7 +48,7 @@ class CScreenShot
 		bool get_osd;
 		bool get_video;
 		bool scale_to_video;
-#if !HAVE_SPARK_HARDWARE && !HAVE_DUCKBOX_HARDWARE && !HAVE_ARM_HARDWARE
+#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWARE
 		FILE *fd;
 		pthread_t  scs_thread;
 		pthread_mutex_t thread_mutex;
@@ -81,7 +81,7 @@ class CScreenShot
 		void EnableVideo(bool enable) { get_video = enable; }
 		void EnableOSD(bool enable) { get_osd = enable; }
 		void ScaleToVideo(bool enable) { scale_to_video = enable; }
-#if HAVE_SPARK_HARDWARE || HAVE_DUCKBOX_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 		bool Start(const std::string custom_cmd = "");
 #else
 		bool Start();
