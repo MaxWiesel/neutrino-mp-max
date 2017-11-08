@@ -590,14 +590,8 @@ struct SNeutrinoSettings
 	int screenshot_format;
 	int screenshot_cover;
 	int screenshot_mode;
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
-	int screenshot_res;
-	int screenshot_png_compression;
-	int screenshot_backbuffer;
-#else
 	int screenshot_video;
 	int screenshot_scale;
-#endif
 	int auto_cover;
 	std::string screenshot_dir;
 
