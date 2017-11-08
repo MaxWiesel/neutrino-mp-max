@@ -35,58 +35,28 @@ class CScreenShot
 		typedef enum {
 			FORMAT_PNG,
 			FORMAT_JPG,
-			FORMAT_BMP
 		} screenshot_format_t;
 
 	private:
 		screenshot_format_t format;
 		std::string filename;
-		unsigned char * pixel_data;
 		int xres;
 		int yres;
 		bool extra_osd;
 		bool get_osd;
 		bool get_video;
-		bool scale_to_video;
-#if !HAVE_SH4_HARDWARE && !HAVE_ARM_HARDWARE
-		FILE *fd;
-		pthread_t  scs_thread;
-		pthread_mutex_t thread_mutex;
-		pthread_mutex_t getData_mutex;
-
-		bool GetData();
-		bool OpenFile();
-		bool SaveFile();
-
-		bool SavePng();
-		bool SaveJpg();
-		bool SaveBmp();
-
-		bool startThread();
-		static void* initThread(void *arg);
-		void runThread();
-		static void cleanupThread(void *arg);
-#endif
-
-#ifdef BOXMODEL_CS_HD2
-		bool mergeOsdScreen(uint32_t dx, uint32_t dy, fb_pixel_t* osdData);
-#endif
+		bool scale_to_osd;
 
 	public:
-		CScreenShot(const std::string fname = "", screenshot_format_t fmt = CScreenShot::FORMAT_JPG);
+		CScreenShot(const std::string fname = "", screenshot_format_t fmt = CScreenShot::FORMAT_PNG);
 		~CScreenShot();
 
 		void MakeFileName(const t_channel_id channel_id);
 		void SetSize(int w, int h) { xres = w; yres = h; }
 		void EnableVideo(bool enable) { get_video = enable; }
 		void EnableOSD(bool enable) { get_osd = enable; }
-		void ScaleToVideo(bool enable) { scale_to_video = enable; }
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+		void ScaleToOSD(bool enable) { scale_to_osd = enable; }
 		bool Start(const std::string custom_cmd = "");
-#else
-		bool Start();
-#endif
-		bool StartSync();
 };
 
 #endif

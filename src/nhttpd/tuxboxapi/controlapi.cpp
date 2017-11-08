@@ -2099,20 +2099,8 @@ void CControlAPI::ScreenshotCGI(CyhookHandler *hh)
 	if(screenshot){
 		screenshot->EnableOSD(enableOSD);
 		screenshot->EnableVideo(enableVideo);
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 		screenshot->Start();
 		hh->SendOk();
-#else
-#if 0
-	screenshot->Start();
-	hh->SendOk(); // FIXME what if screenshot->Start() failed?
-#else
-		if (screenshot->StartSync())
-			hh->SendOk();
-		else
-			hh->SendError();
-#endif
-#endif
 		delete screenshot;
 	}
 }

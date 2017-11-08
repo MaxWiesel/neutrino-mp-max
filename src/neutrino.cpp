@@ -756,24 +756,15 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.key_playbutton = configfile.getInt32("key_playbutton", 0);
 	g_settings.timeshift_pause = configfile.getInt32( "timeshift_pause", 1 );
 
-#if HAVE_SH4_HARDWARE
-	g_settings.screenshot_png_compression = configfile.getInt32( "screenshot_png_compression", 1);
-	g_settings.screenshot_backbuffer = configfile.getInt32( "screenshot_backbuffer", 1);
-#endif
 	g_settings.screenshot_count = configfile.getInt32( "screenshot_count",  1);
 	g_settings.screenshot_format = configfile.getInt32( "screenshot_format",  1);
 	g_settings.screenshot_cover = configfile.getInt32( "screenshot_cover",  0);
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
-	g_settings.screenshot_mode = configfile.getInt32( "screenshot_mode",  1 /* video */);
-	g_settings.screenshot_res = configfile.getInt32( "screenshot_res",  2 /* = osd resolution */);
-#else
 	g_settings.screenshot_mode = configfile.getInt32( "screenshot_mode",  0);
 	g_settings.screenshot_video = configfile.getInt32( "screenshot_video",  1);
 	g_settings.screenshot_scale = configfile.getInt32( "screenshot_scale",  0);
-#endif
 	g_settings.auto_cover = configfile.getInt32( "auto_cover",  0);
 
-	g_settings.screenshot_dir = configfile.getString( "screenshot_dir", "/media/sda1/movie" );
+	g_settings.screenshot_dir = configfile.getString( "screenshot_dir", "/hdd/pictures" );
 	g_settings.cacheTXT = configfile.getInt32( "cacheTXT",  0);
 	g_settings.minimode = configfile.getInt32( "minimode",  0);
 	g_settings.mode_clock = configfile.getInt32( "mode_clock",  0);
@@ -1472,20 +1463,12 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "record_hours", g_settings.record_hours );
 	configfile.setInt32( "timeshift_hours", g_settings.timeshift_hours );
 	//printf("set: key_unlock =============== %d\n", g_settings.key_unlock);
-HAVE_SH4_HARDWARE
-	configfile.setInt32( "screenshot_png_compression", g_settings.screenshot_png_compression );
-	configfile.setInt32( "screenshot_backbuffer", g_settings.screenshot_backbuffer);
-#endif
 	configfile.setInt32( "screenshot_count", g_settings.screenshot_count );
 	configfile.setInt32( "screenshot_format", g_settings.screenshot_format );
 	configfile.setInt32( "screenshot_cover", g_settings.screenshot_cover );
 	configfile.setInt32( "screenshot_mode", g_settings.screenshot_mode );
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
-	configfile.setInt32( "screenshot_res", g_settings.screenshot_res );
-#else
 	configfile.setInt32( "screenshot_video", g_settings.screenshot_video );
 	configfile.setInt32( "screenshot_scale", g_settings.screenshot_scale );
-#endif
 	configfile.setInt32( "auto_cover", g_settings.auto_cover );
 
 	configfile.setString( "screenshot_dir", g_settings.screenshot_dir);
@@ -2867,23 +2850,9 @@ void CNeutrinoApp::RealRun()
 #ifdef SCREENSHOT
 			else if (msg == (neutrino_msg_t) g_settings.key_screenshot) {
 				for(int i = 0; i < g_settings.screenshot_count; i++) {
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
-					CVFD::getInstance()->ShowText("SCREENSHOT");
-					CHintBox *hintbox = NULL;
-					if (g_settings.screenshot_mode == 1)
-						hintbox = new CHintBox(LOCALE_SCREENSHOT_MENU, g_Locale->getText(LOCALE_SCREENSHOT_PLEASE_WAIT), 450, NEUTRINO_ICON_MOVIEPLAYER);
-					if (hintbox)
-						hintbox->paint();
-#endif
 					CScreenShot * sc = new CScreenShot("", (CScreenShot::screenshot_format_t)g_settings.screenshot_format);
 					sc->MakeFileName(CZapit::getInstance()->GetCurrentChannelID());
 					sc->Start();
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
-					if (hintbox) {
-						hintbox->hide();
-						delete hintbox;
-					}
-#endif
 				}
 			}
 #endif
@@ -3572,11 +3541,11 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 	}
 #ifdef SCREENSHOT
 	else if (msg == (neutrino_msg_t) g_settings.key_screenshot) {
-		//video+osd scaled to osd size
-		CScreenShot * sc = new CScreenShot("", (CScreenShot::screenshot_format_t)g_settings.screenshot_format);
-		sc->EnableOSD(true);
-		sc->MakeFileName(CZapit::getInstance()->GetCurrentChannelID());
-		sc->Start();
+		for (int i = 0; i < g_settings.screenshot_count; i++) {
+			CScreenShot * sc = new CScreenShot("", (CScreenShot::screenshot_format_t)g_settings.screenshot_format);
+			sc->MakeFileName(CZapit::getInstance()->GetCurrentChannelID());
+			sc->Start();
+		}
 	}
 #endif
 
