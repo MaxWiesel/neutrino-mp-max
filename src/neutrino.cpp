@@ -2276,7 +2276,6 @@ void wake_up(bool &wakeup)
 			wakeup = ((wk.source == FP_WAKEUP_SOURCE_TIMER) /* || (wk.source == WAKEUP_SOURCE_PWLOST)*/);
 		close(fd);
 	}
-	printf("[timerd] wakeup from standby: %s\n", wakeup ? "yes" : "no");
 #endif
 #if HAVE_ARM_HARDWARE
 	FILE *f = fopen("/proc/stb/fp/was_timer_wakeup", "r");
@@ -2297,6 +2296,7 @@ void wake_up(bool &wakeup)
 		unlink("/tmp/.timer_wakeup");
 #endif
 	}
+	printf("[timerd] wakeup from standby: %s\n", wakeup ? "yes" : "no");
 
 	if(!wakeup){
 		puts("[neutrino.cpp] executing " NEUTRINO_LEAVE_DEEPSTANDBY_SCRIPT ".");
