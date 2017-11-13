@@ -26,6 +26,7 @@
 
 #include <driver/simple_display.h>
 #include <driver/framebuffer.h>
+#include <system/proc_tools.h>
 #include <system/set_threadname.h>
 
 #include <global.h>
@@ -64,20 +65,6 @@ static bool timer_icon = false;
 #include <system/helpers.h>
 static bool usb_icon = false;
 static bool timer_icon = false;
-static int proc_put(const char *path, bool state)
-{
-	int ret, ret2;
-	int pfd = open(path, O_WRONLY);
-	if (pfd < 0)
-		return pfd;
-	ret = write(pfd, state ? "1" : "0", 1);
-	ret2 = close(pfd);
-	if (ret2 < 0)
-		return ret2;
-	return ret;
-}
-#else
-static int proc_put(const char *, bool) {return 0;}
 #endif
 
 static char volume = 0;
@@ -563,10 +550,7 @@ void CLCD::setBrightness(int dimm)
 	}
 #elif HAVE_ARM_HARDWARE
 	std::string value = to_string(255/15*dimm);
-	int pfd = open("/proc/stb/lcd/oled_brightness", O_WRONLY);
-	if (pfd)
-		write(pfd, value.c_str(), value.length());
-	close(pfd);
+	proc_put("/proc/stb/lcd/oled_brightness", value.c_str(), value.length());
 #else
 	(void)dimm; // avoid compiler warning
 #endif
@@ -600,15 +584,15 @@ int CLCD::getBrightnessStandby()
 		return 0;
 }
 
-void CLCD::setScrollMode(int scroll)
+void CLCD::setScrollMode(int scroll_repeats)
 {
-	printf("CLCD::%s scroll:%d\n", __func__, scroll);
-	if (scroll)
+	printf("CLCD::%s scroll_repeats:%d\n", __func__, scroll_repeats);
+	if (scroll_repeats)
 	{
 		proc_put("/proc/stb/lcd/initial_scroll_delay", "1000");
 		proc_put("/proc/stb/lcd/final_scroll_delay", "1000");
 		proc_put("/proc/stb/lcd/scroll_delay", "150");
-		proc_put("/proc/stb/lcd/scroll_repeats", "3");
+		proc_put("/proc/stb/lcd/scroll_repeats", to_string(scroll_repeats).c_str());
 	}
 	else
 	{
