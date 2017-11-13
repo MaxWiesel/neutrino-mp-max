@@ -149,6 +149,8 @@ class CVFD
 		void setBrightnessDeepStandby(int);
 		int getBrightnessDeepStandby();
 
+		void setScrollMode(int) { return; }
+
 		void setPower(int);
 		int getPower();
 

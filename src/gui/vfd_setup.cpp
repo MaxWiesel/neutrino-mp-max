@@ -179,7 +179,7 @@ int CVfdSetup::showSetup()
 		vfds->addItem(new CMenuOptionNumberChooser(LOCALE_LCDMENU_VFD_SCROLL, &g_settings.lcd_vfd_scroll, (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT), 0, 999, this, 0, 0, NONEXISTANT_LOCALE, true));
 #else
 		//scroll options
-		oj = new CMenuOptionChooser(LOCALE_LCDMENU_SCROLL, &g_settings.lcd_scroll, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled);
+		oj = new CMenuOptionChooser(LOCALE_LCDMENU_SCROLL, &g_settings.lcd_scroll, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, vfd_enabled, this);
 		oj->setHint("", LOCALE_MENU_HINT_VFD_SCROLL);
 		vfds->addItem(oj);
 #endif
@@ -325,6 +325,8 @@ bool CVfdSetup::changeNotify(const neutrino_locale_t OptionName, void * /* data 
 #endif
 	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LEDCONTROLER_BACKLIGHT_TV)) {
 		CVFD::getInstance()->setBacklight(g_settings.backlight_tv);
+	} else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_LCDMENU_SCROLL)) {
+		CVFD::getInstance()->setScrollMode(g_settings.lcd_scroll);
 	}
 
 	return false;
