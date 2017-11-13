@@ -39,6 +39,7 @@
 #include "widget/menue.h"
 #include <gui/components/cc.h>
 #include <string>
+#include <ca_cs.h>
 
 class CFrameBuffer;
 class CInfoViewerBB
@@ -82,6 +83,16 @@ class CInfoViewerBB
 			std::string text;
 			bool active;
 		} bbButtonInfoStruct;
+
+		enum CAM_DECODE_NUM {UNKNOWN, NA, FTA, LOCAL, CARD, REMOTE};
+		void paint_cam_icons();
+		unsigned short int decode;
+		void check_emupid();
+		void check_ecmInfo(CaIdVector &ecm_caids);
+		void check_ecmInfo_GB(CaIdVector &ecm_caids);
+		bool ecm_OK;
+		bool camCI;
+		bool useCI;
 
 		typedef struct
 		{

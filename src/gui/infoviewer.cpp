@@ -693,6 +693,8 @@ void CInfoViewer::check_channellogo_ca_SettingsChange()
 		infoViewerBB->initBBOffset();
 		start();
 	}
+	else
+		infoViewerBB->Init();
 }
 
 void CInfoViewer::showTitle(t_channel_id chid, const bool calledFromNumZap, int epgpos, bool forcePaintButtonBar/*=false*/)

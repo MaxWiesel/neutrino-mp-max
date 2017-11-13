@@ -210,6 +210,7 @@ struct SNeutrinoSettings
 	int channel_mode_initial_radio;
 
 	//misc
+	int emu_number;
 	int shutdown_real;
 	int shutdown_real_rcdelay;
 	int shutdown_count;

@@ -488,6 +488,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	//misc
 	g_settings.power_standby = configfile.getInt32( "power_standby", 0);
+	g_settings.emu_number = configfile.getInt32( "emu_number", 0);
 
 	//led
 	g_settings.led_tv_mode = configfile.getInt32( "led_tv_mode", 2);
@@ -1265,6 +1266,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "lcd_notify_rclock", g_settings.lcd_notify_rclock);
 
 	//misc
+	configfile.setInt32( "emu_number", g_settings.emu_number);
 	configfile.setInt32( "power_standby", g_settings.power_standby);
 	configfile.setInt32( "zap_cycle", g_settings.zap_cycle );
 	configfile.setInt32( "hdd_fs", g_settings.hdd_fs);

@@ -64,6 +64,9 @@
 
 extern CRemoteControl *g_RemoteControl;	/* neutrino.cpp */
 extern cVideo * videoDecoder;
+const char *emu_name[] = {"oscam","mgcamd","camd3","gbox"};
+int emu_count = 4;
+static int emu_number = 0;
 
 #define COL_INFOBAR_BUTTONS_BACKGROUND (COL_MENUFOOT_PLUS_0)
 
@@ -103,6 +106,17 @@ void CInfoViewerBB::Init()
 	bbButtonMaxX 		= 0;
 	fta			= true;
 	minX			= 0;
+
+	ecm_OK = false;
+	useCI = false;
+	camCI = false;
+	int CiSlots = g_info.hw_caps->has_CI;
+	int slot = 0;
+	while (slot < CiSlots && slot < 2) {
+		if (cCA::GetInstance()->ModulePresent(CA_SLOT_TYPE_CI, slot))
+			camCI = true;
+		slot++;
+	}
 
 	for (int i = 0; i < CInfoViewerBB::BUTTON_MAX; i++) {
 		tmp_bbButtonInfoText[i] = "";
@@ -752,10 +766,10 @@ void CInfoViewerBB::paint_ca_icons(int caid, const char *icon, int &icon_space_o
 	int py = g_InfoViewer->BoxEndY + (g_settings.infobar_casystem_frame ? 4 : 2); /* hand-crafted, should be automatic */
 	int px = 0;
 	static std::map<int, std::pair<int,const char*> > icon_map;
-	const int icon_space = 10, icon_number = 10;
+	const int icon_space = 10, icon_number = 11;
 
-	static int icon_offset[icon_number] = {0,0,0,0,0,0,0,0,0,0};
-	static int icon_sizeW [icon_number] = {0,0,0,0,0,0,0,0,0,0};
+	static int icon_offset[icon_number] = {0,0,0,0,0,0,0,0,0,0,0};
+	static int icon_sizeW [icon_number] = {0,0,0,0,0,0,0,0,0,0,0};
 	static bool init_flag = false;
 
 	if (!init_flag) {
@@ -763,6 +777,7 @@ void CInfoViewerBB::paint_ca_icons(int caid, const char *icon, int &icon_space_o
 		int icon_sizeH = 0, index = 0;
 		std::map<int, std::pair<int,const char*> >::const_iterator it;
 
+		icon_map[0x0000] = std::make_pair(index++,"dec");
 		icon_map[0x0E00] = std::make_pair(index++,"powervu");
 		icon_map[0x4A00] = std::make_pair(index++,"d");
 		icon_map[0x2600] = std::make_pair(index++,"biss");
@@ -775,7 +790,7 @@ void CInfoViewerBB::paint_ca_icons(int caid, const char *icon, int &icon_space_o
 		icon_map[0x0900] = std::make_pair(index  ,"nds");
 
 		for (it=icon_map.begin(); it!=icon_map.end(); ++it) {
-			snprintf(buf, sizeof(buf), "%s_%s", (*it).second.second, icon);
+			snprintf(buf, sizeof(buf), "%s_%s", (*it).second.second, (*it).second.first==0 ? "na" : "white");
 			frameBuffer->getIconSize(buf, &icon_sizeW[(*it).second.first], &icon_sizeH);
 		}
 
@@ -820,12 +835,13 @@ void CInfoViewerBB::showIcon_CA_Status(int notfirst)
 		return;
 	}
 
-	int caids[] = {  0x900, 0xD00, 0xB00, 0x1800, 0x0500, 0x0100, 0x600,  0x2600, 0x4a00, 0x0E00 };
+	int caids[] = {  0x900, 0xD00, 0xB00, 0x1800, 0x0500, 0x0100, 0x600,  0x2600, 0x4a00, 0x0E00, 0x0000 };
 	const char *white = "white";
 	const char *yellow = "yellow";
 	const char *green = "green";
 	int icon_space_offset = 0;
-	const char *ecm_info_f = "/tmp/ecm.info";
+	const char *dec_icon_name[] = {"na","na","fta","int","card","net"};
+	decode = UNKNOWN;
 
 	if(!g_InfoViewer->chanready) {
 		if (g_settings.infobar_casystem_display == 2) {
@@ -850,55 +866,74 @@ void CInfoViewerBB::showIcon_CA_Status(int notfirst)
 		return;
 	}
 
+	if (emu_number != g_settings.emu_number) {
+		emu_number = 0;
+		check_emupid();
+	}
+
 	if(!notfirst) {
-		FILE* fd = fopen (ecm_info_f, "r");
 		int ecm_caid = 0;
-		if (fd)
+		CaIdVector ecm_caids;
+		check_ecmInfo(ecm_caids);
+
+		for ( int i = 0; i < (int)ecm_caids.size(); i++)
 		{
-			char *buffer = NULL;
-			size_t len = 0;
-			ssize_t read;
-			while ((read = getline(&buffer, &len, fd)) != -1)
+			if ((ecm_caids[i] & 0xFF00) == 0x1700)
 			{
-				if ((sscanf(buffer, "=%*[^9-0]%x", &ecm_caid) == 1) || (sscanf(buffer, "caid: %x", &ecm_caid) == 1))
-				{
-					continue;
+				bool nagra_found = false;
+				bool beta_found = false;
+				for(casys_map_iterator_t it = channel->camap.begin(); it != channel->camap.end(); ++it) {
+					int caid = (*it) & 0xFF00;
+					if(caid == 0x1800)
+						nagra_found = true;
+					if (caid == 0x1700)
+						beta_found = true;
 				}
+				if(beta_found)
+					ecm_caids[i] = 0x600;
+				else if(!beta_found && nagra_found)
+					ecm_caids[i] = 0x1800;
 			}
-			fclose (fd);
-			if (buffer)
-				free (buffer);
 		}
-		if ((ecm_caid & 0xFF00) == 0x1700)
-		{
-			bool nagra_found = false;
-			bool beta_found = false;
-			for(casys_map_iterator_t it = channel->camap.begin(); it != channel->camap.end(); ++it) {
-				int caid = (*it) & 0xFF00;
-				if(caid == 0x1800)
-					nagra_found = true;
-				if (caid == 0x1700)
-					beta_found = true;
-			}
-			if(beta_found)
-				ecm_caid = 0x600;
-			else if(!beta_found && nagra_found)
-				ecm_caid = 0x1800;
+		if (channel->scrambled && camCI && !useCI) {
+			//printf("Channel: %llX\n", channel->getChannelID());
+			useCI = cCA::GetInstance()->checkChannelID(channel->getChannelID());
 		}
+
+		if (useCI)
+			decode = CARD;
+
 		for (int i = 0; i < (int)(sizeof(caids)/sizeof(int)); i++) {
 			bool found = false;
 			for(casys_map_iterator_t it = channel->camap.begin(); it != channel->camap.end(); ++it) {
 				int caid = (*it) & 0xFF00;
 				if (caid == 0x1700)
 					caid = 0x0600;
-				if((found = (caid == caids[i])))
+				if((found = (caid == caids[i]))) {
+					fta = false;
+					for ( int j = 0; j < (int)ecm_caids.size(); j++)
+					{
+						if (caids[i] == (ecm_caids[j] & 0xFF00))
+						{
+							ecm_caid = ecm_caids[j];
+							ecm_OK = true;
+						}
+					}
 					break;
+				}
 			}
+
+			if(i == (int)(sizeof(caids)/sizeof(int))-1) {
+				paint_ca_icons(caids[i], fta ? "fta" : dec_icon_name[decode], icon_space_offset);
+				continue;
+ 			}
+
 			if(g_settings.infobar_casystem_display == 0)
 				paint_ca_icons(caids[i], (found ? (caids[i] == (ecm_caid & 0xFF00) ? green : yellow) : white), icon_space_offset);
 			else if(found)
 				paint_ca_icons(caids[i], (caids[i] == (ecm_caid & 0xFF00) ? green : yellow), icon_space_offset);
 		}
+		paint_cam_icons();
 	}
 }
 
@@ -976,7 +1011,7 @@ void CInfoViewerBB::ResetModules()
 
 void CInfoViewerBB::initBBOffset()
 {
-	bottom_bar_offset = (g_settings.infobar_casystem_display < 2) ? (g_settings.infobar_casystem_frame ? 36 : 22) : 0;
+	bottom_bar_offset = (g_settings.infobar_casystem_display < 2) ? (g_settings.infobar_casystem_frame ? 38 : 24) : 0;
 }
 
 void* CInfoViewerBB::scrambledThread(void *arg)
@@ -1007,5 +1042,157 @@ void CInfoViewerBB::scrambledCheck(bool force)
 		showIcon_Resolution();
 		scrambledErrSave = scrambledErr;
 		scrambledNoSigSave = scrambledNoSig;
+	}
+}
+
+void CInfoViewerBB::paint_cam_icons()
+{
+	if (!fta)
+	{
+		std::ostringstream buf;
+		const char *colour;
+
+		if (ecm_OK)
+			colour = "_green";
+		else
+			colour = "_yellow";
+
+		const int icon_space = 5;
+		int c_iconx = g_InfoViewer->ChanInfoX + (g_settings.infobar_casystem_frame ? 16 : icon_space + 3);
+		int c_icony = g_InfoViewer->BoxEndY + (g_settings.infobar_casystem_frame ? 4 : 2);
+		int c_icon_sizeW = 0;
+		int c_icon_sizeH = 0;
+
+		for (int i = 0; i < emu_count; i++)
+		{
+			if ((emu_number >> i) & 1)
+			{
+				buf.str("");
+				buf << emu_name[i] << colour;
+				frameBuffer->paintIcon(buf.str().c_str(), c_iconx, c_icony);
+				frameBuffer->getIconSize(buf.str().c_str(), &c_icon_sizeW, &c_icon_sizeH);
+				c_iconx = c_iconx + icon_space + c_icon_sizeW;
+			}
+		}
+
+		if (camCI)
+		{
+			if (useCI)
+				frameBuffer->paintIcon("ci+_green", c_iconx, c_icony);
+			else
+				frameBuffer->paintIcon("ci+_grey", c_iconx, c_icony);
+		}
+	}
+}
+
+void CInfoViewerBB::check_emupid()
+{
+	for (int i = 0; i < emu_count; i++)
+		if (getpidof(emu_name[i]))
+			emu_number |= (1 << i);
+}
+
+void CInfoViewerBB::check_ecmInfo(CaIdVector &ecm_caids)
+{
+	const char *ecm_info_f = "/tmp/ecm.info";
+	FILE* fd = fopen (ecm_info_f, "r");
+	int ecm_caid = 0;
+	if (fd)
+	{
+		char *buffer = NULL;
+		size_t len = 0;
+		ssize_t read;
+		while ((read = getline(&buffer, &len, fd)) != -1)
+		{
+			if ((sscanf(buffer, "=%*[^9-0]%x", &ecm_caid) == 1) || (sscanf(buffer, "caid: %x", &ecm_caid) == 1)
+			|| (sscanf(buffer, "CAID %x", &ecm_caid) == 1))
+			{
+				ecm_caids.push_back(ecm_caid);
+				continue;
+			}
+			else if ( strstr(buffer, "source:") ||		//mgcamd
+				  strstr(buffer, "decode:") ||		//gbox
+				  strstr(buffer, "protocol:") ||	//doscam or oscam constcw
+				  strstr(buffer, "from:") ||		//oscam
+				  strstr(buffer, "FROM:"))		//camd3
+			{
+				if ( strstr(buffer, "emu") ||		//mgcamd
+					strstr(buffer, "constcw") ||	//doscam or oscam constcw
+					strstr(buffer, "Internal"))	//gbox
+				{
+					decode = LOCAL;
+				}
+				else if ( strstr(buffer, "slot") ||	//gbox
+					  strstr(buffer, "local") ||	//oscam
+					  strstr(buffer, "com"))
+				{
+					decode = CARD;
+				}
+				else if ( strstr(buffer, "net") ||	//mgcamd
+					  strstr(buffer, "Network") ||	//gbox
+					  strstr(buffer, "."))		//oscam
+				{
+					if ( strstr(buffer, "localhost") || strstr(buffer, "127.0.0.1"))
+						decode = CARD;
+					else
+						decode = REMOTE;
+				}
+			}
+		}
+		fclose (fd);
+		if (buffer)
+			free (buffer);
+	}
+
+	if (emu_number & 0x08) // gbox
+		check_ecmInfo_GB(ecm_caids);
+
+	if(!ecm_caids.size())
+		ecm_caids.push_back(ecm_caid);
+}
+
+void CInfoViewerBB::check_ecmInfo_GB(CaIdVector &ecm_caids)
+{
+	char file[20];
+	for (int i =1; i < 5; i++)
+	{
+		snprintf(file, sizeof(file), "/tmp/ecm%d.info", i);
+		FILE* fd = fopen (file, "r");
+		int ecm_caid = 0;
+		if (fd)
+		{
+			char *buffer = NULL;
+			size_t len = 0;
+			ssize_t read;
+			while ((read = getline(&buffer, &len, fd)) != -1)
+			{
+				if ((sscanf(buffer, "=%*[^9-0]%x", &ecm_caid) == 1) || (sscanf(buffer, "caid: %x", &ecm_caid) == 1))
+				{
+					ecm_caids.push_back(ecm_caid);
+					continue;
+				}
+				else if (strstr(buffer, "decode:"))		//gbox
+				{
+					if (strstr(buffer, "Internal"))		//gbox
+					{
+						decode = LOCAL;
+					}
+					else if (strstr(buffer, "slot"))	//gbox
+					{
+						decode = CARD;
+					}
+					else if (strstr(buffer, "Network"))	//gbox
+					{
+						if ( strstr(buffer, "localhost") || strstr(buffer, "127.0.0.1"))
+							decode = CARD;
+						else
+							decode = REMOTE;
+					}
+				}
+			}
+			fclose (fd);
+			if (buffer)
+				free (buffer);
+		}
 	}
 }
