@@ -612,10 +612,10 @@ void CLCD::setScrollMode(int scroll)
 	}
 	else
 	{
-		proc_put("/proc/stb/lcd/initial_scroll_delay", "0", 1);
-		proc_put("/proc/stb/lcd/final_scroll_delay", "0", 1);
-		proc_put("/proc/stb/lcd/scroll_delay", "0", 1);
-		proc_put("/proc/stb/lcd/scroll_repeats", "0", 1);
+		proc_put("/proc/stb/lcd/initial_scroll_delay", false);
+		proc_put("/proc/stb/lcd/final_scroll_delay", false);
+		proc_put("/proc/stb/lcd/scroll_delay", false);
+		proc_put("/proc/stb/lcd/scroll_repeats", false);
 	}
 }
 
