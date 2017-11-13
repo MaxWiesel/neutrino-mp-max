@@ -133,25 +133,6 @@ static void replace_umlauts(std::string &s)
 	// printf("%s:<< '%s'\n", __func__, s.c_str());
 }
 
-static void display(const char *s, bool update_timestamp = true)
-{
-	int fd = dev_open();
-	int len = strlen(s);
-	if (fd < 0)
-		return;
-	printf("%s '%s'\n", __func__, s);
-	write(fd, s, len);
-	close(fd);
-	if (update_timestamp)
-	{
-		last_display = time(NULL);
-		/* increase timeout to ensure that everything is displayed
-		 * the driver displays 5 characters per second */
-		if (len > g_info.hw_caps->display_xres)
-			last_display += (len - g_info.hw_caps->display_xres) / 5;
-	}
-}
-
 CLCD::CLCD()
 {
 	/* do not show menu in neutrino...,at Line Display true, because there is th GLCD Menu */
@@ -264,11 +245,14 @@ void CLCD::showServicename(std::string name, bool)
 {
 	if (g_info.hw_caps->display_type == HW_DISPLAY_LED_NUM)
 		return;
+
 	servicename = name;
+
 	if (mode != MODE_TVRADIO && mode != MODE_AUDIO)
 		return;
-	replace_umlauts(name);
-	strncpy(display_text, name.c_str(), sizeof(display_text) - 1);
+
+	replace_umlauts(servicename);
+	strncpy(display_text, servicename.c_str(), sizeof(display_text) - 1);
 	display_text[sizeof(display_text) - 1] = '\0';
 	upd_display = true;
 #if HAVE_ARM_HARDWARE
@@ -342,7 +326,7 @@ void CLCD::showTime(bool force)
 	time_t now = time(NULL);
 	if (upd_display)
 	{
-		display(display_text);
+		ShowText(display_text);
 		upd_display = false;
 	}
 	else if (power && (force || (showclock && (now - last_display) > 4)))
@@ -374,13 +358,13 @@ void CLCD::showTime(bool force)
 					sprintf(timestr, "%02d%02d", hour, minute);
 				else	/* pad with spaces on the left side to center the time string */
 					sprintf(timestr, "%*s%02d:%02d",(g_info.hw_caps->display_xres - 5)/2, "", hour, minute);
-				display(timestr, false);
+				ShowText(timestr, false);
 			}
 			else
 			{
 				if (vol_active)
 				{
-					display(display_text);
+					showServicename(servicename);
 					vol_active = false;
 				}
 			}
@@ -411,9 +395,9 @@ void CLCD::showRCLock(int duration)
 		return;
 	}
 
-	display(g_Locale->getText(LOCALE_RCLOCK_LOCKED));
+	ShowText(g_Locale->getText(LOCALE_RCLOCK_LOCKED));
 	sleep(duration);
-	display(servicename.c_str());
+	ShowText(servicename.c_str());
 }
 
 /* update is default true, the mute code sets it to false
@@ -445,7 +429,7 @@ void CLCD::showVolume(const char vol, const bool update)
 	if (g_info.hw_caps->display_type == HW_DISPLAY_LINE_TEXT)
 		sprintf(s,"%.*s", volume*g_info.hw_caps->display_xres/100, "================");
 #endif
-	display(s);
+	ShowText(s);
 #if HAVE_ARM_HARDWARE
 	wake_up();
 #endif
@@ -462,9 +446,7 @@ void CLCD::showMenuText(const int, const char *text, const int, const bool)
 		return;
 	std::string tmp = text;
 	replace_umlauts(tmp);
-	strncpy(display_text, tmp.c_str(), sizeof(display_text) - 1);
-	display_text[sizeof(display_text) - 1] = '\0';
-	upd_display = true;
+	ShowText(tmp.c_str());
 #if HAVE_ARM_HARDWARE
 	wake_up();
 #endif
@@ -476,9 +458,7 @@ void CLCD::showAudioTrack(const std::string &, const std::string & title, const 
 		return;
 	std::string tmp = title;
 	replace_umlauts(tmp);
-	strncpy(display_text, tmp.c_str(), sizeof(display_text) - 1);
-	display_text[sizeof(display_text) - 1] = '\0';
-	upd_display = true;
+	ShowText(tmp.c_str());
 #if HAVE_ARM_HARDWARE
 	wake_up();
 #endif
@@ -506,9 +486,7 @@ void CLCD::setMode(const MODES m, const char * const)
 		showclock = true;
 		power = true;
 		if (g_info.hw_caps->display_type != HW_DISPLAY_LED_NUM) {
-			strncpy(display_text, servicename.c_str(), sizeof(display_text) - 1);
-			display_text[sizeof(display_text) - 1] = '\0';
-			upd_display = true;
+			showServicename(servicename);
 		}
 		showTime();
 		if (g_settings.lcd_info_line)
@@ -687,7 +665,7 @@ void CLCD::Clear()
 #else
 void CLCD::Clear()
 {
-	display(" ", false);
+	ShowText(" ", false);
 }
 #endif
 
@@ -878,6 +856,25 @@ void CLCD::ShowIcon(fp_icon i, bool on)
 			break;
 		default:
 			break;
+	}
+}
+
+void CVFD::ShowText(const char * str, bool update_timestamp)
+{
+	int fd = dev_open();
+	int len = strlen(str);
+	if (fd < 0)
+		return;
+	printf("%s '%s'\n", __func__, str);
+	write(fd, str, len);
+	close(fd);
+	if (update_timestamp)
+	{
+		last_display = time(NULL);
+		/* increase timeout to ensure that everything is displayed
+		 * the driver displays 5 characters per second */
+		if (len > g_info.hw_caps->display_xres)
+			last_display += (len - g_info.hw_caps->display_xres) / 5;
 	}
 }
 
