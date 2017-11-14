@@ -4700,11 +4700,7 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 			for(int i = 3; i < 256; i++)
 				close(i);
 			execvp(global_argv[0], global_argv); // no return if successful
-#if HAVE_SH4_HARDWARE
 			exit(CNeutrinoApp::REBOOT);
-#else
-			exit(1);
-#endif
 		}
 	}
 	else if(actionKey == "moviedir") {
@@ -4852,12 +4848,7 @@ void sighandler (int signum)
 		delete CVFD::getInstance();
 		delete SHTDCNT::getInstance();
 		stop_video();
-		//_exit(0);
-#if HAVE_SH4_HARDWARE
 		exit(CNeutrinoApp::SHUTDOWN);
-#else
-		exit(0);
-#endif
 	default:
 		break;
 	}
