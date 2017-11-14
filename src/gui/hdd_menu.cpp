@@ -1184,6 +1184,8 @@ int CHDDMenuHandler::formatDevice(std::string dev)
 #endif
 
 	progress->showStatusMessageUTF(mkfscmd.c_str());
+	res = umount_all(dev);
+	printf("CHDDMenuHandler::formatDevice: umount res %d\n", res);
 	f = popen(mkfscmd.c_str(), "r");
 	if (!f) {
 		showError(LOCALE_HDD_FORMAT_FAILED);
