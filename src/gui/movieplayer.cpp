@@ -1669,8 +1669,10 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			{
 				videoDecoder->setBlank(false);
 				screensaver(false);
-				//ignore first keypress stop - just quit the screensaver and call infoviewer
-				if (msg == CRCInput::RC_stop) {
+#if 0				//ignore first keypress stop - just quit the screensaver and call infoviewer
+				if (msg <= CRCInput::RC_MaxRC) {
+#endif
+				if (msg <= CRCInput::RC_stop) {
 					g_RCInput->clearRCMsg();
 					callInfoViewer();
 					continue;
@@ -2182,7 +2184,7 @@ void CMoviePlayerGui::callInfoViewer(bool init_vzap_it)
 
 	if (p_movie_info) {
 
-		if(duration == 0)
+		if(duration <= 0)
 			UpdatePosition();
 
 		MI_MOVIE_INFO *mi;
