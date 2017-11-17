@@ -209,12 +209,12 @@ void CHDDMenuHandler::getBlkIds()
 	{
 		while ((mnt = getmntent(mountFile)) != NULL)
 		{
-			if (strncmp(mnt->mnt_fsname, "/dev/sd", 7) && strncmp(mnt->mnt_fsname, "/dev/hd", 7)
-#if HAVE_ARM_HARDWARE
-				&& strncmp(mnt->mnt_fsname, "/dev/mmcblk", 11)
-#endif
-			)
+			if (strncmp(mnt->mnt_fsname, "/dev/sd", 7) && strncmp(mnt->mnt_fsname, "/dev/hd", 7))
 				continue;
+#if HAVE_ARM_HARDWARE
+			if (strncmp(mnt->mnt_fsname, "mmcblk", 6) == 0)
+				continue;
+#endif
 			hdd_s hdd;
 			hdd.devname = std::string(mnt->mnt_fsname +5 );
 

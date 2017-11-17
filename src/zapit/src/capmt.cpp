@@ -207,7 +207,7 @@ void CCamManager::StopCam(t_channel_id channel_id, CCam *cam)
 
 bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start, bool force_update)
 {
-	if (IS_WEBTV(channel_id))
+	if (IS_WEBCHAN(channel_id))
 		return false;
 
 	CCam * cam;
@@ -278,6 +278,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			mode, start ? "START" : "STOP", source, oldmask, newmask, force_update);
 
 	//INFO("source %d old mask %d new mask %d force update %s", source, oldmask, newmask, force_update ? "yes" : "no");
+
 #if ! HAVE_COOL_HARDWARE
 	/* stop decoding if record stops unless it's the live channel. TODO:PIP? */
 	/* all the modes: RECORD, STREAM, PIP except PLAY now stopping here !! */
@@ -293,6 +294,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 		}
 	}
 #endif
+
 	if((oldmask != newmask) || force_update) {
 		cam->setCaMask(newmask);
 		cam->setSource(source);

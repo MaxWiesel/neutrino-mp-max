@@ -32,7 +32,7 @@
 #include <OpenThreads/ReentrantMutex>
 
 #define MAX_FE          4
-#define MAX_ADAPTERS    1
+#define MAX_ADAPTERS    2
 //#define DYNAMIC_DEMUX
 //#define MAKE_FE_KEY(adapter, number) ((adapter << 8) | (number & 0xFF))
 
@@ -117,10 +117,10 @@ class CFEManager
 		void		setLiveFE(CFrontend * fe);
 
 		CFrontend *	allocateFE(CZapitChannel * channel, bool forrecord = false);
-		CFrontend *	getFrontend(CZapitChannel * channel);
 
 		fe_mode_t	getMode() { return mode; };
 
+		CFrontend *	getFrontend(CZapitChannel * channel);
 		int		getFrontendCount() { return femap.size(); };
 		int		getEnabledCount();
 
@@ -136,7 +136,7 @@ class CFEManager
 		bool		haveFreeFrontend();
 		void		linkFrontends(bool init = true);
 		void		copySettings(CFrontend * fe);
-		int		getDemux(transponder_id_t id);
+		int		getDemux(transponder_id_t id, int feNum);
 		bool		lockDemux(int i, transponder_id_t id);
 		void		unlockDemux(int i);
 		bool		haveFreeDemux();

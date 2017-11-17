@@ -90,10 +90,10 @@ typedef struct TP_parameter
 } TP_params;
 
 enum ChannelType {
-	CHANNEL_MPEG2   = 0,
-	CHANNEL_MPEG4   = 1,
-	CHANNEL_HEVC    = 6,
-	CHANNEL_CAVS    = 16
+       CHANNEL_MPEG2   = 0,
+       CHANNEL_MPEG4   = 1,
+       CHANNEL_HEVC    = 6,
+       CHANNEL_CAVS    = 16
 };
 
 #endif /* __zapittypes_h__ */

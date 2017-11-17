@@ -676,8 +676,10 @@ bool CServiceScan::ReplaceTransponderParams(freq_id_t freq, t_satellite_position
 void CServiceScan::SendTransponderInfo(transponder &t)
 {
 	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_REPORT_NUM_SCANNED_TRANSPONDERS, &processed_transponders, sizeof(processed_transponders));
+#if 0
 	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_PROVIDER, (void *) " ", 2);
 	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_SERVICENAME, (void *) " ", 2);
+#endif
 	CZapit::getInstance()->SendEvent(CZapitClient::EVT_SCAN_REPORT_FREQUENCYP, &t.feparams, sizeof(FrontendParameters));
 }
 

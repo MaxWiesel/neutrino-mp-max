@@ -23,10 +23,6 @@
 #ifndef __screenshot_h_
 #define __screenshot_h_
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include <pthread.h>
 
 class CScreenShot

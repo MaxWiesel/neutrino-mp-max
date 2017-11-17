@@ -369,11 +369,11 @@ AC_ARG_WITH(boxtype,
 			BOXTYPE="duckbox"
 			BOXMODEL="$withval"
 			;;
-		hd51)
+		vusolo4k)
 			BOXTYPE="armbox"
 			BOXMODEL="$withval"
 			;;
-		vusolo4k)
+		hd51)
 			BOXTYPE="armbox"
 			BOXMODEL="$withval"
 			;;
@@ -383,10 +383,10 @@ AC_ARG_WITH(boxtype,
 
 AC_ARG_WITH(boxmodel,
 	[  --with-boxmodel         valid for coolstream: hd1, hd2
+                          valid for armbox: hd51, vusolo4k
                           valid for generic: raspi
                           valid for duckbox: ufs910, ufs912, ufs913, ufs922, atevio7500, fortis_hdbox, octagon1008, hs7110, hs7810a, hs7119, hs7819, dp7000, cuberevo, cuberevo_mini, cuberevo_mini2, cuberevo_250hd, cuberevo_2000hd, cuberevo_3000hd, ipbox9900, ipbox99, ipbox55, arivalink200, tf7700, hl101
-                          valid for spark: spark, spark7162
-                          valid for armbox: hd51, vusolo4k],
+                          valid for spark: spark, spark7162],
 	[case "${withval}" in
 		hd1|hd2)
 			if test "$BOXTYPE" = "coolstream"; then
@@ -421,8 +421,8 @@ AC_ARG_WITH(boxmodel,
 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
 			fi
 			;;
-		raspi)
-			if test "$BOXTYPE" = "generic"; then
+		vusolo4k)
+			if test "$BOXTYPE" = "armbox"; then
 				BOXMODEL="$withval"
 			else
 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
@@ -435,8 +435,8 @@ AC_ARG_WITH(boxmodel,
 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
 			fi
 			;;
-		vusolo4k)
-			if test "$BOXTYPE" = "armbox"; then
+		raspi)
+			if test "$BOXTYPE" = "generic"; then
 				BOXMODEL="$withval"
 			else
 				AC_MSG_ERROR([unknown model $withval for boxtype $BOXTYPE])
