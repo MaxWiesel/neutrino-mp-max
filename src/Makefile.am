@@ -119,6 +119,7 @@ neutrino_LDADD = \
 	@AVFORMAT_LIBS@ \
 	@AVUTIL_LIBS@ \
 	@AVCODEC_LIBS@ \
+	@SWSCALE_LIBS@ \
 	$(ADEC_LIBS) \
 	@SIGC_LIBS@ \
 	$(PUGIXML_LIBS) \
@@ -178,13 +179,6 @@ rcsim_SOURCES = rcsim.c rcsim.h
 bin_PROGRAMS += mdev_helper
 mdev_helper_SOURCES = mdev_helper.cpp
 
-if USE_STB_HAL
-neutrino_LDADD += \
-	-lstb-hal
-neutrino_LDFLAGS = \
-	$(STB_HAL_LIB)
-endif
-
 if BOXTYPE_SPARK
 neutrino_LDADD += -lass
 endif
@@ -196,16 +190,6 @@ endif
 if BOXTYPE_TRIPLE
 neutrino_LDADD += \
 	$(top_builddir)/src/lcddisplay/liblcddisplay.a
-endif
-
-neutrino_LDADD += \
-	@SWRESAMPLE_LIBS@ \
-	@AVFORMAT_LIBS@ \
-	@AVUTIL_LIBS@ \
-	@AVCODEC_LIBS@
-
-if BOXTYPE_ARMBOX
-neutrino_LDADD += @SWSCALE_LIBS@
 endif
 
 if BOXMODEL_RASPI
@@ -228,3 +212,13 @@ uncooloff_SOURCES = uncooloff.c
 # 	-lOpenThreads -lrt
 # endif
 endif
+
+if USE_STB_HAL
+neutrino_LDADD += \
+	-lstb-hal
+neutrino_LDFLAGS = \
+	$(STB_HAL_LIB)
+endif
+
+neutrino_LDADD += \
+	@SWRESAMPLE_LIBS@
