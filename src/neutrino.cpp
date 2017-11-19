@@ -3053,6 +3053,7 @@ void CNeutrinoApp::RealRun()
 				//open moviebrowser via media player menu object
 				if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
 					CMediaPlayerMenu::getInstance()->exec(NULL, "moviebrowser");
+				CVFD::getInstance()->UpdateIcons();
 			}
 			else if( msg == CRCInput::RC_play ) {
 				switch (g_settings.key_playbutton)
