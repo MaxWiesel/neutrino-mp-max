@@ -60,6 +60,14 @@ class CScanSettings;
 class CNeutrinoApp : public CMenuTarget, CChangeObserver, public sigc::trackable
 {
 public:
+	enum // Neutrino's exit codes to be handled in it's start script
+	{
+		EXIT_ERROR = -1,
+		EXIT_NORMAL = 0,	// g_info.hw_caps->can_shutdown == 0
+		EXIT_SHUTDOWN = 1,	// g_info.hw_caps->can_shutdown == 1
+		EXIT_REBOOT = 2
+	};
+
 	enum
 	{
 		RECORDING_OFF    = 0,
@@ -67,8 +75,6 @@ public:
 		RECORDING_VCR    = 2,
 		RECORDING_FILE   = 3
 	};
-	
-	
 
 private:
 	CFrameBuffer * frameBuffer;
@@ -120,6 +126,7 @@ private:
 	void standbyMode( bool bOnOff, bool fromDeepStandby = false );
 	void getAnnounceEpgName(CTimerd::RecordingInfo * eventinfo, std::string &name);
 
+	void ExitRun(int can_shutdown = 0);
 	void RealRun();
 	void InitZapper();
 	void InitTimerdClient();
@@ -141,24 +148,6 @@ private:
 	CNeutrinoApp();
 
 public:
-	enum
-	{
-		mode_unknown = -1,
-		mode_tv = 1,
-		mode_radio = 2,
-		mode_scart = 3,
-		mode_standby = 4,
-		mode_audio = 5,
-		mode_pic = 6,
-		mode_ts = 7,
-		mode_off = 8,
-		mode_webtv = 9,
-		mode_upnp = 10,
-		mode_webradio = 11,
-		mode_mask = 0xFF,
-		norezap = 0x100
-	};
-
 	CUserMenu usermenu;
 
 	void saveSetup(const char * fname);
@@ -201,7 +190,7 @@ public:
 	int getLastMode() {
 		return lastMode;
 	}
-	void switchTvRadioMode(const int prev_mode = mode_unknown);
+	void switchTvRadioMode(const int prev_mode = NeutrinoModes::mode_unknown);
 
 	
 	bool isMuted() {return current_muted; }
@@ -228,19 +217,13 @@ public:
 	CConfigFile* getConfigFile() {return &configfile;};
 	bool 		SDTreloadChannels;
 
-	void saveEpg(bool cvfd_mode);
+	void saveEpg(int _mode);
 	void stopDaemonsForFlash();
 	int showChannelList(const neutrino_msg_t msg, bool from_menu = false);
 	void allowChannelList(bool allow){channelList_allowed = allow;}
 	CPersonalizeGui & getPersonalizeGui() { return personalize; }
 	bool getChannellistIsVisible() { return channelList_painted; }
 	void zapTo(t_channel_id channel_id);
-	enum {
-		SHUTDOWN,
-		REBOOT,
-		NOTUSED
-	};
-	void ExitRun(int can_shutdown = SHUTDOWN);
 	bool wakeupFromStandby(void);
 	void standbyToStandby(void);
 	void lockPlayBack(bool blank = true);

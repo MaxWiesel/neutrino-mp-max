@@ -1,5 +1,5 @@
 /*
- * uncooloff - switch off the box with a possible timer wakeup
+ * shutdown_helper - switch off the box with a possible timer wakeup
  * this is needed because the drivers do not implement a proper
  * hwclock interface :-(
  *
@@ -54,6 +54,8 @@ int main(int argc, char **argv)
 	fp.current_minute	= tmnow->tm_min;
 	fp.timer_minutes_hi	= fp_timer >> 8;;
 	fp.timer_minutes_lo	= fp_timer & 0xFF;
+
+	system("/etc/init.d/rcK");
 
 	fd = open("/dev/display", O_RDONLY);
 	if (fd < 0)
