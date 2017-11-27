@@ -109,9 +109,9 @@ bool CScreenShot::Start(const std::string custom_cmd)
 	return true;
 }
 
-/* 
+/*
  * create filename member from channel name and its current EPG data,
- * with added date and time including msecs and suffix for selected format 
+ * with added date and time including msecs and suffix for selected format
  */
 void CScreenShot::MakeFileName(const t_channel_id channel_id)
 {

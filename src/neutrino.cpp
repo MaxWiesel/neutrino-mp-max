@@ -2974,7 +2974,6 @@ void CNeutrinoApp::RealRun()
 				StartSubtitles();
 			}
 			else if (((msg == CRCInput::RC_tv) || (msg == CRCInput::RC_radio)) && (g_settings.key_tvradio_mode == (int)CRCInput::RC_nokey)) {
-#if HAVE_ARM_HARDWARE
 				if (msg == CRCInput::RC_tv)
 				{
 					if (mode == NeutrinoModes::mode_radio || mode == NeutrinoModes::mode_webradio)
@@ -2986,7 +2985,6 @@ void CNeutrinoApp::RealRun()
 						radioMode();
 				}
 				else
-#endif
 					switchTvRadioMode(); //used with defined default tv/radio rc key
 			}
 			/* in case key_subchannel_up/down redefined */
@@ -4062,22 +4060,6 @@ void CNeutrinoApp::ExitRun(int exit_code)
 	if (!do_exiting)
 		return;
 
-#if 0
-	/*
-	   For compatibility: /tmp/.reboot is not really needed anymore
-	   if we use the defined exit code 2 instead of this flagfile.
-	   Next block is just to avoid force changes in start scripts.
-	*/
-	if (exit_code == CNeutrinoApp::EXIT_REBOOT)
-	{
-		exit_code = CNeutrinoApp::EXIT_NORMAL;
-		FILE *f = fopen("/tmp/.reboot", "w");
-		fclose(f);
-	}
-	else
-		unlink("/tmp/.reboot");
-#endif
-
 	printf("[neutrino] %s(int %d)\n", __func__, exit_code);
 	printf("[neutrino] hw_caps->can_shutdown: %d\n", g_info.hw_caps->can_shutdown);
 
@@ -4512,12 +4494,6 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		if(!recordingstatus) { //only switch to standby_channel_id when not recording
 			live_channel_id = standby_channel_id;
 		}
-#if 0
-		/* todo: check parental pin */
-		videoDecoder->Standby(false);
-		channelList->setSelected(0xfffffff); /* make sure that zapTo_ChannelID will zap */
-		channelList->zapTo_ChannelID(live_channel_id);
-#endif
 		channelList->zapTo_ChannelID(live_channel_id, true); /* force re-zap */
 
 		g_Sectionsd->setPauseScanning(false);
@@ -4750,7 +4726,6 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 			saveSetup(NEUTRINO_SETTINGS_FILE);
 
 			/* this is an ugly mess :-( */
-			delete g_RCInput;
 			delete g_Sectionsd;
 			delete g_RemoteControl;
 			delete g_fontRenderer;
@@ -4759,12 +4734,14 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 			delete hint;
 
 			stop_daemons(true);
-			delete CVFD::getInstance();
-			delete SHTDCNT::getInstance();
 			stop_video();
+			/* g_RCInput is used in stop_daemons if a web-tv channel is running */
+			delete g_RCInput;
 			/* g_Timerd, g_Zapit and CVFD are used in stop_daemons */
 			delete g_Timerd;
 			delete g_Zapit; //do we really need this?
+			delete CVFD::getInstance();
+			delete SHTDCNT::getInstance();
 
 			for(int i = 3; i < 256; i++)
 				close(i);
