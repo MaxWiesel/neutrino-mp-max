@@ -498,7 +498,7 @@ fe_code_rate_t CFrontend::getCodeRate(const uint8_t fec_inner, delivery_system_t
 			break;
 		default:
 			if (zapit_debug)
-				printf("no valid fec for DVB-%c set.. assume auto\n", (delsys == DVB_S ? 'S' : (delsys == DVB_C ? 'C' : 'T')));
+				printf("no valid fec for DVB-%s set.. assume auto\n", (delsys == DVB_S ? "S" : (delsys == DVB_C ? "C" : "T/T2")));
 			/* fall through */
 		case fAuto:
 			fec = FEC_AUTO;
@@ -1025,11 +1025,12 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 		fec = "0";
 		break;
 #endif
+	default:
+		INFO("[frontend] getDelSys: unknown FEC: %d !!!", f);
+		/* fall through */
 	case FEC_AUTO:
 		fec = "AUTO";
 		break;
-	default:
-		INFO("[frontend] getDelSys: unknown FEC: %d !!!", f);
 	}
 }
 
@@ -1232,6 +1233,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 #endif
 	default:
 		INFO("[fe%d] DEMOD: unknown FEC: %d", fenumber, fec_inner);
+		/* fall through */
 	case FEC_AUTO:
 		fec = FEC_AUTO;
 		break;
