@@ -2331,8 +2331,10 @@ void wake_up(bool &wakeup)
 	/* not platform specific - this is created by the init process */
 	else if (access("/tmp/.timer_wakeup", F_OK) == 0)
 	{
-		wakeup = 1;
+		wakeup = true;
+#if !HAVE_SH4_HARDWARE
 		unlink("/tmp/.timer_wakeup");
+#endif
 	}
 	printf("[timerd] wakeup from standby: %s\n", wakeup ? "yes" : "no");
 
@@ -2657,7 +2659,7 @@ TIMER_STOP("################################## after all #######################
 	}
 
 	RealRun();
-	ExitRun(g_info.hw_caps->can_shutdown);
+	ExitRun(CNeutrinoApp::EXIT_REBOOT);
 
 	return 0;
 }
@@ -3872,7 +3874,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 #if HAVE_SH4_HARDWARE
 			timer_wakeup = true;
 #endif
-			ExitRun(g_info.hw_caps->can_shutdown);
+			ExitRun(CNeutrinoApp::EXIT_SHUTDOWN);
 		}
 		else {
 			skipShutdownTimer=false;
@@ -3880,6 +3882,8 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		return messages_return::handled;
 	}
 	else if( msg == NeutrinoMessages::REBOOT ) {
+		FILE *f = fopen("/tmp/.reboot", "w");
+		fclose(f);
 		ExitRun(CNeutrinoApp::EXIT_REBOOT);
 	}
 	else if (msg == NeutrinoMessages::EVT_POPUP || msg == NeutrinoMessages::EVT_EXTMSG) {
@@ -4346,7 +4350,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		CCECSetup cecsetup;
 		cecsetup.setCECSettings(false);
 #endif
-		CVFD::getInstance()->ShowText("standby...        ");
+		CVFD::getInstance()->ShowText("standby...");
 		if( mode == NeutrinoModes::mode_scart ) {
 			//g_Controld->setScartMode( 0 );
 		}
@@ -4604,11 +4608,15 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 	}
 	else if(actionKey=="shutdown")
 	{
-		ExitRun(g_info.hw_caps->can_shutdown);
+		ExitRun(CNeutrinoApp::EXIT_SHUTDOWN);
 	}
 	else if(actionKey=="reboot")
 	{
+		FILE *f = fopen("/tmp/.reboot", "w");
+		if (f)
+			fclose(f);
 		ExitRun(CNeutrinoApp::EXIT_REBOOT);
+		unlink("/tmp/.reboot");
 		returnval = menu_return::RETURN_NONE;
 	}
 	else if (actionKey=="clock_switch")
@@ -4895,7 +4903,7 @@ void sighandler (int signum)
 		delete CVFD::getInstance();
 		delete SHTDCNT::getInstance();
 		stop_video();
-		exit(CNeutrinoApp::EXIT_NORMAL);
+		exit(CNeutrinoApp::EXIT_SHUTDOWN);
 	default:
 		break;
 	}
@@ -5330,9 +5338,11 @@ void CNeutrinoApp::Cleanup()
 	printf("cleanup 5\n");fflush(stdout);
 	delete CEitManager::getInstance();
 	printf("cleanup 6\n");fflush(stdout);
+#if HAVE_COOL_HARDWARE
 	//delete CVFD::getInstance();
 
 	comp_malloc_stats(NULL);
+#endif
 #endif
 }
 
