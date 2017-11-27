@@ -1298,7 +1298,9 @@ extern void MoviePlayerStop(void)
 void CMoviePlayerGui::stopPlayBack(void)
 {
 	printf("%s: stopping...\n", __func__);
+#if HAVE_SH4_HARDWARE
 	playback->RequestAbort();
+#endif
 
 	repeat_mode = REPEAT_OFF;
 	if (bgThread) {
