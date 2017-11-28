@@ -2085,6 +2085,8 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		} else if (msg == CRCInput::RC_timeout || msg == NeutrinoMessages::EVT_TIMER) {
 			if (playstate == CMoviePlayerGui::PLAY && (position >= 300000 || (duration < 300000 && (position > (duration /2)))))
 				makeScreenShot(true);
+		} else if (msg == CRCInput::RC_yellow) {
+			showFileInfos();
 		} else if (CNeutrinoApp::getInstance()->listModeKey(msg)) {
 			//FIXME do nothing ?
 		} else if (msg == (neutrino_msg_t) CRCInput::RC_setup) {
@@ -3481,6 +3483,28 @@ void CMoviePlayerGui::makeScreenShot(bool autoshot, bool forcover)
 #endif
 	if (autoshot)
 		autoshot_done = true;
+}
+
+void CMoviePlayerGui::showFileInfos()
+{
+	std::vector<std::string> keys, values;
+	playback->GetMetadata(keys, values);
+	size_t count = keys.size();
+	if (count > 0) {
+		CMenuWidget* sfimenu = new CMenuWidget("Fileinfos", NEUTRINO_ICON_SETTINGS);
+		sfimenu->addItem(GenericMenuBack);
+		sfimenu->addItem(GenericMenuSeparatorLine);
+		for (size_t i = 0; i < count; i++) {
+			std::string key = trim(keys[i]);
+			printf("key: %s - values: %s \n", key.c_str(), isUTF8(values[i]) ? values[i].c_str() : convertLatin1UTF8(values[i]).c_str());
+			CMenuForwarder * mf = new CMenuForwarder(key.c_str(), false, isUTF8(values[i]) ? values[i].c_str() : convertLatin1UTF8(values[i]).c_str(), NULL);
+			sfimenu->addItem(mf);
+		}
+		sfimenu->exec(NULL, "");
+		sfimenu=NULL;
+		delete sfimenu;
+	}
+	return;
 }
 
 size_t CMoviePlayerGui::GetReadCount()

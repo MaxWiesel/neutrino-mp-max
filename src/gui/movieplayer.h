@@ -247,6 +247,7 @@ class CMoviePlayerGui : public CMenuTarget
 	void makeFilename();
 	bool prepareFile(CFile *file);
 	void makeScreenShot(bool autoshot = false, bool forcover = false);
+	void showFileInfos();
 
 	void Cleanup();
 	void ClearFlags();
