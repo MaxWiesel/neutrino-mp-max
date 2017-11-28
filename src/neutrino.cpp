@@ -3478,7 +3478,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 			}
 			else {
 #if HAVE_SH4_HARDWARE
-				if((mode != mode_standby) && (g_settings.shutdown_real) && recordingstatus)
+				if((mode != NeutrinoModes::mode_standby) && (g_settings.shutdown_real) && recordingstatus)
 					timer_wakeup = true;
 #endif
 				new_msg = (mode == NeutrinoModes::mode_standby) ? NeutrinoMessages::STANDBY_OFF : NeutrinoMessages::STANDBY_ON;
@@ -4181,7 +4181,7 @@ void CNeutrinoApp::ExitRun(int exit_code)
 	stop_video();
 
 #if HAVE_SH4_HARDWARE
-	if (can_shutdown == SHUTDOWN) {
+	if (exit_code == CNeutrinoApp::EXIT_SHUTDOWN) {
 		CCECSetup cecsetup;
 		cecsetup.setCECSettings(false);
 	}
