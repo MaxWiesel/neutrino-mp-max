@@ -114,6 +114,11 @@ libneutrino_gui_a_SOURCES = \
 	webtv_setup.cpp \
 	zapit_setup.cpp
 
+if ENABLE_GRAPHLCD
+libneutrino_gui_a_SOURCES += \
+	glcdsetup.cpp
+endif
+
 if BOXTYPE_ARMBOX
 libneutrino_gui_a_SOURCES += \
 	streaminfo2.cpp

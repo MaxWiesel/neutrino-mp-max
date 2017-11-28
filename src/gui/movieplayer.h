@@ -296,7 +296,7 @@ class CMoviePlayerGui : public CMenuTarget
 	t_channel_id getChannelId(void);
 	bool PlayBackgroundStart(const std::string &file, const std::string &name, t_channel_id chan, const std::string &script="");
 	void stopPlayBack(void);
-	void StopSubtitles();
+	void StopSubtitles(bool enable_glcd_mirroring);
 	void StartSubtitles(bool show = true);
 	void setLastMode(int m) { m_LastMode = m; }
 	void Pause(bool b = true);

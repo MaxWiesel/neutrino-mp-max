@@ -82,6 +82,10 @@
 #include <iconv.h>
 #include <libdvbsub/dvbsub.h>
 #include <audio.h>
+#ifdef ENABLE_GRAPHLCD
+#include <driver/nglcd.h>
+bool glcd_play = false;
+#endif
 #include <gui/widget/stringinput_ext.h>
 #include <gui/screensetup.h>
 #include <gui/widget/msgbox.h>
@@ -1384,6 +1388,15 @@ bool CMoviePlayerGui::PlayFileStart(void)
 	}
 
 	file_prozent = 0;
+#ifdef ENABLE_GRAPHLCD
+	nGLCD::MirrorOSD(false);
+	if (p_movie_info)
+		nGLCD::lockChannel(p_movie_info->channelName, p_movie_info->epgTitle);
+	else {
+		glcd_play = true;
+		nGLCD::lockChannel(g_Locale->getText(LOCALE_MOVIEPLAYER_HEAD), file_name.c_str(), file_prozent);
+	}
+#endif
 	pthread_t thrStartHint = 0;
 	if (is_file_player) {
 		showStartingHint = true;
@@ -1512,14 +1525,14 @@ bool CMoviePlayerGui::PlayFileStart(void)
 
 bool CMoviePlayerGui::SetPosition(int pos, bool absolute)
 {
-	StopSubtitles();
+	StopSubtitles(true);
 	bool res = playback->SetPosition(pos, absolute);
 	if(is_file_player && res && speed == 0 && playstate == CMoviePlayerGui::PAUSE){
 		playstate = CMoviePlayerGui::PLAY;
 		speed = 1;
 		playback->SetSpeed(speed);
 	}
-	StartSubtitles();
+	StartSubtitles(true);
 	return res;
 }
 
@@ -1589,6 +1602,14 @@ void CMoviePlayerGui::PlayFileLoop(void)
 
 	while (playstate >= CMoviePlayerGui::PLAY)
 	{
+#ifdef ENABLE_GRAPHLCD
+		if (p_movie_info)
+			nGLCD::lockChannel(p_movie_info->channelName, p_movie_info->epgTitle, duration ? (100 * position / duration) : 0);
+		else {
+			glcd_play = true;
+			nGLCD::lockChannel(g_Locale->getText(LOCALE_MOVIEPLAYER_HEAD), file_name.c_str(), file_prozent);
+		}
+#endif
 		if (update_lcd) {
 			update_lcd = false;
 			updateLcd();
@@ -2021,12 +2042,12 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			bool restore = FileTimeOSD->IsVisible();
 			FileTimeOSD->kill();
 
-			StopSubtitles();
+			StopSubtitles(true);
 			if (msg == CRCInput::RC_epg)
 				g_EventList->exec(CNeutrinoApp::getInstance()->channelList->getActiveChannel_ChannelID(), CNeutrinoApp::getInstance()->channelList->getActiveChannelName());
 			else if (msg == NeutrinoMessages::SHOW_EPG)
 				g_EpgData->show(CNeutrinoApp::getInstance()->channelList->getActiveChannel_ChannelID());
-			StartSubtitles();
+			StartSubtitles(true);
 			if (restore)
 				FileTimeOSD->show(position);
 #if 0
@@ -2120,6 +2141,12 @@ void CMoviePlayerGui::PlayFileEnd(bool restore)
 
 	playback->SetSpeed(1);
 	playback->Close();
+#ifdef ENABLE_GRAPHLCD
+	if (p_movie_info || glcd_play == true) {
+		glcd_play = false;
+		nGLCD::unlockChannel();
+	}
+#endif
 	if (iso_file) {
 		iso_file = false;
 		if (umount2(ISO_MOUNT_POINT, MNT_FORCE))
@@ -2197,6 +2224,10 @@ void CMoviePlayerGui::callInfoViewer(bool init_vzap_it)
 		}
 		if (!movie_info.channelName.empty() || !movie_info.epgTitle.empty())
 			p_movie_info = &movie_info;
+#ifdef ENABLE_GRAPHLCD
+		if (p_movie_info)
+			nGLCD::lockChannel(p_movie_info->channelName, p_movie_info->epgTitle);
+#endif
 	}
 
 	if (p_movie_info) {
@@ -2327,7 +2358,7 @@ void CMoviePlayerGui::getCurrentAudioName(bool /* file_player */, std::string &a
 void CMoviePlayerGui::selectAudioPid()
 {
 	CAudioSelectMenuHandler APIDSelector;
-	StopSubtitles();
+	StopSubtitles(true);
 	APIDSelector.exec(NULL, "-1");
 	StartSubtitles(true);
 #if 0
@@ -2706,7 +2737,7 @@ void CMoviePlayerGui::UpdatePosition()
 #endif
 }
 
-void CMoviePlayerGui::StopSubtitles()
+void CMoviePlayerGui::StopSubtitles(bool enable_glcd_mirroring __attribute__((unused)))
 {
 #if HAVE_SH4_HARDWARE
 	printf("[CMoviePlayerGui] %s\n", __FUNCTION__);
@@ -2720,6 +2751,10 @@ void CMoviePlayerGui::StopSubtitles()
 		tuxtx_pause_subtitle(true);
 		frameBuffer->paintBackground();
 	}
+#ifdef ENABLE_GRAPHLCD
+	if (enable_glcd_mirroring)
+		nGLCD::MirrorOSD(g_settings.glcd_mirror_osd);
+#endif
 #endif
 }
 
@@ -2757,6 +2792,9 @@ void CMoviePlayerGui::StartSubtitles(bool show __attribute__((unused)))
 {
 #if HAVE_SH4_HARDWARE
 	printf("[CMoviePlayerGui] %s: %s\n", __FUNCTION__, show ? "Show" : "Not show");
+#ifdef ENABLE_GRAPHLCD
+	nGLCD::MirrorOSD(false);
+#endif
 
 	if(!show)
 		return;

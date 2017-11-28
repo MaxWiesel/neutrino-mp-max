@@ -181,10 +181,22 @@ AC_ARG_ENABLE(viasatepg,
 	[AC_DEFINE(ENABLE_VIASATEPG,1,[enable ViaSat EPG code])])
 
 AC_ARG_ENABLE(fastscan,
-	[  --enable-fastscan                   enable Fastscan code)],
-	[AC_DEFINE(ENABLE_FASTSCAN,1,[enable fastscan code])])
+	AS_HELP_STRING(--enable-fastscan,include FASTSCAN support),
+	,[enable_fastscan=no])
 
-AM_CONDITIONAL(ENABLE_FASTSCAN, test "$enable_fastscan" = "yes")
+AM_CONDITIONAL(ENABLE_FASTSCAN,test "$enable_fastscan" = "yes")
+if test "$enable_fastscan" = "yes"; then
+	AC_DEFINE(ENABLE_FASTSCAN,1,[include FASTSCAN support])
+fi
+
+AC_ARG_ENABLE(graphlcd,
+	[  --enable-graphlcd                    enable GraphLCD support],
+	[AC_DEFINE(ENABLE_GRAPHLCD,1,[enable GraphLCD support])])
+
+AM_CONDITIONAL(ENABLE_GRAPHLCD,test "$enable_graphlcd" = "yes")
+if test "$enable_graphlcd" = "yes"; then
+	AC_DEFINE(ENABLE_GRAPHLCD,1,[include GraphLCD support])
+fi
 
 AC_ARG_ENABLE(giflib,
 	AS_HELP_STRING(--enable-giflib,use giflib instead of libungif),
