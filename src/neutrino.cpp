@@ -2794,22 +2794,6 @@ void CNeutrinoApp::showMainMenu()
 	}
 }
 
-void CNeutrinoApp::screensaver(bool on)
-{
-	if (on)
-	{
-		m_screensaver = true;
-		CInfoClock::getInstance()->block();
-		CScreenSaver::getInstance()->Start();
-	}
-	else
-	{
-		CScreenSaver::getInstance()->Stop();
-		m_screensaver = false;
-		m_idletime = time(NULL);
-	}
-}
-
 void CNeutrinoApp::RealRun()
 {
 	mainMenu = &personalize.getWidget(MENU_MAIN);
@@ -2832,8 +2816,7 @@ void CNeutrinoApp::RealRun()
 	}
 	g_RCInput->clearRCMsg();
 
-	m_idletime	= time(NULL);
-	m_screensaver	= false;
+	CScreenSaver::getInstance()->resetIdleTime();
 
 	while( true ) {
 #ifdef ENABLE_LUA
@@ -2848,7 +2831,15 @@ void CNeutrinoApp::RealRun()
 		check_timer();
 #endif
 
-		if (mode == NeutrinoModes::mode_radio) {
+		if (msg <= CRCInput::RC_MaxRC)
+			CScreenSaver::getInstance()->resetIdleTime();
+
+#if HAVE_ARM_HARDWARE
+		if (mode == NeutrinoModes::mode_radio)
+#else
+		if (mode == NeutrinoModes::mode_radio || mode == NeutrinoModes::mode_webradio)
+#endif
+		{
 			bool ignored_msg = (
 				/* radio screensaver will ignore this msgs */
 				   msg == NeutrinoMessages::EVT_CURRENTEPG
@@ -2860,25 +2851,26 @@ void CNeutrinoApp::RealRun()
 				|| msg == NeutrinoMessages::EVT_ZAP_GOTAPIDS
 				|| msg == NeutrinoMessages::EVT_ZAP_GOTPIDS
 			);
-			if ( msg == CRCInput::RC_timeout  || msg == NeutrinoMessages::EVT_TIMER)
+			if (msg == CRCInput::RC_timeout || msg == NeutrinoMessages::EVT_TIMER)
 			{
-				int delay = time(NULL) - m_idletime;
-				int screensaver_delay = g_settings.screensaver_delay;
-				if (screensaver_delay !=0 && delay > screensaver_delay*60 && !m_screensaver)
-					screensaver(true);
+				if (CScreenSaver::getInstance()->canStart() && !CScreenSaver::getInstance()->isActive())
+				{
+					CInfoClock::getInstance()->block();
+					CScreenSaver::getInstance()->Start();
+				}
 			}
 			else if (!ignored_msg)
 			{
-				m_idletime = time(NULL);
-				if (m_screensaver)
+				if (CScreenSaver::getInstance()->isActive())
 				{
 					printf("[neutrino] CScreenSaver stop; msg: %lX\n", msg);
-					screensaver(false);
+					CScreenSaver::getInstance()->Stop();
 
 					frameBuffer->stopFrame();
 					frameBuffer->showFrame("radiomode.jpg");
 
-					if (msg <= CRCInput::RC_MaxRC) {
+					if (msg <= CRCInput::RC_MaxRC)
+					{
 						// ignore first keypress - just quit the screensaver
 						g_RCInput->clearRCMsg();
 						continue;
@@ -4192,39 +4184,42 @@ void CNeutrinoApp::ExitRun(int exit_code)
 	if (cs_get_revision() != 10)
 		bright = g_settings.lcd_setting[SNeutrinoSettings::LCD_DEEPSTANDBY_BRIGHTNESS];
 #endif
-	if (timer_minutes)
+	if (exit_code != CNeutrinoApp::EXIT_REBOOT)
 	{
-		time_t t = timer_minutes * 60;
-		struct tm *tm = localtime(&t);
-		char date[30];
-		strftime(date, sizeof(date), "%c", tm);
-		printf("timer_wakeup: %s (%ld)\n", date, timer_minutes * 60);
-
-		/* prioritize proc filesystem */
-		if (access("/proc/stb/fp/wakeup_time", F_OK) == 0)
+		if (timer_minutes)
 		{
-			FILE *f = fopen("/proc/stb/fp/wakeup_time","w");
-			if (f)
-			{
-				fprintf(f, "%ld\n", timer_minutes * 60);
-				fclose(f);
-			}
-			else
-				perror("fopen /proc/stb/fp/wakeup_time");
-		}
-	}
+			time_t t = timer_minutes * 60;
+			struct tm *tm = localtime(&t);
+			char date[30];
+			strftime(date, sizeof(date), "%c", tm);
+			printf("timer_wakeup: %s (%ld)\n", date, timer_minutes * 60);
 
-	/* not platform specific */
-	FILE *f = fopen("/tmp/.timer", "w");
-	if (f)
-	{
-		fprintf(f, "%ld\n", timer_minutes ? timer_minutes * 60 : 0);
-		fprintf(f, "%d\n", leds);
-		fprintf(f, "%d\n", bright);
-		fclose(f);
+			/* prioritize proc filesystem */
+			if (access("/proc/stb/fp/wakeup_time", F_OK) == 0)
+			{
+				FILE *f = fopen("/proc/stb/fp/wakeup_time","w");
+				if (f)
+				{
+					fprintf(f, "%ld\n", timer_minutes * 60);
+					fclose(f);
+				}
+				else
+					perror("fopen /proc/stb/fp/wakeup_time");
+			}
+		}
+
+		/* not platform specific */
+		FILE *f = fopen("/tmp/.timer", "w");
+		if (f)
+		{
+			fprintf(f, "%ld\n", timer_minutes ? timer_minutes * 60 : 0);
+			fprintf(f, "%d\n", leds);
+			fprintf(f, "%d\n", bright);
+			fclose(f);
+		}
+		else
+			perror("fopen /tmp/.timer");
 	}
-	else
-		perror("fopen /tmp/.timer");
 
 	delete g_RCInput;
 	g_RCInput = NULL;
