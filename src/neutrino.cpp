@@ -3591,7 +3591,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 	{
 		g_volume->setVolume(msg);
 #if HAVE_DUCKBOX_HARDWARE
-		if((mode == mode_tv) || (mode == mode_radio)) {
+		if((mode == NeutrinoModes::mode_tv) || (mode == NeutrinoModes::mode_radio)) {
 			CVFD::getInstance()->showServicename(channelList->getActiveChannelName());
 		}
 #endif
@@ -4192,7 +4192,7 @@ void CNeutrinoApp::ExitRun(int exit_code)
 			struct tm *tm = localtime(&t);
 			char date[30];
 			strftime(date, sizeof(date), "%c", tm);
-			printf("timer_wakeup: %s (%ld)\n", date, timer_minutes * 60);
+			printf("wakeup_time: %s (%ld)\n", date, timer_minutes * 60);
 
 			/* prioritize proc filesystem */
 			if (access("/proc/stb/fp/wakeup_time", F_OK) == 0)
@@ -4408,7 +4408,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::StandbyMode(true);
 #endif
-		CVFD::getInstance()->ShowText("standby...");
+		CVFD::getInstance()->ShowText("Standby ...");
 		if( mode == NeutrinoModes::mode_scart ) {
 			//g_Controld->setScartMode( 0 );
 		}
@@ -4489,7 +4489,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		// Active standby off
 		powerManager->SetStandby(false, false);
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-		CVFD::getInstance()->ShowText("resume");
+		CVFD::getInstance()->ShowText("Resume ...");
 		cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
 		videoDecoder->Standby(false);
 		CEpgScan::getInstance()->Stop();
@@ -4740,9 +4740,9 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 
 		hintBox.hide();
 	}
-	else if(actionKey=="restarttuner") {
-		CHintBox * hintBox = new CHintBox(LOCALE_SERVICEMENU_RESTART_TUNER,
-			g_Locale->getText(LOCALE_SERVICEMENU_RESTARTING_TUNER));
+	else if(actionKey=="restarttuner")
+	{
+		CHintBox * hintBox = new CHintBox(LOCALE_SERVICEMENU_RESTART_TUNER, g_Locale->getText(LOCALE_SERVICEMENU_RESTARTING_TUNER));
 		hintBox->paint();
 
 		g_Zapit->setStandby(true);
