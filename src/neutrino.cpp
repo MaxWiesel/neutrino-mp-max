@@ -323,7 +323,7 @@ static SNeutrinoSettings::usermenu_t usermenu_default[] = {
 	{ CRCInput::RC_red,             "2,3,4,13",                             "",     "red"           },
 	{ CRCInput::RC_green,           "6",                                    "",     "green"         },
 	{ CRCInput::RC_yellow,          "7,31",                                 "",     "yellow"        },
-	{ CRCInput::RC_blue,            "12,11,20,21,19,14,29,30,15",           "",     "blue"          },
+	{ CRCInput::RC_blue,            "25,24,21,20,1,19,14,10,11",            "",     "blue"          },
 	{ CRCInput::RC_play,            "9",                                    "",     "5"             },
 	{ CRCInput::RC_audio,           "27",                                   "",     "6"             },
 #if HAVE_SPARK_HARDWARE
