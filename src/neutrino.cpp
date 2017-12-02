@@ -577,7 +577,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	g_settings.infobar_show_tuner = configfile.getInt32("infobar_show_tuner", 1 );
 	g_settings.radiotext_enable = configfile.getBool("radiotext_enable"          , false);
-	g_settings.radiotext_rass_dir = configfile.getString("radiotext_rass_dir", "/tmp/cache");
 	//audio
 	g_settings.audio_AnalogMode = configfile.getInt32( "audio_AnalogMode", 0 );
 	g_settings.audio_DolbyDigital    = configfile.getBool("audio_DolbyDigital"   , false);
@@ -1363,7 +1362,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("infobar_show_dd_available"  , g_settings.infobar_show_dd_available  );
 	configfile.setInt32("infobar_show_tuner"  , g_settings.infobar_show_tuner  );
 	configfile.setBool("radiotext_enable"          , g_settings.radiotext_enable);
-	configfile.setString("radiotext_rass_dir", g_settings.radiotext_rass_dir);
 	//audio
 	configfile.setInt32( "audio_AnalogMode", g_settings.audio_AnalogMode );
 	configfile.setBool("audio_DolbyDigital"   , g_settings.audio_DolbyDigital   );
@@ -2337,8 +2335,10 @@ void CNeutrinoApp::InitSectiondClient()
 #include <cs_frontpanel.h>
 #endif
 
-void wake_up(bool &wakeup)
+bool is_wakeup()
 {
+	bool wakeup = false;
+
 #if HAVE_COOL_HARDWARE
 #ifndef FP_IOCTL_CLEAR_WAKEUP_TIMER
 #define FP_IOCTL_CLEAR_WAKEUP_TIMER 10
@@ -2359,6 +2359,7 @@ void wake_up(bool &wakeup)
 		close(fd);
 	}
 #endif
+
 	/* prioritize proc filesystem */
 	if (access("/proc/stb/fp/was_timer_wakeup", F_OK) == 0)
 	{
@@ -2376,18 +2377,21 @@ void wake_up(bool &wakeup)
 	/* not platform specific - this is created by the init process */
 	else if (access("/tmp/.timer_wakeup", F_OK) == 0)
 	{
-		wakeup = true;
+		wakeup = 1;
 #if !HAVE_SH4_HARDWARE
 		unlink("/tmp/.timer_wakeup");
 #endif
 	}
 	printf("[timerd] wakeup from standby: %s\n", wakeup ? "yes" : "no");
 
-	if(!wakeup){
+	if (!wakeup)
+	{
 		puts("[neutrino.cpp] executing " NEUTRINO_LEAVE_DEEPSTANDBY_SCRIPT ".");
 		if (my_system(NEUTRINO_LEAVE_DEEPSTANDBY_SCRIPT) != 0)
 			perror(NEUTRINO_LEAVE_DEEPSTANDBY_SCRIPT " failed");
 	}
+
+	return wakeup;
 }
 
 int CNeutrinoApp::run(int argc, char **argv)
@@ -2414,7 +2418,6 @@ TIMER_START();
 	cpuFreq = new cCpuFreqManager();
 	cpuFreq->SetCpuFreq(g_settings.cpufreq * 1000 * 1000);
 #endif
-	wake_up( timer_wakeup );
 #if HAVE_SH4_HARDWARE
 	CCECSetup cecsetup;
 	cecsetup.setCECSettings(true);
@@ -2520,7 +2523,6 @@ TIMER_START();
 	CheckFastScan();
 #endif
 
-#if HAVE_COOL_HARDWARE
 	// dirty part of hw_caps - specify some details after zapit start
 	if (strcmp(g_info.hw_caps->boxname, "HD1") == 0)
 	{
@@ -2534,32 +2536,24 @@ TIMER_START();
 		if (CFEManager::getInstance()->getFrontendCount() > 1)
 			strcpy(g_info.hw_caps->boxname, "Neo Twin");
 	}
-#endif
 
 	//timer start
-#if !HAVE_SH4_HARDWARE
-	timer_wakeup = false;//init
-	wake_up( timer_wakeup );
+	timer_wakeup = (is_wakeup() && g_settings.shutdown_timer_record_type);
+	g_settings.shutdown_timer_record_type = false;
 
+#if !HAVE_SH4_HARDWARE
 	init_cec_setting = true;
-	if(!(g_settings.shutdown_timer_record_type && timer_wakeup && g_settings.hdmi_cec_mode)){
+	if(!(timer_wakeup && g_settings.hdmi_cec_mode))
+	{
 		//init cec settings
 		CCECSetup cecsetup;
 		cecsetup.setCECSettings();
 		init_cec_setting = false;
 	}
 #endif
-	timer_wakeup = (timer_wakeup && g_settings.shutdown_timer_record_type);
-	g_settings.shutdown_timer_record_type = false;
 
-	/* todo: check if this is necessary
-	pthread_create (&timer_thread, NULL, timerd_main_thread, (void *) (timer_wakeup && g_settings.shutdown_timer_record_type));
-	 */
-	// The thread argument sets a pointer to Neutrinos timer_wakeup. *pointer is set to true
-	// when timerd is ready, so save the real timer_wakeup value and restore it later. --martii
-	bool timer_wakup_real = timer_wakeup;
-	timer_wakeup = false;
-	pthread_create (&timer_thread, NULL, timerd_main_thread, (void *)&timer_wakeup);
+	long timerd_signal = timer_wakeup;
+	pthread_create (&timer_thread, NULL, timerd_main_thread, (void *)&timerd_signal);
 	timerd_thread_started = true;
 
 #if HAVE_SH4_HARDWARE
@@ -2637,11 +2631,10 @@ TIMER_START();
 	InitSectiondClient();
 
 	/* wait until timerd is ready... */
-	time_t timerd_wait = time_monotonic_ms();
-	while (!timer_wakeup)
+	int64_t timerd_wait = time_monotonic_ms();
+	while (timerd_signal >= 0)
 		usleep(100);
 	dprintf(DEBUG_NORMAL, "had to wait %" PRId64 " ms for timerd start...\n", time_monotonic_ms() - timerd_wait);
-	timer_wakeup = timer_wakup_real;
 	InitTimerdClient();
 
 	// volume
@@ -3525,10 +3518,6 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 					new_msg = NeutrinoMessages::SHUTDOWN;
 			}
 			else {
-#if HAVE_SH4_HARDWARE
-				if((mode != NeutrinoModes::mode_standby) && (g_settings.shutdown_real) && recordingstatus)
-					timer_wakeup = true;
-#endif
 				new_msg = (mode == NeutrinoModes::mode_standby) ? NeutrinoMessages::STANDBY_OFF : NeutrinoMessages::STANDBY_ON;
 				//printf("standby: new msg %X\n", new_msg);
 				if ((g_settings.shutdown_real_rcdelay)) {
@@ -3919,9 +3908,6 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		if(CStreamManager::getInstance()->StreamStatus())
 			skipShutdownTimer = true;
 		if(!skipShutdownTimer) {
-#if HAVE_SH4_HARDWARE
-			timer_wakeup = true;
-#endif
 			ExitRun(CNeutrinoApp::EXIT_SHUTDOWN);
 		}
 		else {
@@ -4773,13 +4759,6 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 		frameBuffer->Clear();
 		CMediaPlayerMenu * media = CMediaPlayerMenu::getInstance();
 		media->exec(NULL, actionKey);
-		return menu_return::RETURN_EXIT_ALL;
-	}
-	else if(actionKey=="rass") {
-		frameBuffer->Clear();
-		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
-		if (g_Radiotext)
-			g_Radiotext->RASS_interactive_mode();
 		return menu_return::RETURN_EXIT_ALL;
 	}
 	else if(actionKey=="restart") {

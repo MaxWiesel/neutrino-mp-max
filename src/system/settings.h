@@ -295,7 +295,6 @@ struct SNeutrinoSettings
 	int ci_tuner;
 	std::string ci_pincode;
 	int radiotext_enable;
-	std::string radiotext_rass_dir;
 
 	//screen saver
 	int screensaver_delay;
@@ -419,8 +418,8 @@ struct SNeutrinoSettings
 		P_MSER_BOUQUET_EDIT,
 		P_MSER_RESET_CHANNELS,
 		P_MSER_RESTART,
-		P_MSER_RELOAD_PLUGINS,
 		P_MSER_RESTART_TUNER,
+		P_MSER_RELOAD_PLUGINS,
 		P_MSER_SERVICE_INFOMENU,
 		P_MSER_SOFTUPDATE,
 
@@ -938,8 +937,7 @@ struct SNeutrinoSettings
 		ITEM_SWUPDATE = 30,
 		ITEM_LIVESTREAM_RESOLUTION = 31,
 		ITEM_ADZAP = 32,
-		ITEM_RASS = 33,
-		ITEM_TUNER_RESTART = 34,
+		ITEM_TUNER_RESTART = 33,
 		ITEM_MAX // MUST be always the last in the list
 	} USER_ITEM;
 

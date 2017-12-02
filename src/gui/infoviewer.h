@@ -67,8 +67,6 @@ class CInfoViewer
 	int            ButtonWidth;
 
         // dimensions of radiotext window
-        int             rt_dx;
-        int             rt_dy;
         int             rt_x;
         int             rt_y;
         int             rt_h;
@@ -87,7 +85,6 @@ class CInfoViewer
         t_channel_id   current_channel_id;
         t_channel_id   current_epg_id;
 
-	//uint32_t           fadeTimer;
 	COSDFader	fader;
 
 	int time_width;
@@ -215,13 +212,4 @@ class CInfoViewer
 	inline t_channel_id get_current_channel_id(void) { return current_channel_id; }
 	void 	ResetModules();
 };
-#if 0
-class CInfoViewerHandler : public CMenuTarget
-{
-	public:
-		int  exec( CMenuTarget* parent,  const std::string &actionkey);
-		int  doMenu();
-
-};
-#endif
 #endif

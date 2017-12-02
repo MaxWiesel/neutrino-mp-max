@@ -492,15 +492,6 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			menu_item->setHint(NEUTRINO_ICON_HINT_RELOAD_CHANNELS, LOCALE_MENU_HINT_RESTART_TUNER);
 			break;
 		}
-		case SNeutrinoSettings::ITEM_RASS:
-		{
-			if (!(CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_radio && g_Radiotext && g_Radiotext->haveRASS()))
-				continue;
-			keyhelper.get(&key,&icon);
-			menu_item = new CMenuForwarder(LOCALE_RASS_HEAD, true, NULL, neutrino, "rass", key, icon);
-			menu_item->setHint(NEUTRINO_ICON_HINT_RASS, LOCALE_MENU_HINT_RASS);
-			break;
-		}
 		case -1: // plugin
 		{
 			int number_of_plugins = g_Plugins->getNumberOfPlugins();
@@ -643,11 +634,6 @@ const char *CUserMenu::getUserMenuButtonName(int button, bool &active, bool retu
 					return_title = true;
 				active = true;
 				continue;
-#if 0
-			case SNeutrinoSettings::ITEM_RASS:
-				if (!(CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_radio && g_Radiotext && g_Radiotext->haveRASS()))
-					continue;
-#endif
 			default:
 				if(loc == NONEXISTANT_LOCALE && !text)
 					loc = CUserMenuSetup::getLocale(item);
