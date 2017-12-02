@@ -1878,12 +1878,3 @@ void CFrameBuffer::blitArea(int , int , int , int , int , int )
 {
 
 }
-
-CFrameBuffer::Mode3D CFrameBuffer::get3DMode()
-{
-	return Mode3D_off;
-}
-
-void CFrameBuffer::set3DMode(Mode3D m)
-{
-}

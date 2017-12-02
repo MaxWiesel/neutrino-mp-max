@@ -1555,7 +1555,6 @@ menu.hint_video_psi_step Set the increment for the on-screen menu
 menu.hint_video_saturation Change picture saturation
 menu.hint_video_scart_mode Select analog output mode for SCART connectors
 menu.hint_video_sdosd Enable/disable OSD display on SD output (scart, cinch)
-menu.hint_video_three_d Change the channel-specific 3D settings
 menu.hint_video_tint Change picture tint
 menu.hint_volume Configure Volume GUI options
 menu.hint_volume_digits Numeric display of the volumebar on/off
@@ -1937,7 +1936,6 @@ mpkey.audio Audiotracks
 mpkey.bookmark Bookmarks
 mpkey.forward Forward
 mpkey.goto Enter playtime
-mpkey.next3dmode next 3D mode
 mpkey.next_repeat_mode Next repeat mode
 mpkey.pause Pause
 mpkey.play Play
@@ -2419,13 +2417,6 @@ subtitles.head Subtitles
 subtitles.stop Stop subtitles
 terrestrialsetup.area Area
 terrestrialsetup.provider Terrestrial Provider
-three.d.off Inactive
-three.d.save Remember for this channel
-three.d.settings 3D Settings
-three.d.settings.general Variant
-three.d.sideside Side-by-Side
-three.d.tile Tile
-three.d.topbottom Top-and-Bottom
 timer.eventrecord.msg The event is scheduled for recording.\nTo edit the schedule open the timer list.
 timer.eventrecord.title Schedule Record
 timer.eventtimed.msg The event is scheduled.\nThe box will power on and \nswitch to this channel at the given time.

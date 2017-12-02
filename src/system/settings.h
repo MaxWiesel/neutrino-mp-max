@@ -187,12 +187,12 @@ struct SNeutrinoSettings
 
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 	int hdmi_mode;
+	uint32_t video_mixer_color;
 	int psi_contrast;
 	int psi_saturation;
 	int psi_brightness;
 	int psi_tint;
 	int psi_step;
-	uint32_t video_mixer_color;
 #endif
 
 #ifdef BOXMODEL_CS_HD2
@@ -703,12 +703,6 @@ struct SNeutrinoSettings
 	int screen_EndX_lcd_1;
 	int screen_EndY_lcd_1;
 	int osd_resolution;
-#if HAVE_SH4_HARDWARE
-	int screen_StartX_int;
-	int screen_StartY_int;
-	int screen_EndX_int;
-	int screen_EndY_int;
-#endif
 	int screen_preset;
 	int screen_width;
 	int screen_height;

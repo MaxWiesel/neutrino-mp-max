@@ -1555,7 +1555,6 @@ menu.hint_video_psi_step Setzt die Schrittweite für das On-Screen-Menü
 menu.hint_video_saturation Ändert die Farbsättigung
 menu.hint_video_scart_mode Wählen Sie den Modus des Ausgangssignals für den SCART-Anschluss
 menu.hint_video_sdosd Aktivieren/Deaktivieren der OSD Anzeige am Analogausgang (Scart, Cinch)
-menu.hint_video_three_d Ändert die kanalspezifischen 3D-Einstellungen
 menu.hint_video_tint Ändert den Farbton
 menu.hint_volume Wählen Sie die Anzeigeoptionen für die Lautstärke
 menu.hint_volume_digits Zifferndarstellung der Lautstärkeanzeige ein- oder ausschalten
@@ -1937,7 +1936,6 @@ mpkey.audio Tonspuren
 mpkey.bookmark Markierungen
 mpkey.forward Vorlauf
 mpkey.goto Zeiteingabe
-mpkey.next3dmode Nächster 3D-Modus
 mpkey.next_repeat_mode Nächster Wiederholungs-Modus
 mpkey.pause Pause
 mpkey.play Play
@@ -2419,13 +2417,6 @@ subtitles.head Untertitel
 subtitles.stop Untertitel aus
 terrestrialsetup.area Region
 terrestrialsetup.provider DVB-T Versorgungsbereich
-three.d.off Deaktiviert
-three.d.save Für Kanal speichern
-three.d.settings 3D-Einstellung
-three.d.settings.general Verfahren
-three.d.sideside Side-by-Side
-three.d.tile Tile
-three.d.topbottom Top-and-Bottom
 timer.eventrecord.msg Die Sendung wurde zur Aufnahme vorgemerkt.
 timer.eventrecord.title Aufnahme vormerken
 timer.eventtimed.msg Die Sendung wurde vorgemerkt.
