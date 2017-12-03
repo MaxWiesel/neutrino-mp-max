@@ -121,6 +121,7 @@ endif
 
 if BOXTYPE_ARMBOX
 libneutrino_gui_a_SOURCES += \
+	psisetup.cpp \
 	streaminfo2.cpp
 else
 libneutrino_gui_a_SOURCES += \

@@ -511,7 +511,9 @@ int CVideoSettings::showVideoSetup()
 	CMenuForwarder *md = new CMenuDForwarder(LOCALE_VIDEOMENU_MIXER_COLOR, true, NULL, cc);
 	md->setHint("", LOCALE_MENU_HINT_VIDEO_MIXER_COLOR);
 	videosetup->addItem(md);
+#endif
 
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 	CMenuForwarder *mf;
 	CMenuOptionNumberChooser *mc;
 

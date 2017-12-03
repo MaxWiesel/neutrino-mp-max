@@ -185,9 +185,11 @@ struct SNeutrinoSettings
 	int analog_mode2;
 	int video_43mode;
 
+#if HAVE_SH4_HARDWARE
+	uint32_t video_mixer_color;
+#endif
 #if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 	int hdmi_mode;
-	uint32_t video_mixer_color;
 	int psi_contrast;
 	int psi_saturation;
 	int psi_brightness;
