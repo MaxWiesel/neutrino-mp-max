@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "Deepstandby deaktiviert."
+
+exit 0

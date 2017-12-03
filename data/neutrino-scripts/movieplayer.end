@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "Movieplayer wird beendet"
+
+exit 0

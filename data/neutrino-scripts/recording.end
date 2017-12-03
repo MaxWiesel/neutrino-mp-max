@@ -1,0 +1,5 @@
+#!/bin/sh
+
+echo "Recording wird beendet"
+
+exit 0
