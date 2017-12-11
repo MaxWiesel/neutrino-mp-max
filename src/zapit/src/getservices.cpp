@@ -622,7 +622,7 @@ void CServiceManager::ParseSatTransponders(delivery_system_t delsys, xmlNodePtr 
 			feparams.frequency = xmlGetNumericAttribute(tps, "centre_frequency", 0);
 		feparams.inversion = INVERSION_AUTO;
 
-		feparams.plp_id = NO_STREAM_ID_FILTER;
+		feparams.plp_id = 0; // NO_STREAM_ID_FILTER = ~0U, seems not suitable here
 		feparams.pls_mode = PLS_Root;
 		feparams.pls_code = 1;
 
@@ -802,6 +802,9 @@ int CServiceManager::LoadMotorPositions(void)
 		while(!feof(fd)) {
 			sscanf(buffer, "%d %d %d %d %d %d %d %d %d %d %d", &spos, &mpos, &diseqc, &com, &uncom, &offL, &offH, &sw, &inuse, &usals, &input);
 
+			int configured = 0;
+			if (diseqc != -1 || com != -1 || uncom != -1 || usals != 0 || mpos != 0)
+				configured = 1;
 			satellitePosition = spos;
 			sat_iterator_t sit = satellitePositions.find(satellitePosition);
 			if(sit != satellitePositions.end()) {
@@ -816,6 +819,7 @@ int CServiceManager::LoadMotorPositions(void)
 				sit->second.use_usals = usals;
 				sit->second.input = input;
 				sit->second.position = satellitePosition;
+				sit->second.configured = configured;
 			}
 			fgets(buffer, 255, fd);
 		}

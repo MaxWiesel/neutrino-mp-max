@@ -2249,7 +2249,7 @@ bool CZapit::StartPlayBack(CZapitChannel *thisChannel)
 		audioDemux->pesFilter(audio_pid);
 	if (video_pid)
 		videoDemux->pesFilter(video_pid);
-	audioDecoder->SetSyncMode(AVSYNC_ENABLED);
+//	audioDecoder->SetSyncMode(AVSYNC_ENABLED);
 
 #if 0 //FIXME hack ?
 	if(thisChannel->getServiceType() == ST_DIGITAL_RADIO_SOUND_SERVICE) {
