@@ -58,6 +58,8 @@
 #define MD5_DIGEST_LENGTH 16
 using namespace std;
 
+#include <gui/widget/hintbox.h>
+
 int mySleep(int sec) {
 	struct timeval timeout;
 
@@ -90,8 +92,25 @@ bool file_exists(const char *filename)
 	}
 }
 
-void  wakeup_hdd(const char *hdd_dir)
+void  wakeup_hdd(const char *hdd_dir, bool msg)
 {
+	//NI
+	CHintBox loadBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_HDD_WAKEUP_START));
+
+	if(!g_settings.hdd_wakeup_msg)
+		msg = false;
+	if(msg)
+		loadBox.paint();
+	std::string s = check_var("/bin/wakeup.sh");
+	my_system(2,s.c_str(),hdd_dir);
+
+	if (!g_settings.hdd_wakeup) {
+		printf("[hdd] internal wakeup disabled\n");
+		if(msg)
+			loadBox.hide();
+		return;
+	}
+
 	if(!check_dir(hdd_dir) && hdd_get_standby(hdd_dir)){
 		std::string wakeup_file = hdd_dir;
 		wakeup_file += "/.wakeup";
@@ -111,6 +130,9 @@ void  wakeup_hdd(const char *hdd_dir)
 		hdd_flush(hdd_dir);
 		remove(wakeup_file.c_str());
 	}
+	//NI
+	if(msg)
+		loadBox.hide();
 }
 //use for script with full path
 int my_system(const char * cmd)
@@ -1397,6 +1419,20 @@ std::string get_path(const char *path)
 	}
 
 	return path;
+}
+
+std::string check_var(const char *file)
+{
+	std::string var = "/var";
+	if(file[0] == '/' && strstr(file, var.c_str()) == 0)
+	{
+		std::string varfile = var + file;
+
+		if (file_exists(varfile))
+			return varfile;
+	}
+
+	return file;
 }
 
 string readLink(string lnk)

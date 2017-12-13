@@ -438,6 +438,7 @@ struct SNeutrinoSettings
 		P_MPLAYER_FILEPLAY_VIDEO,
 		P_MPLAYER_FILEPLAY_AUDIO,
 		P_MPLAYER_YTPLAY,
+		P_MPLAYER_GUI_MOUNT,
 
 		//feature keys
 		P_FEAT_KEY_FAVORIT,
@@ -874,6 +875,8 @@ struct SNeutrinoSettings
 	int	hdd_fs;
 	enum { HDD_STATFS_OFF = 0, HDD_STATFS_ALWAYS, HDD_STATFS_RECORDING };
 	int	hdd_statfs_mode;
+	int	hdd_wakeup; //NI
+	int	hdd_wakeup_msg; //NI
 	int	zap_cycle;
 	int	sms_channel;
 	int	sms_movie;

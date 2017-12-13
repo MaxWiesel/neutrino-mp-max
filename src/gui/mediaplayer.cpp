@@ -183,7 +183,7 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 	personalize->addItem(multimedia_menu, fw_fileplay_video, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY_VIDEO]);
 
 	//fileplayback audio
-	CMenuForwarder *fw_fileplay_audio = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK_AUDIO, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback_audio", CRCInput::2);
+	CMenuForwarder *fw_fileplay_audio = new CMenuForwarder(LOCALE_MOVIEPLAYER_FILEPLAYBACK_AUDIO, true, NULL, &CMoviePlayerGui::getInstance(), "fileplayback_audio", CRCInput::RC_2);
 	fw_fileplay_audio->setHint(NEUTRINO_ICON_HINT_FILEPLAY, LOCALE_MENU_HINT_FILEPLAY);
 	personalize->addItem(multimedia_menu, fw_fileplay_audio, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY_AUDIO]);
 
@@ -198,16 +198,16 @@ int CMediaPlayerMenu::initMenuMedia(CMenuWidget *m, CPersonalizeGui *p)
 //	personalize->addItem(multimedia_menu, fw_mp, &g_settings.personalize[SNeutrinoSettings::P_MEDIA_MPLAYER], false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ACCESS_OPTION);
 
 #ifdef ENABLE_GUI_MOUNT
-	if (g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY])
+	if (g_settings.personalize[SNeutrinoSettings::P_MPLAYER_GUI_MOUNT])
 		personalize->addSeparator(*multimedia_menu, LOCALE_NETWORKMENU_MOUNT, true); 
 
 	CMenuForwarder * mf_mount = new CMenuForwarder(LOCALE_NFS_MOUNT , true, NULL, new CNFSMountGui(), NULL);
 	mf_mount->setHint("", LOCALE_MENU_HINT_NET_NFS_MOUNT);
-	personalize->addItem(multimedia_menu, mf_mount, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY]);
+	personalize->addItem(multimedia_menu, mf_mount, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_GUI_MOUNT]);
 
 	CMenuForwarder * mf_umount = new CMenuForwarder(LOCALE_NFS_UMOUNT, true, NULL, new CNFSUmountGui(), NULL);
 	mf_umount->setHint("", LOCALE_MENU_HINT_NET_NFS_UMOUNT);
-	personalize->addItem(multimedia_menu, mf_umount, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_FILEPLAY]);
+	personalize->addItem(multimedia_menu, mf_umount, &g_settings.personalize[SNeutrinoSettings::P_MPLAYER_GUI_MOUNT]);
 #endif
 
 	int res = menu_return::RETURN_NONE;

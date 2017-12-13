@@ -844,6 +844,9 @@ hdd_statfs_recording nur während Aufnahme
 hdd_umount Aushängen
 hdd_umount_warn Datenträger aushängen
 hdd_umounted Gerät entfernt
+hdd_wakeup Interne Aufweckfunktion
+hdd_wakeup_msg Aufweckfunktion mit Nachricht 
+hdd_wakeup_start Aufweckfunktion wird gestartet
 help_box_title Hilfe
 imageinfo.api API:
 imageinfo.creator Ersteller:
@@ -1156,6 +1159,8 @@ menu.hint_hdd_noise Setzen Sie Parameter für das Automatic Acoustic Management.
 menu.hint_hdd_sleep Dieser Wert definiert, nach wieviel Minuten die Festplatte bei Inaktivität in den Sleep-Modus geschaltet wird
 menu.hint_hdd_statfs Legen Sie fest, wann die Aufnahmeverzeichnis-Füllstandsanzeige im InfoViewer (und ggf. am VFD-Display) aktualisiert werden darf
 menu.hint_hdd_tools Formatieren Sie die gefundenen Datenträger bzw. überprüfen Sie deren Dateisystem
+menu.hint_hdd_wakeup Schaltet die internen Aufweckfunktionen für Festplatten ein oder aus
+menu.hint_hdd_wakeup_msg Schaltet die Benachrichtigung über den Start der Aufweckfunktion ein oder aus
 menu.hint_head_back Ändern Sie die Titel-Hintergrundfarbe
 menu.hint_head_textcolor Ändern Sie die Titel-Textfarbe
 menu.hint_imageinfo Informationen über die installierte Software

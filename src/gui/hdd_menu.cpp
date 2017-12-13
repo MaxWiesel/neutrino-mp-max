@@ -884,6 +884,14 @@ _show_menu:
 		hddmenu->addItem(mc);
 	}
 
+	hddmenu->addItem(new CMenuSeparator());
+	mc = new CMenuOptionChooser(LOCALE_HDD_WAKEUP, &g_settings.hdd_wakeup, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+	mc->setHint("", LOCALE_MENU_HINT_HDD_WAKEUP);
+	hddmenu->addItem(mc);
+	mc = new CMenuOptionChooser(LOCALE_HDD_WAKEUP_MSG, &g_settings.hdd_wakeup_msg, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+	mc->setHint("", LOCALE_MENU_HINT_HDD_WAKEUP_MSG);
+	hddmenu->addItem(mc);
+
 	hddmenu->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_HDD_MANAGE));
 
 	for (std::map<std::string, std::string>::iterator it = devtitle.begin(); it != devtitle.end(); ++it) {
