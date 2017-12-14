@@ -921,7 +921,7 @@ void CPersonalizeGui::addPersonalizedItems()
 
 
 				//get shortcut
-				if (fw->active && (d_key == CRCInput::RC_nokey || CRCInput::isNumeric(d_key))) //if RC_nokey  or RC_key is digi and item is active, allow to generate a shortcut,
+				if (d_key == CRCInput::RC_nokey && fw->active ) //if no icon is defined and item is active, allow to generate a shortcut,
 				{
 					add_shortcut = true;
 					d_key = getShortcut(short_cut);
