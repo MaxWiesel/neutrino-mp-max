@@ -1121,7 +1121,7 @@ void CInfoViewerBB::check_ecmInfo(CaIdVector &ecm_caids)
 			{
 				if ( strstr(buffer, "emu") ||		//mgcamd
 					strstr(buffer, "constcw") ||	//doscam or oscam constcw
-					strstr(buffer, "Internal")) ||	//gbox
+					strstr(buffer, "Internal") ||	//gbox
 					strstr(buffer, "cache"))	//os-cam
 				{
 					decode = LOCAL;
