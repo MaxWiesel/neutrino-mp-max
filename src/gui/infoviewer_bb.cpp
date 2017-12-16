@@ -744,10 +744,12 @@ void CInfoViewerBB::paint_ca_icon(int caid, const char *icon, int &icon_space_of
 	int py = g_InfoViewer->BoxEndY + OFFSET_INNER_SMALL;
 	int px = 0;
 	static std::map<int, std::pair<int,const char*> > icon_map;
-	const int icon_space = OFFSET_INNER_SMALL, icon_number = 11;
 
-	static int icon_offset[icon_number] = {0,0,0,0,0,0,0,0,0,0,0};
-	static int icon_sizeW [icon_number] = {0,0,0,0,0,0,0,0,0,0,0};
+	const int icon_space = OFFSET_INNER_SMALL, icon_number = 12;
+
+	static int icon_offset[icon_number] = {0,0,0,0,0,0,0,0,0,0,0,0};
+	static int icon_sizeW [icon_number] = {0,0,0,0,0,0,0,0,0,0,0,0};
+
 	static bool init_flag = false;
 
 	if (!init_flag) {
@@ -757,8 +759,9 @@ void CInfoViewerBB::paint_ca_icon(int caid, const char *icon, int &icon_space_of
 
 		icon_map[0x0000] = std::make_pair(index++,"dec");
 		icon_map[0x0E00] = std::make_pair(index++,"powervu");
-		icon_map[0x4A00] = std::make_pair(index++,"d");
+		icon_map[0x1000] = std::make_pair(index++,"tan");
 		icon_map[0x2600] = std::make_pair(index++,"biss");
+		icon_map[0x4A00] = std::make_pair(index++,"d");
 		icon_map[0x0600] = std::make_pair(index++,"ird");
 		icon_map[0x0100] = std::make_pair(index++,"seca");
 		icon_map[0x0500] = std::make_pair(index++,"via");
@@ -814,11 +817,12 @@ void CInfoViewerBB::paint_ca_icons(int notfirst)
 		return;
 	}
 
-	int caids[] = {  0x900, 0xD00, 0xB00, 0x1800, 0x0500, 0x0100, 0x600,  0x2600, 0x4a00, 0x0E00, 0x0000 };
+	int caids[] = {  0x900, 0xD00, 0xB00, 0x1800, 0x0500, 0x0100, 0x600, 0x4a00, 0x2600, 0x1000, 0x0E00, 0x0000 };
+	const char *green = "green";
 	const char *white = "white";
 	const char *yellow = "yellow";
-	const char *green = "green";
 	int icon_space_offset = 0;
+
 	const char *dec_icon_name[] = {"na","na","fta","int","card","net"};
 	decode = UNKNOWN;
 
@@ -942,7 +946,6 @@ void CInfoViewerBB::paint_ca_bar()
 	}
 
 	ca_bar->paint(CC_SAVE_SCREEN_NO);
-
 #if 1
 	if (g_settings.infobar_casystem_dotmatrix)
 	{
@@ -1080,7 +1083,7 @@ void CInfoViewerBB::paint_cam_icons()
 			if (useCI)
 				frameBuffer->paintIcon("ci+_green", c_iconx, c_icony);
 			else
-				frameBuffer->paintIcon("ci+_grey", c_iconx, c_icony);
+				frameBuffer->paintIcon("ci+_white", c_iconx, c_icony);
 		}
 	}
 }
@@ -1118,7 +1121,8 @@ void CInfoViewerBB::check_ecmInfo(CaIdVector &ecm_caids)
 			{
 				if ( strstr(buffer, "emu") ||		//mgcamd
 					strstr(buffer, "constcw") ||	//doscam or oscam constcw
-					strstr(buffer, "Internal"))	//gbox
+					strstr(buffer, "Internal")) ||	//gbox
+					strstr(buffer, "cache"))	//os-cam
 				{
 					decode = LOCAL;
 				}
