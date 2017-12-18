@@ -1,4 +1,4 @@
-installdir = $(DATADIR)/iso-codes
+installdir = $(datadir)/iso-codes
 
 install_DATA = \
 	iso-639.tab
