@@ -177,7 +177,7 @@ void CColorSetupNotifier::setPalette()
 
 	frameBuffer->paletteGenFade(COL_INFOBAR,
 	                              convertSetupColor2RGB(t.infobar_red, t.infobar_green, t.infobar_blue),
-	                              convertSetupColor2RGB(t.infobar_Text_red, t.infobar_Text_green, t.infobar_Text_blue),
+	                              convertSetupColor2RGB(t.infobar_red, t.infobar_green, t.infobar_blue),
 	                              8, convertSetupAlpha2Alpha(t.infobar_alpha) );
 
 	frameBuffer->paletteGenFade(COL_SHADOW,
@@ -187,7 +187,7 @@ void CColorSetupNotifier::setPalette()
 
 	frameBuffer->paletteGenFade(COL_INFOBAR_CASYSTEM,
 	                              convertSetupColor2RGB(t.infobar_casystem_red, t.infobar_casystem_green, t.infobar_casystem_blue),
-	                              convertSetupColor2RGB(t.infobar_Text_red, t.infobar_Text_green, t.infobar_Text_blue),
+	                              convertSetupColor2RGB(t.infobar_casystem_red, t.infobar_casystem_green, t.infobar_casystem_blue),
 	                              8, convertSetupAlpha2Alpha(t.infobar_casystem_alpha) );
 
 	frameBuffer->paletteGenFade(COL_COLORED_EVENTS_INFOBAR,
