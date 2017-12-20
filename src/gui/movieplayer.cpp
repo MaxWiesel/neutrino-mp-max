@@ -212,6 +212,9 @@ void CMoviePlayerGui::Init(void)
 	filefilter_video.addFilter("vdr");
 	filefilter_video.addFilter("vob");
 	filefilter_video.addFilter("wmv");
+	// video playlists
+	filefilter_video.addFilter("m3u");
+	filefilter_video.addFilter("m3u8");
 
 	// audio files
 	filefilter_audio.addFilter("aac");
@@ -228,19 +231,9 @@ void CMoviePlayerGui::Init(void)
 	filefilter_audio.addFilter("mpa");
 	filefilter_audio.addFilter("ogg");
 	filefilter_audio.addFilter("wav");
-
-	// playlists
-	tsfilefilter.addFilter("m3u");
-	tsfilefilter.addFilter("m3u8");
-
-	for (unsigned int i = 0; i < filefilter_video.size(); i++)
-	{
-		tsfilefilter.addFilter(filefilter_video.getFilter(i));
-	}
-	for (unsigned int i = 0; i < filefilter_audio.size(); i++)
-	{
-		tsfilefilter.addFilter(filefilter_audio.getFilter(i));
-	}
+	// audio playlists
+	filefilter_audio.addFilter("m3u");
+	filefilter_audio.addFilter("m3u8");
 
 	if (g_settings.network_nfs_moviedir.empty())
 		Path_local = "/";
@@ -252,7 +245,7 @@ void CMoviePlayerGui::Init(void)
 	else
 		filebrowser = new CFileBrowser();
 
-	filebrowser->Filter = &tsfilefilter;
+	// filebrowser->Filter is set in exec() function
 	filebrowser->Hide_records = true;
 	filebrowser->Multi_Select = true;
 	filebrowser->Dirs_Selectable = true;
