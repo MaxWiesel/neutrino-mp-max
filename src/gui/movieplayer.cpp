@@ -383,7 +383,6 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 	if (parent)
 		parent->hide();
 
-	//NI
 	if (actionKey == "fileplayback_video" || actionKey == "fileplayback_audio" || actionKey == "tsmoviebrowser")
 	{
 		if (actionKey == "fileplayback_video") {
@@ -1931,10 +1930,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			if (timeshift == TSHIFT_MODE_OFF)
 				callInfoViewer();
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_bookmark) {
-			if (is_file_player)
-				return;
-			else
-				handleMovieBrowser((neutrino_msg_t) g_settings.mpkey_bookmark, position);
+			handleMovieBrowser((neutrino_msg_t) g_settings.mpkey_bookmark, position);
 			update_lcd = true;
 #if 0
 			clearSubtitle();
