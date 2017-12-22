@@ -791,7 +791,7 @@ void CInfoViewerBB::paint_ca_icon(int caid, const char *icon, int &icon_space_of
 	} else {
 		icon_space_offset += icon_sizeW[icon_map[caid].first];
 		px = endx - icon_space_offset;
-		icon_space_offset += icon_space; //NI
+		icon_space_offset += icon_space;
 	}
 
 	if (px) {
@@ -799,7 +799,7 @@ void CInfoViewerBB::paint_ca_icon(int caid, const char *icon, int &icon_space_of
 		if ((px >= (endx-OFFSET_INNER_MID)) || (px <= 0))
 			printf("#####[%s:%d] Error paint icon %s, px: %d,  py: %d, endx: %d, icon_offset: %d\n", 
 				__FUNCTION__, __LINE__, buf, px, py, endx, icon_offset[icon_map[caid].first]);
-		else
+		else if (strstr(buf,"dec_white") == 0)
 			frameBuffer->paintIcon(buf, px, py);
 	}
 }
