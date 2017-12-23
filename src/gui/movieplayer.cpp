@@ -1698,9 +1698,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #ifdef DEBUG
 				printf("CMoviePlayerGui::%s: spd %d pos %d/%d (%d, %d%%)\n", __func__, speed, position, duration, duration-position, file_prozent);
 #endif
-			} else
 #if HAVE_COOL_HARDWARE
-			{
 				/* in case ffmpeg report incorrect values */
 				if(file_prozent > 89 && (playstate == CMoviePlayerGui::PLAY) && (speed == 1)){
 					if(position_tmp != position){
@@ -1727,8 +1725,11 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				}
 				else
 					eof = 0;
+#endif
+
 			}
-#else
+#if ! HAVE_COOL_HARDWARE
+			else
 			{
 				if (filelist_it == filelist.end() - 1 || filelist_it == filelist.end())
 					g_RCInput->postMsg((neutrino_msg_t) g_settings.mpkey_stop, 0);
