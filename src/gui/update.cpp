@@ -730,7 +730,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		ShowHint(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_START_OFGWRITE);
 		hide();
 
-		const char ofgwrite_tgz[] = "/bin/ofgwrite_tgz";
+		const char ofgwrite_tgz[] = "/usr/bin/ofgwrite_tgz";
 		printf("[update] calling %s %s %s %s\n", ofgwrite_tgz, g_settings.update_dir.c_str(), filename.c_str(), ofgwrite_options.c_str());
 #ifndef DRYRUN
 		my_system(4, ofgwrite_tgz, g_settings.update_dir.c_str(), filename.c_str(), ofgwrite_options.c_str());
