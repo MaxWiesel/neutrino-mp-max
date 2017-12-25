@@ -358,6 +358,14 @@ bool CFlashUpdate::selectHttpImage(void)
 	newVersion = versions[selected];
 	file_md5 = md5s[selected];
 	fileType = fileTypes[selected];
+	if(fileType < '3') {
+		char const * ptr = rindex(filename.c_str(), '.');
+		if(ptr) {
+			ptr++;
+			if(!strcmp(ptr, "zip"))
+				fileType = 'Z';
+		}
+	}
 #ifdef BOXMODEL_CS_HD2
 	if(fileType <= '2') {
 		int esize = CMTDInfo::getInstance()->getMTDEraseSize(sysfs);
@@ -491,6 +499,7 @@ bool CFlashUpdate::checkVersion4Update()
 		}
 		hide();
 
+#if 0
 		//package install:
 		if (file_selected->getType() == CFile::FILE_PKG_PACKAGE){
 			COPKGManager opkg;
@@ -514,6 +523,7 @@ bool CFlashUpdate::checkVersion4Update()
 			return true;
 		}
 #endif
+#endif
 		//set internal filetype
 		char const * ptr = rindex(filename.c_str(), '.');
 		if(ptr) {
@@ -522,6 +532,10 @@ bool CFlashUpdate::checkVersion4Update()
 				fileType = 'A';
 			else if(!strcmp(ptr, "txt"))
 				fileType = 'T';
+			else if(!strcmp(ptr, "zip"))
+				fileType = 'Z';
+			else if(!strcmp(ptr, "tgz"))
+				fileType = 'Z';
 			else if(!allow_flash)
 				return false;
 			else
@@ -602,7 +616,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		return menu_return::RETURN_REPAINT;
 	}
 	if(softupdate_mode==1) { //internet-update
-		if ( ShowMsg(LOCALE_MESSAGEBOX_INFO, (fileType <= '2') ? LOCALE_FLASHUPDATE_INSTALL_IMAGE : LOCALE_FLASHUPDATE_INSTALL_PACKAGE, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE) != CMsgBox::mbrYes)
+		if ( ShowMsg(LOCALE_MESSAGEBOX_INFO, ((fileType <= '2') || (fileType == 'Z')) ? LOCALE_FLASHUPDATE_INSTALL_IMAGE : LOCALE_FLASHUPDATE_INSTALL_PACKAGE, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE) != CMsgBox::mbrYes)
 		{
 			hide();
 			return menu_return::RETURN_REPAINT;
@@ -758,6 +772,18 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 			CNeutrinoApp::getInstance()->exec(NULL, "reboot");
 #endif
 		return menu_return::RETURN_EXIT_ALL;
+	}
+#else
+	else if(fileType == 'Z') // zipped image for flasher
+	{
+		const char install_sh[] = "/bin/flashing.sh";
+		printf("[update] calling %s %s %s\n",install_sh, "zipped", filename.c_str() );
+		if (!my_system(3, install_sh, "zipped", filename.c_str())) {
+			showGlobalStatus(100);
+			ShowHint(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FLASHUPDATE_FLASHREADYREBOOT)); // UTF-8
+			sleep(2);
+			ft.reboot();
+		}
 	}
 #endif
 	else // not image, install
