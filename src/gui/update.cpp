@@ -88,7 +88,6 @@ extern int allow_flash;
 
 #if HAVE_DUCKBOX_HARDWARE
 #define LIST_OF_UPDATES_LOCAL_FILENAME "update.list"
-#define UPDATE_LOCAL_FILENAME          "update.img"
 #define RELEASE_CYCLE                  "2.0"
 #define FILEBROWSER_UPDATE_FILTER      "img"
 #if BOXMODEL_UFS910 || BOXMODEL_FORTIS_HDBOX || BOXMODEL_OCTAGON1008
@@ -108,8 +107,21 @@ extern int allow_flash;
 #define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
 #endif
 #else
+#if HAVE_SPARK_HARDWARE
+#define LIST_OF_UPDATES_LOCAL_FILENAME "update.list"
+#define FILEBROWSER_UPDATE_FILTER      "zip"
+#define RELEASE_CYCLE                  "2.0"
+#define MTD_OF_WHOLE_IMAGE              999
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
+#else
+#if HAVE_ARM_HARDWARE
+#define LIST_OF_UPDATES_LOCAL_FILENAME "update.list"
+#define FILEBROWSER_UPDATE_FILTER      "tgz"
+#define RELEASE_CYCLE                  "2.0"
+#define MTD_OF_WHOLE_IMAGE              999
+#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
+#else
 #define LIST_OF_UPDATES_LOCAL_FILENAME "coolstream.list"
-#define UPDATE_LOCAL_FILENAME          "update.img"
 #define RELEASE_CYCLE                  "2.0"
 #define FILEBROWSER_UPDATE_FILTER      "img"
 
@@ -118,6 +130,8 @@ extern int allow_flash;
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd0"
 #else
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd3"
+#endif
+#endif
 #endif
 #endif
 int pinghost  (const std::string &hostname, std::string *ip = NULL);
