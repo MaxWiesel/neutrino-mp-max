@@ -89,7 +89,6 @@ extern int allow_flash;
 #define LIST_OF_UPDATES_LOCAL_FILENAME "update.list"
 
 #if HAVE_DUCKBOX_HARDWARE
-#define RELEASE_CYCLE                  "2.0"
 #define FILEBROWSER_UPDATE_FILTER      "img"
 #if BOXMODEL_UFS910 || BOXMODEL_FORTIS_HDBOX || BOXMODEL_OCTAGON1008
 #define MTD_OF_WHOLE_IMAGE              5
@@ -110,17 +109,14 @@ extern int allow_flash;
 #else
 #if HAVE_SPARK_HARDWARE
 #define FILEBROWSER_UPDATE_FILTER      "zip"
-#define RELEASE_CYCLE                  "2.0"
 #define MTD_OF_WHOLE_IMAGE              999
 #define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
 #else
 #if HAVE_ARM_HARDWARE
 #define FILEBROWSER_UPDATE_FILTER      "tgz"
-#define RELEASE_CYCLE                  "2.0"
 #define MTD_OF_WHOLE_IMAGE              999
 #define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
 #else
-#define RELEASE_CYCLE                  "2.0"
 #define FILEBROWSER_UPDATE_FILTER      "img"
 #define MTD_OF_WHOLE_IMAGE             0
 #ifdef BOXMODEL_CS_HD2
