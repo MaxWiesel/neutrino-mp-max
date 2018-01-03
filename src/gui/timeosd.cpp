@@ -136,6 +136,7 @@ void CTimeOSD::update(int position, int duration)
 {
 	switch(m_mode) {
 		case MODE_ASC:
+		case MODE_TMP:
 			show(position, false);
 			break;
 		case MODE_DESC:
@@ -153,6 +154,7 @@ void CTimeOSD::switchMode(int position, int duration)
 {
 	switch (m_mode) {
 		case MODE_ASC:
+		case MODE_TMP:
 			m_mode = MODE_DESC;
 			CComponents::kill();
 			break;

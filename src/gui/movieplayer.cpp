@@ -1554,6 +1554,7 @@ bool CMoviePlayerGui::SetPosition(int pos, bool absolute)
 		playback->SetSpeed(speed);
 	}
 	StartSubtitles(true);
+	FileTimeOSD_tmp = 0;
 	return res;
 }
 
@@ -1625,6 +1626,8 @@ void CMoviePlayerGui::PlayFileLoop(void)
 	int bisection_loop = -1;
 	int bisection_loop_max = 5;
 
+	FileTimeOSD_tmp = -1;
+
 	while (playstate >= CMoviePlayerGui::PLAY)
 	{
 #ifdef ENABLE_GRAPHLCD
@@ -1666,9 +1669,25 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		if (bisection_loop > bisection_loop_max)
 			bisection_loop = -1;
 
+		if (FileTimeOSD_tmp > -1)
+			FileTimeOSD_tmp++;
+
 		if ((playstate >= CMoviePlayerGui::PLAY) && (timeshift != TSHIFT_MODE_OFF || (playstate != CMoviePlayerGui::PAUSE))) {
 			if (playback->GetPosition(position, duration)) {
 				FileTimeOSD->update(position, duration);
+
+				if (FileTimeOSD_tmp > -1 && !FileTimeOSD->IsVisible())
+				{
+					FileTimeOSD->setMode(CTimeOSD::MODE_TMP);
+					FileTimeOSD->show(position);
+				}
+				if (FileTimeOSD_tmp > bisection_loop_max)
+				{
+					FileTimeOSD_tmp = -1;
+					if (FileTimeOSD->getMode() == CTimeOSD::MODE_TMP)
+						FileTimeOSD->kill();
+				}
+
 				if (duration > 100)
 					file_prozent = (unsigned char) (position / (duration / 100));
 
@@ -1953,6 +1972,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			FileTimeOSD->switchMode(position, duration);
 			time_forced = false;
 			FileTimeOSD->setMpTimeForced(false);
+			FileTimeOSD_tmp = -1;
 		} else if (msg == (neutrino_msg_t) g_settings.mbkey_cover) {
 			makeScreenShot(false, true);
 		} else if (msg == (neutrino_msg_t) g_settings.key_screenshot) {
