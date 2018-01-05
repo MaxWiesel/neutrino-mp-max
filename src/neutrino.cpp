@@ -64,7 +64,7 @@
 #include <driver/radiotext.h>
 #include <driver/scanepg.h>
 
-#if !HAVE_GENERIC_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 #include "gui/psisetup.h"
 #endif
 #include "gui/adzap.h"
@@ -2696,7 +2696,7 @@ TIMER_START();
 	cCA::GetInstance()->setCheckLiveSlot(g_settings.ci_check_live);
 	//InitZapper();
 
-#if HAVE_SH4_HARDWARE
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 	CPSISetup::getInstance()->blankScreen(false);
 #endif
 	SHTDCNT::getInstance()->init();

@@ -47,7 +47,9 @@
 #include <gui/widget/msgbox.h>
 #include <gui/osd_setup.h>
 #include <gui/osd_helpers.h>
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
 #include <gui/psisetup.h>
+#endif
 #if HAVE_SH4_HARDWARE
 #include <gui/widget/colorchooser.h>
 #endif
