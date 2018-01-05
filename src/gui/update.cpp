@@ -492,15 +492,8 @@ bool CFlashUpdate::checkVersion4Update()
 			//!always leave here!
 			return false;
 		}
-#if HAVE_ARM_HARDWARE
-		//tgz package install:
-		else if (file_selected->getType() == CFile::FILE_TGZ_PACKAGE){
-			fileType = 'Z';
-			//!always leave here!
-			return true;
-		}
 #endif
-#endif
+
 		//set internal filetype
 		char const * ptr = rindex(filename.c_str(), '.');
 		if(ptr) {
