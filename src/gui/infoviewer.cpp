@@ -238,6 +238,7 @@ void CInfoViewer::changePB()
 	ResetPB();
 	if (!timescale){
 		timescale = new CProgressBar();
+		timescale->setItemName("timescale");
 		timescale->setType(CProgressBar::PB_TIMESCALE);
 	}
 }
@@ -250,6 +251,7 @@ void CInfoViewer::initClock()
 	//basic init for clock object
 	if (clock == NULL){
 		clock = new CComponentsFrmClock();
+		clock->setItemName("clock");
 		clock->setClockFormat("%H:%M", "%H %M");
 	}
 
@@ -347,6 +349,7 @@ void CInfoViewer::showRecordIcon (const bool show)
 		{
 			if (rec == NULL){ //TODO: full refactoring of this icon handler
 				rec = new CComponentsShapeSquare(box_x, box_y , box_w, box_h, NULL, CC_SHADOW_ON, COL_RED, COL_INFOBAR_PLUS_0);
+				rec->setItemName("rec");
 				rec->setFrameThickness(FRAME_WIDTH_NONE);
 				rec->setShadowWidth(OFFSET_SHADOW/2);
 				rec->setCorner(RADIUS_MIN, CORNER_ALL);
@@ -406,6 +409,7 @@ void CInfoViewer::paintBackground(int col_NumBox)
 	int y_numbox = body->getYPos()-ChanHeight-OFFSET_SHADOW;
 	if (numbox == NULL){ //TODO: move into an own member, paintNumBox() or so...
 		numbox = new CComponentsShapeSquare(BoxStartX, y_numbox, ChanWidth, ChanHeight);
+		numbox->setItemName("numbox");
 		numbox->enableShadow(CC_SHADOW_ON, OFFSET_SHADOW, true);
 	}else
 		numbox->setDimensionsAll(BoxStartX, y_numbox, ChanWidth, ChanHeight);
@@ -421,6 +425,7 @@ void CInfoViewer::paintHead()
 	int head_w = BoxEndX-head_x;
 	if (header == NULL){
 		header = new CComponentsShapeSquare(head_x, ChanNameY, head_w, time_height, NULL, CC_SHADOW_RIGHT | CC_SHADOW_CORNER_TOP_RIGHT | CC_SHADOW_CORNER_BOTTOM_RIGHT);
+		header->setItemName("header");
 		header->setCorner(RADIUS_LARGE, CORNER_TOP_RIGHT);
 	}else
 		header->setDimensionsAll(head_x, ChanNameY, head_w, time_height);
@@ -447,6 +452,7 @@ void CInfoViewer::paintBody()
 
 	if (body == NULL){
 		body = new CComponentsShapeSquare(ChanInfoX, y_body, BoxEndX-ChanInfoX, h_body);
+		body->setItemName("body");
 	} else {
 		if (txt_cur_event && txt_cur_start && txt_cur_event_rest &&
 				txt_next_event && txt_next_start && txt_next_in) {
@@ -1643,6 +1649,7 @@ void CInfoViewer::showSNR ()
 		if (sigbox == NULL){
 			int sigbox_offset = OFFSET_INNER_MID;
 			sigbox = new CSignalBox(BoxStartX + sigbox_offset, y_numbox+ChanHeight/2, ChanWidth - 2*sigbox_offset, ChanHeight/2, NULL, true, NULL, "S", "Q");
+			sigbox->setItemName("SIGBOX");
 			sigbox->setTextColor(COL_INFOBAR_TEXT);
 			sigbox->setActiveColor(COL_PROGRESSBAR_ACTIVE_PLUS_0);
 			sigbox->setPassiveColor(COL_PROGRESSBAR_PASSIVE_PLUS_0);
@@ -1764,7 +1771,7 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 			txt_cur_event = new CComponentsTextTransp(NULL, xStart, CurrInfoY - height, currTimeX - xStart, height);
 		else
 			txt_cur_event->setDimensionsAll(xStart, CurrInfoY - height, currTimeX - xStart, height);
-
+		txt_cur_event->setItemName("txt_cur_event");
 		txt_cur_event->setText(current, CTextBox::NO_AUTO_LINEBREAK, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO], colored_event_C ? COL_COLORED_EVENTS_TEXT : COL_INFOBAR_TEXT);
 		if (txt_cur_event->isPainted())
 			txt_cur_event->hide();
@@ -1775,6 +1782,7 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 				txt_cur_start = new CComponentsTextTransp(NULL, InfoX, CurrInfoY - height, info_time_width, height);
 			else
 				txt_cur_start->setDimensionsAll(InfoX, CurrInfoY - height, info_time_width, height);
+			txt_cur_start->setItemName("txt_cur_start");
 			txt_cur_start->setText(runningStart, CTextBox::NO_AUTO_LINEBREAK, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO], colored_event_C ? COL_COLORED_EVENTS_TEXT : COL_INFOBAR_TEXT);
 			if (txt_cur_event->isPainted())
 				txt_cur_event->hide();
@@ -1786,6 +1794,7 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 				txt_cur_event_rest = new CComponentsTextTransp(NULL, currTimeX, CurrInfoY - height, currTimeW, height);
 			else
 				txt_cur_event_rest->setDimensionsAll(currTimeX, CurrInfoY - height, currTimeW, height);
+			txt_cur_event_rest->setItemName("txt_cur_event_rest");
 			txt_cur_event_rest->setText(runningRest, CTextBox::RIGHT, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO], colored_event_C ? COL_COLORED_EVENTS_TEXT : COL_INFOBAR_TEXT);
 			if (txt_cur_event_rest->isPainted())
 				txt_cur_event_rest->hide();
@@ -1800,6 +1809,7 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 			txt_next_event = new CComponentsTextTransp(NULL, xStart, NextInfoY, nextTimeX - xStart, height);
 		else
 			txt_next_event->setDimensionsAll(xStart, NextInfoY, nextTimeX - xStart, height);
+		txt_next_event->setItemName("txt_next_event");
 		txt_next_event->setText(next, CTextBox::NO_AUTO_LINEBREAK, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO], colored_event_N ? COL_COLORED_EVENTS_TEXT : COL_INFOBAR_TEXT);
 		if (txt_next_event->isPainted())
 			txt_next_event->hide();
@@ -1810,6 +1820,7 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 				txt_next_start = new CComponentsTextTransp(NULL, InfoX, NextInfoY, info_time_width, height);
 			else
 				txt_next_start->setDimensionsAll(InfoX, NextInfoY, info_time_width, height);
+			txt_next_start->setItemName("txt_next_start");
 			txt_next_start->setText(nextStart, CTextBox::NO_AUTO_LINEBREAK, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO], colored_event_N ? COL_COLORED_EVENTS_TEXT : COL_INFOBAR_TEXT);
 			if (txt_next_start->isPainted())
 				txt_next_start->hide();
@@ -1821,6 +1832,7 @@ void CInfoViewer::display_Info(const char *current, const char *next,
 				txt_next_in = new CComponentsTextTransp(NULL, nextTimeX, NextInfoY, nextTimeW, height);
 			else
 				txt_next_in->setDimensionsAll(nextTimeX, NextInfoY, nextTimeW, height);
+			txt_next_in->setItemName("txt_next_in");
 			txt_next_in->setText(nextDuration, CTextBox::RIGHT, g_Font[SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO], colored_event_N ? COL_COLORED_EVENTS_TEXT : COL_INFOBAR_TEXT);
 			if (txt_next_in->isPainted())
 				txt_next_in->hide();
