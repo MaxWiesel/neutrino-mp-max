@@ -58,11 +58,11 @@ extern cVideo * videoDecoder;
 extern CPlugins *g_Plugins;//for relodplugins
 extern CBouquetManager *g_bouquetManager;
 #if HAVE_DUCKBOX_HARDWARE
-#define EVENTDEV "/dev/input/event0"
-#elif HAVE_SPARK_HARDWARE
-#define EVENTDEV "/dev/input/nevis_ir"
+#define RC_DEVICE "/dev/input/event0"
+#elif HAVE_SPARK_HARDWARE || HAVE_COOL_HARDWARE
+#define RC_DEVICE "/dev/input/nevis_ir"
 #else
-#define EVENTDEV "/dev/input/input0"
+#define RC_DEVICE "/dev/input/event1"
 #endif
 
 //-----------------------------------------------------------------------------
@@ -923,10 +923,10 @@ void CControlAPI::RCEmCGI(CyhookHandler *hh)
 	if (!hh->ParamList["repeat"].empty())
 		repeat = atoi(hh->ParamList["repeat"].c_str());
 #endif
-#if 0
-	int evd = open(EVENTDEV, O_RDWR);
+#if 1
+	int evd = open(RC_DEVICE, O_RDWR);
 	if (evd < 0) {
-		perror("opening " EVENTDEV " failed");
+		perror("opening " RC_DEVICE " failed");
 		hh->SendError();
 		return;
 	}
@@ -943,9 +943,10 @@ void CControlAPI::RCEmCGI(CyhookHandler *hh)
 		return;
 	}
 	close(evd);
-#endif
+#else
 	/* 0 == KEY_PRESSED in rcinput.cpp */
 	g_RCInput->postMsg((neutrino_msg_t) sendcode, 0);
+#endif
 	hh->SendOk();
 }
 //-----------------------------------------------------------------------------
