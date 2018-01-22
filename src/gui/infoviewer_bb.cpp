@@ -1060,9 +1060,8 @@ void CInfoViewerBB::paint_cam_icons()
 		else
 			colour = "_yellow";
 
-		const int icon_space = 5;
-		int c_iconx = g_InfoViewer->ChanInfoX + (g_settings.infobar_casystem_frame ? 16 : icon_space + 3);
-		int c_icony = g_InfoViewer->BoxEndY + (g_settings.infobar_casystem_frame ? 4 : 2);
+		int c_iconx = g_InfoViewer->ChanInfoX + (g_settings.infobar_casystem_frame ? FRAME_WIDTH_MIN + OFFSET_INNER_SMALL + OFFSET_INNER_MID : OFFSET_INNER_MID);
+		int c_icony = g_InfoViewer->BoxEndY + OFFSET_INNER_SMALL;
 		int c_icon_sizeW = 0;
 		int c_icon_sizeH = 0;
 
@@ -1074,7 +1073,7 @@ void CInfoViewerBB::paint_cam_icons()
 				buf << emu_name[i] << colour;
 				frameBuffer->paintIcon(buf.str().c_str(), c_iconx, c_icony);
 				frameBuffer->getIconSize(buf.str().c_str(), &c_icon_sizeW, &c_icon_sizeH);
-				c_iconx = c_iconx + icon_space + c_icon_sizeW;
+				c_iconx += OFFSET_INNER_SMALL + c_icon_sizeW;
 			}
 		}
 
