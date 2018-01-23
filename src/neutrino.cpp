@@ -904,7 +904,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	}
 
 	g_settings.font_file = configfile.getString("font_file", FONTDIR"/neutrino.ttf");
-	g_settings.ttx_font_file = configfile.getString( "ttx_font_file", FONTDIR"/DejaVuLGCSansMono-Bold.ttf");
+	g_settings.ttx_font_file = configfile.getString( "ttx_font_file", FONTDIR"/tuxtxt.ttf");
 	ttx_font_file = g_settings.ttx_font_file;
 	g_settings.sub_font_file = configfile.getString("sub_font_file", FONTDIR"/neutrino.ttf");
 	sub_font_file = &g_settings.sub_font_file;
