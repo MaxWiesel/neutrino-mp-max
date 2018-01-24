@@ -905,7 +905,13 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	g_settings.font_file = configfile.getString("font_file", FONTDIR"/neutrino.ttf");
 	g_settings.ttx_font_file = configfile.getString( "ttx_font_file", FONTDIR"/tuxtxt.ttf");
-	ttx_font_file = g_settings.ttx_font_file;
+	if (access(g_settings.ttx_font_file, F_OK) != 0)
+	{
+		g_settings.ttx_font_file = FONTDIR "/tuxtxt.ttf";
+		configfile.setUnknownKeyQueryedFlag(true); // force saving config
+	}
+	ttx_font_file = g_settings.ttx_font_file.c_str();
+
 	g_settings.sub_font_file = configfile.getString("sub_font_file", FONTDIR"/neutrino.ttf");
 	sub_font_file = &g_settings.sub_font_file;
 	sub_font_size = configfile.getInt32("fontsize.subtitles", 24);
