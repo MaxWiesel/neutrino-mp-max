@@ -309,6 +309,7 @@ void CComponentsHeader::initLogo()
 		*/
 		if (next_item){
 			if (next_item->getItemType() == CC_ITEMTYPE_FRM_ICONFORM)
+			{
 				/* either clock is present
 				 * or in chanellist edit mode
 				 * possible button */
@@ -316,6 +317,7 @@ void CComponentsHeader::initLogo()
 					next_item = cch_cl_obj;
 				else
 					next_item = cch_btn_obj;
+			}
 		}
 
 		/*
