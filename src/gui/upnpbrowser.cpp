@@ -200,6 +200,8 @@ int CUpnpBrowserGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/
 	g_Zapit->startPlayBack();
 #endif
 
+	m_frameBuffer->Clear();
+
 	CZapit::getInstance()->EnablePlayback(true);
 	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE , m_LastMode);
 	g_RCInput->postMsg(NeutrinoMessages::SHOW_INFOBAR, 0);
