@@ -531,76 +531,28 @@ void CMoviePlayerGui::updateLcd(bool display_playtime)
 		int mm = ss/60;
 		ss -= mm * 60;
 		lcd = to_string(hh/10) + to_string(hh%10) + ":" + to_string(mm/10) + to_string(mm%10) + ":" + to_string(ss/10) + to_string(ss%10);
-
-		CVFD::getInstance()->setMode(LCD_MODE);
-		CVFD::getInstance()->showMenuText(0, lcd.c_str(), -1, true);
-		return;
 	}
-
-	if (isMovieBrowser && p_movie_info && !p_movie_info->epgTitle.empty() && p_movie_info->epgTitle.size() && strncmp(p_movie_info->epgTitle.c_str(), "not", 3))
-		name = p_movie_info->epgTitle;
 	else
-		name = pretty_name;
+	{
+		if (isMovieBrowser && p_movie_info && !p_movie_info->epgTitle.empty() && p_movie_info->epgTitle.size() && strncmp(p_movie_info->epgTitle.c_str(), "not", 3))
+			name = p_movie_info->epgTitle;
+		else
+			name = pretty_name;
 
-	switch (playstate) {
-		case CMoviePlayerGui::PAUSE:
-#if !defined(BOXMODEL_UFS910) \
- && !defined(BOXMODEL_UFS912) \
- && !defined(BOXMODEL_UFS913) \
- && !defined(BOXMODEL_UFS922) \
- && !defined(BOXMODEL_FORTIS_HDBOX) \
- && !defined(BOXMODEL_OCTAGON1008) \
- && !defined(BOXMODEL_HS7110) \
- && !defined(BOXMODEL_HS7420) \
- && !defined(BOXMODEL_HS7810A) \
- && !defined(BOXMODEL_HS7119) \
- && !defined(BOXMODEL_HS7429) \
- && !defined(BOXMODEL_HS7819) \
- && !defined(BOXMODEL_IPBOX9900) \
- && !defined(BOXMODEL_IPBOX99) \
- && !defined(BOXMODEL_IPBOX55)
-			lcd = "|| ";
-#else
-			lcd = "";
-#endif
-			if (speed < 0) {
-				sprintf(tmp, "%dx<| ", abs(speed));
-				lcd = tmp;
-			} else if (speed > 0) {
-				sprintf(tmp, "%dx|> ", abs(speed));
-				lcd = tmp;
-#if !defined(BOXMODEL_UFS910) \
- && !defined(BOXMODEL_UFS912) \
- && !defined(BOXMODEL_UFS913) \
- && !defined(BOXMODEL_UFS922) \
- && !defined(BOXMODEL_OCTAGON1008) \
- && !defined(BOXMODEL_HS7110) \
- && !defined(BOXMODEL_HS7420) \
- && !defined(BOXMODEL_HS7810A) \
- && !defined(BOXMODEL_HS7119) \
- && !defined(BOXMODEL_HS7429) \
- && !defined(BOXMODEL_HS7819) \
- && !defined(BOXMODEL_IPBOX9900) \
- && !defined(BOXMODEL_IPBOX99) \
- && !defined(BOXMODEL_IPBOX55)
-			} else
-				lcd = "|| ";
-#else
-			} else
-				lcd = "";
-#endif
-			break;
-#if !defined(BOXMODEL_OCTAGON1008)
-		case CMoviePlayerGui::REW:
-			sprintf(tmp, "%dx<< ", abs(speed));
-			lcd = tmp;
-			break;
-		case CMoviePlayerGui::FF:
-			sprintf(tmp, "%dx>> ", abs(speed));
-			lcd = tmp;
-			break;
-#endif
-		case CMoviePlayerGui::PLAY:
+		switch (playstate)
+		{
+			case CMoviePlayerGui::PAUSE:
+				if (speed < 0)
+				{
+					sprintf(tmp, "%dx<| ", abs(speed));
+					lcd = tmp;
+				}
+				else if (speed > 0)
+				{
+					sprintf(tmp, "%dx|> ", abs(speed));
+					lcd = tmp;
+				}
+				else
 #if !defined(BOXMODEL_UFS910) \
  && !defined(BOXMODEL_UFS912) \
  && !defined(BOXMODEL_UFS913) \
@@ -616,14 +568,52 @@ void CMoviePlayerGui::updateLcd(bool display_playtime)
  && !defined(BOXMODEL_CUBEREVO_MINI2) \
  && !defined(BOXMODEL_IPBOX9900) \
  && !defined(BOXMODEL_IPBOX99) \
- && !defined(BOXMODEL_IPBOX55)
-			lcd = "> ";
+ && !defined(BOXMODEL_IPBOX55) \
+ && !defined(BOXMODEL_HD51)
+					lcd = "|| ";
+#else
+					lcd = "";
 #endif
-			break;
-		default:
-			break;
+				break;
+#if !defined(BOXMODEL_OCTAGON1008)
+			case CMoviePlayerGui::REW:
+				sprintf(tmp, "%dx<< ", abs(speed));
+				lcd = tmp;
+				break;
+			case CMoviePlayerGui::FF:
+				sprintf(tmp, "%dx>> ", abs(speed));
+				lcd = tmp;
+				break;
+#endif
+			case CMoviePlayerGui::PLAY:
+#if !defined(BOXMODEL_UFS910) \
+ && !defined(BOXMODEL_UFS912) \
+ && !defined(BOXMODEL_UFS913) \
+ && !defined(BOXMODEL_UFS922) \
+ && !defined(BOXMODEL_FORTIS_HDBOX) \
+ && !defined(BOXMODEL_OCTAGON1008) \
+ && !defined(BOXMODEL_HS7110) \
+ && !defined(BOXMODEL_HS7420) \
+ && !defined(BOXMODEL_HS7810A) \
+ && !defined(BOXMODEL_HS7119) \
+ && !defined(BOXMODEL_HS7429) \
+ && !defined(BOXMODEL_HS7819) \
+ && !defined(BOXMODEL_CUBEREVO_MINI2) \
+ && !defined(BOXMODEL_IPBOX9900) \
+ && !defined(BOXMODEL_IPBOX99) \
+ && !defined(BOXMODEL_IPBOX55) \
+ && !defined(BOXMODEL_HD51)
+				lcd = "> ";
+#else
+				lcd = "";
+#endif
+				break;
+			default:
+				break;
+		}
+		lcd += name;
 	}
-	lcd += name;
+
 	CVFD::getInstance()->setMode(LCD_MODE);
 	CVFD::getInstance()->showMenuText(0, lcd.c_str(), -1, true);
 #endif
