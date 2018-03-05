@@ -568,8 +568,7 @@ void CMoviePlayerGui::updateLcd(bool display_playtime)
  && !defined(BOXMODEL_CUBEREVO_MINI2) \
  && !defined(BOXMODEL_IPBOX9900) \
  && !defined(BOXMODEL_IPBOX99) \
- && !defined(BOXMODEL_IPBOX55) \
- && !defined(BOXMODEL_HD51)
+ && !defined(BOXMODEL_IPBOX55)
 					lcd = "|| ";
 #else
 					lcd = "";
@@ -601,8 +600,7 @@ void CMoviePlayerGui::updateLcd(bool display_playtime)
  && !defined(BOXMODEL_CUBEREVO_MINI2) \
  && !defined(BOXMODEL_IPBOX9900) \
  && !defined(BOXMODEL_IPBOX99) \
- && !defined(BOXMODEL_IPBOX55) \
- && !defined(BOXMODEL_HD51)
+ && !defined(BOXMODEL_IPBOX55)
 				lcd = "> ";
 #else
 				lcd = "";
