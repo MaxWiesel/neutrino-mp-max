@@ -994,7 +994,7 @@ void CEventList::paintFoot(t_channel_id channel_id)
 	CColorKeyHelper keyhelper; //user_menue.h
 	neutrino_msg_t dummy = CRCInput::RC_nokey;
 	const char * icon = NULL;
-	struct button_label buttons[5]; //TODO dbt: add directly into footer object with setButtonLabels()
+	struct button_label buttons[7]; //NI //TODO dbt: add directly into footer object with setButtonLabels()
 	int btn_cnt = 0;
 
 	int tID = -1; //any value, not NULL
@@ -1052,7 +1052,6 @@ void CEventList::paintFoot(t_channel_id channel_id)
 		btn_cnt++;
 	}
 
-#if 0
 	//NI epg button for epg-plus
 	buttons[btn_cnt].button = NEUTRINO_ICON_BUTTON_EPG_SMALL;
 	buttons[btn_cnt].locale = LOCALE_EPGPLUS_HEAD;
@@ -1062,7 +1061,6 @@ void CEventList::paintFoot(t_channel_id channel_id)
 	buttons[btn_cnt].button = g_info.hw_caps->has_button_timer ? NEUTRINO_ICON_BUTTON_TIMER : NEUTRINO_ICON_BUTTON_0;
 	buttons[btn_cnt].locale = LOCALE_TIMERLIST_NAME;
 	btn_cnt++;
-#endif
 
 	CComponentsFooter footer;
 	footer.enableShadow(CC_SHADOW_ON, -1, true);
