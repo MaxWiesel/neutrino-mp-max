@@ -266,7 +266,8 @@ channellist.foot_sort_sat Sorted[Sat]
 channellist.hdicon Show HD/UHD icon
 channellist.head All Services
 channellist.history History
-channellist.history_clear Clear History
+channellist.history_clear Clear history
+channellist.history_empty No history available
 channellist.keep_numbers Persistent Channel Numbers
 channellist.make_hdlist Create lists of HD and UHD channels
 channellist.make_newlist Create list of new channels
@@ -940,7 +941,7 @@ keybindingmenu.video Video
 keybindingmenu.volume Volume
 keybindingmenu.volumedown Decrease
 keybindingmenu.volumeup Increase
-keybindingmenu.zaphistory Zapping History Bouquet
+keybindingmenu.zaphistory Channel history
 keychooser.head Setup new key
 keychooser.text Press new key.\nWait a few seconds to abort ...
 keychoosermenu.currentkey current key
