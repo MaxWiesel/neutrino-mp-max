@@ -794,12 +794,12 @@ glcd.color.red Red
 glcd.color.white White
 glcd.color.yellow Yellow
 glcd.color.orange Orange
-glcd.color.light_gray Light_Gray
+glcd.color.light_gray Light Gray
 glcd.color.gray Gray
-glcd.color.dark_gray Dark_Gray
-glcd.color.dark_red Dark_Red
-glcd.color.dark_green Dark_Green
-glcd.color.dark_blue Dark_Blue
+glcd.color.dark_gray Dark Gray
+glcd.color.dark_red Dark Red
+glcd.color.dark_green Dark Green
+glcd.color.dark_blue Dark Blue
 glcd.color.purple Purple
 glcd.color.mint Mint
 glcd.color.golden Golden
