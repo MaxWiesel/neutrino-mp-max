@@ -243,42 +243,42 @@ buildinfo.creator Creator
 buildinfo.kernel Kernel version
 buildinfo.menu Build information
 cablesetup.provider cable provider
-channellist.additional Additional Informations
-channellist.additional_off Off
-channellist.additional_on On
-channellist.additional_on_minitv On (with MiniTV)
-channellist.current_tp Current Transponder
+channellist.additional Additional informations
+channellist.additional_off off
+channellist.additional_on on
+channellist.additional_on_minitv on (with MiniTV)
+channellist.current_tp Current transponder
 channellist.edit Edit
-channellist.epgtext_align_left Left
-channellist.epgtext_align_right Right
-channellist.extended Show Event Progress
+channellist.epgtext_align_left left
+channellist.epgtext_align_right right
+channellist.extended Show event progress
 channellist.extended_colored with colored progressbar
 channellist.extended_simple with simple progressbar
 channellist.favs Favorites
-channellist.foot Channel Information
-channellist.foot_freq Sat/Freq Info
-channellist.foot_next Next Event
-channellist.foot_off Off
-channellist.foot_sort_alpha Sorted[Alpha]
-channellist.foot_sort_chnum Sorted[Number]
-channellist.foot_sort_freq Sorted[Freq]
-channellist.foot_sort_sat Sorted[Sat]
+channellist.foot Channel information
+channellist.foot_freq Sat/Freq info
+channellist.foot_next next event
+channellist.foot_off off
+channellist.foot_sort_alpha Sorted[alpha]
+channellist.foot_sort_chnum Sorted[number]
+channellist.foot_sort_freq Sorted[freq]
+channellist.foot_sort_sat Sorted[sat]
 channellist.hdicon Show HD/UHD icon
-channellist.head All Services
+channellist.head All services
 channellist.history History
 channellist.history_clear Clear history
 channellist.history_empty No history available
-channellist.keep_numbers Persistent Channel Numbers
+channellist.keep_numbers Persistent channel numbers
 channellist.make_hdlist Create lists of HD and UHD channels
 channellist.make_newlist Create list of new channels
 channellist.make_removedlist Create list of removed channels
 channellist.make_webtvlist Create list of WebTV channels
-channellist.new_zap_mode Quickzap in List
-channellist.new_zap_mode_active Active
-channellist.new_zap_mode_allow Allow
-channellist.new_zap_mode_off Off
+channellist.new_zap_mode Quickzap in list
+channellist.new_zap_mode_active active
+channellist.new_zap_mode_allow allow
+channellist.new_zap_mode_off off
 channellist.nonefound No channels were found!\nPlease execute a scan\n(MENU-key -> service)
-channellist.numeric_adjust Numeric Zap Adjust
+channellist.numeric_adjust Numeric zap adjust
 channellist.provs Providers
 channellist.recordable_channels Recordable channels
 channellist.recording_not_possible Recording not possible!
@@ -286,12 +286,12 @@ channellist.remember Last used
 channellist.reset_all Reset 'new' flag for all channels
 channellist.reset_flags Reset 'new' channel flag
 channellist.sats Satellites
-channellist.show_channellogo Show Channel Logos
-channellist.show_channelnumber Show Channel Numbers
-channellist.show_empty_favs Show empty Favorites Bouquets
-channellist.show_infobox Show Bottom Infobox
-channellist.since Since
-channellist.start Starts
+channellist.show_channellogo Show channel logos
+channellist.show_channelnumber Show channel numbers
+channellist.show_empty_favs Show empty favorites bouquets
+channellist.show_infobox Show bottom infobox
+channellist.since since
+channellist.start starts
 ci.check_live_slot Check CI-slot for live-tv use
 ci.clock CI clock (Mhz)
 ci.empty No CAM in slot
@@ -353,7 +353,7 @@ colorthememenu.head Select theme
 colorthememenu.head2 Load themes
 colorthememenu.menu_hints Hint box
 colorthememenu.name Theme name
-colorthememenu.neutrino_theme Reset Theme
+colorthememenu.neutrino_theme Reset theme
 colorthememenu.question Use selected theme?
 colorthememenu.save Save current theme
 colorthememenu.select1 User Theme
@@ -608,9 +608,9 @@ filebrowser.filter.active Filter on
 filebrowser.filter.inactive Filter off
 filebrowser.head Filebrowser
 filebrowser.mark Mark
-filebrowser.nextpage Next Page
-filebrowser.pm Playlist Manager
-filebrowser.prevpage Prev. Page
+filebrowser.nextpage Next page
+filebrowser.pm Playlist manager
+filebrowser.prevpage Prev. page
 filebrowser.scan Scaning folder
 filebrowser.select Select
 filebrowser.showrights Show file rights
@@ -650,7 +650,7 @@ flashupdate.currentversiondate Date
 flashupdate.currentversiontime Time
 flashupdate.erasefailed erasure of flash failed
 flashupdate.erasing erasing flash
-flashupdate.experimentalimage The image you have selected is an untested version, this means\nyour box maybe fail to boot after update.\n\nDo you really want to update to this version?
+flashupdate.experimentalimage You have selected a beta version or a nightly build.\nPlease note that this version is untested\nand your box may not work after update.\n\nDo you really want to install this version?
 flashupdate.expertfunctions Expert-functions
 flashupdate.fileis0bytes the filesize is 0 Bytes
 flashupdate.fileselector File-Selector
@@ -744,7 +744,7 @@ fontmenu.scaling_y Vertical (in %)
 fontmenu.scaling_y_hint2 Vertical (in %) min 50 / max 200
 fontmenu.sizes Font sizes
 fontsize.button_text Button text
-fontsize.channel_num_zap direct selection
+fontsize.channel_num_zap Direct selection
 fontsize.channellist Channellist
 fontsize.channellist_descr Description
 fontsize.channellist_event Event list
@@ -755,7 +755,7 @@ fontsize.epg_info2 EPG Info 2
 fontsize.epg_title EPG Title
 fontsize.epgplus_item EPG-Plus item
 fontsize.eventlist_datetime Date and time
-fontsize.eventlist_event Event Info
+fontsize.eventlist_event Event info
 fontsize.eventlist_itemlarge Large
 fontsize.eventlist_itemsmall Small
 fontsize.eventlist_title Title
@@ -848,7 +848,7 @@ hdd_mount_failed Failed to mount.
 hdd_mount_ok Device ready to use.
 hdd_mount_umount Mount/Unmount
 hdd_noise Acoustic-control (AAM)
-hdd_not_found No HDD found
+hdd_not_found No device found
 hdd_set_recdir Use device for recording ?
 hdd_settings Data Storage
 hdd_sleep Switch off after
@@ -868,7 +868,7 @@ imageinfo.creator Creator:
 imageinfo.date Date:
 imageinfo.dokumentation Docs:
 imageinfo.forum Forum:
-imageinfo.head Image info:
+imageinfo.head Image informations
 imageinfo.homepage Home page:
 imageinfo.image Image:
 imageinfo.kernel Kernel:
@@ -1057,7 +1057,7 @@ menu.hint_adzap AdZap will switch back to the current channel when the selected 
 menu.hint_adzap_active AdZap is active. With a new call it will be deactivated.
 menu.hint_adzap_writedata Write data according to adzap status to /tmp/adzap.data
 menu.hint_aplay Audio player
-menu.hint_aplay_setup Change title display, start directory, screen saver and more
+menu.hint_aplay_setup Change title display, start directory, screen saver etc.
 menu.hint_audio Audio output, DD\nSRS True volume options
 menu.hint_audio_ac3 Pass AC3 audio tracks unchanged
 menu.hint_audio_adjust_vol_ac3 Channel specific volume adjustment for AC3 streams
@@ -1519,7 +1519,7 @@ menu.hint_selected_back Change selected item background color
 menu.hint_selected_text Change selected item text color
 menu.hint_service Tuner setup, service scan,\nbouquet editor, software upgrade
 menu.hint_service_scan Auto and manual service scan
-menu.hint_settings Configure System\nNetwork, audio, video, OSD and more
+menu.hint_settings Configure System\nNetwork, audio, video, OSD etc.
 menu.hint_shoutcast_dev_id Type your SHOUTcast Dev ID. An empty input disables SHOUTcast support
 menu.hint_shoutcast_enabled Enable or disable SHOUTcast support
 menu.hint_show_mute_icon Show mute icon, when volume set to 0
@@ -1531,7 +1531,7 @@ menu.hint_sleeptimer Set timer to put your box\nin sleep mode
 menu.hint_sleeptimer_min Default setting for sleeptimer
 menu.hint_sms_channel If enabled, numeric buttons in channel list used to search channel in SMS style
 menu.hint_sms_movie If enabled, numeric buttons in moviebrowser used to search movie in SMS style
-menu.hint_soft_restart Restart Neutrino without reboot
+menu.hint_soft_restart Restart graphical user interface without reboot
 menu.hint_softupdate_check Check online update, download and flash firmware
 menu.hint_softupdate_check_local Select and flash firmware from local file
 menu.hint_softupdate_createimage_menu Backup of current software, including all settings
@@ -1547,7 +1547,7 @@ menu.hint_sw_update Update software
 menu.hint_theme Select pre-defined color theme\nSave or load theme from files
 menu.hint_timeouts Configure time to hide GUI windows\nin seconds
 menu.hint_timeouts_static_messages Timeout for specific messages with user interaction
-menu.hint_timer_followscreenings Show selection with followscreenings for timer programming
+menu.hint_timer_followscreenings Show selection with followscreenings for timer programming. "Always" shows selection even if just one event is found.
 menu.hint_timers Add/Remove/Edit scheduled\nrecording, reminders etc.
 menu.hint_timezone Select your timezone
 menu.hint_tmdb_api_key Type your TMDb API key. An empty input disables TMDb support
@@ -1671,7 +1671,7 @@ miscsettings.infobar_disp_6 Channelnumber, Logo [Signal]
 miscsettings.infobar_gradient_body Gradient EPG-area
 miscsettings.infobar_gradient_bottom Gradient bottom
 miscsettings.infobar_gradient_top Gradient top
-miscsettings.infobar_logo_hdd_dir Logo directory
+miscsettings.infobar_logo_hdd_dir External logo directory
 miscsettings.infobar_sat_display Satellite display on infobar
 miscsettings.infobar_show show Info on EPG change
 miscsettings.infobar_show_dd_available show DD availability
@@ -1908,7 +1908,7 @@ moviebrowser.truncate Truncate movie?
 moviebrowser.truncate_failed Truncate failed.
 moviebrowser.truncate_failed_playing Impossible to truncate playing movie.
 moviebrowser.truncating Truncating movie, please wait ...
-moviebrowser.ts_only Show recordings only
+moviebrowser.ts_only Show all video formats
 moviebrowser.update_if_dest_empty_only Copy if destination is empty only
 moviebrowser.use_dir Use directory
 moviebrowser.use_movie_dir Use movie directory
@@ -2171,7 +2171,7 @@ ping.socket is unreachable (socket error)
 ping.unreachable is unreachable
 pinprotection.head Enter PIN code
 pinprotection.wrongcode PIN-Code was wrong! Try again.
-plugins.hdd_dir Plugin external directory.
+plugins.hdd_dir External plugin directory
 plugins.no_plugin No plugin
 plugins.result plugin output
 plugintype.disabled Disabled
@@ -2465,7 +2465,7 @@ timerbar.recordevent Record
 timerlist.alarmtime Alarm time
 timerlist.apids Audio PIDs
 timerlist.apids_dflt record default audio streams
-timerlist.ask_to_delete Deletion of timer stops current recording!\n%sContinue anyway?
+timerlist.ask_to_delete Deletion of timer stops current recording!\n%sDelete timer anyway?
 timerlist.bouquetselect choose bouquet
 timerlist.channel Channel
 timerlist.channelselect choose channel

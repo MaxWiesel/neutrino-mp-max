@@ -609,7 +609,7 @@ filebrowser.filter.inactive Filter aus
 filebrowser.head Dateibrowser
 filebrowser.mark Markieren
 filebrowser.nextpage Seite vor
-filebrowser.pm Playlist Manager
+filebrowser.pm Playlist-Manager
 filebrowser.prevpage Seite zurück
 filebrowser.scan Durchsuche Verzeichnisse
 filebrowser.select Auswählen
@@ -650,7 +650,7 @@ flashupdate.currentversiondate Datum
 flashupdate.currentversiontime Uhrzeit
 flashupdate.erasefailed Flash löschen fehlgeschlagen
 flashupdate.erasing lösche Flash
-flashupdate.experimentalimage Sie haben einen Snapshot ausgewählt, bitte beachten Sie,\ndass diese Version ungetestet ist und u.U. Ihre Box\nnach dem Update nicht mehr funktionsfähig ist.\n\nSoll diese Version wirklich installiert werden?
+flashupdate.experimentalimage Sie haben eine Betaversion oder einen Nightly Build ausgewählt.\nBitte beachten Sie, dass diese Version ungetestet ist\nund Ihre Box nach dem Update möglicherweise nicht mehr funktionsfähig ist.\n\nSoll diese Version wirklich installiert werden?
 flashupdate.expertfunctions Experten-Funktionen
 flashupdate.fileis0bytes die Dateigröße ist 0 Byte
 flashupdate.fileselector Datei-Auswahl
@@ -730,7 +730,7 @@ flashupdate.writeflashmtd einzelne Partition einspielen
 flashupdate.wrongbase Abweichende Release-Information\nFortfahren?
 fontmenu.channellist Kanalliste
 fontmenu.epg EPG (Programmführer)
-fontmenu.eventlist Event-Liste
+fontmenu.eventlist Eventliste
 fontmenu.head Schrift
 fontmenu.infobar Infobar
 fontmenu.menu Menü
@@ -755,7 +755,7 @@ fontsize.epg_info2 EPG Info 2
 fontsize.epg_title EPG Titel
 fontsize.epgplus_item EPG-Plus Listeneintrag
 fontsize.eventlist_datetime Datum/Zeit
-fontsize.eventlist_event Event Info
+fontsize.eventlist_event Eventinfo
 fontsize.eventlist_itemlarge Groß
 fontsize.eventlist_itemsmall Klein
 fontsize.eventlist_title Titel
@@ -841,12 +841,12 @@ hdd_fmt_mountpoint Verzeichnis zum einhängen
 hdd_fs Dateisystem zum formatieren
 hdd_label_hint1 Datenträger Bezeichnung eingeben und mit Speichern übernehmen
 hdd_label_hint2 Nur bei RECORD (Standard Aufnahme HDD) werden die nötigen Verzeichnisse auf den Datenträger geschrieben
-hdd_manage Laufwerke verwalten
+hdd_manage Datenträger verwalten
 hdd_middle Mittel
 hdd_mount einhängen
-hdd_mount_failed Fehler! Bitte Datenträgereinstellungen überprüfen?
+hdd_mount_failed Fehler! Bitte Datenträgereinstellungen überprüfen.
 hdd_mount_ok Datenträger bereit
-hdd_mount_umount Laufwerke ein-/aushängen
+hdd_mount_umount Datenträger ein-/aushängen
 hdd_noise Akustikkontrolle (AAM)
 hdd_not_found Kein Datenträger
 hdd_set_recdir Diesen Datenträger für die Aufnahme nutzen?
@@ -961,7 +961,7 @@ keychoosermenu.setnone Keine Taste
 languagesetup.head Sprache und Zeitzonen
 languagesetup.osd Menüsprache
 languagesetup.select Sprache
-lcd_info_line Zeige in Infozeile 
+lcd_info_line Zeige in Infozeile
 lcd_info_line_channel Kanalname
 lcd_info_line_clock Uhrzeit
 lcdcontroler.brightness Normalbetrieb
@@ -1009,7 +1009,7 @@ mainmenu.channels Kanalliste
 mainmenu.clearsectionsd Lösche EPG Cache
 mainmenu.games Spiele
 mainmenu.head Hauptmenü
-mainmenu.lua Lua-Plugins
+mainmenu.lua Plugins
 mainmenu.media Multimedia
 mainmenu.mediaplayer Mediaplayer
 mainmenu.movieplayer Movieplayer
@@ -1171,7 +1171,7 @@ menu.hint_hdd_fmt Wählen Sie das Datenträgerformat aus
 menu.hint_hdd_format Erstellt eine Partition auf dem Datenträger und formatiert diese
 menu.hint_hdd_label Geben Sie die HDD Bezeichnung ein
 menu.hint_hdd_mountpoint Wählen Sie das Einhängeverzeichnis
-menu.hint_hdd_noise Setzen Sie Parameter für das Automatic Acoustic Management.\nNicht alle Laufwerke unterstützen diese Funktion
+menu.hint_hdd_noise Setzen Sie Parameter für das Automatic Acoustic Management.\nNicht alle Datenträger unterstützen diese Funktion
 menu.hint_hdd_sleep Dieser Wert definiert, nach wieviel Minuten die Festplatte bei Inaktivität in den Sleep-Modus geschaltet wird
 menu.hint_hdd_statfs Legen Sie fest, wann die Aufnahmeverzeichnis-Füllstandsanzeige im InfoViewer (und ggf. am VFD-Display) aktualisiert werden darf
 menu.hint_hdd_tools Formatieren Sie die gefundenen Datenträger bzw. überprüfen Sie deren Dateisystem
@@ -1547,7 +1547,7 @@ menu.hint_sw_update System aktualisieren, Image sichern und wiederherstellen
 menu.hint_theme Wählen Sie ein vordefiniertes Farbschema, speichern oder laden Sie ihre eigenen Farbschemata
 menu.hint_timeouts Anzeigedauer für Menüs oder Infofenster, die sich automatisch schließen (0 deaktiviert)
 menu.hint_timeouts_static_messages Anzeigedauer für bestimmte Meldungen mit Benutzerinteraktion
-menu.hint_timer_followscreenings Zeige weitere Termine für Timerprogrammierung.
+menu.hint_timer_followscreenings Zeige weitere Termine für Timerprogrammierung. "Immer" zeigt die Auswahl auch dann, wenn nur ein Event gefunden wurde.
 menu.hint_timers Hinzufügen, entfernen und bearbeiten geplanter Aufnahmen oder anderer Timer
 menu.hint_timezone Wählen Sie ihre Zeitzone aus
 menu.hint_tmdb_api_key Geben Sie den TMDb API Schlüssel ein. Eine leere Eingabe schaltet die TMDb-Unterstützung aus
@@ -1671,7 +1671,7 @@ miscsettings.infobar_disp_6 Kanalnummer, Logo [Signalbalken]
 miscsettings.infobar_gradient_body Farbverlauf EPG-Bereich
 miscsettings.infobar_gradient_bottom Farbverlauf unten
 miscsettings.infobar_gradient_top Farbverlauf oben
-miscsettings.infobar_logo_hdd_dir Logo-Verzeichnis
+miscsettings.infobar_logo_hdd_dir Externes Logo-Verzeichnis
 miscsettings.infobar_sat_display Kabel-/Satellitenanbieter
 miscsettings.infobar_show Info bei EPG Änderungen
 miscsettings.infobar_show_dd_available DD-Verfügbarkeit anzeigen
@@ -1908,7 +1908,7 @@ moviebrowser.truncate Film kürzen?
 moviebrowser.truncate_failed Fehler beim Kürzen des Films
 moviebrowser.truncate_failed_playing Kürzen des Films während der Wiedergabe nicht möglich.
 moviebrowser.truncating Kürze Film, bitte warten ...
-moviebrowser.ts_only Nur Aufnahmen zeigen
+moviebrowser.ts_only Alle Videoformate zeigen
 moviebrowser.update_if_dest_empty_only Übernehmen nur wenn Ziel leer
 moviebrowser.use_dir Verzeichnis verwenden
 moviebrowser.use_movie_dir Wiedergabeverzeichnis verwenden
@@ -1995,7 +1995,7 @@ networkmenu.ipaddress IP
 networkmenu.mount Netzwerkfreigaben bearbeiten
 networkmenu.nameserver Nameserver
 networkmenu.netmask Netzmaske
-networkmenu.ntpenable Zeit per INet synchronisieren
+networkmenu.ntpenable Zeit synchronisieren per
 networkmenu.ntprefresh NTP/DVB-Aktualisierung
 networkmenu.ntprefresh_hint1 NTP/DVB-Time-Sync [min]
 networkmenu.ntprefresh_hint2 braucht Reboot oder EPG-Reset
@@ -2446,7 +2446,7 @@ streaming.dir_not_writable Das Aufnahmeverzeichnis ist nicht beschreibbar.\nAufn
 streaming.overflow Aufnahme-Puffer Überlauf! Bitte ggf. einige Aufnahmen beenden.
 streaming.slow System oder Datenträger zu langsam! Bitte ggf. einige Aufnahmen beenden.
 streaming.write_error Die Aufnahme wurde leider abgebrochen,\nda ein Fehler beim Schreiben der Daten auftrat.
-stringinput.backspace Rücklöschen
+stringinput.backspace Rücktaste
 stringinput.caps Groß/Klein
 stringinput.clear Alles löschen
 stringinput.insert Einfügen
@@ -2465,7 +2465,7 @@ timerbar.recordevent Aufnehmen
 timerlist.alarmtime Alarmzeit
 timerlist.apids Audio PIDs
 timerlist.apids_dflt Voreingestellte Tonspuren aufn.
-timerlist.ask_to_delete Das Löschen des Timers beendet auch die laufende Aufnahme!\n%sTrotzdem fortsetzen?
+timerlist.ask_to_delete Das Löschen des Timers beendet auch die laufende Aufnahme!\n%sTimer trotzdem löschen?
 timerlist.bouquetselect Bouquet wählen
 timerlist.channel Kanal
 timerlist.channelselect Kanal wählen
@@ -2672,7 +2672,7 @@ wizard.setup_easy Einfach
 wizard.setup_type Installationstyp
 wizard.setup_type_hint Wählen Sie einfache Grundeinstellungen oder erweiterte Auswahlmöglichkeiten für die Installation
 wizard.welcome_head Willkommen zur Ersteinrichtung Ihres Receivers!
-wizard.welcome_text Neutrino ist eine von der Tuxbox-Community entwickelte und gepflegte Benutzeroberfläche für Set-Top-Boxen und lebt von der Unterstützung der Nutzer und vielen freiwilligen beitragenden Helfern.\nSollten Sie Hilfe benötigen, Anregungen, Verbesserungsvorschläge oder Fehler bemerken,\nkönnen Sie sich gerne auf unseren Supportseiten melden oder Kontakt aufnehmen. Kontakt- bzw. Webaddressen entnehmen Sie bitte hierfür im Hauptmenü unter "Informationen". \nIn den folgenden Schritten wird Sie Neutrino durch die Ersteinrichtung führen.\nSicherheitshinweis:\n Ihre Set-Top-Box lässt sich auch per Webinterface steuern, um zum Beispiel die Timer-Verwaltung zu nutzen oder Live-TV im Web-Browser zu schauen.\nAchten Sie bitte darauf, dass Ihr Gerät nicht von aussen zugänglich ist,\nda sonst ein unbefugter Zugriff über das Internet nicht ausgeschlossen werden kann!\nNächster Schritt?
+wizard.welcome_text Neutrino ist eine von der Tuxbox-Community entwickelte und gepflegte Benutzeroberfläche für Set-Top-Boxen und lebt von der Unterstützung der Nutzer und vielen freiwilligen beitragenden Helfern.\nSollten Sie Hilfe benötigen, Anregungen bzw. Verbesserungsvorschläge haben oder Fehler bemerken,\nkönnen Sie sich gerne auf unseren Supportseiten melden oder Kontakt aufnehmen. Kontakt- bzw. Webaddressen entnehmen Sie bitte hierfür im Hauptmenü unter "Informationen". \nIn den folgenden Schritten wird Sie Neutrino durch die Ersteinrichtung führen.\nSicherheitshinweis:\n Ihre Set-Top-Box lässt sich auch per Webinterface steuern, um zum Beispiel die Timer-Verwaltung zu nutzen oder Live-TV im Web-Browser zu schauen.\nAchten Sie bitte darauf, dass Ihr Gerät nicht von aussen zugänglich ist,\nda sonst ein unbefugter Zugriff über das Internet nicht ausgeschlossen werden kann!\nNächster Schritt?
 word.from ab
 word.in in
 youtube.dev_id YouTube Dev ID
