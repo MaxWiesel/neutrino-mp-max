@@ -805,7 +805,7 @@ glcd.color.mint Mint
 glcd.color.golden Golden
 glcd.enable GraphLCD enabled
 glcd.font Font
-glcd.head GraphLCD
+glcd.head GraphLCD-Support
 glcd.mirror_osd Show OSD menu on GraphLCD
 glcd.mirror_video Show running video on GraphLCD
 glcd.restart Rescan
@@ -961,6 +961,21 @@ keychoosermenu.setnone no key
 languagesetup.head Language and timezone
 languagesetup.osd OSD Language
 languagesetup.select OSD Language
+lcd4l_clock_a Analog clock in Standby-Mode
+lcd4l_convert Convert umlauts
+lcd4l_logodir Channellogo-Directory
+lcd4l_skin Display-Style
+lcd4l_skin_0 Standard
+lcd4l_skin_1 Large
+lcd4l_skin_2 Small (SysInfo)
+lcd4l_skin_3 d-box2
+lcd4l_skin_4 User
+lcd4l_skin_radio Activate Radio-Style
+lcd4l_support LCD4Linux-Support
+lcd4l_support_auto automatic
+lcd4l_support_off off
+lcd4l_support_on on
+lcd4l_weather Weather in Standby-Mode
 lcd_info_line show in infoline
 lcd_info_line_channel Channelname
 lcd_info_line_clock clock
@@ -1265,6 +1280,13 @@ menu.hint_language OSD language, timezone\nPrefered audio and subtitles language
 menu.hint_last_radio Start box on selected channel\nif last mode is Radio
 menu.hint_last_tv Start box on selected channel\nif last mode is TV
 menu.hint_last_use Start box on last used channel
+menu.hint_lcd4l_clock_a Shows an analog clock instead of a digital clock on display at standby
+menu.hint_lcd4l_convert Convert umlauts for the built-in LCD4Linux font
+menu.hint_lcd4l_logodir Logo directory.\nFallback to default on invalid entry.
+menu.hint_lcd4l_skin Switch between modes\nDefault, Big, SysInfo, d-box2, User Defined
+menu.hint_lcd4l_skin_radio Switch the mode, when Radio-Mode is activated
+menu.hint_lcd4l_support Activate/deactivate LCD4Linux\nsupported display: Pearl DPF
+menu.hint_lcd4l_weather Shows first tuxwetter favorite on display at standby
 menu.hint_leds_blink Blinking LEDs in deep-standby
 menu.hint_leds_deepstandby LEDs state in deeps-standby mode
 menu.hint_leds_record LEDs state when box recording

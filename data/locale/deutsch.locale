@@ -805,7 +805,7 @@ glcd.color.mint Mint
 glcd.color.golden Golden
 glcd.enable GraphLCD aktiv
 glcd.font Schrift
-glcd.head GraphLCD
+glcd.head GraphLCD-Unterstützung
 glcd.mirror_osd OSD-Menü auf GraphLCD anzeigen
 glcd.mirror_video Videobild auf GraphLCD anzeigen
 glcd.restart Neu erkennen
@@ -961,6 +961,21 @@ keychoosermenu.setnone Keine Taste
 languagesetup.head Sprache und Zeitzonen
 languagesetup.osd Menüsprache
 languagesetup.select Sprache
+lcd4l_clock_a Analog-Uhr im Standby-Modus
+lcd4l_convert Konvertiere Umlaute
+lcd4l_logodir Senderlogo-Verzeichnis
+lcd4l_skin Display-Style
+lcd4l_skin_0 Standard
+lcd4l_skin_1 Groß
+lcd4l_skin_2 Klein (SysInfo)
+lcd4l_skin_3 d-box2
+lcd4l_skin_4 Benutzer
+lcd4l_skin_radio Radio-Style aktivieren
+lcd4l_support LCD4Linux-Unterstützung
+lcd4l_support_auto automatisch
+lcd4l_support_off aus
+lcd4l_support_on ein
+lcd4l_weather Wetter im Standby-Modus
 lcd_info_line Zeige in Infozeile
 lcd_info_line_channel Kanalname
 lcd_info_line_clock Uhrzeit
@@ -1265,6 +1280,13 @@ menu.hint_language Menü-Sprache, Zeitzone, bevorzugte Tonspuren, Untertitel-Spr
 menu.hint_last_radio Wählen Sie den Start-Sender im Radio-Modus
 menu.hint_last_tv Wählen Sie den Start-Sender im TV-Modus
 menu.hint_last_use Speichert den aktuellen Kanal beim Herunterfahren der Box
+menu.hint_lcd4l_clock_a Zeigt im Standby-Betrieb eine Analog-Uhr anstatt einer Digital-Uhr
+menu.hint_lcd4l_convert Konvertiert Umlaute für die eingebaute LCD4Linux-Schriftart
+menu.hint_lcd4l_logodir Verzeichnis für Senderlogos\nBei ungültigem Eintrag Fallback auf Standard-Logoverzeichnis
+menu.hint_lcd4l_skin Auswahl der verfügbaren Darstellungsarten\nStandard, Groß, SysInfo, d-box2, Benutzerdefiniert
+menu.hint_lcd4l_skin_radio Wechselt die Darstellungsart, wenn der Radio-Modus aktiviert wird
+menu.hint_lcd4l_support LCD4Linux aktivieren/deaktivieren\nUnterstützte Displays: Pearl DPF
+menu.hint_lcd4l_weather Zeigt im Standby-Betrieb die entsprechenden Daten des ersten Favoriteneintrags von tuxwetter auf dem Display an
 menu.hint_leds_blink Die Power-LEDs blinken, wenn sich der Receiver im Deep-Standby befindet und ein Timer aktiv ist
 menu.hint_leds_deepstandby Definiert den Status der Power-LEDs im Deep-Standby
 menu.hint_leds_record Definiert, ob die Power-LEDs blinken sollen, wenn eine Aufnahme aktiv ist

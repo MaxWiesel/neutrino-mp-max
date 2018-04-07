@@ -39,6 +39,10 @@
 #include <gui/glcdsetup.h>
 #endif
 
+#ifdef ENABLE_LCD4LINUX
+#include "gui/lcd4l_setup.h"
+#endif
+
 #include <global.h>
 #include <neutrino.h>
 #include <mymenu.h>
@@ -205,10 +209,21 @@ int CVfdSetup::showSetup()
 		oj->setHint("", LOCALE_MENU_HINT_VFD_NOTIFY_RCLOCK);
 		vfds->addItem(oj);
 	}
+#ifdef ENABLE_LCD4LINUX
+	if (g_settings.glcd_enable == 0)
+	{
+		vfds->addItem(GenericMenuSeparatorLine);
+		vfds->addItem(new CMenuForwarder(LOCALE_LCD4L_SUPPORT, true, NULL, new CLCD4lSetup(), NULL, CRCInput::RC_yellow));
+	}
+#endif
+
 #ifdef ENABLE_GRAPHLCD
-	vfds->addItem(GenericMenuSeparatorLine);
 	GLCD_Menu glcdMenu;
-	vfds->addItem(new CMenuForwarder(LOCALE_GLCD_HEAD, true, NULL, &glcdMenu, NULL, CRCInput::RC_blue));
+	if (g_settings.lcd4l_support == 0)
+	{
+		vfds->addItem(GenericMenuSeparatorLine);
+		vfds->addItem(new CMenuForwarder(LOCALE_GLCD_HEAD, true, NULL, &glcdMenu, NULL, CRCInput::RC_blue));
+	}
 #endif
 
 	int res = vfds->exec(NULL, "");
