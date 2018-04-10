@@ -377,7 +377,7 @@ void CVFD::wake_up() {
 	else
 		setPower(1);
 	if(g_settings.lcd_info_line){
-		switch_name_time_cnt = g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR] + 10;
+		switch_name_time_cnt = g_settings.handling_infobar[SNeutrinoSettings::HANDLING_INFOBAR] + 10;
 	}
 #if defined (BOXMODEL_OCTAGON1008)
 	ShowIcon(ICON_COLON2, false);
@@ -1016,7 +1016,7 @@ void CVFD::setMode(const MODES m, const char * const title)
 		showServicename(servicename);
 		showclock = true;
 		if(g_settings.lcd_info_line)
-			switch_name_time_cnt = g_settings.timing[SNeutrinoSettings::TIMING_INFOBAR] + 10;
+			switch_name_time_cnt = g_settings.handling_infobar[SNeutrinoSettings::HANDLING_INFOBAR] + 10;
 		break;
 	case MODE_AUDIO:
 	{
