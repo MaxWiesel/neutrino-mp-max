@@ -125,6 +125,13 @@ const CMenuOptionChooser::keyval MESSAGEBOX_YES_NO_OPTIONS[MESSAGEBOX_YES_NO_OPT
 	{ 1, LOCALE_MESSAGEBOX_YES }
 };
 
+//NI
+const CMenuOptionChooser::keyval MESSAGEBOX_YES_NO_INVERTED_OPTIONS[MESSAGEBOX_YES_NO_OPTIONS_COUNT] =
+{
+	{ 0, LOCALE_MESSAGEBOX_YES },
+	{ 1, LOCALE_MESSAGEBOX_NO }
+};
+
 #define MESSAGEBOX_PARENTAL_LOCK_OPTIONS_COUNT 3
 const CMenuOptionChooser::keyval MESSAGEBOX_PARENTAL_LOCK_OPTIONS[MESSAGEBOX_PARENTAL_LOCK_OPTIONS_COUNT] =
 {
@@ -483,7 +490,7 @@ void CMovieBrowser::initGlobalSettings(void)
 
 	m_settings.browserAdditional = 0;
 
-	m_settings.ts_only = 0;
+	m_settings.ts_only = 1;
 	m_settings.ytmode = cYTFeedParser::MOST_POPULAR;
 	m_settings.ytorderby = cYTFeedParser::ORDERBY_PUBLISHED;
 	m_settings.ytresults = 10;
@@ -605,7 +612,7 @@ bool CMovieBrowser::loadSettings(MB_SETTINGS* settings)
 	settings->lastRecordMaxItems = configfile.getInt32("mb_lastRecordMaxItems", NUMBER_OF_MOVIES_LAST);
 	settings->browser_serie_mode = configfile.getInt32("mb_browser_serie_mode", 0);
 	settings->serie_auto_create = configfile.getInt32("mb_serie_auto_create", 0);
-	settings->ts_only = configfile.getInt32("mb_ts_only", 0);
+	settings->ts_only = configfile.getInt32("mb_ts_only", 1);
 
 	settings->sorting.item = (MB_INFO_ITEM)configfile.getInt32("mb_sorting_item", MB_INFO_RECORDDATE);
 	settings->sorting.direction = (MB_DIRECTION)configfile.getInt32("mb_sorting_direction", MB_DIRECTION_UP);
@@ -3468,7 +3475,7 @@ bool CMovieBrowser::showMenu(bool calledExternally)
 	optionsMenu.addItem(new CMenuOptionChooser(LOCALE_MOVIEBROWSER_HIDE_SERIES,       (int*)(&m_settings.browser_serie_mode), MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true));
 	optionsMenu.addItem(new CMenuOptionChooser(LOCALE_MOVIEBROWSER_SERIE_AUTO_CREATE, (int*)(&m_settings.serie_auto_create), MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true));
 	int ts_only = m_settings.ts_only;
-	optionsMenu.addItem( new CMenuOptionChooser(LOCALE_MOVIEBROWSER_TS_ONLY,           (int*)(&m_settings.ts_only), MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true ));
+	optionsMenu.addItem( new CMenuOptionChooser(LOCALE_MOVIEBROWSER_TS_ONLY,           (int*)(&m_settings.ts_only), MESSAGEBOX_YES_NO_INVERTED_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true )); //NI
 
 	//optionsMenu.addItem(GenericMenuSeparator);
 
