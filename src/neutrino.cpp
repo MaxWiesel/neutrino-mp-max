@@ -378,6 +378,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	//theme/color options
 	CThemes::getTheme(configfile);
+	g_settings.theme_name = configfile.getString("theme_name","");
 
 #ifdef ENABLE_LCD4LINUX
 	g_settings.lcd4l_support = configfile.getInt32("lcd4l_support" , 0);
@@ -1254,6 +1255,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	}
 
 	//theme/color options
+	configfile.getString( "theme_name",g_settings.theme_name );
 	CThemes::setTheme(configfile);
 
 #ifdef ENABLE_LCD4LINUX
