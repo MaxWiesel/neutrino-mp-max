@@ -315,6 +315,9 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &actionKey)
 	m_idletime = time(NULL);
 	m_screensaver = false;
 
+	m_cover.clear();
+	m_stationlogo = false;
+
 	if (parent)
 		parent->hide();
 
@@ -381,7 +384,6 @@ int CAudioPlayerGui::show()
 	while (loop)
 	{
 		updateMetaData();
-
 		updateTimes();
 
 		// stop if mode was changed in another thread
@@ -1728,12 +1730,12 @@ void CAudioPlayerGui::paintCover()
 	const CAudioMetaData meta = CAudioPlayer::getInstance()->getMetaData();
 
 	// try folder.jpg first
-	std::string cover = m_curr_audiofile.Filename.substr(0, m_curr_audiofile.Filename.rfind('/')) + "/folder.jpg";
-	bool stationlogo = false;
+	m_cover = m_curr_audiofile.Filename.substr(0, m_curr_audiofile.Filename.rfind('/')) + "/folder.jpg";
+	m_stationlogo = false;
 
 	// try cover from tag
 	if (!meta.cover.empty())
-		cover = meta.cover;
+		m_cover = meta.cover;
 	// try station logo
 	else if (!meta.logo.empty())
 	{
@@ -1753,20 +1755,20 @@ void CAudioPlayerGui::paintCover()
 			CHTTPTool httptool;
 			if (httptool.downloadFile(meta.logo, fullname.c_str()))
 			{
-				cover = fullname;
-				stationlogo = true;
+				m_cover = fullname;
+				m_stationlogo = true;
 			}
 			else
-				cover.clear();
+				m_cover.clear();
 		}
 	}
 
-	if (access(cover.c_str(), F_OK) == 0)
+	if (access(m_cover.c_str(), F_OK) == 0)
 	{
 		int cover_x = m_x + OFFSET_INNER_MID;
 		int cover_y = m_y + OFFSET_INNER_SMALL;
 		m_cover_width = 0;
-		CComponentsPicture *cover_object = new CComponentsPicture(cover_x, cover_y, cover);
+		CComponentsPicture *cover_object = new CComponentsPicture(cover_x, cover_y, m_cover);
 		if (cover_object)
 		{
 			cover_object->doPaintBg(false);
