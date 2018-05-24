@@ -978,32 +978,28 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.audioplayer_repeat_on = configfile.getInt32("audioplayer_repeat_on",0);
 	g_settings.audioplayer_show_playlist = configfile.getInt32("audioplayer_show_playlist",1);
 	g_settings.audioplayer_enable_sc_metadata = configfile.getInt32("audioplayer_enable_sc_metadata",1);
-#ifdef SHOUTCAST_DEV_ID
-	g_settings.shoutcast_dev_id = SHOUTCAST_DEV_ID;
-#else
-	g_settings.shoutcast_dev_id = configfile.getString("shoutcast_dev_id","XXXXXXXXXXXXXXXX");
-#endif
-	g_settings.shoutcast_enabled = configfile.getInt32("shoutcast_enabled", 1);
-	g_settings.shoutcast_enabled = g_settings.shoutcast_enabled && check_shoutcast_dev_id();
 
 	//Movie-Player
 	g_settings.movieplayer_repeat_on = configfile.getInt32("movieplayer_repeat_on", CMoviePlayerGui::REPEAT_OFF);
 	g_settings.movieplayer_bisection_jump = configfile.getInt32("movieplayer_bisection_jump", 5);
 	g_settings.movieplayer_display_playtime = configfile.getInt32("movieplayer_display_playtime", 0);
-#ifdef YOUTUBE_DEV_ID
-	g_settings.youtube_dev_id = YOUTUBE_DEV_ID;
-#else
+
+	//online services
 	g_settings.youtube_dev_id = configfile.getString("youtube_dev_id","XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-#endif
-	g_settings.youtube_enabled = configfile.getInt32("youtube_enabled", 1);
-	g_settings.youtube_enabled = g_settings.youtube_enabled && check_youtube_dev_id();
-#ifdef TMDB_API_KEY
-	g_settings.tmdb_api_key = TMDB_API_KEY;
-#else
-	g_settings.tmdb_api_key = configfile.getString("tmdb_api_key","XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-#endif
-	g_settings.tmdb_enabled = configfile.getInt32("tmdb_enabled", 1);
-	g_settings.tmdb_enabled = g_settings.tmdb_enabled && check_tmdb_api_key();
+ 	g_settings.youtube_enabled = configfile.getInt32("youtube_enabled", 1);
+ 	g_settings.youtube_enabled = g_settings.youtube_enabled && check_youtube_dev_id();
+
+ 	g_settings.tmdb_api_key = configfile.getString("tmdb_api_key","XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+ 	g_settings.tmdb_enabled = configfile.getInt32("tmdb_enabled", 1);
+ 	g_settings.tmdb_enabled = g_settings.tmdb_enabled && check_tmdb_api_key();
+
+	g_settings.omdb_api_key = configfile.getString("omdb_api_key","XXXXXXXX");
+	g_settings.omdb_enabled = configfile.getInt32("omdb_enabled", 1);
+	g_settings.omdb_enabled = g_settings.omdb_enabled && check_omdb_api_key();
+
+	g_settings.shoutcast_dev_id = configfile.getString("shoutcast_dev_id","XXXXXXXXXXXXXXXX");
+	g_settings.shoutcast_enabled = configfile.getInt32("shoutcast_enabled", 1);
+	g_settings.shoutcast_enabled = g_settings.shoutcast_enabled && check_shoutcast_dev_id();
 
 	//Filebrowser
 	g_settings.filebrowser_showrights =  configfile.getInt32("filebrowser_showrights", 1);
@@ -1699,23 +1695,24 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "audioplayer_repeat_on", g_settings.audioplayer_repeat_on );
 	configfile.setInt32( "audioplayer_show_playlist", g_settings.audioplayer_show_playlist );
 	configfile.setInt32( "audioplayer_enable_sc_metadata", g_settings.audioplayer_enable_sc_metadata );
-#ifndef SHOUTCAST_DEV_ID
-	configfile.setString( "shoutcast_dev_id", g_settings.shoutcast_dev_id );
-#endif
-	configfile.setInt32( "shoutcast_enabled", g_settings.shoutcast_enabled );
 
 	//Movie-Player
 	configfile.setInt32( "movieplayer_repeat_on", g_settings.movieplayer_repeat_on );
 	configfile.setInt32( "movieplayer_bisection_jump", g_settings.movieplayer_bisection_jump );
 	configfile.setInt32( "movieplayer_display_playtime", g_settings.movieplayer_display_playtime );
-#ifndef YOUTUBE_DEV_ID
-	configfile.setString( "youtube_dev_id", g_settings.youtube_dev_id );
-#endif
-	configfile.setInt32( "youtube_enabled", g_settings.youtube_enabled );
-#ifndef TMDB_API_KEY
-	configfile.setString( "tmdb_api_key", g_settings.tmdb_api_key );
-#endif
-	configfile.setInt32( "tmdb_enabled", g_settings.tmdb_enabled );
+
+	//online services
+ 	configfile.setString( "youtube_dev_id", g_settings.youtube_dev_id );
+ 	configfile.setInt32( "youtube_enabled", g_settings.youtube_enabled );
+
+ 	configfile.setString( "tmdb_api_key", g_settings.tmdb_api_key );
+ 	configfile.setInt32( "tmdb_enabled", g_settings.tmdb_enabled );
+
+	configfile.setString( "omdb_api_key", g_settings.omdb_api_key );
+	configfile.setInt32( "omdb_enabled", g_settings.omdb_enabled );
+
+	configfile.setString( "shoutcast_dev_id", g_settings.shoutcast_dev_id );
+	configfile.setInt32( "shoutcast_enabled", g_settings.shoutcast_enabled );
 
 	//Filebrowser
 	configfile.setInt32("filebrowser_showrights", g_settings.filebrowser_showrights);
