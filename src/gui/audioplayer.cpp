@@ -703,6 +703,9 @@ int CAudioPlayerGui::show()
 
 					delete InetRadioInputChanger;
 
+					if (!m_playlist.empty())
+						clearPlaylist();
+
 					if (select >= 0)
 						old_select = select;
 					switch (select)
