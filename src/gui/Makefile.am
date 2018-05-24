@@ -66,6 +66,7 @@ libneutrino_gui_a_SOURCES = \
 	filebrowser.cpp \
 	followscreenings.cpp \
 	imageinfo.cpp \
+	imdb.cpp \
 	info_menue.cpp \
 	infoviewer.cpp \
 	infoviewer_bb.cpp \
