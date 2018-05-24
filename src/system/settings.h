@@ -868,8 +868,6 @@ struct SNeutrinoSettings
 	int   audioplayer_repeat_on;
 	int   audioplayer_show_playlist;
 	int   audioplayer_enable_sc_metadata;
-	std::string shoutcast_dev_id;
-	int shoutcast_enabled;
 
 	//Filebrowser
 	int filebrowser_showrights;
@@ -877,7 +875,7 @@ struct SNeutrinoSettings
 	int filebrowser_denydirectoryleave;
 	int filebrowser_use_filter;
 
-	//movieplayer
+	//online services
 	int   movieplayer_repeat_on;
 	int movieplayer_bisection_jump;
 	int movieplayer_display_playtime;
@@ -885,6 +883,10 @@ struct SNeutrinoSettings
 	int youtube_enabled;
 	std::string tmdb_api_key;
 	int tmdb_enabled;
+	std::string imdb_api_key;
+	int imdb_enabled;
+	std::string shoutcast_dev_id;
+	int shoutcast_enabled;
 
 	//zapit setup
 	std::string StartChannelTV;
