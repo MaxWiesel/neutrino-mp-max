@@ -1756,7 +1756,8 @@ int CMenuOptionNumberChooser::paint(bool selected)
 	}
 
 	//manage toggle button
-	handleOptionIcon(l_option);
+	if (localized.size() == 2)
+		handleOptionIcon(l_option);
 
 	//paint item
 	prepareItem(selected, height);
@@ -2062,7 +2063,8 @@ int CMenuOptionChooser::paint( bool selected)
 	}
 
 	//manage toggle button
-	handleOptionIcon(l_option);
+	if (number_of_options == 2)
+		handleOptionIcon(l_option);
 
 	//paint item
 	prepareItem(selected, height);
