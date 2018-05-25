@@ -985,22 +985,21 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.movieplayer_display_playtime = configfile.getInt32("movieplayer_display_playtime", 0);
 
 	//online services
-
 	///youtube
 	g_settings.youtube_dev_id = YT_DEV_KEY;
 #if ENABLE_YOUTUBE_KEY_MANAGE
 	g_settings.youtube_dev_id = configfile.getString("youtube_dev_id", g_settings.youtube_dev_id .empty() ? "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" : g_settings.youtube_dev_id);
 #endif
- 	g_settings.youtube_enabled = configfile.getInt32("youtube_enabled", 1);
- 	g_settings.youtube_enabled = g_settings.youtube_enabled && CApiKey::check_youtube_dev_id();
+	g_settings.youtube_enabled = configfile.getInt32("youtube_enabled", 1);
+	g_settings.youtube_enabled = g_settings.youtube_enabled && CApiKey::check_youtube_dev_id();
 
 	///tmdb
 	g_settings.tmdb_api_key = TMDB_DEV_KEY;
 #if ENABLE_TMDB_KEY_MANAGE
 	g_settings.tmdb_api_key = configfile.getString("tmdb_api_key", g_settings.tmdb_api_key.empty() ? "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" : g_settings.tmdb_api_key);
 #endif
- 	g_settings.tmdb_enabled = configfile.getInt32("tmdb_enabled", 1);
- 	g_settings.tmdb_enabled = g_settings.tmdb_enabled && CApiKey::check_tmdb_api_key();
+	g_settings.tmdb_enabled = configfile.getInt32("tmdb_enabled", 1);
+	g_settings.tmdb_enabled = g_settings.tmdb_enabled && CApiKey::check_tmdb_api_key();
 
 	///omdb
 	g_settings.omdb_api_key = OMDB_API_KEY;
@@ -1017,6 +1016,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 #endif
 	g_settings.shoutcast_enabled = configfile.getInt32("shoutcast_enabled", 1);
 	g_settings.shoutcast_enabled = g_settings.shoutcast_enabled && CApiKey::check_shoutcast_dev_id();
+
 
 	//Filebrowser
 	g_settings.filebrowser_showrights =  configfile.getInt32("filebrowser_showrights", 1);
@@ -1720,14 +1720,14 @@ void CNeutrinoApp::saveSetup(const char * fname)
 
 	//online services
 #if ENABLE_YOUTUBE_KEY_MANAGE
- 	configfile.setString( "youtube_dev_id", g_settings.youtube_dev_id );
+	configfile.setString( "youtube_dev_id", g_settings.youtube_dev_id );
 #endif
- 	configfile.setInt32( "youtube_enabled", g_settings.youtube_enabled );
+	configfile.setInt32( "youtube_enabled", g_settings.youtube_enabled );
 
 #if ENABLE_TMDB_KEY_MANAGE
- 	configfile.setString( "tmdb_api_key", g_settings.tmdb_api_key );
+	configfile.setString( "tmdb_api_key", g_settings.tmdb_api_key );
 #endif
- 	configfile.setInt32( "tmdb_enabled", g_settings.tmdb_enabled );
+	configfile.setInt32( "tmdb_enabled", g_settings.tmdb_enabled );
 
 #if ENABLE_OMDB_KEY_MANAGE
 	configfile.setString( "omdb_api_key", g_settings.omdb_api_key );
