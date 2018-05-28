@@ -37,7 +37,6 @@
 #include <driver/rcinput.h>
 #include <driver/audioplay.h>
 #include <driver/audiometadata.h>
-#include <driver/display.h>
 
 #include <daemonc/remotecontrol.h>
 
@@ -94,8 +93,10 @@ extern cVideo * videoDecoder;
 #define AUDIOPLAYER_START_SCRIPT CONFIGDIR "/audioplayer.start"
 #define AUDIOPLAYER_END_SCRIPT CONFIGDIR "/audioplayer.end"
 #define DEFAULT_RADIOSTATIONS_XMLFILE CONFIGDIR "/radio-stations.xml"
+#define DEFAULT_RADIOFAVORITES_XMLFILE CONFIGDIR "/radio-favorites.xml"
 
 const char RADIO_STATION_XML_FILE[] = {DEFAULT_RADIOSTATIONS_XMLFILE};
+const char RADIO_FAVORITES_XML_FILE[] = {DEFAULT_RADIOFAVORITES_XMLFILE};
 
 CAudiofileExt::CAudiofileExt() : CAudiofile(), firstChar('\0')
 {
@@ -252,6 +253,13 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &actionKey)
 		m_select_title_by_name = g_settings.audioplayer_select_title_by_name;
 	}
 
+	//auto-load favorites
+	if ((m_inetmode) && (m_playlist.empty()))
+	{
+		if (access(RADIO_FAVORITES_XML_FILE, F_OK) == 0)
+			scanXmlFile(RADIO_FAVORITES_XML_FILE);
+	}
+
 	if (m_playlist.empty())
 		m_current = -1;
 	else
@@ -304,6 +312,10 @@ int CAudioPlayerGui::exec(CMenuTarget* parent, const std::string &actionKey)
 	m_LastMode = CNeutrinoApp::getInstance()->getMode();
 	CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::CHANGEMODE , NeutrinoModes::mode_audio);
 
+	// wake up hdd
+	printf("[audioplayer.cpp] wakeup_hdd(%s)\n", g_settings.network_nfs_audioplayerdir.c_str());
+	wakeup_hdd(g_settings.network_nfs_audioplayerdir.c_str()/*,true*/);
+
 	puts("[audioplayer.cpp] executing " AUDIOPLAYER_START_SCRIPT ".");
 	if (my_system(AUDIOPLAYER_START_SCRIPT) != 0)
 		perror(AUDIOPLAYER_START_SCRIPT " failed");
@@ -350,6 +362,17 @@ int CAudioPlayerGui::show()
 	bool update = true;
 	bool clear_before_update = false;
 	m_key_level = 0;
+
+	// auto-play first entry from favorites
+	if (g_settings.inetradio_autostart)
+	{
+		if ((m_inetmode) && (!m_playlist.empty()))
+		{
+			m_current = 0;
+			m_selected = 0;
+			play(m_selected);
+		}
+	}
 
 	while (loop)
 	{
@@ -434,6 +457,22 @@ int CAudioPlayerGui::show()
 		{
 			if (m_state != CAudioPlayerGui::STOP)
 				stop();
+		}
+		//add RC_favorites for internetradio
+		else if ((msg == CRCInput::RC_favorites) && (m_inetmode))
+		{
+			if (m_key_level == 0)
+			{
+				// clear playlist and load RADIO_FAVORITES_XML_FILE
+				if (access(RADIO_FAVORITES_XML_FILE, F_OK) == 0)
+				{
+					if (!m_playlist.empty())
+						clearPlaylist();
+					scanXmlFile(RADIO_FAVORITES_XML_FILE);
+					clear_before_update = true;
+					update = true;
+				}
+			}
 		}
 		else if (msg == CRCInput::RC_left || msg == CRCInput::RC_previoussong)
 		{
@@ -667,6 +706,10 @@ int CAudioPlayerGui::show()
 					// -- setup menue for inetradio input
 					sprintf(cnt, "%d", count);
 					InputSelector.addItem(new CMenuForwarder(
+								LOCALE_AUDIOPLAYER_ADD_FAV, true, NULL, InetRadioInputChanger,
+								cnt, CRCInput::convertDigitToKey(count + 1)), old_select == count);
+					sprintf(cnt, "%d", ++count);
+					InputSelector.addItem(new CMenuForwarder(
 								LOCALE_AUDIOPLAYER_ADD_LOC, true, NULL, InetRadioInputChanger,
 								cnt, CRCInput::convertDigitToKey(count + 1)), old_select == count);
 					sprintf(cnt, "%d", ++count);
@@ -692,21 +735,28 @@ int CAudioPlayerGui::show()
 					switch (select)
 					{
 						case 0:
-							scanXmlFile(RADIO_STATION_XML_FILE);
+							scanXmlFile(RADIO_FAVORITES_XML_FILE);
 							CVFD::getInstance()->setMode(CVFD::MODE_AUDIO);
 							paintLCD();
 							break;
 						case 1:
-							readDir_ic();
+							scanXmlFile(RADIO_STATION_XML_FILE);
 							CVFD::getInstance()->setMode(CVFD::MODE_AUDIO);
 							paintLCD();
 							break;
 						case 2:
+							readDir_ic();
+							CVFD::getInstance()->setMode(CVFD::MODE_AUDIO);
+							paintLCD();
+							break;
+						case 3:
 							openSCbrowser();
 							break;
 						default:
 							break;
 					}
+					m_current = 0;
+					m_selected = 0;
 					update=true;
 				}
 				else if (shufflePlaylist())
@@ -1018,7 +1068,9 @@ void CAudioPlayerGui::addUrl2Playlist(const char *url, const char *name, const c
 	CAudiofileExt mp3(url, CFile::STREAM_AUDIO);
 	//printf("[addUrl2Playlist], name = %s, url = %s\n", name, url);
 	if (name != NULL)
+	{
 		mp3.MetaData.title = name;
+	}
 	else
 	{
 		std::string filename = mp3.Filename.substr(mp3.Filename.rfind('/') + 1);
@@ -2279,13 +2331,13 @@ void CAudioPlayerGui::updateTimes(const bool force)
 			int x_total_time = m_x + m_width - OFFSET_INNER_MID - w_total_time - 2*m_titlebox->getFrameThickness();
 			// played time offset to align this value on the right side
 			int o_played_time = std::max(w_faked_time - w_played_time, 0);
-			int x_faked_time = m_x + m_width - OFFSET_INNER_MID - w_total_time - w_faked_time;
+			int x_faked_time = x_total_time - w_faked_time;
 			int x_played_time = x_faked_time + o_played_time;
 			int y_times = m_y + OFFSET_INNER_SMALL;
 
 			if (updateTotal && !m_inetmode)
 			{
-				m_frameBuffer->paintBoxRel(x_total_time, y_times, w_total_time + OFFSET_INNER_MID, m_item_height, m_titlebox->getColorBody());
+				m_frameBuffer->paintBoxRel(x_total_time, y_times, w_total_time, m_item_height, m_titlebox->getColorBody());
 				if (m_time_total > 0)
 				{
 					g_Font[SNeutrinoSettings::FONT_TYPE_MENU]->RenderString(x_total_time, y_times + m_item_height, w_total_time, total_time, COL_MENUHEAD_TEXT); //total time
@@ -2804,8 +2856,7 @@ bool CAudioPlayerGui::askToOverwriteFile(const std::string& filename)
 	return res;
 }
 
-std::string CAudioPlayerGui::absPath2Rel(const std::string& fromDir,
-		const std::string& absFilename)
+std::string CAudioPlayerGui::absPath2Rel(const std::string& fromDir, const std::string& absFilename)
 {
 	std::string res = "";
 
