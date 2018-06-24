@@ -264,7 +264,6 @@ channellist.foot_sort_alpha Sortiert[alpha]
 channellist.foot_sort_chnum Sortiert[nummer]
 channellist.foot_sort_freq Sortiert[freq]
 channellist.foot_sort_sat Sortiert[sat]
-channellist.hdicon HD/UHD Icon anzeigen
 channellist.head Alle Kanäle
 channellist.history Verlauf
 channellist.history_clear Verlauf löschen
@@ -292,6 +291,7 @@ channellist.show_channellogo Senderlogos zeigen
 channellist.show_channelnumber Kanalnummern zeigen
 channellist.show_empty_favs Zeige leere Favoriten-Bouquets
 channellist.show_infobox Sendungsfenster anzeigen
+channellist.show_res_icon Auflösung signalisieren
 channellist.since seit
 channellist.start Start
 ci.check_live_slot CI-Slot auf Live-TV Nutzung prüfen
@@ -1143,7 +1143,6 @@ menu.hint_channellist_epg_align Legen Sie fest, wie der Text für das EPG in der
 menu.hint_channellist_extended Bei aktivierter Funktion wird vor dem Sendernamen ein Balken eingeblendet, der den Sendungsfortschritt anzeigt
 menu.hint_channellist_fonts Ändern Sie die Schriftgrößen in der Kanalliste
 menu.hint_channellist_foot Definiert, welche Informationen im unteren Sendungsfenster angezeigt werden sollen
-menu.hint_channellist_hdicon Zeigt HD/UHD Symbol in der Kanalliste
 menu.hint_channellist_mode Wählen Sie die Start-Kanalliste im TV-Modus
 menu.hint_channellist_mode_radio Wählen Sie die Start-Kanalliste im Radio-Modus
 menu.hint_channellist_setup Wählen Sie die Anzeigeoptionen für die Kanalliste
@@ -1151,6 +1150,7 @@ menu.hint_channellist_show_channellogo Senderlogos aktivieren/deaktivieren.
 menu.hint_channellist_show_channelnumber Zeigt Kanalnummer in der Kanalliste.
 menu.hint_channellist_show_empty_favs Zeigt oder versteckt leere Bouquets in den Favoriten
 menu.hint_channellist_show_infobox Zeigt oder versteckt das untere Sendungsfenster
+menu.hint_channellist_show_res_icon Zeigt oder versteckt das Icon zur Signalisierung der Auflösung
 menu.hint_channels Kanalliste öffnen
 menu.hint_ci Conditional-Access-Menü zum Einrichten Ihres CI-Moduls oder der eingebetteten Conax-Karte
 menu.hint_clock_background Lassen Sie die Uhr mit Hintergrund anzeigen

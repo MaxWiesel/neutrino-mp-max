@@ -836,12 +836,12 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.channellist_epgtext_align_right	= configfile.getBool("channellist_epgtext_align_right"          , false);
 	g_settings.channellist_foot = configfile.getInt32("channellist_foot", 0); //default transponder data
 	g_settings.channellist_new_zap_mode = configfile.getInt32("channellist_new_zap_mode", 0);
-	g_settings.channellist_hdicon = configfile.getInt32("channellist_hdicon", 0); //default off
 	g_settings.channellist_sort_mode  = configfile.getInt32("channellist_sort_mode", 0);//sort mode: alpha, freq, sat
 	g_settings.channellist_numeric_adjust  = configfile.getInt32("channellist_numeric_adjust", 0);
 	g_settings.channellist_show_channellogo = configfile.getInt32("channellist_show_channellogo", 1);
 	g_settings.channellist_show_infobox = configfile.getInt32("channellist_show_infobox", 1);
 	g_settings.channellist_show_numbers = configfile.getInt32("channellist_show_numbers", 1);
+	g_settings.channellist_show_res_icon = configfile.getInt32("channellist_show_res_icon", 0);
 
 	//screen configuration
 	g_settings.osd_resolution      = (osd_resolution_tmp == -1) ? configfile.getInt32("osd_resolution", 0) : osd_resolution_tmp;
@@ -1615,7 +1615,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setBool("channellist_epgtext_align_right", g_settings.channellist_epgtext_align_right);
 	configfile.setInt32("channellist_foot", g_settings.channellist_foot);
 	configfile.setInt32("channellist_new_zap_mode", g_settings.channellist_new_zap_mode);
-	configfile.setInt32("channellist_hdicon", g_settings.channellist_hdicon);
 	configfile.setInt32("remote_control_hardware", g_settings.remote_control_hardware);
 	configfile.setBool  ( "audiochannel_up_down_enable", g_settings.audiochannel_up_down_enable );
 	configfile.setInt32("channellist_sort_mode", g_settings.channellist_sort_mode);
@@ -1623,6 +1622,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("channellist_show_channellogo", g_settings.channellist_show_channellogo);
 	configfile.setInt32("channellist_show_infobox", g_settings.channellist_show_infobox);
 	configfile.setInt32("channellist_show_numbers", g_settings.channellist_show_numbers);
+	configfile.setInt32("channellist_show_res_icon", g_settings.channellist_show_res_icon);
 
 	//screen configuration
 	configfile.setInt32("osd_resolution"     , COsdHelpers::getInstance()->g_settings_osd_resolution_save);

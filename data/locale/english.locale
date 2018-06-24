@@ -264,7 +264,6 @@ channellist.foot_sort_alpha Sorted[alpha]
 channellist.foot_sort_chnum Sorted[number]
 channellist.foot_sort_freq Sorted[freq]
 channellist.foot_sort_sat Sorted[sat]
-channellist.hdicon Show HD/UHD icon
 channellist.head All services
 channellist.history History
 channellist.history_clear Clear history
@@ -292,6 +291,7 @@ channellist.show_channellogo Show channel logos
 channellist.show_channelnumber Show channel numbers
 channellist.show_empty_favs Show empty favorites bouquets
 channellist.show_infobox Show bottom infobox
+channellist.show_res_icon Signalize resolution
 channellist.since since
 channellist.start starts
 ci.check_live_slot Check CI-slot for live-tv use
@@ -1143,7 +1143,6 @@ menu.hint_channellist_epg_align EPG event align
 menu.hint_channellist_extended Show current event progress bar
 menu.hint_channellist_fonts Change channel list font sizes
 menu.hint_channellist_foot Show additional information\nin bottom box
-menu.hint_channellist_hdicon Show HD/UHD icons in channel list
 menu.hint_channellist_mode Use the selected channel list mode on startup if last mode is TV
 menu.hint_channellist_mode_radio Use the selected channel list mode on startup if last mode is Radio
 menu.hint_channellist_setup Configure channel list GUI options
@@ -1151,6 +1150,7 @@ menu.hint_channellist_show_channellogo Enable/disable channel logos.
 menu.hint_channellist_show_channelnumber Show channel number in channel list
 menu.hint_channellist_show_empty_favs Show or hide empty bouquets in favorites
 menu.hint_channellist_show_infobox Show or hide bottom infobox of channellist
+menu.hint_channellist_show_res_icon Show or hide the icon to signalize resolution
 menu.hint_channels Open channel list
 menu.hint_ci Conditional access menu\nto setup your CI CAM or embeded Conax card
 menu.hint_clock_background Show clock with theme's background color

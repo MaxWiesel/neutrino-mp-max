@@ -2006,12 +2006,18 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 		if ((*chanlist)[curr]->getChannelID() == CZapit::getInstance()->GetPipChannelID())
 			pip_icon = NEUTRINO_ICON_MARKER_PIP;
 #endif
-		//set HD/UHD icon
-		const char *hd_icon = NULL;
-		if(chan->isHD() && g_settings.channellist_hdicon)
-			hd_icon = NEUTRINO_ICON_RESOLUTION_HD;
-		if(chan->isUHD() && g_settings.channellist_hdicon)
-			hd_icon = NEUTRINO_ICON_RESOLUTION_UHD;
+
+		//set resolution icon
+		const char *res_icon = NULL;
+		if (g_settings.channellist_show_res_icon)
+		{
+			if (chan->isHD())
+				res_icon = NEUTRINO_ICON_MARKER_HD;
+			else if (chan->isUHD())
+				res_icon = NEUTRINO_ICON_MARKER_UHD;
+			else
+				res_icon = NEUTRINO_ICON_MARKER_SD;
+		}
 
 		//set webtv icon
 		const char *webtv_icon = NULL;
@@ -2029,10 +2035,10 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 		int offset_right = OFFSET_INNER_MID;
 		int icon_x_right = x + width - SCROLLBAR_WIDTH - offset_right;
 
-		if (hd_icon)
+		if (res_icon)
 		{
-			frameBuffer->getIconSize(hd_icon, &icon_w, &icon_h);
-			if (frameBuffer->paintIcon(hd_icon, icon_x_right - icon_w, ypos, fheight))
+			frameBuffer->getIconSize(res_icon, &icon_w, &icon_h);
+			if (frameBuffer->paintIcon(res_icon, icon_x_right - icon_w, ypos, fheight))
 			{
 				offset_right += icon_w + OFFSET_INNER_MID;
 				icon_x_right -= icon_w + OFFSET_INNER_MID;

@@ -570,7 +570,7 @@ const CMenuOptionChooser::keyval PROGRESSBAR_COLOR_OPTIONS[PROGRESSBAR_COLOR_OPT
 	{ CProgressBar::PB_MATRIX,      _LOCALE_PROGRESSBAR_COLOR_MATRIX },
 	{ CProgressBar::PB_LINES_V,     _LOCALE_PROGRESSBAR_COLOR_VERTICAL },
 	{ CProgressBar::PB_LINES_H,     _LOCALE_PROGRESSBAR_COLOR_HORIZONTAL },
-	{ CProgressBar::PB_COLOR,       _LOCALE_PROGRESSBAR_COLOR_FULL },
+	{ CProgressBar::PB_COLOR,       _LOCALE_PROGRESSBAR_COLOR_FULL }
 };
 
 //show osd setup
@@ -723,7 +723,7 @@ int COsdSetup::showOsdSetup()
 	mc->setHint("", LOCALE_MENU_HINT_ROUNDED_CORNERS);
 	osd_menu->addItem(mc);
 
-#if !HAVE_ARM_HARDWARE //FIXME: make it usable for AX51 
+#if !HAVE_ARM_HARDWARE //FIXME: make it usable for AX51
 	// fade windows
 	mc = new CMenuOptionChooser(LOCALE_COLORMENU_FADE, &g_settings.widget_fade, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true );
 	mc->setHint("", LOCALE_MENU_HINT_FADE);
@@ -983,7 +983,7 @@ void COsdSetup::showOsdMenueColorSetup(CMenuWidget *menu_colors)
 	mf->setHint("", LOCALE_MENU_HINT_PROGRESSBAR_PASSIVE);
 	menu_colors->addItem(mf);
 
-	// progressbar aktive
+	// progressbar active
 	mf = new CMenuDForwarder(LOCALE_COLORMENU_PROGRESSBAR_ACTIVE, true, NULL, chProgressbar_active );
 	mf->setHint("", LOCALE_MENU_HINT_PROGRESSBAR_ACTIVE);
 	menu_colors->addItem(mf);
@@ -1341,14 +1341,14 @@ void COsdSetup::showOsdChanlistSetup(CMenuWidget *menu_chanlist)
 	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_EPG_ALIGN);
 	menu_chanlist->addItem(mc);
 
+	// show resolution icon
+	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_SHOW_RES_ICON, &g_settings.channellist_show_res_icon, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
+	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_SHOW_RES_ICON);
+	menu_chanlist->addItem(mc);
+
 	// extended channel list
 	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_EXTENDED, &g_settings.theme.progressbar_design_channellist, PROGRESSBAR_COLOR_OPTIONS, PROGRESSBAR_COLOR_OPTION_COUNT, true, this);
 	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_EXTENDED);
-	menu_chanlist->addItem(mc);
-
-	// hd-icon
-	mc = new CMenuOptionChooser(LOCALE_CHANNELLIST_HDICON, &g_settings.channellist_hdicon, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
-	mc->setHint("", LOCALE_MENU_HINT_CHANNELLIST_HDICON);
 	menu_chanlist->addItem(mc);
 
 	// show infobox
