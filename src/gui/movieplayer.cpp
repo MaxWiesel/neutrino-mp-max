@@ -2082,7 +2082,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			if (restore)
 				FileTimeOSD->show(position);
 		} else if (msg == NeutrinoMessages::SHOW_EPG) {
-			handleMovieBrowser(NeutrinoMessages::SHOW_EPG, position);
+			showMovieInfo();
 		} else if (msg == NeutrinoMessages::EVT_SUBT_MESSAGE) {
 #if 0
 			showSubtitle(data);
@@ -2761,10 +2761,6 @@ void CMoviePlayerGui::handleMovieBrowser(neutrino_msg_t msg, int /*position*/)
 				cMovieInfo.saveMovieInfo(*p_movie_info);	/* save immediately in xml file */
 			}
 		}
-	} else if (msg == NeutrinoMessages::SHOW_EPG && p_movie_info) {
-		disableOsdElements(NO_MUTE);
-		g_EpgData->show_mp(p_movie_info, position, duration);
-		enableOsdElements(NO_MUTE);
 	}
 	return;
 }
