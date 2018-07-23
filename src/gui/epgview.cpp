@@ -1702,8 +1702,7 @@ void CEpgData::ResetModules()
 }
 
 //  -- EPG Data Viewer Menu Handler Class
-//  -- to be used for calls from Menue
-//  -- (2004-03-06 rasc)
+//  -- to be used for calls from Menu
 
 int CEPGDataHandler::exec(CMenuTarget* parent, const std::string &/*actionkey*/)
 {
