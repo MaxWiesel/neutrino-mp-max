@@ -2056,13 +2056,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			showHelp();
 			enableOsdElements(NO_MUTE);
 		} else if (msg == CRCInput::RC_info) {
-			if (fromInfoviewer)
-			{
-				showMovieInfo();
-				fromInfoviewer = false;
-			}
-			else
-				callInfoViewer();
+			callInfoViewer();
 			update_lcd = true;
 #if 0
 			clearSubtitle();
