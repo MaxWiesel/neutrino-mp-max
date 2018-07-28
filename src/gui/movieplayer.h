@@ -294,6 +294,7 @@ class CMoviePlayerGui : public CMenuTarget
 	void stopPlayBack(void);
 	void StopSubtitles(bool enable_glcd_mirroring);
 	void StartSubtitles(bool show = true);
+	void stopTimeshift(void);
 	void setLastMode(int m) { m_LastMode = m; }
 	void Pause(bool b = true);
 	void selectAudioPid(void);

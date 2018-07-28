@@ -1151,7 +1151,7 @@ bool CRecordManager::StopAutoRecord(bool lock)
 
 	g_RCInput->killTimer (shift_timer);
 
-	if(!autoshift)
+	if (!autoshift)
 		return false;
 
 	if (lock)
@@ -1161,7 +1161,7 @@ bool CRecordManager::StopAutoRecord(bool lock)
 	if (inst)
 	{
 		StopInstance(inst);
-		CMoviePlayerGui::getInstance().timeshift = TSHIFT_MODE_OFF;
+		CMoviePlayerGui::getInstance().stopTimeshift();
 	}
 
 	if (lock)
