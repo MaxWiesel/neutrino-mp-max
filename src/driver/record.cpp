@@ -1404,13 +1404,13 @@ void CRecordManager::StartTimeshift()
 #elif defined(BOXMODEL_FORTIS_HDBOX)
 		CVFD::getInstance()->ShowIcon(FP_ICON_TIMESHIFT, true);
 #endif
-		bool tstarted = false;
+// 		bool tstarted = false;
 		/* start temporary timeshift if enabled and not running, but dont start second record */
 		if (g_settings.temp_timeshift) {
 			if (!FindTimeshift()) {
 				res = StartAutoRecord();
 				tmode = "timeshift"; // record just started
-				tstarted = true;
+// 				tstarted = true;
 			}
 		}
 		else if (!RecordingStatus(live_channel_id)) {
