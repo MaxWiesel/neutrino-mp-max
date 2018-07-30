@@ -906,6 +906,7 @@ const char * locale_real_names[] =
 	"imageinfo.image",
 	"imageinfo.kernel",
 	"imageinfo.license",
+	"imageinfo.os",
 	"imageinfo.vcs",
 	"imageinfo.version",
 	"imdb.api_key",
