@@ -62,6 +62,7 @@ using namespace std;
 #include <curl/types.h>
 #endif
 
+#include <gui/widget/hintbox.h>
 
 int mySleep(int sec) {
 	struct timeval timeout;
