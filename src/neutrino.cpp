@@ -2822,7 +2822,7 @@ TIMER_STOP("################################## after all #######################
 	}
 
 	for (std::list<std::string>::iterator it = g_settings.webepg_xml.begin(); it != g_settings.webepg_xml.end(); ++it)
-		g_Sectionsd->readSIfromIPTVXML((*it).c_str());
+		g_Sectionsd->readSIfromXMLTV((*it).c_str());
 
 	RealRun();
 	ExitRun(CNeutrinoApp::EXIT_REBOOT);
