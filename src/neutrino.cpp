@@ -808,6 +808,18 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	}
 
 
+	g_settings.web_epg.clear();
+	int webepg_count = configfile.getInt32("webepg_count", 0);
+	if (webepg_count) {
+		for (int i = 0; i < webepg_count; i++) {
+			std::string k = "webepg_" + to_string(i);
+			std::string web_epg = configfile.getString(k, "");
+			if (web_epg.empty())
+				continue;
+			g_settings.web_epg.push_back(web_epg);
+		}
+	}
+
 	g_settings.webradio_xml.clear();
 #ifndef BOXMODEL_CS_HD1
 	/*
@@ -1593,6 +1605,14 @@ void CNeutrinoApp::saveSetup(const char * fname)
 		webtv_count++;
 	}
 	configfile.setInt32 ( "webtv_xml_count", g_settings.webtv_xml.size());
+
+	int webepg_count = 0;
+	for (std::list<std::string>::iterator it = g_settings.web_epg.begin(); it != g_settings.web_epg.end(); ++it) {
+		std::string k = "webepg_" + to_string(webepg_count);
+		configfile.setString(k, *it);
+		webepg_count++;
+	}
+	configfile.setInt32 ( "webepg_count", g_settings.web_epg.size());
 
 	saveKeys();
 
@@ -2800,6 +2820,9 @@ TIMER_STOP("################################## after all #######################
 		hintBox->hide();
 		delete hintBox;
 	}
+
+	for (std::list<std::string>::iterator it = g_settings.web_epg.begin(); it != g_settings.web_epg.end(); ++it)
+		g_Sectionsd->readSIfromIPTVXML((*it).c_str());
 
 	RealRun();
 	ExitRun(CNeutrinoApp::EXIT_REBOOT);
