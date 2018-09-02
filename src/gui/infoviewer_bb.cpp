@@ -1114,18 +1114,20 @@ void CInfoViewerBB::check_ecmInfo(CaIdVector &ecm_caids)
 			}
 			else if ( strstr(buffer, "source:") ||		//mgcamd
 				  strstr(buffer, "decode:") ||		//gbox
+				  strstr(buffer, "address:") ||		//cccam
 				  strstr(buffer, "protocol:") ||	//doscam or oscam constcw
 				  strstr(buffer, "from:") ||		//oscam
 				  strstr(buffer, "FROM:"))		//camd3
 			{
 				if ( strstr(buffer, "emu") ||		//mgcamd
 					strstr(buffer, "constcw") ||	//doscam or oscam constcw
-					strstr(buffer, "Internal") ||	//gbox
-					strstr(buffer, "cache"))	//os-cam
+					strstr(buffer, "cache3") ||	//oscam with cacheex
+					strstr(buffer, "Internal"))	//gbox
 				{
 					decode = LOCAL;
 				}
 				else if ( strstr(buffer, "slot") ||	//gbox
+					  strstr(buffer, "/dev/sci") ||	//cccam
 					  strstr(buffer, "local") ||	//oscam
 					  strstr(buffer, "com"))
 				{
