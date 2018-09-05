@@ -96,20 +96,20 @@ extern cVideo *videoDecoder;
 #define BGCOLOR			LCD_DATADIR "bgcolor"
 
 #define FLAG_LCD4LINUX		"/tmp/.lcd4linux"
-#define PIDFILE			"/tmp/lcd4linux.pid"
+#define PIDFILE			"/var/run/lcd4linux.pid"
 
 static void lcd4linux(bool run)
 {
 	const char *buf = "lcd4linux";
 	if (run == true)
 	{
-		if (my_system(2, "/etc/init.d/lcd4linux", "start") != 0)
+		if (my_system(3,"service", "lcd4linux", "start") != 0)
 			printf("[CLCD4l] %s: executing '%s' failed\n", __FUNCTION__, buf);
 		sleep(2);
 	}
 	else
 	{
-		if (my_system(2, "/etc/init.d/lcd4linux", "stop") != 0)
+		if (my_system(3,"service", "lcd4linux", "stop") != 0)
 			printf("[CLCD4l] %s: terminating '%s' failed\n", __FUNCTION__, buf);
 	}
 }
@@ -141,11 +141,12 @@ void CLCD4l::InitLCD4l()
 
 void CLCD4l::StartLCD4l()
 {
-	if (!thrLCD4l && g_settings.lcd4l_support == 1 || g_settings.lcd4l_support == 2)
+	if (!thrLCD4l && (g_settings.lcd4l_support == 1 || g_settings.lcd4l_support == 2))
 	{
 		printf("[CLCD4l] %s: starting thread\n", __FUNCTION__);
 		pthread_create(&thrLCD4l, NULL, LCD4lProc, (void*) this);
 		pthread_detach(thrLCD4l);
+		lcd4linux(true);
 	}
 }
 
@@ -156,6 +157,7 @@ void CLCD4l::StopLCD4l()
 		printf("[CLCD4l] %s: stopping thread\n", __FUNCTION__);
 		pthread_cancel(thrLCD4l);
 		thrLCD4l = 0;
+		lcd4linux(false);
 	}
 }
 
@@ -280,14 +282,6 @@ void* CLCD4l::LCD4lProc(void* arg)
 		{
 			PLCD4l->WriteFile(FLAG_LCD4LINUX);
 			FirstRun = false;
-		}
-		if (g_settings.lcd4l_support == 0)
-		{
-			lcd4linux(false);
-		}
-		if (g_settings.lcd4l_support == 1 || g_settings.lcd4l_support == 2)
-		{
-			lcd4linux(true);
 		}
 	}
 	return 0;
@@ -703,10 +697,12 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		{
 			WriteFile(LAYOUT, Layout);
 			m_Layout = Layout;
+
 			if (!firstRun)
 			{
-				lcd4linux(false);
-				lcd4linux(true);
+				const char *buf = "service lcd4linux reload";
+				if (my_system(3,"service", "lcd4linux", "reload") != 0)
+					printf("[CLCD4l] %s: executing '%s' failed\n", __FUNCTION__, buf);
 			}
 		}
 	}

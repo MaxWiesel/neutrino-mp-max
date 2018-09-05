@@ -137,9 +137,7 @@ int CLCD4lSetup::show()
 	CMenuWidget* lcd4lSetup = new CMenuWidget(LOCALE_LCD4L_SUPPORT, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_LCD4L_SETUP);
 	lcd4lSetup->addIntroItems();
 
-	const char *flag_lcd4l_activ = FLAGDIR "/.lcd4l";
-	CTouchFileNotifier * lcd4l_activ = new CTouchFileNotifier(flag_lcd4l_activ);
-	mc = new CMenuOptionChooser(LOCALE_LCD4L_SUPPORT, &g_settings.lcd4l_support, LCD4L_SUPPORT_OPTIONS, LCD4L_SUPPORT_OPTION_COUNT, true, lcd4l_activ, CRCInput::RC_red);
+	mc = new CMenuOptionChooser(LOCALE_LCD4L_SUPPORT, &g_settings.lcd4l_support, LCD4L_SUPPORT_OPTIONS, LCD4L_SUPPORT_OPTION_COUNT, true, this, CRCInput::RC_red);
 	mc->setHint("", LOCALE_MENU_HINT_LCD4L_SUPPORT);
 	lcd4lSetup->addItem(mc);
 	lcd4lSetup->addItem(GenericMenuSeparatorLine);
