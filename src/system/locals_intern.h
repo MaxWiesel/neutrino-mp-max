@@ -1018,6 +1018,7 @@ const char * locale_real_names[] =
 	"languagesetup.select",
 	"lcd4l_clock_a",
 	"lcd4l_convert",
+	"lcd4l_display_type",
 	"lcd4l_logodir",
 	"lcd4l_skin",
 	"lcd4l_skin_0",
