@@ -810,7 +810,9 @@ struct SNeutrinoSettings
 
 	// lcd4linux
 	int lcd4l_support;
-	std::string	lcd4l_logodir;
+	std::string lcd4l_logodir;
+	int lcd4l_brightness;
+	int lcd4l_brightness_standby;
 	int lcd4l_display_type;
 	int lcd4l_skin;
 	int lcd4l_skin_radio;
