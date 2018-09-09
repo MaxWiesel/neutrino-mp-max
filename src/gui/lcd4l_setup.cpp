@@ -132,6 +132,7 @@ int CLCD4lSetup::show()
 
 	int temp_lcd4l_display_type = g_settings.lcd4l_display_type;
 	int temp_lcd4l_skin = g_settings.lcd4l_skin;
+	int temp_lcd4l_brightness = g_settings.lcd4l_brightness;
 
 	// lcd4l setup
 	CMenuWidget* lcd4lSetup = new CMenuWidget(LOCALE_LCD4L_SUPPORT, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_LCD4L_SETUP);
@@ -158,7 +159,7 @@ int CLCD4lSetup::show()
 	mc->setHint("", LOCALE_MENU_HINT_LCD4L_SKIN_RADIO);
 	lcd4lSetup->addItem(mc);
 
-	nc = new CMenuOptionNumberChooser(LOCALE_LCD4L_BRIGHTNESS, (int *)&g_settings.lcd4l_brightness, true, 1, 7, this);
+	nc = new CMenuOptionNumberChooser(LOCALE_LCD4L_BRIGHTNESS, (int *)&temp_lcd4l_brightness, true, 1, 7, this);
 	nc->setHint("", LOCALE_MENU_HINT_LCD4L_BRIGHTNESS);
 	lcd4lSetup->addItem(nc);
 
@@ -198,17 +199,28 @@ int CLCD4lSetup::show()
 
 	// the things to do on exit
 
+	bool initlcd4l = false;
+
 	if (g_settings.lcd4l_display_type != temp_lcd4l_display_type)
 	{
 		g_settings.lcd4l_display_type = temp_lcd4l_display_type;
-		LCD4l->InitLCD4l();
+		initlcd4l = true;
 	}
 
 	if (g_settings.lcd4l_skin != temp_lcd4l_skin)
 	{
 		g_settings.lcd4l_skin = temp_lcd4l_skin;
-		LCD4l->InitLCD4l();
+		initlcd4l = true;
 	}
+
+	if (g_settings.lcd4l_brightness != temp_lcd4l_brightness)
+	{
+		g_settings.lcd4l_brightness = temp_lcd4l_brightness;
+		initlcd4l = true;
+	}
+
+	if (initlcd4l)
+		LCD4l->InitLCD4l();
 
 	return res;
 }
