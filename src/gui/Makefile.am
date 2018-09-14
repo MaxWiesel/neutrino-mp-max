@@ -144,26 +144,31 @@ libneutrino_gui_a_SOURCES += \
 	test_menu.cpp
 endif
 
-if BOXTYPE_SPARK
-libneutrino_gui_a_SOURCES += \
-	psisetup.cpp
-endif
-
-if BOXTYPE_DUCKBOX
-libneutrino_gui_a_SOURCES += \
-	psisetup.cpp
-endif
-
 libneutrino_gui2_a_SOURCES = \
 	color.cpp \
 	hdd_menu.cpp \
 	infoclock.cpp \
-	kerneloptions.cpp \
 	motorcontrol.cpp
 
 if !BOXTYPE_SPARK
 libneutrino_gui2_a_SOURCES += \
 	cam_menu.cpp
+endif
+
+if BOXTYPE_SPARK
+libneutrino_gui_a_SOURCES += \
+	psisetup.cpp
+
+libneutrino_gui2_a_SOURCES += \
+	kerneloptions.cpp
+endif
+
+if BOXTYPE_DUCKBOX
+libneutrino_gui_a_SOURCES += \
+	psisetup.cpp
+
+libneutrino_gui2_a_SOURCES += \
+	kerneloptions.cpp
 endif
 
 if ENABLE_UPNP
