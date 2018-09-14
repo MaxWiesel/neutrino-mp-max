@@ -60,11 +60,10 @@ public:
 	enum // Neutrino's exit codes to be handled in it's start script
 	{
 		EXIT_ERROR = -1,
-//		EXIT_NORMAL = 0,	// g_info.hw_caps->can_shutdown == 0
-		EXIT_SHUTDOWN = 0,	// g_info.hw_caps->can_shutdown == 1
-		EXIT_REBOOT = 1
+		EXIT_NORMAL = 0,	// g_info.hw_caps->can_shutdown == 0
+		EXIT_SHUTDOWN = 1,	// g_info.hw_caps->can_shutdown == 1
+		EXIT_REBOOT = 2
 	};
-	void ExitRun(int can_shutdown = 0);
 
 	enum
 	{
@@ -123,6 +122,7 @@ private:
 	void standbyMode( bool bOnOff, bool fromDeepStandby = false );
 	void getAnnounceEpgName(CTimerd::RecordingInfo * eventinfo, std::string &name);
 
+	void ExitRun(int can_shutdown = 0);
 	void RealRun();
 	void InitZapper();
 	void InitTimerdClient();

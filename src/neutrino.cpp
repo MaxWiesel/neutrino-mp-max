@@ -2497,10 +2497,8 @@ void wake_up(bool &wakeup)
 	/* not platform specific - this is created by the init process */
 	else if (access("/tmp/.timer_wakeup", F_OK) == 0)
 	{
-		wakeup = true;
-#if !HAVE_SH4_HARDWARE
+		wakeup = 1;
 		unlink("/tmp/.timer_wakeup");
-#endif
 	}
 	printf("[timerd] wakeup from standby: %s\n", wakeup ? "yes" : "no");
 
@@ -2834,7 +2832,7 @@ TIMER_STOP("################################## after all #######################
 		g_Sectionsd->readSIfromXMLTV((*it).c_str());
 
 	RealRun();
-	ExitRun(CNeutrinoApp::EXIT_REBOOT);
+	ExitRun(g_info.hw_caps->can_shutdown);
 
 	return 0;
 }
@@ -4036,7 +4034,7 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 #if HAVE_SH4_HARDWARE
 			timer_wakeup = true;
 #endif
-			ExitRun(CNeutrinoApp::EXIT_SHUTDOWN);
+			ExitRun(g_info.hw_caps->can_shutdown);
 		}
 		else {
 			skipShutdownTimer=false;
@@ -4044,8 +4042,6 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 		return messages_return::handled;
 	}
 	else if( msg == NeutrinoMessages::REBOOT ) {
-		FILE *f = fopen("/tmp/.reboot", "w");
-		fclose(f);
 		ExitRun(CNeutrinoApp::EXIT_REBOOT);
 	}
 	else if (msg == NeutrinoMessages::EVT_POPUP || msg == NeutrinoMessages::EVT_EXTMSG) {
@@ -4790,15 +4786,11 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 	}
 	else if(actionKey=="shutdown")
 	{
-		ExitRun(CNeutrinoApp::EXIT_SHUTDOWN);
+		ExitRun(g_info.hw_caps->can_shutdown);
 	}
 	else if(actionKey=="reboot")
 	{
-		FILE *f = fopen("/tmp/.reboot", "w");
-		if (f)
-			fclose(f);
 		ExitRun(CNeutrinoApp::EXIT_REBOOT);
-		unlink("/tmp/.reboot");
 		returnval = menu_return::RETURN_NONE;
 	}
 	else if (actionKey=="clock_switch")
@@ -5104,7 +5096,7 @@ void sighandler (int signum)
 		delete CVFD::getInstance();
 		delete SHTDCNT::getInstance();
 		stop_video();
-		exit(CNeutrinoApp::EXIT_SHUTDOWN);
+		exit(CNeutrinoApp::EXIT_NORMAL);
 	default:
 		break;
 	}
