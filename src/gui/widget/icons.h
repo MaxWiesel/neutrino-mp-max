@@ -305,4 +305,6 @@
 #define NEUTRINO_ICON_MARKER_DIALOG_OFF		"marker_dialog_off"
 #define NEUTRINO_ICON_MARKER_UPDATE_AVAILABLE	"marker_update_available"
 
+#define NEUTRINO_ICON_HINT_LCD4L	"hint_lcd4linux"
+
 #endif /* __gui_widget_icons_h__ */
