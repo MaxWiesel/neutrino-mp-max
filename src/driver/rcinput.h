@@ -74,6 +74,10 @@
 #define KEY_BLUE         0x191
 #endif
 
+#ifndef KEY_PLAYPAUSE_LONG
+#define KEY_PLAYPAUSE_LONG 0X4A4
+#endif
+
 #ifndef KEY_GAMES
 #define KEY_GAMES        0x1a1   /* Media Select Games */
 #endif
@@ -224,7 +228,7 @@ class CRCInput
 			RC_tv		= KEY_TV,
 			RC_radio	= KEY_RADIO,
 			RC_text		= KEY_TEXT,
-#if defined BOXMODEL_VUSOLO4K
+#if BOXMODEL_VUSOLO4K
 			RC_info		= 0xFFFE,
 			RC_epg		= KEY_INFO,
 #else
@@ -272,7 +276,7 @@ class CRCInput
 			RC_bookmarks	= KEY_BOOKMARKS,
 			RC_program	= KEY_PROGRAM,
 			RC_playpause	= KEY_PLAYPAUSE,
-#ifdef BOXMODEL_HD51 || BOXMODEL_HD60
+#if BOXMODEL_HD51 || BOXMODEL_HD60
 			RC_playpause_long = KEY_PLAYPAUSE_LONG,
 #endif
 
