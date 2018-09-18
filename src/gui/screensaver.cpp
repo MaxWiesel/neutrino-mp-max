@@ -171,7 +171,7 @@ bool CScreenSaver::ReadDir()
 {
 	string d;
 	if (CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_audio && g_settings.audioplayer_cover_as_screensaver)
-		d = COVERDIR;
+		d = COVERDIR_TMP;
 	else
 		d = g_settings.screensaver_dir;
 	if (d.length() > 1)
