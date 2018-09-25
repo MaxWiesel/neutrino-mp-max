@@ -2817,6 +2817,17 @@ TIMER_START();
 	cSysLoad::getInstance();
 	cHddStat::getInstance();
 
+	//NI create userdirs
+	CFileHelpers::createDir(FONTDIR_VAR);
+	CFileHelpers::createDir(ICONSDIR_VAR);
+	CFileHelpers::createDir(LOGODIR_VAR);
+	CFileHelpers::createDir(LOCALEDIR_VAR);
+	CFileHelpers::createDir(THEMESDIR_VAR);
+	CFileHelpers::createDir(PLUGINDIR_VAR);
+	CFileHelpers::createDir(WEBRADIODIR_VAR);
+	CFileHelpers::createDir(WEBTVDIR_VAR);
+	CFileHelpers::createDir(PUBLIC_HTTPDDIR);
+
 TIMER_STOP("################################## after all ##################################");
 	if (g_settings.softupdate_autocheck) {
 		hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FLASHUPDATE_CHECKUPDATE_INTERNET));
