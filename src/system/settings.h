@@ -305,6 +305,8 @@ struct SNeutrinoSettings
 	int ci_tuner;
 	std::string ci_pincode;
 	int radiotext_enable;
+	int webradio_xml_auto;
+	int webtv_xml_auto;
 
 	//screen saver
 	int screensaver_delay;
@@ -507,6 +509,7 @@ struct SNeutrinoSettings
 	std::string network_nfs_recordingdir;
 	std::string timeshiftdir;
 	std::string downloadcache_dir;
+	std::string last_webradio_dir;
 	std::string last_webtv_dir;
 
 	//recording
@@ -928,6 +931,7 @@ struct SNeutrinoSettings
 
 	// NI
 	int		show_menu_hints_line;
+	int		inetradio_autostart;
 
 	int		livestreamResolution;
 	std::string	livestreamScriptPath;

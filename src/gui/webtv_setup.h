@@ -1,7 +1,8 @@
 /*
-	WebTV setup menue
+	WebTV/WebRadio Setup
 
 	Copyright (C) 2012-2013 martii
+	Copyright (C)      2018 by vanhofen
 
 	License: GPL
 
@@ -27,9 +28,10 @@
 #include <string.h>
 #include <gui/widget/menue.h>
 
-class CWebTVSetup : public CMenuTarget
+class CWebTVSetup : public CMenuTarget, CChangeObserver //NI
 {
 	private:
+		bool webradio;
 		int width;
 		int selected;
 		int item_offset;
@@ -39,6 +41,16 @@ class CWebTVSetup : public CMenuTarget
 		CWebTVSetup();
 		int exec(CMenuTarget *parent, const std::string &actionKey);
 		int Show();
+		bool changeNotify(const neutrino_locale_t OptionName, void *data); //NI
+
+		void webradio_xml_auto();
+		bool webradio_xml_autodir(std::string directory);
+
+		void webtv_xml_auto();
+		bool webtv_xml_autodir(std::string directory);
+
+		void webchannels_auto();
+		bool webchannels_autodir(std::string directory);
 };
 
 class CWebTVResolution : public CMenuTarget

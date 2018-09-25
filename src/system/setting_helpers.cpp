@@ -285,7 +285,7 @@ void CColorSetupNotifier::setPalette()
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 15,
 	                              convertSetupColor2RGB(t.clock_Digit_red, t.clock_Digit_green, t.clock_Digit_blue),
 	                              convertSetupAlpha2Alpha(t.clock_Digit_alpha));
-	//NI
+
 	// COL_PROGRESSBAR_ACTIVE
 	frameBuffer->paletteSetColor(COL_NEUTRINO_TEXT + 16,
 	                              convertSetupColor2RGB(t.progressbar_active_red, t.progressbar_active_green, t.progressbar_active_blue),
