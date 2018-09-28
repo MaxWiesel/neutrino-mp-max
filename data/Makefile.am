@@ -2,6 +2,7 @@ SUBDIRS = \
 	fonts \
 	icons \
 	inetradio \
+	initial \
 	iso-codes \
 	license \
 	locale \
