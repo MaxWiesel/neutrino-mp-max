@@ -95,6 +95,7 @@ class CPlugins
 		inline       int           getNumberOfPlugins  (void            ) const { return plugin_list.size()                    ; }
 		inline const char *        getName             (const int number) const { return plugin_list[number].name.c_str()      ; }
 		inline const char *        getPluginFile       (const int number) const { return plugin_list[number].pluginfile.c_str(); }
+		inline const char *        getCfgFile          (const int number) const { return plugin_list[number].cfgfile.c_str()   ; } //NI
 		inline const char *        getPluginDir        (const int number) const { return plugin_list[number].plugindir.c_str() ; }
 		inline const char *        getHintIcon         (const int number) const { return plugin_list[number].hinticon.c_str()  ; }
 		inline const char *        getFileName         (const int number) const { return plugin_list[number].filename.c_str()  ; }

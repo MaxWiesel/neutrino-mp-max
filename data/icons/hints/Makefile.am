@@ -18,6 +18,7 @@ install_DATA = \
 	hint_games.png \
 	hint_hdd.png \
 	hint_imageinfo.png \
+	hint_imagelogo.png \
 	hint_inetradio.png \
 	hint_info.png \
 	hint_keys.png \
@@ -57,6 +58,7 @@ install_DATA = \
 	hint_tvradio_switch.png \
 	hint_vfd.png \
 	hint_video.png \
+	hint_vtxt.png \
 	hint_webtv.png \
 	hint_xmltv.png \
 	hint_ytplay.png

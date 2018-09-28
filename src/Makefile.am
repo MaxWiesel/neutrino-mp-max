@@ -175,8 +175,8 @@ if BOXMODEL_CS_HD2
 neutrino_LDADD += -liconv
 endif
 
-bin_PROGRAMS += drivertool
-drivertool_SOURCES = drivertool.c
+#NI bin_PROGRAMS += drivertool
+#NI drivertool_SOURCES = drivertool.c
 bin_PROGRAMS += dt
 dt_SOURCES = dt.c
 endif
@@ -214,6 +214,3 @@ neutrino_LDADD += \
 neutrino_LDFLAGS = \
 	$(STB_HAL_LIB)
 endif
-
-neutrino_LDADD += \
-	@SWRESAMPLE_LIBS@

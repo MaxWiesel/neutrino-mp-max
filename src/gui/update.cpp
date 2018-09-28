@@ -168,7 +168,7 @@ public:
 		}
 };
 
-#if 0
+#if 0 //NI
 void CFlashUpdate::update_php(std::string &url, const char* type)
 {
 	if (url.find("update.php") != std::string::npos)
@@ -266,7 +266,6 @@ bool CFlashUpdate::selectHttpImage(void)
 #endif
 
 	snprintf(current, 200, "%s %s %s %s", curInfo.getReleaseCycle(), curInfo.getType(true), curInfo.getDate(), curInfo.getTime());
-
 
 	CMenuWidget SelectionWidget(LOCALE_FLASHUPDATE_SELECTIMAGE, NEUTRINO_ICON_UPDATE, listWidth, MN_WIDGET_ID_IMAGESELECTOR);
 
@@ -471,8 +470,8 @@ bool CFlashUpdate::checkVersion4Update()
 	else
 	{
 		CFileBrowser UpdatesBrowser;
-
 		CFileFilter UpdatesFilter;
+
 		if (allow_flash)
 			UpdatesFilter.addFilter(FILEBROWSER_UPDATE_FILTER);
 

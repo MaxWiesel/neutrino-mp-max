@@ -3243,12 +3243,14 @@ void CNeutrinoApp::RealRun()
 				as.exec(NULL, "-1");
 				StartSubtitles();
 			}
-			else if( (msg == CRCInput::RC_audio) && g_settings.audio_run_player) {
+			else if((msg == CRCInput::RC_audio) && g_settings.audio_run_player)
+			{
 				//open mediaplayer menu in audio mode, user can select between audioplayer and internetradio
 				CMediaPlayerMenu * multimedia_menu = CMediaPlayerMenu::getInstance();
 				multimedia_menu->exec(NULL, "");
 			}
-			else if( msg == CRCInput::RC_video) {
+			else if( msg == CRCInput::RC_video)
+			{
 				//open moviebrowser via media player menu object
 				if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
 					CMediaPlayerMenu::getInstance()->exec(NULL, "moviebrowser");
@@ -4920,6 +4922,20 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 
 		hintBox->hide();
 		delete hintBox;
+	}
+	else if (actionKey == "camd_reset")
+	{
+		CHintBox hintbox(LOCALE_CAMD_CONTROL, LOCALE_CAMD_MSG_RESET);
+		hintbox.paint();
+
+		printf("[neutrino.cpp] executing \"service camd restart\"\n");
+		if (my_system(3, "service", "camd", "restart") != 0)
+			printf("[neutrino.cpp] executing failed\n");
+		sleep(1);
+
+		hintbox.hide();
+
+		return menu_return::RETURN_EXIT_ALL;
 	}
 	else if(actionKey=="ytplayback" || actionKey=="tsmoviebrowser" || actionKey=="fileplayback_video" || actionKey=="fileplayback_audio")
 	{

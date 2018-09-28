@@ -79,7 +79,6 @@ int CInfoMenu::showMenu()
 	CDBoxInfoWidget boxinfo;
 	CStreamInfo2 streaminfo;
 
-
 	info->addIntroItems();
 	CMenuForwarder * mf = new CMenuForwarder(LOCALE_SERVICEMENU_IMAGEINFO,  true, NULL, &imageinfo, NULL, CRCInput::RC_red);
 	mf->setHint(NEUTRINO_ICON_HINT_IMAGEINFO, LOCALE_MENU_HINT_IMAGEINFO);

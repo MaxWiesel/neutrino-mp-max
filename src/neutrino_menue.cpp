@@ -40,6 +40,7 @@
 #include "gui/audio_select.h"
 #include "gui/bedit/bouqueteditor_bouquets.h"
 #include "gui/bouquetlist.h"
+#include <gui/daemon_control.h>
 #if !HAVE_SPARK_HARDWARE
 #include "gui/cam_menu.h"
 #endif
@@ -76,7 +77,6 @@
 #include "gui/videosettings.h"
 #include "driver/record.h"
 #include "driver/display.h"
-
 
 extern CPlugins       * g_Plugins;
 extern CRemoteControl * g_RemoteControl;
@@ -436,7 +436,13 @@ void CNeutrinoApp::InitMenuService()
 	//separator
 	personalize.addSeparator(MENU_SERVICE);
 
+	mf = new CMenuForwarder(LOCALE_DAEMON_CONTROL, true, NULL, new CDaemonControlMenu(), NULL);
+	mf->setHint(NEUTRINO_ICON_HINT_IMAGELOGO, LOCALE_MENU_HINT_DAEMON_CONTROL);
+	personalize.addItem(MENU_SERVICE, mf, &g_settings.personalize[SNeutrinoSettings::P_MSER_DAEMON_CONTROL]);
 
+	mf = new CMenuForwarder(LOCALE_CAMD_CONTROL, true, NULL, new CCamdControlMenu(), NULL);
+	mf->setHint(NEUTRINO_ICON_HINT_IMAGELOGO, LOCALE_MENU_HINT_CAMD_CONTROL);
+	personalize.addItem(MENU_SERVICE, mf, &g_settings.personalize[SNeutrinoSettings::P_MSER_CAMD_CONTROL], false, CPersonalizeGui::PERSONALIZE_SHOW_AS_ITEM_OPTION, NULL, DCOND_MODE_REC | DCOND_MODE_TSHIFT);
 	personalize.addSeparator(MENU_SERVICE);
 
 	//restart neutrino

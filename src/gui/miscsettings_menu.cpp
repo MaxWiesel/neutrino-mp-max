@@ -37,7 +37,11 @@
 #include <gui/cec_setup.h>
 #include <gui/filebrowser.h>
 #include <gui/keybind_setup.h>
+#ifdef ENABLE_LCD4LINUX
+#include <gui/lcd4l_setup.h>
+#endif
 #include <gui/plugins.h>
+#include <gui/plugins_hide.h>
 #include <gui/sleeptimer.h>
 #include <gui/zapit_setup.h>
 #if HAVE_SH4_HARDWARE
@@ -148,6 +152,10 @@ int CMiscMenue::exec(CMenuTarget* parent, const std::string &actionKey)
 	else if(actionKey == "onlineservices")
 	{
 		return showMiscSettingsMenuOnlineServices();
+	}
+	else if(actionKey == "plugins")
+	{
+		return showMiscSettingsMenuPlugins();
 	}
 	else if(actionKey == "epg_read_now")
 	{
@@ -358,6 +366,17 @@ int CMiscMenue::showMiscSettingsMenu()
 	mf->setHint("", LOCALE_MENU_HINT_MISC_KERNELOPTIONS);
 	misc_menue.addItem(mf);
 #endif
+
+	// LCD4Linux Setup
+	CLCD4lSetup lcd4lSetup;
+	mf = new CMenuForwarder(LOCALE_LCD4L_SUPPORT, true, NULL, &lcd4lSetup, NULL, CRCInput::RC_7);
+	mf->setHint(NEUTRINO_ICON_HINT_LCD4L, LOCALE_MENU_HINT_LCD4L_SUPPORT);
+	misc_menue.addItem(mf);
+
+	// plugins
+	mf = new CMenuForwarder(LOCALE_PLUGINS_CONTROL, true, NULL, this, "plugins", CRCInput::RC_8);
+	mf->setHint(NEUTRINO_ICON_HINT_IMAGELOGO, LOCALE_MENU_HINT_PLUGINS_CONTROL);
+	misc_menue.addItem(mf);
 
 	int res = misc_menue.exec(NULL, "");
 
@@ -689,6 +708,32 @@ int CMiscMenue::showMiscSettingsMenuOnlineServices()
 
 	int res = ms_oservices->exec(NULL, "");
 	delete ms_oservices;
+	return res;
+}
+
+// plugins
+int CMiscMenue::showMiscSettingsMenuPlugins()
+{
+	CMenuWidget *ms_plugins = new CMenuWidget(LOCALE_MISCSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_MISCSETUP_PLUGINS);
+	ms_plugins->addIntroItems(LOCALE_PLUGINS_CONTROL);
+
+	CMenuForwarder * mf = new CMenuForwarder(LOCALE_PLUGINS_HDD_DIR, true, g_settings.plugin_hdd_dir, this, "plugin_dir");
+	mf->setHint("", LOCALE_MENU_HINT_PLUGINS_HDD_DIR);
+	ms_plugins->addItem(mf);
+
+	mf = new CMenuForwarder(LOCALE_MPKEY_PLUGIN, true, g_settings.movieplayer_plugin, this, "movieplayer_plugin");
+	mf->setHint("", LOCALE_MENU_HINT_MOVIEPLAYER_PLUGIN);
+	ms_plugins->addItem(mf);
+
+	ms_plugins->addItem(GenericMenuSeparatorLine);
+
+	CPluginsHideMenu pluginsHideMenu;
+	mf = new CMenuForwarder(LOCALE_PLUGINS_HIDE, true, NULL, &pluginsHideMenu, NULL, CRCInput::RC_red);
+	mf->setHint(NEUTRINO_ICON_HINT_IMAGELOGO, LOCALE_MENU_HINT_PLUGINS_HIDE);
+	ms_plugins->addItem(mf);
+
+	int res = ms_plugins->exec(NULL, "");
+	delete ms_plugins;
 	return res;
 }
 

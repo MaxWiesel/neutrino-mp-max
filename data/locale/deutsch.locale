@@ -245,6 +245,29 @@ buildinfo.creator Ersteller
 buildinfo.kernel Kernel Version
 buildinfo.menu Build Informationen
 cablesetup.provider Kabelanbieter
+camd_control camd-Steuerung
+camd_item_cccam_hint CCcam - Softcam
+camd_item_cccam_name cccam
+camd_item_cs2gbox_hint cs2gbox - Newcamd Bridge
+camd_item_cs2gbox_name cs2gbox
+camd_item_doscam_hint DOSCam - Softcam und Emulator
+camd_item_doscam_name doscam
+camd_item_gbox_hint GBox - Softcam und Emulator
+camd_item_gbox_name gbox
+camd_item_mgcamd_hint MGCamd - Emulator
+camd_item_mgcamd_name mgcamd
+camd_item_ncam_hint NCam - Softcam und Emulator
+camd_item_ncam_name ncam
+camd_item_newcs_hint NewCS - Softcam
+camd_item_newcs_name newcs
+camd_item_oscam_hint OSCam - Softcam
+camd_item_oscam_name oscam
+camd_item_osemu_hint OSEmu - Emulator
+camd_item_osemu_name osemu
+camd_msg_reset camd wird neu gestartet
+camd_msg_start camd wird gestartet
+camd_msg_stop camd wird gestoppt
+camd_reset camd neu starten
 channellist.additional Zusatzinformationen
 channellist.additional_off aus
 channellist.additional_on ein
@@ -369,6 +392,31 @@ cpu.freq CPU Frequenz
 cpu.freq_default Standard Frequenz
 cpu.freq_normal Normale Frequenz
 cpu.freq_standby Standby Frequenz
+daemon_control Daemon-Steuerung
+daemon_item.crond_desc cron Daemon kann zeitgesteuerte Aufgaben ausführen
+daemon_item.crond_name crond
+daemon_item.djmount_desc UPnP AV Client kann den Inhalt von Media-Servern mounten
+daemon_item.djmount_name djmount
+daemon_item.dropbear_desc SSH2 Server und Client
+daemon_item.dropbear_name Dropbear
+daemon_item.emmremind_desc Zeigt eine Änderung der EMM's in den Infoicons an
+daemon_item.emmremind_name EMM-Änderungsbenachrichtigung
+daemon_item.fcm_desc Zeigt die Anrufliste der FRITZ!Box und noch vieles mehr ...
+daemon_item.fcm_name FritzCallMonitor
+daemon_item.inadyn_desc DynDNS Client
+daemon_item.inadyn_name Inadyn
+daemon_item.nfsserver_desc NFS Kernel Server
+daemon_item.nfsserver_name NFS-Server
+daemon_item.sambaserver_desc Server-Message-Block-Protokoll (SMB) Implementierung
+daemon_item.sambaserver_name Samba-Server
+daemon_item.tuxcald_desc Kalenderplugin Dienstprogramm
+daemon_item.tuxcald_name TuxCal
+daemon_item.tuxmaild_desc Mailplugin (IMAP/SMTP) Dienstprogramm
+daemon_item.tuxmaild_name TuxMail
+daemon_item.ushare_desc A/V und DLNA Medienserver
+daemon_item.ushare_name uShare
+daemon_item.xupnpd_desc eXtensible UPnP agent - DLNA Medienserver für IPTV
+daemon_item.xupnpd_name xupnpd
 date.Apr  Apr
 date.Aug  Aug
 date.Dec  Dez
@@ -1142,6 +1190,8 @@ menu.hint_backup Sichern von Konfigurationen und Kanallisten
 menu.hint_bedit Bearbeiten ihrer Favoriten und der Bouquets
 menu.hint_buildinfo Informationen über Compiler, Compilerflags, Kernel
 menu.hint_cache_txt Startet das Zwischenspeichern des Teletextes nach einem Kanalwechsel
+menu.hint_camd_control Softcams und Emulatoren\nStart, Stop, Versionsinfo
+menu.hint_camd_reset Aktive Softcam und/oder Emulator neu starten
 menu.hint_cec_mode CEC-Modus
 menu.hint_cec_standby CEC-Standby
 menu.hint_cec_view_on CEC view ON
@@ -1174,6 +1224,7 @@ menu.hint_colors Konfigurieren Sie die Menü-Farben
 menu.hint_colors_shadow Einstellen der Schattenfarbe
 menu.hint_content_back Ändern Sie die Hintergrundfarbe für den Fensterinhalt
 menu.hint_content_textcolor Ändern Sie die Textfarbe für den Fensterinhalt
+menu.hint_daemon_control An- und Abschalten von System-Diensten
 menu.hint_dboxinfo Informationen über CPU und Arbeitsspeicher der Box
 menu.hint_delete_channels Löschen aller Kanäle
 menu.hint_delete_removed Lösche das Bouquet 'Gelöschte Kanäle'
@@ -1427,7 +1478,9 @@ menu.hint_plugin_type_games Legt fest, ob Spiele im Benutzermenü unter der Rubr
 menu.hint_plugin_type_lua Legt fest, ob Plugins im Benutzermenü unter der Rubrik 'Plugin-Typen' gezeigt werden sollen
 menu.hint_plugin_type_scripts Legt fest, ob Skripte im Benutzermenü unter der Rubrik 'Plugin-Typen' gezeigt werden sollen
 menu.hint_plugin_type_tools Legt fest, ob Werkzeuge im Benutzermenü unter der Rubrik 'Plugin-Typen' gezeigt werden sollen
+menu.hint_plugins_control Plugin-Einstellungen und Verwaltung von installierten Plugins
 menu.hint_plugins_hdd_dir Auswahl des Verzeichnisses zum Laden der Plugins von einem externen Datenträger
+menu.hint_plugins_hide Integrierte Plugins oder Plugins in den Benutzermenüs verstecken oder anzeigen
 menu.hint_power_leds Konfiguriert das Verhalten der LEDs an der Power-Taste
 menu.hint_pref_lang Wählen Sie ihre bevorzugte Tonspur und EPG-Sprache,\ndie Einstellung 'none' deaktiviert diese Option
 menu.hint_pref_subs Wählen Sie ihre bevorzugte Untertitel-Sprache,\ndie Einstellung 'none' deaktiviert diese Option
@@ -1714,7 +1767,7 @@ miscsettings.epg_scan_always Immer
 miscsettings.epg_scan_bouquets Zu scannende Bouquets
 miscsettings.epg_scan_bq Aktuelles Bouquet
 miscsettings.epg_scan_fav Alle Favoriten
-miscsettings.epg_scan_live Bei eingeschaltener Box
+miscsettings.epg_scan_live Bei eingeschalteter Box
 miscsettings.epg_scan_sel Markierte Bouquets
 miscsettings.epg_scan_standby Im Standby-Modus
 miscsettings.general Allgemein
@@ -2244,7 +2297,11 @@ ping.socket ist nicht erreichbar (Socket-Fehler)
 ping.unreachable ist nicht erreichbar (unerreichbar)
 pinprotection.head PIN-Abfrage
 pinprotection.wrongcode Geben Sie den Code nocheinmal ein!
+plugin.hide_no Anzeigen
+plugin.hide_yes Verstecken
+plugins.control Plugins verwalten
 plugins.hdd_dir Externes Plugin-Verzeichnis
+plugins.hide Plugins verstecken oder anzeigen
 plugins.no_plugin Kein Plugin
 plugins.result Pluginausgabe
 plugintype.disabled Deaktiviert

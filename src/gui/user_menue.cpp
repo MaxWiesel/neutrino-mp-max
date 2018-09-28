@@ -192,6 +192,7 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 	bool _mode_webtv = (CNeutrinoApp::getInstance()->getMode() == NeutrinoModes::mode_webtv) &&
 				(!CZapit::getInstance()->GetCurrentChannel()->getScriptName().empty());
 
+	int rec_mode = (CRecordManager::getInstance()->GetRecordMode() & CRecordManager::RECMODE_REC_TSHIFT);
 	bool timeshift = CMoviePlayerGui::getInstance().timeshift;
 	bool adzap_active = CAdZapMenu::getInstance()->isActive();
 
@@ -315,7 +316,7 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 		{
 			keyhelper.get(&key,&icon, feat_key[g_settings.personalize[SNeutrinoSettings::P_FEAT_KEY_VTXT]].key); //CRCInput::RC_blue
 			menu_item = new CMenuForwarder(LOCALE_USERMENU_ITEM_VTXT, true, NULL, CPluginsExec::getInstance(), "teletext", key, icon);
-			// FIXME menu_item->setHint("", NONEXISTANT_LOCALE);
+			menu_item->setHint(NEUTRINO_ICON_HINT_VTXT, LOCALE_USERMENU_ITEM_VTXT); //NI
 			break;
 		}
 		case SNeutrinoSettings::ITEM_FAVORITS:
@@ -419,6 +420,14 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			menu_item->setHint(NEUTRINO_ICON_HINT_SCRIPTS, LOCALE_MENU_HINT_SCRIPTS);
 			break;
 		}
+		//NI
+		case SNeutrinoSettings::ITEM_CAMD_RESET:
+		{
+			keyhelper.get(&key,&icon);
+			menu_item = new CMenuForwarder(LOCALE_CAMD_RESET, !rec_mode, NULL, neutrino, "camd_reset", key, icon);
+			// FIXME menu_item->setHint("", NONEXISTANT_LOCALE);
+			break;
+		}
 #if ENABLE_YOUTUBE_PLAYER
 		case SNeutrinoSettings::ITEM_YOUTUBE:
 		{
@@ -454,6 +463,13 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			keyhelper.get(&key,&icon);
 			menu_item = new CMenuDForwarder(LOCALE_MAINMENU_LUA, g_Plugins->hasPlugin(CPlugins::P_TYPE_LUA), NULL, new CPluginList(LOCALE_MAINMENU_LUA,CPlugins::P_TYPE_LUA), "-1", key, icon );
 			// FIXME menu_item->setHint("", NONEXISTANT_LOCALE);
+			break;
+		}
+		case SNeutrinoSettings::ITEM_TUNER_RESTART:
+		{
+			keyhelper.get(&key,&icon);
+			menu_item = new CMenuForwarder(LOCALE_SERVICEMENU_RESTART_TUNER, true, NULL, neutrino, "restarttuner", key, icon);
+			menu_item->setHint(NEUTRINO_ICON_HINT_RELOAD_CHANNELS, LOCALE_MENU_HINT_RESTART_TUNER);
 			break;
 		}
 		case SNeutrinoSettings::ITEM_HDDMENU:
@@ -505,13 +521,6 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			keyhelper.get(&key,&icon,CRCInput::RC_blue);
 			menu_item = new CMenuForwarder(LOCALE_USERMENU_ITEM_ADZAP, true, adzap_active ? g_Locale->getText(LOCALE_OPTIONS_OFF) : NULL, CAdZapMenu::getInstance(), "adzap", key, icon);
 			menu_item->setHint(NEUTRINO_ICON_HINT_ADZAP, adzap_active ? LOCALE_MENU_HINT_ADZAP_ACTIVE : LOCALE_MENU_HINT_ADZAP);
-			break;
-		}
-		case SNeutrinoSettings::ITEM_TUNER_RESTART:
-		{
-			keyhelper.get(&key,&icon);
-			menu_item = new CMenuForwarder(LOCALE_SERVICEMENU_RESTART_TUNER, true, NULL, neutrino, "restarttuner", key, icon);
-			menu_item->setHint(NEUTRINO_ICON_HINT_RELOAD_CHANNELS, LOCALE_MENU_HINT_RESTART_TUNER);
 			break;
 		}
 		case -1: // plugin

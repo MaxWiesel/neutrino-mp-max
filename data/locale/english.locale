@@ -127,7 +127,7 @@ audio.srs_iq SRS TruVolume algo
 audio.srs_nmgr Noise manager
 audio.srs_volume Reference volume
 audiomenu.PCMOffset Volume Decrease PCM
-audiomenu.ac3 Pass AC3
+audiomenu.ac3 AC3 passthrough
 audiomenu.analog_mode Analog mode
 audiomenu.analog_out Analog output
 audiomenu.auto_lang Auto select audio
@@ -137,7 +137,7 @@ audiomenu.avsync A/V sync
 audiomenu.avsync_am Audio master
 audiomenu.clockrec 
 audiomenu.dolbydigital Prefer Dolby Digital
-audiomenu.dts Pass DTS
+audiomenu.dts DTS passthrough
 audiomenu.hdmi_dd Encoded DD on HDMI
 audiomenu.hdmi_dd_auto auto
 audiomenu.hdmi_dd_force force
@@ -245,6 +245,29 @@ buildinfo.creator Creator
 buildinfo.kernel Kernel version
 buildinfo.menu Build information
 cablesetup.provider cable provider
+camd_control camd control
+camd_item_cccam_hint CCcam - Softcam
+camd_item_cccam_name cccam
+camd_item_cs2gbox_hint cs2gbox - Newcamd bridge
+camd_item_cs2gbox_name cs2gbox
+camd_item_doscam_hint DOSCam - Softcam and emulator
+camd_item_doscam_name doscam
+camd_item_gbox_hint GBox - Softcam and emulator
+camd_item_gbox_name gbox
+camd_item_mgcamd_hint MGCamd - Emulator
+camd_item_mgcamd_name mgcamd
+camd_item_ncam_hint NCam - Softcam and emulator
+camd_item_ncam_name ncam
+camd_item_newcs_hint NewCS - Softcam
+camd_item_newcs_name newcs
+camd_item_oscam_hint OSCam - Softcam
+camd_item_oscam_name oscam
+camd_item_osemu_hint OSEmu - Emulator
+camd_item_osemu_name osemu
+camd_msg_reset camd will be restarted
+camd_msg_start camd will be started
+camd_msg_stop camd will be stopped
+camd_reset camd restart
 channellist.additional Additional informations
 channellist.additional_off off
 channellist.additional_on on
@@ -369,6 +392,31 @@ cpu.freq CPU frequency
 cpu.freq_default Default frequency
 cpu.freq_normal Normal frequency
 cpu.freq_standby Standby frequency
+daemon_control Daemon control
+daemon_item.crond_desc Cron daemon allows scheduled tasks
+daemon_item.crond_name crond
+daemon_item.djmount_desc UPnP AV client allows to mount media-servers
+daemon_item.djmount_name djmount
+daemon_item.dropbear_desc SSH2 server and client
+daemon_item.dropbear_name Dropbear
+daemon_item.emmremind_desc Show different EMM's in the Infoicons
+daemon_item.emmremind_name EMM-Change Notification
+daemon_item.fcm_desc Shows FRITZ!Box call list and much more ...
+daemon_item.fcm_name FritzCallMonitor
+daemon_item.inadyn_desc DynDNS client
+daemon_item.inadyn_name Inadyn
+daemon_item.nfsserver_desc NFS kernel server
+daemon_item.nfsserver_name NFS server
+daemon_item.sambaserver_desc Server-Message-Block-Protocol (SMB) implementation
+daemon_item.sambaserver_name Samba server
+daemon_item.tuxcald_desc Calender plugin daemon
+daemon_item.tuxcald_name TuxCal
+daemon_item.tuxmaild_desc Mailplugin (IMAP/SMTP) daemon
+daemon_item.tuxmaild_name TuxMail
+daemon_item.ushare_desc A/V and DLNA Mediaserver
+daemon_item.ushare_name uShare
+daemon_item.xupnpd_desc eXtensible UPnP agent - DLNA Mediaserver for IPTV
+daemon_item.xupnpd_name xupnpd
 date.Apr  Apr
 date.Aug  Aug
 date.Dec  Dec
@@ -1142,6 +1190,8 @@ menu.hint_backup Backup configs and channels to selected dir
 menu.hint_bedit Edit favorites and bouquets
 menu.hint_buildinfo Information about compilers, compiler flags, kernel
 menu.hint_cache_txt Start teletext caching after channel switch
+menu.hint_camd_control Softcams and emulators\nStart, stop, version info
+menu.hint_camd_reset Restart the active softcam and/or emulator
 menu.hint_cec_mode CEC mode
 menu.hint_cec_standby CEC standby
 menu.hint_cec_view_on CEC view ON
@@ -1174,6 +1224,7 @@ menu.hint_colors Configure GUI colors
 menu.hint_colors_shadow Setup for shadow color.
 menu.hint_content_back Change GUI window background color
 menu.hint_content_textcolor Change GUI window text color
+menu.hint_daemon_control Start and stop system-daemons
 menu.hint_dboxinfo Information about box cpu and storage
 menu.hint_delete_channels Remove all channels
 menu.hint_delete_removed Delete the channels in the 'Removed channels' boquet
@@ -1427,7 +1478,9 @@ menu.hint_plugin_type_games Show games in usermenu at selection 'Plugin types'
 menu.hint_plugin_type_lua Show plugins in usermenu at selection 'Plugin types'
 menu.hint_plugin_type_scripts Show scripts in usermenu at selection 'Plugin types'
 menu.hint_plugin_type_tools Show tools in usermenu at selection 'Plugin types'
+menu.hint_plugins_control Plugin settings and management of installed plugins
 menu.hint_plugins_hdd_dir Select directory to load\nplugins from
+menu.hint_plugins_hide Hide or show integrated plugins or plugins in user menus
 menu.hint_power_leds Configure power-button LEDs behavior
 menu.hint_pref_lang Select preferred audio and EPG language\nselect 'none' to disable
 menu.hint_pref_subs Select preferred subtitle language\nselect 'none' to disable
@@ -2244,7 +2297,11 @@ ping.socket is unreachable (socket error)
 ping.unreachable is unreachable
 pinprotection.head Enter PIN code
 pinprotection.wrongcode PIN-Code was wrong! Try again.
+plugin.hide_no Show
+plugin.hide_yes Hide
+plugins.control Control plugins
 plugins.hdd_dir External plugin directory
+plugins.hide Hide or show plugins
 plugins.no_plugin No plugin
 plugins.result plugin output
 plugintype.disabled Disabled

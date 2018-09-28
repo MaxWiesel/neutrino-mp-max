@@ -307,6 +307,11 @@
 #define NEUTRINO_ICON_MARKER_DIALOG_OFF		"marker_dialog_off"
 #define NEUTRINO_ICON_MARKER_UPDATE_AVAILABLE	"marker_update_available"
 
+//NI
+#define NEUTRINO_ICON_HINT_IMAGELOGO	"hint_imagelogo"
+#define NEUTRINO_ICON_HINT_VTXT		"hint_vtxt"
 #define NEUTRINO_ICON_HINT_LCD4L	"hint_lcd4linux"
+#define NEUTRINO_ICON_HINT_FCM		"hint_FritzCallMonitor"
+#define NEUTRINO_ICON_HINT_EMMRD	"hint_emmrd"
 
 #endif /* __gui_widget_icons_h__ */

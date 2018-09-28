@@ -58,6 +58,7 @@ libneutrino_gui_a_SOURCES = \
 	buildinfo.cpp \
 	channellist.cpp \
 	cec_setup.cpp \
+	daemon_control.cpp \
 	dboxinfo.cpp \
 	epgplus.cpp \
 	epgview.cpp \
@@ -90,6 +91,7 @@ libneutrino_gui_a_SOURCES = \
 	pipsetup.cpp \
 	pluginlist.cpp \
 	plugins.cpp \
+	plugins_hide.cpp \
 	proxyserver_setup.cpp \
 	rc_lock.cpp \
 	record_setup.cpp \
