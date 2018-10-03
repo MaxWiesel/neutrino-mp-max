@@ -240,7 +240,6 @@ const char * locale_real_names[] =
 	"audioplayer.streamripper_start",
 	"audioplayer.streamripper_stop",
 	"audioplayer.title_artist",
-	"audioplayer_internetradio.name",
 	"bookmarkmanager.delete",
 	"bookmarkmanager.name",
 	"bookmarkmanager.rename",

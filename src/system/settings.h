@@ -936,7 +936,6 @@ struct SNeutrinoSettings
 
 	// NI
 	int		show_menu_hints_line;
-	int		inetradio_autostart;
 
 	int		livestreamResolution;
 	std::string	livestreamScriptPath;

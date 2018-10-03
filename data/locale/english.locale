@@ -212,7 +212,6 @@ audioplayer.streamripper_dir Streamripper directory
 audioplayer.streamripper_start Start streamripper
 audioplayer.streamripper_stop Stop streamripper
 audioplayer.title_artist Title, artist
-audioplayer_internetradio.name Audioplayer and Internetradio
 bookmarkmanager.delete delete
 bookmarkmanager.name bookmarks
 bookmarkmanager.rename rename
