@@ -368,10 +368,12 @@ int CMiscMenue::showMiscSettingsMenu()
 #endif
 
 	// LCD4Linux Setup
+#ifdef ENABLE_LCD4LINUX
 	CLCD4lSetup lcd4lSetup;
 	mf = new CMenuForwarder(LOCALE_LCD4L_SUPPORT, true, NULL, &lcd4lSetup, NULL, CRCInput::RC_7);
 	mf->setHint(NEUTRINO_ICON_HINT_LCD4L, LOCALE_MENU_HINT_LCD4L_SUPPORT);
 	misc_menue.addItem(mf);
+#endif
 
 	// plugins
 	mf = new CMenuForwarder(LOCALE_PLUGINS_CONTROL, true, NULL, this, "plugins", CRCInput::RC_8);
