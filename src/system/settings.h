@@ -219,7 +219,6 @@ struct SNeutrinoSettings
 	int channel_mode_initial_radio;
 
 	//misc
-	int emu_number;
 	int shutdown_real;
 	int shutdown_real_rcdelay;
 	int shutdown_count;
@@ -237,6 +236,7 @@ struct SNeutrinoSettings
 	int infobar_show_channellogo;
 	int infobar_progressbar;
 	int infobar_casystem_display;
+	int infobar_casystem_emu_display;
 	int infobar_casystem_dotmatrix;
 	int infobar_casystem_frame;
 	int scrambled_message;

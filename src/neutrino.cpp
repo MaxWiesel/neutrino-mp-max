@@ -524,7 +524,6 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	//misc
 	g_settings.power_standby = configfile.getInt32( "power_standby", 0);
-	g_settings.emu_number = configfile.getInt32( "emu_number", 0);
 
 	//led
 	g_settings.led_tv_mode = configfile.getInt32( "led_tv_mode", 2);
@@ -589,6 +588,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.infobar_show_channellogo   = configfile.getInt32("infobar_show_channellogo"  , 3 );
 	g_settings.infobar_progressbar   = configfile.getInt32("infobar_progressbar"  , 1 ); // below channel name
 	g_settings.infobar_casystem_display = configfile.getInt32("infobar_casystem_display", 1 );//discreet ca mode default
+	g_settings.infobar_casystem_emu_display = configfile.getInt32( "infobar_casystem_emu_display", 0);
 	g_settings.infobar_casystem_dotmatrix = configfile.getInt32("infobar_casystem_dotmatrix", 0 );
 	g_settings.infobar_casystem_frame = configfile.getInt32("infobar_casystem_frame", 1 );
 	g_settings.scrambled_message = configfile.getBool("scrambled_message", false );
@@ -1433,7 +1433,6 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32( "lcd_notify_rclock", g_settings.lcd_notify_rclock);
 
 	//misc
-	configfile.setInt32( "emu_number", g_settings.emu_number);
 	configfile.setInt32( "power_standby", g_settings.power_standby);
 	configfile.setInt32( "zap_cycle", g_settings.zap_cycle );
 	configfile.setInt32( "hdd_fs", g_settings.hdd_fs);
@@ -1472,6 +1471,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("infobar_show_channellogo"  , g_settings.infobar_show_channellogo  );
 	configfile.setInt32("infobar_progressbar"  , g_settings.infobar_progressbar  );
 	configfile.setInt32("infobar_casystem_display"  , g_settings.infobar_casystem_display  );
+	configfile.setInt32( "infobar_casystem_emu_display", g_settings.infobar_casystem_emu_display);
 	configfile.setInt32("infobar_casystem_dotmatrix"  , g_settings.infobar_casystem_dotmatrix  );
 	configfile.setInt32("infobar_casystem_frame"  , g_settings.infobar_casystem_frame  );
 	configfile.setBool("scrambled_message"  , g_settings.scrambled_message  );

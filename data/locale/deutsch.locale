@@ -1298,6 +1298,7 @@ menu.hint_infobar_buttons_usertitle Erzwingt die benutzerdefinierten Titel der F
 menu.hint_infobar_casys ein: zeigt alle CA-Systeme; diskret: zeigt nur aktive CA-Systeme; mini: einzelnes Symbol in der Fußleiste
 menu.hint_infobar_casys_color Ändern Sie die Hintergrundfarbe für die CA-Systemanzeige der Infobar
 menu.hint_infobar_casys_dotmatrix ein: CA-Systemanzeige mit Punktematrix im Hintergrund
+menu.hint_infobar_casys_emu ein: CA-Systemanzeige mit Emu Icon
 menu.hint_infobar_casys_frame ein: CA-Systemanzeige mit Rahmen
 menu.hint_infobar_dd Zeigt ein Dolby Digital Icon bei Verfügbarkeit
 menu.hint_infobar_filesys Zeigen den vom Flash- und einer HDD verwendeten Speicherplatz
@@ -1784,6 +1785,7 @@ miscsettings.infobar Infobar
 miscsettings.infobar_buttons_usertitle Benutzertitel für Farbtasten
 miscsettings.infobar_casystem_display CA-Systemanzeige
 miscsettings.infobar_casystem_dotmatrix CA-Anzeige mit Punktematrix
+miscsettings.infobar_casystem_emu CA-Anzeige mit Emu Icon
 miscsettings.infobar_casystem_frame CA-Anzeige mit Rahmen
 miscsettings.infobar_casystem_mini mini
 miscsettings.infobar_casystem_mode diskret

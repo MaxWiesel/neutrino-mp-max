@@ -849,7 +849,7 @@ void CInfoViewerBB::paint_ca_icons(int notfirst)
 		return;
 	}
 
-	if (emu_number != g_settings.emu_number) {
+	if (emu_number != g_settings.infobar_casystem_emu_display) {
 		emu_number = 0;
 		check_emupid();
 	}

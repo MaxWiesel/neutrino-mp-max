@@ -1298,6 +1298,7 @@ menu.hint_infobar_buttons_usertitle Forces userdefined titles for the color keys
 menu.hint_infobar_casys on: display all CA systems, descreet: display active CA systems; mini: single symbol in footer
 menu.hint_infobar_casys_color Change CA-System background color
 menu.hint_infobar_casys_dotmatrix on: CA-System with dot matrix in background
+menu.hint_infobar_casys_emu ein: CA-System with Emu-Symbol
 menu.hint_infobar_casys_frame on: CA-System with frame
 menu.hint_infobar_dd Show DD icon
 menu.hint_infobar_filesys Show flash and HDD used space levels
@@ -1784,6 +1785,7 @@ miscsettings.infobar Infobar
 miscsettings.infobar_buttons_usertitle Usertitles for color keys
 miscsettings.infobar_casystem_display CA-System display
 miscsettings.infobar_casystem_dotmatrix CA display with dot matrix
+miscsettings.infobar_casystem_emu CA display with Emu symbol
 miscsettings.infobar_casystem_frame CA display with frame
 miscsettings.infobar_casystem_mini mini
 miscsettings.infobar_casystem_mode discreet
