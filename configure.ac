@@ -365,6 +365,7 @@ data/locale/Makefile
 data/pictures/Makefile
 data/pictures/backgrounds/Makefile
 data/pictures/screensaver/Makefile
+data/policy/Makefile
 data/scripts/Makefile
 data/themes/Makefile
 data/themes/Grey-Blue/Makefile

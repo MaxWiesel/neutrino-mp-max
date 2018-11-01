@@ -9,6 +9,7 @@ SUBDIRS = \
 	license \
 	locale \
 	pictures \
+	policy \
 	scripts \
 	themes \
 	webradio \
