@@ -479,6 +479,10 @@ AC_ARG_WITH(boxtype,
 			BOXTYPE="armbox"
 			BOXMODEL="$withval"
 		;;
+		hd60)
+			BOXTYPE="armbox"
+			BOXMODEL="$withval"
+		;;
 		*)
 			AC_MSG_ERROR([bad value $withval for --with-boxtype])
 		;;
