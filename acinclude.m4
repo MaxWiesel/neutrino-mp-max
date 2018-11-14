@@ -403,74 +403,10 @@ _TUXBOX_APPS_LIB_PKGCONFIG($1,$2)
 
 AC_DEFUN([TUXBOX_BOXTYPE], [
 AC_ARG_WITH(boxtype,
-	AS_HELP_STRING([--with-boxtype], [valid values: tripledragon, coolstream, spark, azbox, generic, armbox, duckbox, spark7162]),
+	AS_HELP_STRING([--with-boxtype], [valid values: tripledragon, coolstream, spark, azbox, generic, armbox, duckbox]),
 	[case "${withval}" in
-		tripledragon|coolstream|azbox|generic|armbox)
+		tripledragon|coolstream|spark|azbox|generic|armbox|duckbox)
 			BOXTYPE="$withval"
-		;;
-		spark|spark7162)
-			BOXTYPE="spark"
-			BOXMODEL="$withval"
-		;;
-		dm*)
-			BOXTYPE="dreambox"
-			BOXMODEL="$withval"
-		;;
-		ufs*)
-			BOXTYPE="duckbox"
-			BOXMODEL="$withval"
-		;;
-		atevio*)
-			BOXTYPE="duckbox"
-			BOXMODEL="$withval"
-		;;
-		fortis*)
-			BOXTYPE="duckbox"
-			BOXMODEL="$withval"
-		;;
-		octagon*)
-			BOXTYPE="duckbox"
-			BOXMODEL="$withval"
-		;;
-		hs7*)
-			BOXTYPE="duckbox"
-			BOXMODEL="$withval"
-		;;
-		dp*)
-			BOXTYPE="duckbox"
-			BOXMODEL="$withval"
-		;;
-		cuberevo*)
-			BOXTYPE="duckbox"
-			BOXMODEL="$withval"
-		;;
-		ipbox*)
-			BOXTYPE="duckbox"
-			BOXMODEL="$withval"
-		;;
-		arivalink200)
-			BOXTYPE="duckbox"
-			BOXMODEL="$withval"
-		;;
-		tf*)
-			BOXTYPE="duckbox"
-			BOXMODEL="$withval"
-		;;
-		hl101)
-			BOXTYPE="duckbox"
-			BOXMODEL="$withval"
-		;;
-		vusolo4k)
-			BOXTYPE="armbox"
-			BOXMODEL="$withval"
-		;;
-		hd51)
-			BOXTYPE="armbox"
-			BOXMODEL="$withval"
-		;;
-		hd60)
-			BOXTYPE="armbox"
-			BOXMODEL="$withval"
 		;;
 		*)
 			AC_MSG_ERROR([bad value $withval for --with-boxtype])
