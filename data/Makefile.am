@@ -10,6 +10,8 @@ SUBDIRS = \
 	pictures \
 	scripts \
 	themes \
+	webradio \
+	webtv \
 	y-web
 
 if BOXTYPE_TRIPLE
@@ -28,8 +30,7 @@ config_DATA = \
 	satellites.xml \
 	settingsupdate.conf \
 	terrestrial.xml \
-	tobackup.conf \
-	webradio_usr.xml
+	tobackup.conf
 
 install-data-hook:
 	$(INSTALL) -d $(DESTDIR)/$(CONFIGDIR)/zapit
