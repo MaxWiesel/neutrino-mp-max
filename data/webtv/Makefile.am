@@ -1,7 +1,4 @@
-installdir = $(WEBTVDIR)
+installdir = $(WEBTVDIR_VAR)
 
 install_DATA = \
-	filmon.lua \
-	filmon.xml \
-	yt_live.lua \
-	yt_live.xml
+	webtv_usr.xml
