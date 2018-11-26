@@ -128,13 +128,12 @@ libneutrino_gui_a_SOURCES += \
 	glcdsetup.cpp
 endif
 
-if BOXTYPE_ARMBOX
-libneutrino_gui_a_SOURCES += \
-	psisetup.cpp \
-	streaminfo2.cpp
-else
+if BOXTYPE_COOL
 libneutrino_gui_a_SOURCES += \
 	streaminfo1.cpp
+else
+libneutrino_gui_a_SOURCES += \
+	streaminfo2.cpp
 endif
 
 if ENABLE_EXTUPDATE
@@ -172,6 +171,11 @@ libneutrino_gui_a_SOURCES += \
 
 libneutrino_gui2_a_SOURCES += \
 	kerneloptions.cpp
+endif
+
+if BOXTYPE_ARMBOX
+libneutrino_gui_a_SOURCES += \
+	psisetup.cpp
 endif
 
 if ENABLE_UPNP
