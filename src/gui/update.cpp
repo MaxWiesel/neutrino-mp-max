@@ -145,6 +145,7 @@ CFlashUpdate::CFlashUpdate()
 		sysfs = MTD_DEVICE_OF_UPDATE_PART;
 	dprintf(DEBUG_NORMAL, "[update] mtd partition to update: %s\n", sysfs.c_str());
 	notify = true;
+	gotImage = false;
 }
 
 
@@ -260,12 +261,6 @@ bool CFlashUpdate::selectHttpImage(void)
 	showStatusMessageUTF(g_Locale->getText(LOCALE_FLASHUPDATE_GETINFOFILE));
 
 	char current[200];
-#if 0
-	snprintf(current, 200, "%s: %s %s %s %s %s", g_Locale->getText(LOCALE_FLASHUPDATE_CURRENTVERSION_SEP), curInfo.getReleaseCycle(), 
-		g_Locale->getText(LOCALE_FLASHUPDATE_CURRENTVERSIONDATE), curInfo.getDate(), 
-		g_Locale->getText(LOCALE_FLASHUPDATE_CURRENTVERSIONTIME), curInfo.getTime());
-#endif
-
 	snprintf(current, 200, "%s %s %s %s", curInfo.getReleaseCycle(), curInfo.getType(true), curInfo.getDate(), curInfo.getTime());
 
 	CMenuWidget SelectionWidget(LOCALE_FLASHUPDATE_SELECTIMAGE, NEUTRINO_ICON_UPDATE, listWidth, MN_WIDGET_ID_IMAGESELECTOR);
@@ -377,16 +372,11 @@ bool CFlashUpdate::selectHttpImage(void)
 	newVersion = versions[selected];
 	file_md5 = md5s[selected];
 	fileType = fileTypes[selected];
-	if(fileType < '3') {
-		char const * ptr = rindex(filename.c_str(), '.');
-		if(ptr) {
-			ptr++;
-			if(!strcmp(ptr, "zip"))
-				fileType = 'Z';
-		}
-	}
-#ifdef BOXMODEL_CS_HD2
-	if(fileType <= '2') {
+	gotImage = (fileType <= '9');
+//NI #ifdef BOXMODEL_CS_HD2
+#if 0
+	if (gotImage)
+	{
 		int esize = CMTDInfo::getInstance()->getMTDEraseSize(sysfs);
 		dprintf(DEBUG_NORMAL, "[update] erase size is %x\n", esize);
 		if (esize == 0x40000) {
@@ -395,7 +385,7 @@ bool CFlashUpdate::selectHttpImage(void)
 	}
 #endif
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	if ((fileType <= '2') && (filename.substr(filename.find_last_of(".") + 1) == "tgz"))
+	if (gotImage && (filename.substr(filename.find_last_of(".") + 1) == "tgz"))
 	{
 		// manipulate fileType for tgz-packages
 		fileType = 'Z';
@@ -448,7 +438,7 @@ bool CFlashUpdate::checkVersion4Update()
 		versionInfo = new CFlashVersionInfo(newVersion);//Memory leak: versionInfo
 		sprintf(msg, g_Locale->getText(msg_body), versionInfo->getDate(), versionInfo->getTime(), versionInfo->getReleaseCycle(), versionInfo->getType(true));
 
-		if (fileType <= '2')
+		if (gotImage)
 		{
 			if ((strncmp(RELEASE_CYCLE, versionInfo->getReleaseCycle(), 2) != 0) &&
 			    (ShowMsg(LOCALE_MESSAGEBOX_INFO, LOCALE_FLASHUPDATE_WRONGBASE, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE) != CMsgBox::mbrYes))
@@ -506,7 +496,6 @@ bool CFlashUpdate::checkVersion4Update()
 		}
 		hide();
 
-#if 0
 		//package install:
 		if (file_selected->getType() == CFile::FILE_PKG_PACKAGE){
 			COPKGManager opkg;
@@ -522,7 +511,6 @@ bool CFlashUpdate::checkVersion4Update()
 			//!always leave here!
 			return false;
 		}
-#endif
 
 		//set internal filetype
 		char const * ptr = rindex(filename.c_str(), '.');
@@ -532,9 +520,9 @@ bool CFlashUpdate::checkVersion4Update()
 				fileType = 'A';
 			else if(!strcmp(ptr, "txt"))
 				fileType = 'T';
-			else if(!strcmp(ptr, "zip"))
-				fileType = 'Z';
 			else if(!strcmp(ptr, "tgz"))
+				fileType = 'Z';
+			else if(!strcmp(ptr, "zip"))
 				fileType = 'Z';
 			else if(!allow_flash)
 				return false;
@@ -614,7 +602,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		return menu_return::RETURN_REPAINT;
 	}
 	if(softupdate_mode==1) { //internet-update
-		if ( ShowMsg(LOCALE_MESSAGEBOX_INFO, ((fileType <= '2') || (fileType == 'Z')) ? LOCALE_FLASHUPDATE_INSTALL_IMAGE : LOCALE_FLASHUPDATE_INSTALL_PACKAGE, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE) != CMsgBox::mbrYes)
+		if ( ShowMsg(LOCALE_MESSAGEBOX_INFO, gotImage ? LOCALE_FLASHUPDATE_INSTALL_IMAGE : LOCALE_FLASHUPDATE_INSTALL_PACKAGE, CMsgBox::mbrYes, CMsgBox::mbYes | CMsgBox::mbNo, NEUTRINO_ICON_UPDATE) != CMsgBox::mbrYes)
 		{
 			hide();
 			return menu_return::RETURN_REPAINT;
@@ -624,7 +612,8 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 	showGlobalStatus(60);
 
 	dprintf(DEBUG_NORMAL, "[update] flash/install filename %s type %c\n", filename.c_str(), fileType);
-	if(fileType <= '2') {
+	if (gotImage)
+	{
 		//flash it...
 #if ENABLE_EXTUPDATE
 #ifndef BOXMODEL_CS_HD2
