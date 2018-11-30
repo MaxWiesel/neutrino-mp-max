@@ -287,7 +287,7 @@ bool CFlashUpdate::selectHttpImage(void)
 		}
 		else
 		{
-// 			update_php(url, curInfo.getType());
+//			update_php(url, curInfo.getType());
 			startpos = url.find('/', startpos+2)+1;
 		}
 		endpos = std::string::npos;
@@ -329,7 +329,6 @@ bool CFlashUpdate::selectHttpImage(void)
 				description += versionInfo.getTime();
 
 				descriptions.push_back(description); /* workaround since CMenuForwarder does not store the Option String itself */
-
 
 				if (!separator)
 				{
@@ -612,9 +611,9 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 	showGlobalStatus(60);
 
 	dprintf(DEBUG_NORMAL, "[update] flash/install filename %s type %c\n", filename.c_str(), fileType);
-	if (gotImage)
+
+	if (gotImage && (fileType <= '9')) // flashing image
 	{
-		//flash it...
 #if ENABLE_EXTUPDATE
 #ifndef BOXMODEL_CS_HD2
 		if (g_settings.apply_settings) {
@@ -646,23 +645,8 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		sleep(2);
 		ft.reboot();
 	}
-	else if(fileType == 'T') // display file contents
-	{
-		FILE* fd = fopen(filename.c_str(), "r");
-		if(fd) {
-			char * buffer;
-			off_t filesize = lseek(fileno(fd), 0, SEEK_END);
-			lseek(fileno(fd), 0, SEEK_SET);
-			buffer =(char *) malloc((uint32_t)filesize+1);
-			fread(buffer, (uint32_t)filesize, 1, fd);
-			fclose(fd);
-			buffer[filesize] = 0;
-			ShowMsg(LOCALE_MESSAGEBOX_INFO, buffer, CMsgBox::mbrBack, CMsgBox::mbBack);
-			free(buffer);
-		}
-	}
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	else if (fileType == 'Z')
+	else if (gotImage && (fileType == 'Z')) // flashing image with ofgwrite
 	{
 		bool flashing = false;
 		showGlobalStatus(100);
@@ -810,6 +794,21 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		}
 	}
 #endif
+	else if (fileType == 'T') // not image, display file contents
+	{
+		FILE* fd = fopen(filename.c_str(), "r");
+		if(fd) {
+			char * buffer;
+			off_t filesize = lseek(fileno(fd), 0, SEEK_END);
+			lseek(fileno(fd), 0, SEEK_SET);
+			buffer = (char *) malloc((uint32_t)filesize+1);
+			fread(buffer, (uint32_t)filesize, 1, fd);
+			fclose(fd);
+			buffer[filesize] = 0;
+			ShowMsg(LOCALE_MESSAGEBOX_INFO, buffer, CMsgBox::mbrBack, CMsgBox::mbBack);
+			free(buffer);
+		}
+	}
 	else // not image, install
 	{
 		const char install_sh[] = TARGET_PREFIX "/bin/install.sh";
