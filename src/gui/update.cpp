@@ -145,7 +145,7 @@ CFlashUpdate::CFlashUpdate()
 		sysfs = MTD_DEVICE_OF_UPDATE_PART;
 	dprintf(DEBUG_NORMAL, "[update] mtd partition to update: %s\n", sysfs.c_str());
 	notify = true;
-	gotImage = false;
+	gotImage = false; // NOTE: local update can't set gotImage variable!
 }
 
 
@@ -612,7 +612,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 
 	dprintf(DEBUG_NORMAL, "[update] flash/install filename %s type %c\n", filename.c_str(), fileType);
 
-	if (gotImage && (fileType <= '9')) // flashing image
+	if (fileType <= '9') // flashing image
 	{
 #if ENABLE_EXTUPDATE
 #ifndef BOXMODEL_CS_HD2
@@ -646,7 +646,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		ft.reboot();
 	}
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	else if (gotImage && (fileType == 'Z')) // flashing image with ofgwrite
+	else if (fileType == 'Z') // flashing image with ofgwrite
 	{
 		bool flashing = false;
 		showGlobalStatus(100);
@@ -780,18 +780,6 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 			CNeutrinoApp::getInstance()->exec(NULL, "reboot");
 #endif
 		return menu_return::RETURN_EXIT_ALL;
-	}
-#else
-	else if(fileType == 'Z') // zipped image for flasher
-	{
-		const char install_sh[] = "/bin/flashing.sh";
-		printf("[update] calling %s %s %s\n",install_sh, "zipped", filename.c_str() );
-		if (!my_system(3, install_sh, "zipped", filename.c_str())) {
-			showGlobalStatus(100);
-			ShowHint(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FLASHUPDATE_FLASHREADYREBOOT)); // UTF-8
-			sleep(2);
-			ft.reboot();
-		}
 	}
 #endif
 	else if (fileType == 'T') // not image, display file contents
