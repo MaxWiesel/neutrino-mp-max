@@ -245,7 +245,7 @@ class CRCInput
 			RC_forward	= KEY_FORWARD,
 			RC_rewind	= KEY_REWIND,
 			RC_stop		= KEY_STOP,
-			RC_timeshift	= KEY_TIME,
+			RC_timeshift	= KEY_T,
 			RC_mode		= KEY_MODE,
 			RC_switchvideomode = KEY_SWITCHVIDEOMODE,
 			RC_games	= KEY_GAMES,
