@@ -643,6 +643,16 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	char e2filename2[255];
 	e2filename2[0] = '\0';
 
+	//create special filename from channelname
+	std::string SpecialChannelName = ChannelName;
+	std::transform(SpecialChannelName.begin(), SpecialChannelName.end(), SpecialChannelName.begin(), ::tolower);
+	SpecialChannelName = str_replace(" ","-",SpecialChannelName);
+	SpecialChannelName = str_replace("ä","a",SpecialChannelName);
+	SpecialChannelName = str_replace("ö","o",SpecialChannelName);
+	SpecialChannelName = str_replace("ü","u",SpecialChannelName);
+	SpecialChannelName = str_replace("+","___plus___",SpecialChannelName);
+	SpecialChannelName = str_replace("&","___and___",SpecialChannelName);
+
 	CZapitChannel * cc = NULL;
 	if (channel_id)
 		if (CNeutrinoApp::getInstance()->channelList)
@@ -676,6 +686,11 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 		id_tmp_path += ChannelName + fileType[i];
 		v_path.push_back(id_tmp_path);
 
+		//create filename with special channel name (logo_hdd_dir)
+		id_tmp_path = g_settings.logo_hdd_dir + "/";
+		id_tmp_path += SpecialChannelName + fileType[i];
+		v_path.push_back(id_tmp_path);
+
 		//create filename with id (logo_hdd_dir)
 		id_tmp_path = g_settings.logo_hdd_dir + "/";
 		id_tmp_path += strChnId + fileType[i];
@@ -703,6 +718,11 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 			id_tmp_path += ChannelName + fileType[i];
 			v_path.push_back(id_tmp_path);
 
+			//create filename with special channel name (LOGODIR_VAR)
+			id_tmp_path = LOGODIR_VAR "/";
+			id_tmp_path += SpecialChannelName + fileType[i];
+			v_path.push_back(id_tmp_path);
+
 			//create filename with id (LOGODIR_VAR)
 			id_tmp_path = LOGODIR_VAR "/";
 			id_tmp_path += strChnId + fileType[i];
@@ -728,6 +748,11 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 			//create filename with channel name (LOGODIR)
 			id_tmp_path = LOGODIR "/";
 			id_tmp_path += ChannelName + fileType[i];
+			v_path.push_back(id_tmp_path);
+
+			//create filename with special channel name (LOGODIR)
+			id_tmp_path = LOGODIR "/";
+			id_tmp_path += SpecialChannelName + fileType[i];
 			v_path.push_back(id_tmp_path);
 
 			//create filename with id (LOGODIR)
