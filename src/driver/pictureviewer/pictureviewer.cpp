@@ -542,6 +542,16 @@ bool CPictureViewer::GetLogoName(const uint64_t& channel_id, const std::string& 
 	char e2filename2[255];
 	e2filename2[0] = '\0';
 
+	//create special filename from channelname
+	std::string SpecialChannelName = ChannelName;
+	std::transform(SpecialChannelName.begin(), SpecialChannelName.end(), SpecialChannelName.begin(), ::tolower);
+	SpecialChannelName = str_replace(" ","-",SpecialChannelName);
+	SpecialChannelName = str_replace("ä","a",SpecialChannelName);
+	SpecialChannelName = str_replace("ö","o",SpecialChannelName);
+	SpecialChannelName = str_replace("ü","u",SpecialChannelName);
+	SpecialChannelName = str_replace("+","___plus___",SpecialChannelName);
+	SpecialChannelName = str_replace("&","___and___",SpecialChannelName);
+
 	CZapitChannel * cc = NULL;
 	if (channel_id)
 		if (CNeutrinoApp::getInstance()->channelList)
