@@ -31,8 +31,6 @@
 #include <vector>
 #include <stdio.h>    /* printf       */
 #include <sys/time.h> /* gettimeofday */
-#include <map>
-#include <pthread.h>
 #include <inttypes.h>
 class CPictureViewer
 {
@@ -110,15 +108,6 @@ class CPictureViewer
 	int m_endx;
 	int m_endy;
 	
-	std::string logo_hdd_dir;
-	struct logo_data {
-		std::string name;
-		int width;
-		int height;
-	};
-	std::map<uint64_t, logo_data> logo_map;
-	pthread_mutex_t logo_map_mutex;
-
 	CFormathandler * fh_getsize(const char *name,int *x,int *y, int width_wanted, int height_wanted);
 	void init_handlers(void);
 	void add_format(int (*picsize)(const char *,int *,int*,int,int),int (*picread)(const char *,unsigned char **,int*,int*), int (*id)(const char*));
