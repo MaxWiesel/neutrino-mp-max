@@ -63,7 +63,7 @@
 #include <system/debug.h>
 
 #include <cs_api.h>
-#include <video.h>
+#include <hardware/video.h>
 #if HAVE_SH4_HARDWARE
 #include <zapit/zapit.h>
 #include "screensetup.h"
