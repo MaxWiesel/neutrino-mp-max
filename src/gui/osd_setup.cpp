@@ -66,9 +66,7 @@
 #include <system/helpers.h>
 #include "cs_api.h"
 
-#if USE_STB_HAL
-#include <video_hal.h>
-#endif
+#include <hardware/video.h>
 
 extern CRemoteControl * g_RemoteControl;
 

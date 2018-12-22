@@ -14,7 +14,7 @@
 #include <gui/volumebar.h>
 #include <gui/osd_helpers.h>
 
-#include <video_cs.h>
+#include <hardware/video.h>
 
 extern CInfoClock *InfoClock;
 extern CTimeOSD *FileTimeOSD;
