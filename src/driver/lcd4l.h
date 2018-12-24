@@ -109,6 +109,9 @@ class CLCD4l
 		std::string	m_font;
 		std::string	m_fgcolor;
 		std::string	m_bgcolor;
+		std::string	m_fcolor1;
+		std::string	m_fcolor2;
+		std::string	m_pbcolor;
 };
 
 #endif
