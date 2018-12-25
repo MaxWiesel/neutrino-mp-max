@@ -55,6 +55,7 @@ class COsdSetup : public CMenuTarget, public CChangeObserver
 		COnOffNotifier* colorInfoclockNotifier;
 		COnOffNotifier* screensaverNotifier;
 		COnOffNotifier* channellistNotifier;
+		COnOffNotifier* channellogoNotifier;
 		COnOffNotifier* infobarHddNotifier;
 		CGenericMenuActivate casystemActivate;
 		CGenericMenuActivate screensaverActivate;
@@ -75,6 +76,7 @@ class COsdSetup : public CMenuTarget, public CChangeObserver
 		void showOsdFontSizeSetup(CMenuWidget *menu_fonts);
 		void showOsdTimeoutSetup(CMenuWidget *menu_timeout);
 		void showOsdMenusSetup(CMenuWidget *menu_menus);
+		void showOsdChannellogosSetup(CMenuWidget *menu_channellogos); //NI
 		void showOsdInfobarSetup(CMenuWidget *menu_infobar);
 		void showOsdChanlistSetup(CMenuWidget *menu_chanlist);
 		void showOsdEventlistSetup(CMenuWidget *menu_eventlist);
