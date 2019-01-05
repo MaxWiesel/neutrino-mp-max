@@ -126,7 +126,6 @@ const CMenuOptionChooser::keyval MESSAGEBOX_YES_NO_OPTIONS[MESSAGEBOX_YES_NO_OPT
 	{ 1, LOCALE_MESSAGEBOX_YES }
 };
 
-//NI
 const CMenuOptionChooser::keyval MESSAGEBOX_YES_NO_INVERTED_OPTIONS[MESSAGEBOX_YES_NO_OPTIONS_COUNT] =
 {
 	{ 0, LOCALE_MESSAGEBOX_YES },
@@ -3024,7 +3023,6 @@ bool CMovieBrowser::loadTsFileNamesFromDir(const std::string & dirname)
 			} else {
 				result |= addFile(flist[i], dirItNr);
 			}
-//NI
 #if 0
 			if (result)
 				OnLocalProgress(i, count, dirname );
@@ -3270,7 +3268,7 @@ void CMovieBrowser::loadMovies(bool doRefresh)
 	struct timeval t1, t2;
 	gettimeofday(&t1, NULL);
 
-	CProgressWindow loadBox((show_mode == MB_SHOW_YT) ? LOCALE_MOVIEPLAYER_YTPLAYBACK : LOCALE_MOVIEBROWSER_SCAN_FOR_MOVIES, CCW_PERCENT 50, CCW_PERCENT 10, NULL, show_mode == MB_SHOW_YT ? &ytparser.OnProgress : /* //NI &OnLocalProgress, */ &OnGlobalProgress);
+	CProgressWindow loadBox((show_mode == MB_SHOW_YT) ? LOCALE_MOVIEPLAYER_YTPLAYBACK : LOCALE_MOVIEBROWSER_SCAN_FOR_MOVIES, CCW_PERCENT 50, CCW_PERCENT 10, NULL, show_mode == MB_SHOW_YT ? &ytparser.OnProgress : /* &OnLocalProgress, */ &OnGlobalProgress);
 	loadBox.enableShadow();
 	loadBox.paint();
 
@@ -3570,7 +3568,7 @@ bool CMovieBrowser::showMenu(bool calledExternally)
 	optionsMenu.addItem(new CMenuOptionChooser(LOCALE_MOVIEBROWSER_HIDE_SERIES,       (int*)(&m_settings.browser_serie_mode), MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true));
 	optionsMenu.addItem(new CMenuOptionChooser(LOCALE_MOVIEBROWSER_SERIE_AUTO_CREATE, (int*)(&m_settings.serie_auto_create), MESSAGEBOX_YES_NO_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true));
 	int ts_only = m_settings.ts_only;
-	optionsMenu.addItem( new CMenuOptionChooser(LOCALE_MOVIEBROWSER_TS_ONLY,           (int*)(&m_settings.ts_only), MESSAGEBOX_YES_NO_INVERTED_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true )); //NI
+	optionsMenu.addItem( new CMenuOptionChooser(LOCALE_MOVIEBROWSER_TS_ONLY,           (int*)(&m_settings.ts_only), MESSAGEBOX_YES_NO_INVERTED_OPTIONS, MESSAGEBOX_YES_NO_OPTIONS_COUNT, true ));
 
 	//optionsMenu.addItem(GenericMenuSeparator);
 
