@@ -897,6 +897,7 @@ struct SNeutrinoSettings
 	int movieplayer_repeat_on;
 	int movieplayer_bisection_jump;
 	int movieplayer_display_playtime;
+	int movieplayer_timeosd_while_searching;
 
 	//online services
 	std::string youtube_dev_id;
