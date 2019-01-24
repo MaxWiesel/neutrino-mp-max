@@ -68,6 +68,7 @@
 
 
 #include <system/settings.h>
+#include <system/helpers.h> //NI
 
 #include <algorithm>
 #include <sys/stat.h>
