@@ -2589,8 +2589,6 @@ void wake_up(bool &wakeup)
 
 	if (!wakeup)
 		exec_controlscript(NEUTRINO_LEAVE_DEEPSTANDBY_SCRIPT);
-
-	return wakeup;
 }
 
 int CNeutrinoApp::run(int argc, char **argv)
