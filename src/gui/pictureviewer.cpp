@@ -79,8 +79,8 @@
 #include <hardware/video.h>
 extern cVideo * videoDecoder;
 
-#define PICTUREVIEWER_START_SCRIPT CONFIGDIR "/pictureviewer.start"
-#define PICTUREVIEWER_END_SCRIPT CONFIGDIR "/pictureviewer.end"
+#define PICTUREVIEWER_START_SCRIPT CONTROLDIR "/pictureviewer.start"
+#define PICTUREVIEWER_END_SCRIPT CONTROLDIR "/pictureviewer.end"
 
 //------------------------------------------------------------------------
 bool comparePictureByDate (const CPicture& a, const CPicture& b)
