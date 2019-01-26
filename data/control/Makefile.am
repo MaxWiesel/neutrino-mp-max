@@ -1,4 +1,3 @@
-
 installdir = $(CONFIGDIR)
 
 install_DATA = \
@@ -8,6 +7,7 @@ install_DATA = \
 	deepstandby.off \
 	flash.start \
 	inactivity.on \
+	migration.sh \
 	movieplayer.start \
 	movieplayer.end \
 	neutrino.start \
@@ -26,6 +26,7 @@ install-data-hook:
 	chmod 0755 $(DESTDIR)$(CONFIGDIR)/deepstandby.off
 	chmod 0755 $(DESTDIR)$(CONFIGDIR)/flash.start
 	chmod 0755 $(DESTDIR)$(CONFIGDIR)/inactivity.on
+	chmod 0755 $(DESTDIR)$(CONFIGDIR)/migration.sh
 	chmod 0755 $(DESTDIR)$(CONFIGDIR)/movieplayer.start
 	chmod 0755 $(DESTDIR)$(CONFIGDIR)/movieplayer.end
 	chmod 0755 $(DESTDIR)$(CONFIGDIR)/neutrino.start
