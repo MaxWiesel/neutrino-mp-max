@@ -4587,6 +4587,9 @@ void CNeutrinoApp::tvMode( bool rezap )
 #ifdef USEACTIONLOG
 	g_ActionLog->println("mode: tv");
 #endif
+
+	videoDecoder->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
+	audioDecoder->SetSyncMode((AVSYNC_TYPE)g_settings.avsync);
 }
 
 void CNeutrinoApp::scartMode( bool bOnOff )
@@ -4859,6 +4862,9 @@ void CNeutrinoApp::radioMode( bool rezap)
 	if( rezap )
 		channelRezap();
 	frameBuffer->showFrame("radiomode.jpg");
+
+	videoDecoder->SetSyncMode((AVSYNC_TYPE)AVSYNC_DISABLED);
+	audioDecoder->SetSyncMode((AVSYNC_TYPE)AVSYNC_DISABLED);
 }
 
 void CNeutrinoApp::channelRezap()
