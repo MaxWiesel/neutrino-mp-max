@@ -86,6 +86,7 @@ class CProgressBar : public CComponentsItem
 
 		///paints graph
 		void paintProgress(bool do_save_bg = CC_SAVE_SCREEN_NO);
+		void paintStarBar(); //NI starbar
 
 	public:
 		///parameters:
@@ -147,7 +148,8 @@ class CProgressBar : public CComponentsItem
 		enum pb_type_t {
 			PB_REDLEFT = 0,
 			PB_REDRIGHT,
-			PB_TIMESCALE
+			PB_TIMESCALE,
+			PB_STARBAR, //NI starbar
 		};
 
 		void setType(pb_type_t type);

@@ -39,6 +39,10 @@
 #define GREEN  0x00FF00
 #define YELLOW 0xFFFF00
 
+//NI starbar
+#include <gui/pictureviewer.h>
+extern CPictureViewer * g_PicViewer;
+
 CProgressBar::CProgressBar(	const int x_pos,
 				const int y_pos,
 				const int w,
@@ -465,10 +469,17 @@ void CProgressBar::paintProgress(bool do_save_bg)
 
 	if (cc_allow_paint){
 		if (!is_painted || (pb_active_width != pb_last_width)) {
+			//NI start
+			if(pb_type == PB_STARBAR) {
+				paintStarBar();
+				is_painted = true;
+			}
+			else {
 			CProgressBarCache *pbc = CProgressBarCache::pbcLookup(pb_height, pb_max_width, pb_active_col, pb_passive_col, *pb_design, pb_invert, *pb_gradient, pb_red, pb_yellow, pb_green);
 			if (pbc)
 				pbc->pbcPaint(pb_x, pb_y, pb_active_width, pb_passive_width);
 			is_painted = true;
+			}
 		}
 	}
 
@@ -476,6 +487,17 @@ void CProgressBar::paintProgress(bool do_save_bg)
 		pb_last_width = pb_active_width;
 }
 
+//NI starbar
+void CProgressBar::paintStarBar()
+{
+	std::string pb_active_graphic(frameBuffer->getIconPath(NEUTRINO_ICON_STARS));
+	std::string pb_passive_graphic(frameBuffer->getIconPath(NEUTRINO_ICON_STARS_BG));
+
+	int stars_w = 0, stars_h = 0;
+	g_PicViewer->getSize(pb_passive_graphic.c_str(), &stars_w, &stars_h);
+	g_PicViewer->DisplayImage(pb_passive_graphic, pb_x, pb_y, stars_w, stars_h); // background
+	g_PicViewer->DisplayImage_unscaled(pb_active_graphic, pb_x, pb_y, pb_active_width, stars_h); // aktiv bar
+}
 
 void CProgressBar::paint(bool do_save_bg)
 {

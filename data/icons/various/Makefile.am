@@ -9,5 +9,7 @@ install_DATA = \
 	numericpad.png \
 	star-off.png \
 	star-on.png \
+	stars.png \
+	stars_bg.png \
 	tmdb.png \
 	volume.png
