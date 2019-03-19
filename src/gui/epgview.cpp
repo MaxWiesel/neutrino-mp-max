@@ -297,8 +297,6 @@ void CEpgData::showText(int startPos, int ypos, bool has_cover, bool fullClear)
 		if (tmdb_active)
 		{
 			provider_logo = NEUTRINO_ICON_TMDB;
-			if (tmdb_stars <= 10)
-				tmdb_stars *= 10; // recalculate tmdb_stars value for starbar
 			stars = tmdb_stars;
 		}
 		else if (imdb_active)
@@ -313,7 +311,7 @@ void CEpgData::showText(int startPos, int ypos, bool has_cover, bool fullClear)
 		if (!provider_logo.empty())
 		{
 			frameBuffer->getIconSize(provider_logo.c_str(), &logo_w, &logo_h);
-			frameBuffer->paintIcon(provider_logo.c_str(), sx+OFFSET_INNER_MID+cover_offset, y+(medlineheight-logo_h)/2);
+			frameBuffer->paintIcon(provider_logo.c_str(), sx+OFFSET_INNER_MID+cover_offset, y, medlineheight);
 			logo_offset = logo_w + OFFSET_INNER_MID;
 		}
 
@@ -337,8 +335,8 @@ void CEpgData::showText(int startPos, int ypos, bool has_cover, bool fullClear)
 			}
 
 			medlinecount = (sb - cc_starbar->getHeight()) / medlineheight;
-			y += cc_starbar->getHeight();
 		}
+		y += medlineheight;
 	}
 
 	for (int i = startPos; i < textSize && i < startPos + medlinecount; i++, y += medlineheight)
@@ -1180,7 +1178,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 						printf("timerd not available\n");
 				}
 				break;
-			case CRCInput::RC_0: //imdb
+			case CRCInput::RC_0: //tmdb
 			{
 				if (imdb_active) {
 					imdb_active = false;
@@ -1323,7 +1321,6 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 				}
 				break;
 			}
-//#if 0
 			case CRCInput::RC_help:
 				bigFonts = bigFonts ? false : true;
 				ResetModules();
@@ -1350,10 +1347,7 @@ int CEpgData::show(const t_channel_id channel_id, uint64_t a_id, time_t* a_start
 					show(channel_id, id, &startzeit, false, call_fromfollowlist);
 				showPos=0;
 				break;
-//#else
 			case CRCInput::RC_info:
-			//case CRCInput::RC_help:
-//#endif
 			case CRCInput::RC_ok:
 			case CRCInput::RC_timeout:
 				if(fader.StartFadeOut()) {
@@ -1625,6 +1619,7 @@ void CEpgData::showTimerEventBar (bool pshow, bool adzap, bool mp_info)
 		adzap_button += g_Locale->getText(LOCALE_UNIT_SHORT_MINUTE);
 	}
 
+
 	if (imdb_active)
 	{
 		EpgButtons[UsedButtons][1].button = (imdb->gotPoster()) ? NEUTRINO_ICON_BUTTON_GREEN : NEUTRINO_ICON_BUTTON_DUMMY_SMALL;
@@ -1640,9 +1635,9 @@ void CEpgData::showTimerEventBar (bool pshow, bool adzap, bool mp_info)
 	{
 		// check tmdb button
 		if (g_settings.tmdb_enabled)
-			EpgButtons[MP_BUTTONS][1].button = NEUTRINO_ICON_BUTTON_GREEN;
+			EpgButtons[MP_BUTTONS][2].button = NEUTRINO_ICON_BUTTON_0;
 		else
-			EpgButtons[MP_BUTTONS][1].button = NEUTRINO_ICON_BUTTON_DUMMY_SMALL;
+			EpgButtons[MP_BUTTONS][2].button = NEUTRINO_ICON_BUTTON_DUMMY_SMALL;
 
 		::paintButtons(x, y, w, MaxButtons, EpgButtons[MP_BUTTONS], w, h);
 	}
@@ -1656,9 +1651,9 @@ void CEpgData::showTimerEventBar (bool pshow, bool adzap, bool mp_info)
 
 		// check tmdb button
 		if (g_settings.tmdb_enabled)
-			EpgButtons[TV_BUTTONS][1].button = NEUTRINO_ICON_BUTTON_GREEN;
+			EpgButtons[TV_BUTTONS][4].button = NEUTRINO_ICON_BUTTON_0;
 		else
-			EpgButtons[TV_BUTTONS][1].button = NEUTRINO_ICON_BUTTON_DUMMY_SMALL;
+			EpgButtons[TV_BUTTONS][4].button = NEUTRINO_ICON_BUTTON_DUMMY_SMALL;
 
 		if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
 			::paintButtons(x, y, w, MaxButtons, EpgButtons[TV_BUTTONS], w, h, "", false, COL_MENUFOOT_TEXT, adzap ? adzap_button.c_str() : NULL, 2);
