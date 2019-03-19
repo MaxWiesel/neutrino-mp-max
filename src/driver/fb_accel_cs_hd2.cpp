@@ -183,11 +183,17 @@ void CFbAccelCSHD2::fbCopyArea(uint32_t width, uint32_t height, uint32_t dst_x, 
 	}
 }
 
-void CFbAccelCSHD2::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp)
+void CFbAccelCSHD2::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp, uint32_t unscaled_w, uint32_t unscaled_h) //NI
 {
 	int  xc, yc;
 	xc = (width > xRes) ? xRes : width;
 	yc = (height > yRes) ? yRes : height;
+
+	//NI
+	if (unscaled_w != 0 && (int)unscaled_w < xc)
+		xc = unscaled_w;
+	if (unscaled_h != 0 && (int)unscaled_h < yc)
+		yc = unscaled_h;
 
 	if(!(width%4)) {
 		fb_image image;
@@ -201,7 +207,7 @@ void CFbAccelCSHD2::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint3
 		ioctl(fd, FBIO_IMAGE_BLT, &image);
 		return;
 	}
-	CFrameBuffer::blit2FB(fbbuff, width, height, xoff, yoff, xp, yp, transp);
+	CFrameBuffer::blit2FB(fbbuff, width, height, xoff, yoff, xp, yp, transp, unscaled_w, unscaled_h); //NI
 }
 
 void CFbAccelCSHD2::blitBox2FB(const fb_pixel_t* boxBuf, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff)

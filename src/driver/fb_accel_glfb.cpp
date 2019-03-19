@@ -105,9 +105,9 @@ CFbAccelGLFB::~CFbAccelGLFB()
 	}
 }
 
-void CFbAccelGLFB::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp)
+void CFbAccelGLFB::blit2FB(void *fbbuff, uint32_t width, uint32_t height, uint32_t xoff, uint32_t yoff, uint32_t xp, uint32_t yp, bool transp, uint32_t unscaled_w, uint32_t unscaled_h) //NI
 {
-	CFrameBuffer::blit2FB(fbbuff, width, height, xoff, yoff, xp, yp, transp);
+	CFrameBuffer::blit2FB(fbbuff, width, height, xoff, yoff, xp, yp, transp, unscaled_w, unscaled_h); //NI
 	blit();
 }
 
@@ -168,7 +168,7 @@ int CFbAccelGLFB::setMode(unsigned int, unsigned int, unsigned int)
 		backbuffer = lfb + swidth * yRes;
 		return 0;
 	}
-	fprintf(stderr, LOGTAG "not enough FB memory (have %d, need %d)\n", available, needmem);
+	fprintf(stderr, LOGTAG " not enough FB memory (have %d, need %d)\n", available, needmem);
 	backbuffer = lfb; /* will not work well, but avoid crashes */
 	return 0;
 }

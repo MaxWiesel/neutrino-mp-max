@@ -774,6 +774,35 @@ bool CPictureViewer::DisplayImage(const std::string & name, int posx, int posy, 
 	return false;
 }
 
+//NI
+bool CPictureViewer::DisplayImage_unscaled(const std::string & name, int posx, int posy, int width, int height, int transp)
+{
+	if(width < 1 || height < 1){
+		dprintf(DEBUG_NORMAL,  "[CPictureViewer] [%s - %d] Error: width %i height %i \n", __func__, __LINE__, width, height);
+		return false;
+	}
+
+	int unscaled_w = width;
+	int unscaled_h = height;
+
+	CFrameBuffer* frameBuffer = CFrameBuffer::getInstance();
+	if (transp > CFrameBuffer::TM_EMPTY)
+		frameBuffer->SetTransparent(transp);
+
+	/* TODO: cache or check for same */
+	fb_pixel_t * data = getIcon(name, &width, &height);
+
+	if (transp > CFrameBuffer::TM_EMPTY)
+		frameBuffer->SetTransparentDefault();
+
+	if(data) {
+		frameBuffer->blit2FB(data, width, height, posx, posy, 0, 0, transp, unscaled_w, unscaled_h);
+		cs_free_uncached(data);
+		return true;
+	}
+	return false;
+}
+
 fb_pixel_t * CPictureViewer::int_getImage(const std::string & name, int *width, int *height, bool GetImage)
 {
 	if (access(name.c_str(), R_OK) == -1)

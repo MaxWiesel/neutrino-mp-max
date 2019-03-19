@@ -13,7 +13,6 @@ AM_CPPFLAGS = \
 	@LUA_CFLAGS@ \
 	@HWLIB_CFLAGS@
 
-
 noinst_LIBRARIES = libneutrino_pictureviewer.a
 
 libneutrino_pictureviewer_a_SOURCES = \

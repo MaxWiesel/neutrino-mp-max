@@ -76,6 +76,9 @@ class CPictureViewer
 	void rescaleImageDimensions(int *width, int *height, const int max_width, const int max_height, bool upscale=false);
 	void getSupportedImageFormats(std::vector<std::string>& erw);
 
+	//NI
+	bool DisplayImage_unscaled(const std::string & name, int posx, int posy, int width, int height, int transp=0 /*CFrameBuffer::TM_EMPTY*/);
+
  private:
 	CFormathandler *fh_root;
 	ScalingMode m_scaling;
