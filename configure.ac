@@ -1,6 +1,6 @@
 define(ver_major, 3)
-define(ver_minor, 7)
-define(ver_micro, 1)
+define(ver_minor, 8)
+define(ver_micro, 0)
 
 AC_INIT(Neutrino-MP, ver_major.ver_minor.ver_micro)
 AM_INIT_AUTOMAKE([nostdinc foreign])
@@ -138,17 +138,19 @@ TUXBOX_APPS_LIB_PKGCONFIG(AVCODEC,libavcodec)
 TUXBOX_APPS_LIB_PKGCONFIG(AVUTIL,libavutil)
 TUXBOX_APPS_LIB_PKGCONFIG(SIGC,sigc++-2.0)
 
-TUXBOX_APPS_LIB_PKGCONFIG(SWSCALE,libswscale)
+if test "$BOXTYPE" = "armbox"; then
+	TUXBOX_APPS_LIB_PKGCONFIG(SWSCALE,libswscale)
+fi
 
 if test "$BOXTYPE" = "coolstream"; then
 	TUXBOX_APPS_LIB_PKGCONFIG(BLURAY,libbluray)
 fi
 
 if test "$BOXTYPE" = "coolstream" ||
+   test "$BOXTYPE" = "armbox" ||
    test "$BOXTYPE" = "generic" ||
    test "$BOXTYPE" = "tripledragon" ||
    test "$BOXTYPE" = "duckbox" ||
-   test "$BOXTYPE" = "armbox" ||
    test "$BOXTYPE" = "spark7162" ||
    test "$BOXTYPE" = "spark"; then
 	AC_DEFINE(SCREENSHOT, 1, [Define to 1 if the platform supports screenshots])
