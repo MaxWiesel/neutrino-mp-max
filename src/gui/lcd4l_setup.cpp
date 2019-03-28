@@ -200,14 +200,14 @@ int CLCD4lSetup::show()
 	const char *flag_lcd4l_weather = FLAGDIR "/.lcd-weather";
 	int fake_lcd4l_weather = file_exists(flag_lcd4l_weather);
 	CTouchFileNotifier *lcd_weather = new CTouchFileNotifier(flag_lcd4l_weather);
-	mc = new CMenuOptionChooser(LOCALE_LCD4L_WEATHER, &fake_lcd4l_weather, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, (file_exists( DATADIR "/lcd/scripts/weather")), lcd_weather, CRCInput::convertDigitToKey(shortcut++));
+	mc = new CMenuOptionChooser(LOCALE_LCD4L_WEATHER, &fake_lcd4l_weather, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, lcd_weather, CRCInput::convertDigitToKey(shortcut++));
 	mc->setHint(NEUTRINO_ICON_HINT_LCD4LINUX, LOCALE_MENU_HINT_LCD4L_WEATHER);
 	lcd4lSetup->addItem(mc);
 
 	const char *flag_lcd4l_clock_a = FLAGDIR "/.lcd-clock_a";
 	int fake_lcd4l_clock_a = file_exists(flag_lcd4l_clock_a);
 	CTouchFileNotifier *lcd_clock_a = new CTouchFileNotifier(flag_lcd4l_clock_a);
-	mc = new CMenuOptionChooser(LOCALE_LCD4L_CLOCK_A, &fake_lcd4l_clock_a, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, (file_exists( DATADIR "/lcd/scripts/aclock")), lcd_clock_a, CRCInput::convertDigitToKey(shortcut++));
+	mc = new CMenuOptionChooser(LOCALE_LCD4L_CLOCK_A, &fake_lcd4l_clock_a, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, lcd_clock_a, CRCInput::convertDigitToKey(shortcut++));
 	mc->setHint(NEUTRINO_ICON_HINT_LCD4LINUX, LOCALE_MENU_HINT_LCD4L_CLOCK_A);
 	lcd4lSetup->addItem(mc);
 
