@@ -220,21 +220,3 @@ bool CFbAccelMIPS::fullHdAvailable()
 #endif
 	return false;
 }
-
-CFbAccelMIPS::Mode3D CFbAccelMIPS::get3DMode()
-{
-	return mode3D;
-}
-
-void CFbAccelMIPS::set3DMode(Mode3D m)
-{
-	if (mode3D != m) {
-		mode3D = m;
-	const char *modes[] = { "off", "sidebyside", "topandbottom" };
-	std::string value = modes[mode3D];
-	int pfd = open("/proc/stb/fb/3dmode", O_WRONLY);
-	if (pfd)
-		write(pfd, value.c_str(), value.length());
-	close(pfd);
-	}
-}
