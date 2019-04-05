@@ -193,6 +193,10 @@ if BOXTYPE_DUCKBOX
 neutrino_LDADD += -lass
 endif
 
+if BOXTYPE_MIPSBOX
+neutrino_LDADD += -lass
+endif
+
 if BOXTYPE_TRIPLE
 neutrino_LDADD += \
 	$(top_builddir)/src/lcddisplay/liblcddisplay.a

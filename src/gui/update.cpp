@@ -78,7 +78,7 @@
 
 #include <cs_api.h>
 
-#if HAVE_ARM_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 #include <hardware/video.h>
 extern cVideo * videoDecoder;
 #endif
@@ -117,7 +117,7 @@ extern int allow_flash;
 #define MTD_OF_WHOLE_IMAGE              999
 #define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
 #else
-#if HAVE_ARM_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 #define FILEBROWSER_UPDATE_FILTER      "tgz"
 #define MTD_OF_WHOLE_IMAGE              999
 #define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
@@ -393,7 +393,7 @@ bool CFlashUpdate::selectHttpImage(void)
 		}
 	}
 #endif
-#if HAVE_ARM_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	if ((fileType <= '2') && (filename.substr(filename.find_last_of(".") + 1) == "tgz"))
 	{
 		// manipulate fileType for tgz-packages
@@ -671,7 +671,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 			free(buffer);
 		}
 	}
-#if HAVE_ARM_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	else if (fileType == 'Z')
 	{
 		showGlobalStatus(100);
