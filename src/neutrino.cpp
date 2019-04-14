@@ -554,7 +554,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	g_settings.shutdown_min = 0;
 	if (g_info.hw_caps->can_shutdown)
-		g_settings.shutdown_min = configfile.getInt32("shutdown_min", 0);
+		g_settings.shutdown_min = configfile.getInt32("shutdown_min", 000);
 	g_settings.sleeptimer_min = configfile.getInt32("sleeptimer_min", 0);
 
 	g_settings.timer_remotebox_ip.clear();
@@ -593,7 +593,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.infobar_subchan_disp_pos = configfile.getInt32("infobar_subchan_disp_pos"  , 0 );
 	g_settings.infobar_buttons_usertitle = configfile.getBool("infobar_buttons_usertitle", false );
 	g_settings.infobar_show = configfile.getInt32("infobar_show", configfile.getInt32("infobar_cn", 1));
-	g_settings.infobar_show_channellogo   = configfile.getInt32("infobar_show_channellogo"  , 3 );
+	g_settings.infobar_show_channellogo   = configfile.getInt32("infobar_show_channellogo"  , 5 );
 	g_settings.infobar_progressbar   = configfile.getInt32("infobar_progressbar"  , 1 ); // below channel name
 	g_settings.infobar_casystem_display = configfile.getInt32("infobar_casystem_display", 1 );//discreet ca mode default
 	g_settings.infobar_casystem_emu_display = configfile.getInt32( "infobar_casystem_emu_display", 0);
@@ -614,9 +614,9 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.radiotext_enable = configfile.getBool("radiotext_enable"          , true);
 	//audio
 	g_settings.audio_AnalogMode = configfile.getInt32( "audio_AnalogMode", 0 );
-	g_settings.audio_DolbyDigital    = configfile.getBool("audio_DolbyDigital"   , false);
+	g_settings.audio_DolbyDigital    = configfile.getBool("audio_DolbyDigital"   , true);
 
-	g_settings.auto_lang = configfile.getInt32( "auto_lang", 0 );
+	g_settings.auto_lang = configfile.getInt32( "auto_lang", 1 );
 	g_settings.auto_subs = configfile.getInt32( "auto_subs", 0 );
 
 	for(int i = 0; i < 3; i++) {
@@ -642,8 +642,8 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.language = configfile.getString("language", "");
 	g_settings.timezone = configfile.getString("timezone", "(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Vienna");
 	//epg dir
-	g_settings.epg_cache            = configfile.getInt32("epg_cache_time", 14);
-	g_settings.epg_extendedcache    = configfile.getInt32("epg_extendedcache_time", 360);
+	g_settings.epg_cache            = configfile.getInt32("epg_cache_time", 7);
+	g_settings.epg_extendedcache    = configfile.getInt32("epg_extendedcache_time", 168);
 	g_settings.epg_old_events       = configfile.getInt32("epg_old_events", 1);
 	g_settings.epg_max_events       = configfile.getInt32("epg_max_events", 30000);
 	g_settings.epg_dir              = configfile.getString("epg_dir", "/media/hdd/epg");
@@ -708,7 +708,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 		g_settings.network_nfs[i].dir = configfile.getString("network_nfs_dir_" + i_str, "");
 		g_settings.network_nfs[i].local_dir = configfile.getString("network_nfs_local_dir_" + i_str, "");
 		if (g_settings.network_nfs[i].local_dir.empty())
-			g_settings.network_nfs[i].local_dir = "/media/mnt" + i_str;
+			g_settings.network_nfs[i].local_dir = "/mnt/mnt" + i_str;
 		g_settings.network_nfs[i].automount = configfile.getInt32("network_nfs_automount_" + i_str, 0);
 		g_settings.network_nfs[i].type = configfile.getInt32("network_nfs_type_" + i_str, 0);
 		g_settings.network_nfs[i].username = configfile.getString("network_nfs_username_" + i_str, "" );
@@ -2896,7 +2896,8 @@ TIMER_START();
 	}
 
 	// clean up startlogo
-	if (startlogo){
+	if (startlogo)
+	{
 		sleep(3);
 		frameBuffer->stopFrame();
 	}
@@ -2928,13 +2929,13 @@ TIMER_START();
 #endif
 	SHTDCNT::getInstance()->init();
 
-	CZapit::getInstance()->SetScanSDT(g_settings.enable_sdt);
-
 #ifdef ENABLE_LCD4LINUX
 	LCD4l = new CLCD4l();
 	if (g_settings.lcd4l_support)
 		LCD4l->StartLCD4l();
 #endif
+
+	CZapit::getInstance()->SetScanSDT(g_settings.enable_sdt);
 
 	cSysLoad::getInstance();
 	cHddStat::getInstance();
@@ -3993,7 +3994,6 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 			if((eventinfo->channel_id != live_channel_id) && !(SAME_TRANSPONDER(live_channel_id, eventinfo->channel_id)))
 				zapTo(eventinfo->channel_id);
 		}
-
 		if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF) {
 			CRecordManager::getInstance()->Record(eventinfo);
 			autoshift = CRecordManager::getInstance()->TimeshiftOnly();
@@ -4516,7 +4516,7 @@ void CNeutrinoApp::saveEpg(int _mode)
 	{
 		if (_mode == NeutrinoModes::mode_standby)
 		{
-			// skip save epg in standby mode, if last saveepg time < 15 Min.
+			// skip save epg in standby mode, if last saveepg time < 15 minutes
 			std::string index_xml = g_settings.epg_dir.c_str();
 			index_xml += "/index.xml";
 			time_t t=0;
@@ -4526,6 +4526,7 @@ void CNeutrinoApp::saveEpg(int _mode)
 					return;
 			}
 		}
+
 		CVFD::getInstance()->Clear();
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
 		CVFD::getInstance()->ShowText(g_Locale->getText(LOCALE_EPG_SAVING));
@@ -4672,6 +4673,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::StandbyMode(true);
 #endif
+
 		CVFD::getInstance()->ShowText("Standby ...");
 		if( mode == NeutrinoModes::mode_scart ) {
 			//g_Controld->setScartMode( 0 );

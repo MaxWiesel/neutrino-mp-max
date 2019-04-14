@@ -41,13 +41,13 @@ const struct personalize_settings_t personalize_settings[SNeutrinoSettings::P_SE
 	{"personalize_redbutton"		, CPersonalizeGui::PERSONALIZE_ACTIVE_MODE_ENABLED}, // epg/info
 	
 	//main menu
-	{"personalize_tv_mode"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
-	{"personalize_tv_radio_mode"		, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE}, //toggle
-	{"personalize_radio_mode"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
-	{"personalize_timer"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE}, 
-	{"personalize_media"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE}, 
+	{"personalize_tv_mode"			, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
+	{"personalize_tv_radio_mode"		, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE}, //toggle
+	{"personalize_radio_mode"		, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
+	{"personalize_timer"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
+	{"personalize_media"			, CPersonalizeGui::PERSONALIZE_MODE_VISIBLE},
 	
-	{"personalize_games"			, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},	
+	{"personalize_games"			, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
 	{"personalize_tools"			, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
 	{"personalize_scripts"			, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
 	{"personalize_lua"			, CPersonalizeGui::PERSONALIZE_MODE_NOTVISIBLE},
