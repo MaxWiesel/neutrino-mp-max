@@ -257,7 +257,7 @@ void CMenuItem::paintItemCaption(const bool select_mode, const char * right_text
 			if(g_settings.lcd4l_support)
 				lcd4l_text = str;
 #endif
-		}
+		} 
 		else
 		{
 			CVFD::getInstance()->showMenuText(0, left_text, -1, true);
@@ -270,6 +270,7 @@ void CMenuItem::paintItemCaption(const bool select_mode, const char * right_text
 				lcd4l_text = left_text;
 #endif
 		}
+
 #ifdef ENABLE_GRAPHLCD
 		if(g_settings.glcd_enable)
 			nGLCD::lockChannel(g_Locale->getText(LOCALE_MAINMENU_HEAD), graphlcd_text, 0);
@@ -279,7 +280,7 @@ void CMenuItem::paintItemCaption(const bool select_mode, const char * right_text
 			LCD4l->CreateFile("/tmp/lcd/menu", lcd4l_text, g_settings.lcd4l_convert);
 #endif
 	}
-
+	
 	//left text
 	int _dx = dx;
 	int icon_w = 0;
@@ -1045,6 +1046,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 #ifdef ENABLE_LCD4LINUX
 					LCD4l->RemoveFile("/tmp/lcd/menu");
 #endif
+
 					//exec this item...
 					CMenuItem* item = items[selected];
 					if (msg == CRCInput::RC_left && g_settings.menu_left_exit &&
@@ -1057,6 +1059,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 					item->msg = msg;
 					fader.StopFade();
 					int rv = item->exec( this );
+
 #ifdef ENABLE_GRAPHLCD
 					if(g_settings.glcd_enable)
 						nGLCD::lockChannel(g_Locale->getText(LOCALE_MAINMENU_HEAD), item->graphlcd_text, 0);
@@ -1065,6 +1068,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 					if (g_settings.lcd4l_support)
 						LCD4l->CreateFile("/tmp/lcd/menu", item->lcd4l_text, g_settings.lcd4l_convert);
 #endif
+
 					switch ( rv ) {
 						case menu_return::RETURN_EXIT_ALL:
 							retval = menu_return::RETURN_EXIT_ALL;
@@ -1148,6 +1152,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 	if(!parent)
 		if(oldLcdMode != CVFD::getInstance()->getMode())
 			CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
+
 #ifdef ENABLE_GRAPHLCD
 	nGLCD::unlockChannel();
 #endif
@@ -2539,6 +2544,9 @@ int CMenuSeparator::paint(bool selected)
 			
 			frameBuffer->paintBoxRel(name_start_x-OFFSET_INNER_SMALL, y, stringwidth+2*OFFSET_INNER_SMALL, height, item_bgcolor);
 			
+			if ((type & LINE)) //NI - use COL_MENUHEAD_TEXT for CMenuSeparators defined with LINE and STRING
+				item_color = COL_MENUHEAD_TEXT;
+
 			paintItemCaption(selected);
 		}
 	}

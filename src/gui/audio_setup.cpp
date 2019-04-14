@@ -171,7 +171,7 @@ int CAudioSetup::showAudioSetup()
 	//dd via spdif
 	CMenuOptionChooser * as_oj_dd_spdif 	= new CMenuOptionChooser(LOCALE_AUDIOMENU_SPDIF_DD, &g_settings.spdif_dd, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, audioSetupNotifier);
 	as_oj_dd_spdif->setHint("", LOCALE_MENU_HINT_AUDIO_SPDIF_DD);
-#endif // HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#endif
 
 	CMenuOptionChooser * as_oj_avsync = NULL;
 	CMenuOptionNumberChooser * as_oj_vsteps = NULL;
@@ -242,7 +242,7 @@ int CAudioSetup::showAudioSetup()
 	if (g_info.hw_caps->has_HDMI)
 		audioSettings->addItem(as_oj_dd_hdmi);
 	audioSettings->addItem(as_oj_dd_spdif);
-#endif // HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#endif
 	audioSettings->addItem(as_oj_ddsubchn);
 	//---------------------------------------------------------
 	audioSettings->addItem(GenericMenuSeparatorLine);

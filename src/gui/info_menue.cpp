@@ -50,7 +50,7 @@
 #if !HAVE_SPARK_HARDWARE
 #include "gui/cam_menu.h"
 
-extern CCAMMenuHandler * g_CamHandler;
+extern CCAMMenuHandler *g_CamHandler;
 #endif
 
 CInfoMenu::CInfoMenu()
@@ -62,9 +62,9 @@ CInfoMenu::~CInfoMenu()
 {
 }
 
-int CInfoMenu::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
+int CInfoMenu::exec(CMenuTarget *parent, const std::string &/*actionKey*/)
 {
-	int   res = menu_return::RETURN_REPAINT;
+	int res = menu_return::RETURN_REPAINT;
 
 	if (parent != NULL)
 		parent->hide();
@@ -83,11 +83,11 @@ int CInfoMenu::showMenu()
 	CStreamInfo2 streaminfo;
 
 	info->addIntroItems();
-	CMenuForwarder * mf = new CMenuForwarder(LOCALE_SERVICEMENU_IMAGEINFO,  true, NULL, &imageinfo, NULL, CRCInput::RC_red);
+	CMenuForwarder *mf = new CMenuForwarder(LOCALE_SERVICEMENU_IMAGEINFO, true, NULL, &imageinfo, NULL, CRCInput::RC_red);
 	mf->setHint(NEUTRINO_ICON_HINT_IMAGEINFO, LOCALE_MENU_HINT_IMAGEINFO);
 	info->addItem(mf);
 
-	mf = new CMenuForwarder(LOCALE_EXTRA_DBOXINFO,         true, NULL, &boxinfo, NULL, CRCInput::RC_green);
+	mf = new CMenuForwarder(LOCALE_EXTRA_DBOXINFO, true, NULL, &boxinfo, NULL, CRCInput::RC_green);
 	mf->setHint(NEUTRINO_ICON_HINT_DBOXINFO, LOCALE_MENU_HINT_DBOXINFO);
 	info->addItem(mf);
 
@@ -95,16 +95,18 @@ int CInfoMenu::showMenu()
 	mf = new CMenuForwarder(LOCALE_STREAMINFO_HEAD, _mode_ts || !CNeutrinoApp::getInstance()->channelList->isEmpty(), NULL, &streaminfo, NULL, CRCInput::RC_yellow);
 	mf->setHint(NEUTRINO_ICON_HINT_STREAMINFO, LOCALE_MENU_HINT_STREAMINFO);
 	info->addItem(mf);
+
 #if 0
+	CBuildInfo buildinfo;
+	mf = new CMenuForwarder(LOCALE_BUILDINFO_MENU, true, NULL, &buildinfo, NULL, CRCInput::RC_blue);
+	mf->setHint(NEUTRINO_ICON_HINT_IMAGEINFO, LOCALE_MENU_HINT_BUILDINFO);
+	info->addItem(mf);
+
 	mf = new CMenuForwarder(LOCALE_HDD_INFO_HEAD, true, NULL, &hddinfo, NULL, CRCInput::RC_blue);
 	mf->setHint(NEUTRINO_ICON_HINT_HDD_INFO, LOCALE_MENU_HINT_HDD_INFO);
 	info->addItem(mf);
-
-	CBuildInfo buildinfo;
-	mf = new CMenuForwarder(LOCALE_BUILDINFO_MENU,  true, NULL, &buildinfo, NULL, CRCInput::RC_blue);
-	mf->setHint(NEUTRINO_ICON_HINT_IMAGEINFO, LOCALE_MENU_HINT_BUILDINFO);
-	info->addItem(mf);
 #endif
+
 	//add PLUGIN_INTEGRATION_INFORMATION plugins
 	info->integratePlugins(PLUGIN_INTEGRATION_INFORMATION, 1);
 

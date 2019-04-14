@@ -180,6 +180,7 @@ void CFlashUpdate::update_php(std::string &url, const char* type)
 	}
 }
 #endif
+
 bool CFlashUpdate::checkOnlineVersion()
 {
 	CHTTPTool httpTool;

@@ -2860,7 +2860,8 @@ bool CAudioPlayerGui::askToOverwriteFile(const std::string& filename)
 	return res;
 }
 
-std::string CAudioPlayerGui::absPath2Rel(const std::string& fromDir, const std::string& absFilename)
+std::string CAudioPlayerGui::absPath2Rel(const std::string& fromDir,
+		const std::string& absFilename)
 {
 	std::string res = "";
 
