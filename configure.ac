@@ -4,7 +4,7 @@ define(ver_minor, 8)
 define(ver_micro, 0)
 define(neutrino_rel_cycle, ver_major.ver_minor)
 
-AC_INIT(Neutrino-MP, ver_major.ver_minor.ver_micro)
+AC_INIT(Neutrino-MP,ver_major.ver_minor.ver_micro)
 AM_INIT_AUTOMAKE([nostdinc foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
 
@@ -23,7 +23,7 @@ TUXBOX_BOXTYPE
 AC_PROG_CC
 AC_PROG_CXX
 AC_DISABLE_STATIC
-AM_PROG_LIBTOOL
+LT_INIT
 
 # Add build information to local_build_config.h.tmp
 # -------------------------------------------------
@@ -339,7 +339,7 @@ AC_SUBST(LUA_CFLAGS)
 AC_SUBST(LUA_LIBS)
 AC_SUBST(BLURAY_LIBS)
 
-AC_OUTPUT([
+AC_CONFIG_FILES([
 Makefile
 data/Makefile
 data/config/Makefile
@@ -436,3 +436,5 @@ src/zapit/Makefile
 src/zapit/lib/Makefile
 src/zapit/src/Makefile
 ])
+
+AC_OUTPUT
