@@ -90,7 +90,7 @@ int CFollowScreenings::exec(CMenuTarget* /*parent*/, const std::string & actionK
 					if (i->eventType == CTimerd::TIMER_RECORD) {
 						if (channel_id == i->channel_id && e->startTime == i->epg_starttime) {
 							Timer.removeTimerEvent(i->eventID);
-							if (!forwarders.empty() && followlist.size() > 1)
+							if (!forwarders.empty() && (followlist.size() > 1 || g_settings.timer_followscreenings == FOLLOWSCREENINGS_ALWAYS)) //NI
 								forwarders[ix]->iconName_Info_right = "";
 #if 0
 							else
@@ -109,9 +109,9 @@ int CFollowScreenings::exec(CMenuTarget* /*parent*/, const std::string & actionK
 								  e->startTime, e->startTime - (ANNOUNCETIME + 120 ), apids, true, e->startTime - (ANNOUNCETIME + 120) > time(NULL), recDir, true) == -1) {
 					//FIXME -- no error handling, but this shouldn't happen ...
 				} else {
-					if (!forwarders.empty() && followlist.size() > 1)
+					if (!forwarders.empty() && (followlist.size() > 1 || g_settings.timer_followscreenings == FOLLOWSCREENINGS_ALWAYS)) //NI
 						forwarders[ix]->iconName_Info_right = NEUTRINO_ICON_MARKER_RECORD;
-					else
+					else if (notify && g_settings.timer_followscreenings != FOLLOWSCREENINGS_ALWAYS)
 						ShowMsg(LOCALE_TIMER_EVENTRECORD_TITLE, LOCALE_TIMER_EVENTRECORD_MSG,
 							CMsgBox::mbrBack, CMsgBox::mbBack, NEUTRINO_ICON_INFO);
 					return menu_return::RETURN_REPAINT;
@@ -152,12 +152,12 @@ void CFollowScreenings::show()
 
 	getFollowScreenings();
 
-	if (followlist.size() == 1)
+	if (followlist.size() == 1 && g_settings.timer_followscreenings != FOLLOWSCREENINGS_ALWAYS) //NI
 	{
 		snprintf(actionstr, sizeof(actionstr), "%lu", followlist.front().startTime);
 		exec(NULL, actionstr);
 	}
-	else if (followlist.size() > 1)
+	else if (followlist.size() > 1 || g_settings.timer_followscreenings == FOLLOWSCREENINGS_ALWAYS) //NI
 	{
 		CMenuWidget m(LOCALE_EPGVIEWER_SELECT_SCREENING, NEUTRINO_ICON_SETTINGS);
 		const char *icon = NEUTRINO_ICON_BUTTON_RED;

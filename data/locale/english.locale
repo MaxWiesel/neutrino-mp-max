@@ -2228,6 +2228,7 @@ opkg.update.check Checking for updates ...
 opkg.update.reading_lists Reading package lists ...
 opkg.upgrade Upgrade installed packages
 opkg.warning_3rdparty_packages 3rd party packages could damage your system! Are you sure install this package?
+options.always always
 options.default Reset to defaults
 options.fb framebuffer
 options.hint_default Reset the values to their defaults

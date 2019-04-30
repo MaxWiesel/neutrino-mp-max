@@ -2228,6 +2228,7 @@ opkg.update.check Prüfe auf Updates ...
 opkg.update.reading_lists Paketlisten werden eingelesen ...
 opkg.upgrade Installierte Pakete aktualisieren
 opkg.warning_3rdparty_packages Drittanbieter-Pakete könnten Ihr System beschädigen! Sind Sie sicher, dieses Paket zu installieren?
+options.always immer
 options.default Voreinstellungen benutzen
 options.fb framebuffer
 options.hint_default Setzen Sie die Werte auf die Voreinstellung zurück.
