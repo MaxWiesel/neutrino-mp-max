@@ -248,7 +248,7 @@ void nGLCD::Exec() {
 	}
 
 	if (CNeutrinoApp::getInstance()->recordingstatus) {
-#if defined BOXMODEL_VUSOLO4K
+#ifdef BOXMODEL_VUSOLO4K
 		for (int bx = 0; bx < 6; bx++) {
 #else
 		for (int bx = 0; bx < 3; bx++) {
@@ -257,7 +257,7 @@ void nGLCD::Exec() {
 		}
 	} else
 	if (CNeutrinoApp::getInstance()->isMuted()) {
-#if defined BOXMODEL_VUSOLO4K
+#ifdef BOXMODEL_VUSOLO4K
 		for (int bx = 0; bx < 6; bx++) {
 #else
 		for (int bx = 0; bx < 3; bx++) {

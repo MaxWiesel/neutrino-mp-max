@@ -2271,7 +2271,7 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 			if (m_doRefresh)
 				refresh();
 		}
-
+		saveSettings(&m_settings);
 	}
 	else if (g_settings.sms_movie && (msg >= CRCInput::RC_1) && (msg <= CRCInput::RC_9))
 	{
