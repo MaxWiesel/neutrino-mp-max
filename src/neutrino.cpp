@@ -172,9 +172,7 @@ char zapit_lat[20]="#";
 char zapit_long[20]="#";
 bool autoshift = false;
 uint32_t scrambled_timer;
-#if ENABLE_FASTSCAN
 uint32_t fst_timer;
-#endif
 t_channel_id standby_channel_id = 0;
 
 //NEW
@@ -2757,9 +2755,7 @@ TIMER_START();
 	InitZapitClient();
 	g_Zapit->setStandby(false);
 
-#if ENABLE_FASTSCAN
 	CheckFastScan();
-#endif
 
 	// dirty part of hw_caps - specify some details after zapit start
 	if (strcmp(g_info.hw_caps->boxname, "HD1") == 0)
@@ -3691,7 +3687,6 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 			}
 			return messages_return::handled;
 		}
-#if ENABLE_FASTSCAN
 		if(data == fst_timer) {
 			g_RCInput->killTimer(fst_timer);
 			if (wakeupFromStandby()) {
@@ -3702,7 +3697,6 @@ int CNeutrinoApp::handleMsg(const neutrino_msg_t _msg, neutrino_msg_data_t data)
 			}
 			return messages_return::handled;
 		}
-#endif
 	}
 	if (msg == NeutrinoMessages::SHOW_MAINMENU) {
 		showMainMenu();
@@ -4401,11 +4395,9 @@ void CNeutrinoApp::ExitRun(int exit_code)
 		saveEpg(NeutrinoModes::mode_off);
 	}
 
-#if ENABLE_FASTSCAN
 	/* on shutdown force load new fst */
 	if (exit_code == CNeutrinoApp::EXIT_SHUTDOWN)
 		CheckFastScan(true, false);
-#endif
 
 	CVFD::getInstance()->setMode(CVFD::MODE_SHUTDOWN);
 
@@ -4750,10 +4742,8 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 
 		// Active standby on
 		powerManager->SetStandby(false, false);
-#if ENABLE_FASTSCAN
 		if (scansettings.fst_update)
 			fst_timer = g_RCInput->addTimer(30*1000*1000, true);
-#endif
 	} else {
 		// Active standby off
 		powerManager->SetStandby(false, false);
@@ -4764,9 +4754,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		CEpgScan::getInstance()->Stop();
 		CSectionsdClient::CurrentNextInfo dummy;
 		g_InfoViewer->getEPG(0, dummy);
-#if ENABLE_FASTSCAN
 		g_RCInput->killTimer(fst_timer);
-#endif
 
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::StandbyMode(false);

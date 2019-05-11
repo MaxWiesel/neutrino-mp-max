@@ -237,9 +237,7 @@ class CZapit : public OpenThreads::Thread
 		bool PrepareChannels();
 		bool StartScan(int scan_mode);
 		bool StartScanTP(TP_params * TPparams);
-#ifdef ENABLE_FASTSCAN
 		bool StartFastScan(int scan_mode, int opid);
-#endif
 
 		void addChannelToBouquet(const unsigned int bouquet, const t_channel_id channel_id);
 		void SetConfig(Zapit_config * Cfg);
