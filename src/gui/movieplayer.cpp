@@ -95,7 +95,7 @@ bool glcd_play = false;
 
 #include <system/stacktrace.h>
 
-#if HAVE_COOL_HARDWARE || HAVE_ARM_HARDWARE || HAVE_SH4_HARDWARE
+#if HAVE_COOL_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE || HAVE_SH4_HARDWARE
 #define LCD_MODE CVFD::MODE_MENU_UTF8
 #else
 #define LCD_MODE CVFD::MODE_MOVIE
@@ -1362,7 +1362,9 @@ extern void MoviePlayerStop(void)
 void CMoviePlayerGui::stopPlayBack(void)
 {
 	printf("%s: stopping...\n", __func__);
+#if HAVE_SH4_HARDWARE
 	playback->RequestAbort();
+#endif
 
 	repeat_mode = REPEAT_OFF;
 	if (bgThread) {
@@ -1979,7 +1981,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			if (timeshift == TSHIFT_MODE_OFF)
 				callInfoViewer();
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_bookmark) {
-#if HAVE_COOL_HARDWARE
+#if HAVE_COOL_HARDWARE || HAVE_ARM_HARDWARE
 			if (is_file_player)
 				selectChapter();
 			else
@@ -2955,6 +2957,43 @@ void CMoviePlayerGui::StartSubtitles(bool show __attribute__((unused)))
 	tuxtx_pause_subtitle(false);
 #endif
 }
+
+#if HAVE_ARM_HARDWARE
+void CMoviePlayerGui::selectChapter()
+{
+	if (!is_file_player)
+		return;
+
+	std::vector<int> positions; std::vector<std::string> titles;
+	playback->GetChapters(positions, titles);
+
+	if (positions.empty())
+		return;
+
+	CMenuWidget ChSelector(LOCALE_MOVIEBROWSER_MENU_MAIN_BOOKMARKS, NEUTRINO_ICON_AUDIO);
+
+	ChSelector.addItem(GenericMenuCancel);
+
+	int select = -1;
+	CMenuSelectorTarget * selector = new CMenuSelectorTarget(&select);
+
+	char cnt[5];
+	if (!positions.empty()) {
+		ChSelector.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MOVIEPLAYER_CHAPTERS));
+		for (unsigned i = 0; i < positions.size(); i++) {
+			sprintf(cnt, "%d", i);
+			CMenuForwarder * item = new CMenuForwarder(titles[i].c_str(), true, NULL, selector, cnt, CRCInput::convertDigitToKey(i + 1));
+			ChSelector.addItem(item, position > positions[i]);
+		}
+	}
+	ChSelector.exec(NULL, "");
+	delete selector;
+	printf("CMoviePlayerGui::selectChapter: selected %d (%d)\n", select, (select >= 0) ? positions[select] : -1);
+	if (select >= 0) {
+		playback->SetPosition(positions[select], true);
+	}
+}
+#endif
 
 #if 0
 void CMoviePlayerGui::selectChapter()
