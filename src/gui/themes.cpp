@@ -502,7 +502,7 @@ void CThemes::getTheme(CConfigFile &configfile)
 	t.shadow_green = configfile.getInt32( "shadow_green", 8);
 	t.shadow_blue = configfile.getInt32( "shadow_blue", 8 );
 
-	//NI
+	// progressbar
 	t.progressbar_active_red = configfile.getInt32( "progressbar_active_red", 98 );
 	t.progressbar_active_green = configfile.getInt32( "progressbar_active_green", 98 );
 	t.progressbar_active_blue = configfile.getInt32( "progressbar_active_blue", 98 );

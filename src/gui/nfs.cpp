@@ -123,7 +123,7 @@ int CNFSMountGui::exec( CMenuTarget* parent, const std::string & actionKey )
 			g_settings.network_nfs[i].type = 0;
 			g_settings.network_nfs[i].username = "";
 			g_settings.network_nfs[i].password = "";
-			g_settings.network_nfs[i].mount_options1 = "ro,soft";
+			g_settings.network_nfs[i].mount_options1 = "soft";
 			g_settings.network_nfs[i].mount_options2 = "nolock";
 			g_settings.network_nfs[i].mac = "11:22:33:44:55:66";
 			m_entry[i] = getEntryString(i);

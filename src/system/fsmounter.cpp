@@ -223,8 +223,8 @@ CFSMounter::MountRes CFSMounter::mount(const std::string &ip, const std::string 
 	{
 		if(fstype == NFS)
 		{
-			options1 = "ro,soft,udp";
-			options2 = "nolock,rsize=8192,wsize=8192";
+			options1 = "soft";
+			options2 = "nolock";
 		}
 		else if(fstype == CIFS)
 		{

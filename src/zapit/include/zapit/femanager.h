@@ -116,7 +116,6 @@ class CFEManager
 		bool		Init();
 		void		Close();
 		void		Open();
-
 		CFrontend *	getFE(int index = 0);
 		CFrontend *	getLiveFE() { return livefe; };
 		void		setLiveFE(CFrontend * fe);

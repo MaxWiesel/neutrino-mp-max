@@ -481,7 +481,6 @@ void CBouquetManager::parseBouquetsXml(const char *fname, bool bUser)
 						snprintf(buf, sizeof(buf), "%llx", chan->getChannelID() & 0xFFFFFFFFFFFFULL);
 						chan->setScriptName("#" + new_epgxml + "=" + buf);
 					}
-
 					newBouquet->addService(chan);
 				} else if (bUser) {
 					if (url) {
@@ -1320,7 +1319,6 @@ void CBouquetManager::readEPGMapping()
 			if(channel_id && ((xmlepg != NULL) && (xmlepg[0] != '\0'))){
 				EpgXMLMapping[channel_id]=xmlepg;
 			}
-
 			epgmap = xmlNextNode(epgmap);
 		}
 	}

@@ -1046,7 +1046,7 @@ void CServiceManager::CopyFile(const char * from, const char * to)
 		}
 		in.close();
 	}
-	// sync();
+	sync();
 }
 
 void CServiceManager::WriteSatHeader(FILE * fd, sat_config_t &config)

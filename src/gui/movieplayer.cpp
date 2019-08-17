@@ -105,7 +105,6 @@ bool glcd_play = false;
 #define MOVIEPLAYER_END_SCRIPT "movieplayer.end"
 
 extern cVideo * videoDecoder;
-extern cAudio * audioDecoder;
 extern CRemoteControl *g_RemoteControl;	/* neutrino.cpp */
 
 extern CVolume* g_volume;

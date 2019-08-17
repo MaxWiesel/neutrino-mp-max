@@ -965,7 +965,6 @@ struct SNeutrinoSettings
 	int font_scaling_x;
 	int font_scaling_y;
 
-	// NI
 	int		show_menu_hints_line;
 
 	int		livestreamResolution;

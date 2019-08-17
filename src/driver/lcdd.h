@@ -157,6 +157,7 @@ class CLCD
 
 
 	private:
+
 #ifdef HAVE_TRIPLEDRAGON
 		class FontsDef
 		{
@@ -221,6 +222,7 @@ class CLCD
 		void		setlcdparameter(int dimm, int power);
 		void		count_down();
 #endif
+
 	public:
 		bool has_lcd;
 		void wake_up();

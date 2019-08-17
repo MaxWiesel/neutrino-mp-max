@@ -185,6 +185,18 @@ rcsim_SOURCES = rcsim.c rcsim.h
 bin_PROGRAMS += mdev_helper
 mdev_helper_SOURCES = mdev_helper.cpp
 
+if USE_STB_HAL
+neutrino_LDADD += \
+	-lstb-hal
+neutrino_LDFLAGS = \
+	$(STB_HAL_LIB)
+endif
+
+if BOXTYPE_TRIPLE
+neutrino_LDADD += \
+	$(top_builddir)/src/lcddisplay/liblcddisplay.a
+endif
+
 if BOXTYPE_SPARK
 neutrino_LDADD += -lass
 endif
@@ -197,11 +209,6 @@ if BOXTYPE_MIPSBOX
 neutrino_LDADD += -lass
 endif
 
-if BOXTYPE_TRIPLE
-neutrino_LDADD += \
-	$(top_builddir)/src/lcddisplay/liblcddisplay.a
-endif
-
 if BOXMODEL_RASPI
 neutrino_LDADD += \
 	-L/opt/vc/lib/ -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt
@@ -210,11 +217,4 @@ endif
 if BOXTYPE_COOL
 bin_PROGRAMS += shutdown_helper
 shutdown_helper_SOURCES = shutdown_helper.c
-endif
-
-if USE_STB_HAL
-neutrino_LDADD += \
-	-lstb-hal
-neutrino_LDFLAGS = \
-	$(STB_HAL_LIB)
 endif
