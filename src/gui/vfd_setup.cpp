@@ -209,8 +209,20 @@ int CVfdSetup::showSetup()
 		oj->setHint("", LOCALE_MENU_HINT_VFD_NOTIFY_RCLOCK);
 		vfds->addItem(oj);
 	}
+
+#if !BOXMODEL_VUSOLO4K && !BOXMODEL_VUDUO4K
+#if ENABLE_LCD4LINUX && ENABLE_GRAPHLCD
+	if (g_settings.glcd_enable != 0 && g_settings.lcd4l_support != 0) {
+		g_settings.glcd_enable = 0;
+		g_settings.lcd4l_support = 0;
+	}
+#endif
+#endif
+
 #ifdef ENABLE_LCD4LINUX
+#if !(BOXMODEL_VUSOLO4K) && !BOXMODEL_VUDUO4K && (ENABLE_GRAPHLCD)
 	if (g_settings.glcd_enable == 0)
+#endif
 	{
 		vfds->addItem(GenericMenuSeparatorLine);
 		vfds->addItem(new CMenuForwarder(LOCALE_LCD4L_SUPPORT, true, NULL, new CLCD4lSetup(), NULL, CRCInput::RC_yellow));
@@ -219,7 +231,11 @@ int CVfdSetup::showSetup()
 
 #ifdef ENABLE_GRAPHLCD
 	GLCD_Menu glcdMenu;
+#ifdef ENABLE_LCD4LINUX
+#if !BOXMODEL_VUSOLO4K && !BOXMODEL_VUDUO4K
 	if (g_settings.lcd4l_support == 0)
+#endif
+#endif
 	{
 		vfds->addItem(GenericMenuSeparatorLine);
 		vfds->addItem(new CMenuForwarder(LOCALE_GLCD_HEAD, true, NULL, &glcdMenu, NULL, CRCInput::RC_blue));
