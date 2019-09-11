@@ -210,7 +210,7 @@ int CVfdSetup::showSetup()
 		vfds->addItem(oj);
 	}
 
-#if !BOXMODEL_VUSOLO4K && !BOXMODEL_VUDUO4K
+#if !BOXMODEL_VUSOLO4K && !BOXMODEL_VUDUO4K && !BOXMODEL_VUULTIMO4K
 #if ENABLE_LCD4LINUX && ENABLE_GRAPHLCD
 	if (g_settings.glcd_enable != 0 && g_settings.lcd4l_support != 0) {
 		g_settings.glcd_enable = 0;
@@ -220,7 +220,7 @@ int CVfdSetup::showSetup()
 #endif
 
 #ifdef ENABLE_LCD4LINUX
-#if !(BOXMODEL_VUSOLO4K) && !BOXMODEL_VUDUO4K && (ENABLE_GRAPHLCD)
+#if !(BOXMODEL_VUSOLO4K) && !BOXMODEL_VUDUO4K && !BOXMODEL_VUULTIMO4K && (ENABLE_GRAPHLCD)
 	if (g_settings.glcd_enable == 0)
 #endif
 	{
@@ -232,7 +232,7 @@ int CVfdSetup::showSetup()
 #ifdef ENABLE_GRAPHLCD
 	GLCD_Menu glcdMenu;
 #ifdef ENABLE_LCD4LINUX
-#if !BOXMODEL_VUSOLO4K && !BOXMODEL_VUDUO4K
+#if !BOXMODEL_VUSOLO4K && !BOXMODEL_VUDUO4K && !BOXMODEL_VUULTIMO4K
 	if (g_settings.lcd4l_support == 0)
 #endif
 #endif
