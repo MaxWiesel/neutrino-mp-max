@@ -13,6 +13,10 @@ cat << EOF
 #define KEY_PLAYPAUSE_LONG 0x4A4
 #endif
 
+#ifndef KEY_NONEXISTING
+#define KEY_NONEXISTING 0x0
+#endif
+
 #ifndef KEY_GAMES
 #define KEY_GAMES	0x1a1   /* Media Select Games */
 #endif
