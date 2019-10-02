@@ -99,23 +99,23 @@ install_DATA += rc_wwio_bre2ze4k.png
 endif
 
 if BOXMODEL_VUSOLO4K
-install_DATA += rc_vu_solo4k.png
+install_DATA += rc_vuplus.png
 endif
 
 if BOXMODEL_VUDUO4K
-install_DATA += rc_vu_solo4k.png
+install_DATA += rc_vuplus.png
 endif
 
 if BOXMODEL_VUULTIMO4K
-install_DATA += rc_vu_solo4k.png
+install_DATA += rc_vuplus.png
 endif
 
 if BOXMODEL_VUZERO4K
-install_DATA += rc_vu_solo4k.png
+install_DATA += rc_vuplus.png
 endif
 
 if BOXMODEL_VUDUO
-install_DATA += rc_vu_solo4k.png
+install_DATA += rc_vuplus.png
 endif
 
 if BOXTYPE_SPARK
