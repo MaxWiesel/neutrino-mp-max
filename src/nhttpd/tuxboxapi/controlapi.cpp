@@ -65,6 +65,7 @@ extern CBouquetManager *g_bouquetManager;
 #else
 #define RC_DEVICE "/dev/input/event1"
 #endif
+#define RC_DEVICE_FALLBACK "/dev/input/event0"
 
 //-----------------------------------------------------------------------------
 //=============================================================================
@@ -976,6 +977,8 @@ void CControlAPI::RCEmCGI(CyhookHandler *hh)
 #endif
 #if 1
 	int evd = open(RC_DEVICE, O_RDWR);
+	if (evd < 0)
+		evd = open(RC_DEVICE_FALLBACK, O_RDWR);
 	if (evd < 0) {
 		perror("opening " RC_DEVICE " failed");
 		hh->SendError();
