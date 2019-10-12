@@ -114,6 +114,14 @@ if BOXMODEL_VUZERO4K
 install_DATA += rc_vuplus.png
 endif
 
+if BOXMODEL_VUUNO4KSE
+install_DATA += rc_vuplus.png
+endif
+
+if BOXMODEL_VUUNO4K
+install_DATA += rc_vuplus.png
+endif
+
 if BOXMODEL_VUDUO
 install_DATA += rc_vuplus.png
 endif
