@@ -128,8 +128,8 @@ AC_ARG_ENABLE(libcoolstream-static,
 AM_CONDITIONAL(ENABLE_LIBCOOLSTREAM_STATIC, test "$enable_libcoolstream_static" = "yes")
 
 AC_ARG_ENABLE(reschange,
-	AS_HELP_STRING([--enable-reschange], [enable change the osd resolution @<:@default for hd2 and hd51@:>@]),
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution]))
+	AS_HELP_STRING([--enable-reschange], [enable to change osd resolution]),
+	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable to change osd resolution]))
 AM_CONDITIONAL(ENABLE_RESCHANGE, test "$enable_reschange" = "yes")
 
 # default theme
@@ -607,7 +607,6 @@ elif test "$BOXMODEL" = "hd1"; then
 	AC_DEFINE(BOXMODEL_CS_HD1, 1, [coolstream hd1/neo/neo2/zee])
 elif test "$BOXMODEL" = "hd2"; then
 	AC_DEFINE(BOXMODEL_CS_HD2, 1, [coolstream tank/trinity/trinity v2/trinity duo/zee2/link])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "spark"; then
 	AC_DEFINE(BOXMODEL_SPARK, 1, [spark])
 elif test "$BOXMODEL" = "spark7162"; then
@@ -662,41 +661,36 @@ elif test "$BOXMODEL" = "hl101"; then
 	AC_DEFINE(BOXMODEL_HL101, 1, [hl101])
 elif test "$BOXMODEL" = "hd51"; then
 	AC_DEFINE(BOXMODEL_HD51, 1, [hd51])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "hd60"; then
 	AC_DEFINE(BOXMODEL_HD60, 1, [hd60])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "bre2ze4k"; then
 	AC_DEFINE(BOXMODEL_BRE2ZE4K, 1, [bre2ze4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "osmio4k"; then
 	AC_DEFINE(BOXMODEL_OSMIO4K, 1, [osmio4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "osmio4kplus"; then
 	AC_DEFINE(BOXMODEL_OSMIO4KPLUS, 1, [osmio4kplus])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vusolo4k"; then
 	AC_DEFINE(BOXMODEL_VUSOLO4K, 1, [vusolo4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vuduo4k"; then
 	AC_DEFINE(BOXMODEL_VUDUO4K, 1, [vuduo4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vuultimo4k"; then
 	AC_DEFINE(BOXMODEL_VUULTIMO4K, 1, [vuultimo4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vuuno4k"; then
 	AC_DEFINE(BOXMODEL_VUUNO4K, 1, [vuuno4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vuuno4kse"; then
 	AC_DEFINE(BOXMODEL_VUUNO4KSE, 1, [vuuno4kse])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vuzero4k"; then
 	AC_DEFINE(BOXMODEL_VUZERO4K, 1, [vuzero4k])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 elif test "$BOXMODEL" = "vuduo"; then
 	AC_DEFINE(BOXMODEL_VUDUO, 1, [vuduo])
-	AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable change the osd resolution])
 fi
+
+# BOXMODELs that allows to change osd resolution
+case "$BOXMODEL" in
+	hd2|hd51|hd60|bre2ze4k|osmio4k|osmio4kplus|vusolo4k|vuduo4k|vuultimo4k|vuuno4k|vuuno4kse|vuzero4k|vuduo)
+		AC_DEFINE(ENABLE_CHANGE_OSD_RESOLUTION, 1, [enable to change osd resolution])
+	;;
+esac
 ])
 
 dnl backward compatiblity
