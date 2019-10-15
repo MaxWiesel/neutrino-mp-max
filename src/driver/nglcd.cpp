@@ -593,7 +593,7 @@ void nGLCD::Run(void)
 					bitmap->Clear(GLCD::cColor::Black);
 					ts.tv_sec = 0; // don't wait
 					static CFrameBuffer* fb = CFrameBuffer::getInstance();
-#if !defined BOXMODEL_VUSOLO4K && !defined BOXMODEL_VUDUO4K && !defined BOXMODEL_VUULTIMO4K && !defined BOXMODEL_VUUNO4KSE
+#if !BOXMODEL_VUSOLO4K && !BOXMODEL_VUDUO4K && !BOXMODEL_VUULTIMO4K && !BOXMODEL_VUUNO4KSE
 					static int fb_width = fb->getScreenWidth(true);
 #endif
 					static int fb_height = fb->getScreenHeight(true);
