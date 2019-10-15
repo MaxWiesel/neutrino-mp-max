@@ -44,7 +44,9 @@ class CLCD4l
 			PEARL320x240	= 0,
 			SAMSUNG800x480	= 1,
 			SAMSUNG800x600	= 2,
-			SAMSUNG1024x600	= 3
+			SAMSUNG1024x600	= 3,
+			PNG		= 4,
+			VUPLUS4K480x320	= 5
 		};
 
 		// Functions

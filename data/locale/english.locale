@@ -1401,7 +1401,7 @@ menu.hint_lcd4l_display_type_setup Settings for the type of external display
 menu.hint_lcd4l_logodir Directory for own channel logos. Fallback to default logos when entry is invalid.
 menu.hint_lcd4l_skin Switch between styles\nDefault, User defined, etc.
 menu.hint_lcd4l_skin_radio Switch style when Radio-Mode is activated
-menu.hint_lcd4l_support Activate/deactivate LCD4Linux\nSupported displays: Pearl DPF, Samsung SPF
+menu.hint_lcd4l_support Activate/deactivate LCD4Linux\nSupported displays: Pearl DPF, Samsung SPF, PNG, VUPlus4k LCD
 menu.hint_lcd4l_weather Shows weather data in standby mode
 menu.hint_leds_blink Blinking LEDs in deep-standby
 menu.hint_leds_deepstandby LEDs state in deep-standby mode

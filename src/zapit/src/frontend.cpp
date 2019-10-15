@@ -1733,7 +1733,7 @@ uint32_t CFrontend::sendEN50494TuningCommand(const uint32_t frequency, const int
 		}
 		fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_18);
 		usleep(20 * 1000);		/* en50494 says: >4ms and < 22 ms */
-		sendDiseqcCommand(&cmd, 120);				/* en50494 says: >2ms and < 60 ms -- it seems we must add the lengthe of telegramm itself (~65ms)*/
+		sendDiseqcCommand(&cmd, 120);	/* en50494 says: >2ms and < 60 ms -- it seems we must add the lengthe of telegramm itself (~65ms)*/
 		fop(ioctl, FE_SET_VOLTAGE, unicable_lowvolt);
 	}
 	return ret;

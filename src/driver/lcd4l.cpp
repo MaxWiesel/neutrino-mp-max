@@ -225,6 +225,8 @@ int CLCD4l::GetMaxBrightness()
 		case SAMSUNG800x480:
 		case SAMSUNG800x600:
 		case SAMSUNG1024x600:
+		case PNG:
+		case VUPLUS4K480x320:
 			max_brightness = 10;
 			break;
 		case PEARL320x240:
@@ -773,6 +775,14 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 			case SAMSUNG1024x600:
 				DisplayType = "Samsung1024x600_";
 				break;
+			case PNG:
+				DisplayType = "PNG_";
+				break;
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUULTIMO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_VUUNO4K
+			case VUPLUS4K480x320:
+				DisplayType = "VUPLUS4K_";
+				break;
+#endif
 			case PEARL320x240:
 			default:
 				DisplayType = "Pearl_";
