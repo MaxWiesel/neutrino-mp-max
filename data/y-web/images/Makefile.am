@@ -48,6 +48,8 @@ install_DATA =	accept.png \
 		popup.png \
 		properties.png \
 		radio.png \
+		rc_dbox_nokia_old.png \
+		rc_dbox_philips.png \
 		record.png \
 		reload.png \
 		remove.png \
@@ -98,6 +100,10 @@ if BOXMODEL_BRE2ZE4K
 install_DATA += rc_wwio_bre2ze4k.png
 endif
 
+if BOXMODEL_H7
+install_DATA += rc_zgemma_h7.png
+endif
+
 if BOXMODEL_VUSOLO4K
 install_DATA += rc_vuplus.png
 endif
@@ -110,7 +116,7 @@ if BOXMODEL_VUULTIMO4K
 install_DATA += rc_vuplus.png
 endif
 
-if BOXMODEL_VUZERO4K
+if BOXMODEL_VUUNO4K
 install_DATA += rc_vuplus.png
 endif
 
@@ -118,21 +124,12 @@ if BOXMODEL_VUUNO4KSE
 install_DATA += rc_vuplus.png
 endif
 
-if BOXMODEL_VUUNO4K
+if BOXMODEL_VUZERO4K
 install_DATA += rc_vuplus.png
 endif
 
 if BOXMODEL_VUDUO
 install_DATA += rc_vuplus.png
-endif
-
-if BOXTYPE_SPARK
-install_DATA += rc_spark_old.jpg \
-		rc_spark_new.jpg
-endif
-
-if BOXTYPE_DUCKBOX
-install_DATA += rc_910.jpg
 endif
 
 # file manager
