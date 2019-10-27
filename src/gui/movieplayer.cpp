@@ -80,12 +80,10 @@
 #include <sstream>
 #include <algorithm>
 #include <iconv.h>
+#include <system/stacktrace.h>
+
 #include <libdvbsub/dvbsub.h>
 #include <hardware/audio.h>
-#ifdef ENABLE_GRAPHLCD
-#include <driver/nglcd.h>
-bool glcd_play = false;
-#endif
 #include <gui/widget/stringinput_ext.h>
 #include <gui/screensetup.h>
 #include <gui/widget/msgbox.h>
@@ -93,7 +91,9 @@ bool glcd_play = false;
 #include <libavcodec/avcodec.h>
 #endif
 
-#include <system/stacktrace.h>
+#ifdef ENABLE_GRAPHLCD
+bool glcd_play = false;
+#endif
 
 #if HAVE_COOL_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE || HAVE_SH4_HARDWARE
 #define LCD_MODE CVFD::MODE_MENU_UTF8

@@ -127,13 +127,6 @@
 #include <system/settings.h>
 #include <system/helpers.h>
 #include <system/sysload.h>
-#ifdef ENABLE_GRAPHLCD
-#include <driver/nglcd.h>
-#endif
-#ifdef ENABLE_LCD4LINUX
-#include "driver/lcd4l.h"
-CLCD4l *LCD4l;
-#endif
 
 #include <timerdclient/timerdclient.h>
 #include <timerd/timermanager.h>
@@ -166,6 +159,12 @@ int old_b_id = -1;
 
 CInfoClock      *InfoClock;
 CTimeOSD	*FileTimeOSD;
+
+#ifdef ENABLE_LCD4LINUX
+#include "driver/lcd4l.h"
+CLCD4l *LCD4l;
+#endif
+
 int allow_flash = 1;
 Zapit_config zapitCfg;
 char zapit_lat[20]="#";
@@ -5162,7 +5161,6 @@ void CNeutrinoApp::stopDaemonsForFlash()
 /**************************************************************************************
 *          Main programm - no function here                                           *
 **************************************************************************************/
-
 #ifdef ENABLE_LCD4LINUX
 void stop_lcd4l_support()
 {

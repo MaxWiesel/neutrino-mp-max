@@ -43,9 +43,6 @@
 #include <gui/audiomute.h>
 #include <gui/mediaplayer.h>
 #include <zapit/zapit.h>
-#ifdef ENABLE_GRAPHLCD
-#include <driver/nglcd.h>
-#endif
 
 
 #define VOLUME_SCRIPT	CONFIGDIR "/volume.sh"

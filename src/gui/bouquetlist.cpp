@@ -56,9 +56,6 @@
 #include <mymenu.h>
 #include <zapit/getservices.h>
 
-#ifdef ENABLE_GRAPHLCD
-#include <driver/nglcd.h>
-#endif
 #ifdef ENABLE_LCD4LINUX
 #include "driver/lcd4l.h"
 extern CLCD4l *LCD4l;

@@ -33,8 +33,6 @@
 #include <config.h>
 #endif
 
-
-#include "vfd_setup.h"
 #ifdef ENABLE_GRAPHLCD
 #include <gui/glcdsetup.h>
 #endif
@@ -42,6 +40,8 @@
 #ifdef ENABLE_LCD4LINUX
 #include "gui/lcd4l_setup.h"
 #endif
+
+#include "vfd_setup.h"
 
 #include <global.h>
 #include <neutrino.h>

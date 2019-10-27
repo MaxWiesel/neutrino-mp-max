@@ -47,9 +47,6 @@
 
 #include <cctype>
 
-#ifdef ENABLE_GRAPHLCD
-#include <driver/nglcd.h>
-#endif
 #ifdef ENABLE_LCD4LINUX
 #include "driver/lcd4l.h"
 extern CLCD4l *LCD4l;
@@ -250,11 +247,11 @@ void CMenuItem::paintItemCaption(const bool select_mode, const char * right_text
 			snprintf(str, len, "%s %s", left_text, right_text);
 			CVFD::getInstance()->showMenuText(0, str, -1, true);
 #ifdef ENABLE_GRAPHLCD
-			if(g_settings.glcd_enable)
+			if (g_settings.glcd_enable)
 				graphlcd_text = str;
 #endif
 #ifdef ENABLE_LCD4LINUX
-			if(g_settings.lcd4l_support)
+			if (g_settings.lcd4l_support)
 				lcd4l_text = str;
 #endif
 		} 
@@ -262,7 +259,7 @@ void CMenuItem::paintItemCaption(const bool select_mode, const char * right_text
 		{
 			CVFD::getInstance()->showMenuText(0, left_text, -1, true);
 #ifdef ENABLE_GRAPHLCD
-			if(g_settings.glcd_enable)
+			if (g_settings.glcd_enable)
 				graphlcd_text = left_text;
 #endif
 #ifdef ENABLE_LCD4LINUX
@@ -272,7 +269,7 @@ void CMenuItem::paintItemCaption(const bool select_mode, const char * right_text
 		}
 
 #ifdef ENABLE_GRAPHLCD
-		if(g_settings.glcd_enable)
+		if (g_settings.glcd_enable)
 			nGLCD::lockChannel(g_Locale->getText(LOCALE_MAINMENU_HEAD), graphlcd_text, 0);
 #endif
 #ifdef ENABLE_LCD4LINUX
@@ -1062,7 +1059,7 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 					int rv = item->exec( this );
 
 #ifdef ENABLE_GRAPHLCD
-					if(g_settings.glcd_enable)
+					if (g_settings.glcd_enable)
 						nGLCD::lockChannel(g_Locale->getText(LOCALE_MAINMENU_HEAD), item->graphlcd_text, 0);
 #endif
 #ifdef ENABLE_LCD4LINUX
