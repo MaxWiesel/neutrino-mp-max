@@ -58,12 +58,12 @@ extern cVideo * videoDecoder;
 extern CPlugins *g_Plugins;//for relodplugins
 extern CBouquetManager *g_bouquetManager;
 
-#if HAVE_DUCKBOX_HARDWARE
-#define RC_DEVICE "/dev/input/event0"
-#elif HAVE_SPARK_HARDWARE || HAVE_COOL_HARDWARE
-#define RC_DEVICE "/dev/input/nevis_ir"
+#if HAVE_SPARK_HARDWARE || HAVE_COOL_HARDWARE
+	#define RC_DEVICE "/dev/input/nevis_ir"
+#elif BOXMODEL_H7
+	#define RC_DEVICE "/dev/input/event2"
 #else
-#define RC_DEVICE "/dev/input/event1"
+	#define RC_DEVICE "/dev/input/event1"
 #endif
 #define RC_DEVICE_FALLBACK "/dev/input/event0"
 
@@ -3962,7 +3962,6 @@ std::string CControlAPI::getSubdirectories(CyhookHandler *hh, std::string path, 
 	}
 	return result;
 }
-
 
 //-----------------------------------------------------------------------------
 /** Get neutrino movies
