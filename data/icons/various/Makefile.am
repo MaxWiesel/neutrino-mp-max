@@ -5,6 +5,7 @@ install_DATA = \
 	audioplay.png \
 	border_lr.png \
 	border_ul.png \
+	clock_face.png \
 	imdb.png \
 	numericpad.png \
 	star-off.png \
