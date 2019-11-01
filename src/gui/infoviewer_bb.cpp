@@ -898,8 +898,6 @@ void CInfoViewerBB::paint_ca_icons(int notfirst)
 			bool found = false;
 			for(casys_map_iterator_t it = channel->camap.begin(); it != channel->camap.end(); ++it) {
 				int caid = (*it) & 0xFF00;
-				if (caid == 0x1700)
-					caid = 0x0600;
 				if((found = (caid == caids[i]))) {
 					fta = false;
 					for ( int j = 0; j < (int)ecm_caids.size(); j++)
