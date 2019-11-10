@@ -11,12 +11,12 @@ install_DATA = \
 	gbox_green.png \
 	gbox_white.png \
 	gbox_yellow.png \
-	oscam_green.png \
-	oscam_white.png \
-	oscam_yellow.png \
-	osemu_green.png \
-	osemu_white.png \
-	osemu_yellow.png \
 	mgcamd_green.png \
 	mgcamd_white.png \
 	mgcamd_yellow.png
+	oscam_green.png \
+	oscam_white.png \
+	oscam_yellow.png \
+	osmod_green.png \
+	osmod_white.png \
+	osmod_yellow.png
