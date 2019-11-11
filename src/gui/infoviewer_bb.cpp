@@ -65,7 +65,7 @@
 extern CRemoteControl *g_RemoteControl;	/* neutrino.cpp */
 extern cVideo * videoDecoder;
 const char *emu_name[] = {"oscam","mgcamd","camd3","gbox","osmod"};
-int emu_count = 4;
+int emu_count = 5;
 static int emu_number = 0;
 
 #define COL_INFOBAR_BUTTONS_BACKGROUND (COL_MENUFOOT_PLUS_0)
