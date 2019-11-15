@@ -23,6 +23,7 @@
 #include <cstdio>
 
 #include <global.h>
+#include <system/helpers.h>
 #include <zapit/zapit.h>
 #include <zapit/channel.h>
 
