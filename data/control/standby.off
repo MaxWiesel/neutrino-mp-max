@@ -2,4 +2,7 @@
 
 echo "StandBy deaktiviert"
 
+service tuxcald start
+service tuxmaild start
+
 exit 0

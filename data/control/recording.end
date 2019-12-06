@@ -2,4 +2,7 @@
 
 echo "Recording wird beendet"
 
+service tuxcald start
+service tuxmaild start
+
 exit 0
