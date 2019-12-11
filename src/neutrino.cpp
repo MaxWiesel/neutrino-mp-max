@@ -3242,6 +3242,10 @@ void CNeutrinoApp::RealRun()
 					showMainMenu();
 				}
 			}
+			else if (msg == (neutrino_msg_t) g_settings.key_favorites)
+			{
+				showChannelList(msg);
+			}
 			else if( ( msg == (neutrino_msg_t) g_settings.key_quickzap_up ) || ( msg == (neutrino_msg_t) g_settings.key_quickzap_down ) )
 			{
 				quickZap(msg);
@@ -3583,13 +3587,13 @@ int CNeutrinoApp::showChannelList(const neutrino_msg_t _msg, bool from_menu)
 	} else if(msg == CRCInput::RC_sat) {
 		SetChannelMode(LIST_MODE_SAT);
 		nNewChannel = bouquetList->exec(true);
-	} else if(msg == CRCInput::RC_favorites) {
-		SetChannelMode(LIST_MODE_FAV);
+	} else if(msg == CRCInput::RC_www) {
+		SetChannelMode(LIST_MODE_WEB);
 		if (bouquetList->Bouquets.empty())
 			SetChannelMode(LIST_MODE_PROV);
 		nNewChannel = bouquetList->exec(true);
-	} else if(msg == CRCInput::RC_www) {
-		SetChannelMode(LIST_MODE_WEB);
+	} else if(msg == (neutrino_msg_t) g_settings.key_favorites) {
+		SetChannelMode(LIST_MODE_FAV);
 		if (bouquetList->Bouquets.empty())
 			SetChannelMode(LIST_MODE_PROV);
 		nNewChannel = bouquetList->exec(true);
@@ -3728,10 +3732,13 @@ bool CNeutrinoApp::listModeKey(const neutrino_msg_t msg)
 {
 	if (
 		   msg == CRCInput::RC_sat
-		|| msg == CRCInput::RC_favorites
 		|| msg == CRCInput::RC_www
+		|| msg == (neutrino_msg_t) g_settings.key_favorites
 	)
+	{
+		printf("CNeutrinoApp::listModeKey: true\n");
 		return true;
+	}
 	return false;
 }
 
@@ -5495,6 +5502,7 @@ void CNeutrinoApp::loadKeys(const char *fname)
 	}
 	g_settings.key_channelList_sort = tconfig->getInt32("key_channelList_sort", CRCInput::RC_blue);
 	g_settings.key_current_transponder = tconfig->getInt32("key_current_transponder", CRCInput::RC_games);
+	g_settings.key_favorites = tconfig->getInt32("key_favorites", CRCInput::RC_favorites);
 	g_settings.key_format_mode_active = tconfig->getInt32("key_format_mode_active", 1);
 	g_settings.key_help = tconfig->getInt32("key_help", CRCInput::RC_help);
 	g_settings.key_lastchannel = tconfig->getInt32("key_lastchannel", CRCInput::RC_0);
@@ -5576,7 +5584,7 @@ void CNeutrinoApp::loadKeys(const char *fname)
 
 	g_settings.longkeypress_duration = tconfig->getInt32("longkeypress_duration", LONGKEYPRESS_OFF);
 
-	g_settings.mode_left_right_key_tv = tconfig->getInt32("mode_left_right_key_tv", SNeutrinoSettings::ZAP);
+	g_settings.mode_left_right_key_tv = tconfig->getInt32("mode_left_right_key_tv", SNeutrinoSettings::VZAP);
 
 	if (fname)
 		delete tconfig;
@@ -5601,6 +5609,7 @@ void CNeutrinoApp::saveKeys(const char *fname)
 	tconfig->setInt32("key_channelList_pageup", g_settings.key_pageup);
 	tconfig->setInt32("key_channelList_sort", g_settings.key_channelList_sort);
 	tconfig->setInt32("key_current_transponder", g_settings.key_current_transponder);
+	tconfig->setInt32("key_favorites", g_settings.key_favorites);
 	tconfig->setInt32("key_format_mode_active", g_settings.key_format_mode_active);
 	tconfig->setInt32("key_help", g_settings.key_help);
 	tconfig->setInt32("key_lastchannel", g_settings.key_lastchannel);

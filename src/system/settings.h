@@ -1155,6 +1155,7 @@ struct SNeutrinoSettings
 	int key_channelList_cancel;
 	int key_channelList_sort;
 	int key_current_transponder;
+	int key_favorites;
 	int key_format_mode_active;
 	int key_help;
 	int key_lastchannel;
