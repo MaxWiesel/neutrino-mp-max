@@ -1775,6 +1775,7 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 		StopPlayBack(msgBool.truefalse, false);
 		playbackStopForced = true;
 		lock_channel_id = live_channel_id;
+		//lockPlayBack();
 		SendCmdReady(connfd);
 		break;
 	}
@@ -1793,6 +1794,7 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 				SendEvent(CZapitClient::EVT_ZAP_FAILED, &lock_channel_id, sizeof(lock_channel_id));
 			lock_channel_id = 0;
 		}
+		//unlockPlayBack();
 		SendCmdReady(connfd);
 		break;
 	}

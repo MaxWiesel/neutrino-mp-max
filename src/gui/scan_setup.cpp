@@ -757,9 +757,11 @@ void CScanSetup::addScanMenuFrontendOptions(CMenuWidget *m)
 	nc->setNumberFormat(std::string("%d00 ") + g_Locale->getText(LOCALE_UNIT_SHORT_MILLISECOND));
 	nc->setHint("", LOCALE_MENU_HINT_SCAN_FETIMEOUT);
 	m->addItem(nc);
+
 	nc = new CMenuOptionNumberChooser(LOCALE_EXTRA_ZAPIT_FE_RETRIES, (int *)&zapitCfg.feRetries, true, 0, 9);
 	nc->setHint("", LOCALE_MENU_HINT_SCAN_FERETRIES);
 	m->addItem(nc);
+
 	CMenuOptionChooser * mc = new CMenuOptionChooser(LOCALE_EXTRA_ZAPIT_FE_NO_SAME,  (int *)&zapitCfg.noSameFE, NOSAMEFE_SCAN_OPTIONS, NOSAMEFE_SCAN_OPTIONS_COUNT, true, NULL);
 	mc->setHint("", LOCALE_MENU_HINT_SCAN_FENOSAME);
 	m->addItem(mc);

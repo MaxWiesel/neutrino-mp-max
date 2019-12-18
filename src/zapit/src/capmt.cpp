@@ -302,6 +302,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 		cam->setCaMask(newmask);
 		cam->setSource(source);
 		if(newmask != 0 && (!filter_channels || !channel->bUseCI)) {
+			INFO("\033[33m socket only\033[0m");
 			cam->makeCaPmt(channel, true);
 			cam->setCaPmt(true);
 			// CI
@@ -316,6 +317,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 	}
 	// CI
 	if(oldmask == newmask) {
+		INFO("\033[33m (oldmask == newmask)\033[0m");
 		if (mode) {
 			if(start) {
 				CaIdVector caids;
@@ -337,6 +339,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 	}
 
 	if(newmask == 0) {
+		INFO("\033[33m (newmask == 0)\033[0m");
 		/* FIXME: back to live channel from playback dont parse pmt and call setCaPmt
 		 * (see CMD_SB_LOCK / UNLOCK PLAYBACK */
 		//channel->setRawPmt(NULL);//FIXME
@@ -400,12 +403,12 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			unsigned char * buffer = channel->getRawPmt(len);
 			cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI, channel->scrambled, channel->camap, 0, true);
 
-			/* out commented: causes a double send of capmt, the second without needed parameters */ 
-#ifdef HAVE_COOLSTREAM
+			/* out commented: causes a double send of capmt, the second without needed parameters */
+#if HAVE_COOL_HARDWARE
 			if (tunerno >= 0 && tunerno != cDemux::GetSource(cam->getSource())) {
-			INFO("CI: configured tuner %d do not match %d, skip [%s]\n", tunerno, cam->getSource(), channel->getName().c_str());
+				INFO("CI: configured tuner %d do not match %d, skip [%s]\n", tunerno, cam->getSource(), channel->getName().c_str());
 			} else if (filter_channels && !channel->bUseCI) {
-			INFO("CI: filter enabled, CI not used for [%s]\n", channel->getName().c_str());
+				INFO("CI: filter enabled, CI not used for [%s]\n", channel->getName().c_str());
 			} else {
 				cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI);
 			}

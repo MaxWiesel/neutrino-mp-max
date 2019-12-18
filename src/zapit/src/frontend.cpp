@@ -1956,10 +1956,10 @@ void CFrontend::setDiseqc(int sat_no, const uint8_t pol, const uint32_t frequenc
 			/* new code */
 			sat_no &= 0x0F;
 			cmd.msg[3] = 0xF0 | sat_no;
-			sendDiseqcCommand(&cmd, delay);	
+			sendDiseqcCommand(&cmd, delay);
 			cmd.msg[2] = 0x38;	/* port group = commited switches */
 			cmd.msg[3] = 0xF0 | ((pol & 1) ? 0 : 2) | (high_band ? 1 : 0);
-			sendDiseqcCommand(&cmd, delay);	
+			sendDiseqcCommand(&cmd, delay);
 #if 0			/* old code */
 #if 1
 			/* for 16 inputs */
