@@ -702,7 +702,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 #else
 			mf = new CMenuForwarder(m_title, true, NULL, selector, to_string(i).c_str(), CRCInput::convertDigitToKey(i));
 #endif
-			mf->iconName_Info_right = active ? NEUTRINO_ICON_CHECKMARK : NULL;
+			mf->iconName_Info_right = active ? NEUTRINO_ICON_MARKER_DIALOG_OK : NULL;
 			m.addItem(mf, active);
 		}
 
