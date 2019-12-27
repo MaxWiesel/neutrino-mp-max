@@ -2147,15 +2147,15 @@ void CInfoViewer::killTitle()
 	{
 		is_visible = false;
 		infoViewerBB->is_visible = false;
-		if (infoViewerBB->getFooter())
-			infoViewerBB->getFooter()->kill();
-		if (infoViewerBB->getCABar())
-			infoViewerBB->getCABar()->kill();
-		if (rec)
-			rec->kill();
-		//printf("killTitle(%d, %d, %d, %d)\n", BoxStartX, BoxStartY, BoxEndX+ OFFSET_SHADOW-BoxStartX, bottom-BoxStartY);
-		//frameBuffer->paintBackgroundBox(BoxStartX, BoxStartY, BoxEndX+ OFFSET_SHADOW, bottom);
-		if (!(zap_mode & IV_MODE_VIRTUAL_ZAP)){
+
+		if (g_settings.radiotext_enable && g_Radiotext)
+		{
+			g_Radiotext->S_RtOsd = g_Radiotext->haveRadiotext() ? 1 : 0;
+			killRadiotext();
+		}
+
+		if (!(zap_mode & IV_MODE_VIRTUAL_ZAP))
+		{
 			if (infobar_txt)
 				infobar_txt->kill();
 			numbox->kill();
@@ -2166,6 +2166,11 @@ void CInfoViewer::killTitle()
 		if (sigbox)
 			sigbox->kill();
 #endif
+		if (rec)
+			rec->kill();
+
+		if (timescale && (g_settings.infobar_progressbar == SNeutrinoSettings::INFOBAR_PROGRESSBAR_ARRANGEMENT_DEFAULT))
+			timescale->kill();
 
 		if (clock)
 		{
@@ -2175,8 +2180,6 @@ void CInfoViewer::killTitle()
 		}
 
 		header->kill();
-
-		body->kill();
 
 		if (txt_curr_start)
 			txt_curr_start->kill();
@@ -2191,13 +2194,16 @@ void CInfoViewer::killTitle()
 		if (txt_next_in)
 			txt_next_in->kill();
 
-		if (timescale)
-			if (g_settings.infobar_progressbar == SNeutrinoSettings::INFOBAR_PROGRESSBAR_ARRANGEMENT_DEFAULT)
-				timescale->kill();
-		if (g_settings.radiotext_enable && g_Radiotext) {
-			g_Radiotext->S_RtOsd = g_Radiotext->haveRadiotext() ? 1 : 0;
-			killRadiotext();
-		}
+		body->kill();
+
+		if (infoViewerBB->getCABar())
+			infoViewerBB->getCABar()->kill();
+
+		if (infoViewerBB->getFooter())
+			infoViewerBB->getFooter()->kill();
+
+		//printf("killTitle(%d, %d, %d, %d)\n", BoxStartX, BoxStartY, BoxEndX+ OFFSET_SHADOW-BoxStartX, bottom-BoxStartY);
+		//frameBuffer->paintBackgroundBox(BoxStartX, BoxStartY, BoxEndX+ OFFSET_SHADOW, bottom);
 	}
 	showButtonBar = false;
 	CInfoClock::getInstance()->enableInfoClock();
