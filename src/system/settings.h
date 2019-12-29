@@ -841,6 +841,7 @@ struct SNeutrinoSettings
 	int glcd_brightness;
 	int glcd_brightness_standby;
 	int glcd_scroll_speed;
+	int glcd_selected_config;
 
 	// lcd4linux
 	int lcd4l_support;
