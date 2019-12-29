@@ -229,7 +229,7 @@ void GLCD_Menu::GLCD_Menu_Settings()
 	m.addItem(new CMenuOptionChooser(LOCALE_GLCD_ENABLE, &g_settings.glcd_enable,
 				OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
 
-	m.addItem(new CMenuForwarder(LOCALE_LCD4L_DISPLAY_TYPE,	(nGLCD::getInstance()->GetConfigSize() > 1),
+	m.addItem(new CMenuForwarder(LOCALE_GLCD_DISPLAY,	(nGLCD::getInstance()->GetConfigSize() > 1),
 								nGLCD::getInstance()->GetConfigName(g_settings.glcd_selected_config).c_str(), this, "select_driver"));
 	int shortcut = 1;
 	m.addItem(GenericMenuSeparatorLine);
