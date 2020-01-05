@@ -2770,7 +2770,7 @@ TIMER_START();
 	g_videoSettings->setVideoSettings();
 
 	// show start logo
-	bool startlogo = frameBuffer->showFrame("logo.jpg");
+	bool startlogo = frameBuffer->showFrame("start.jpg");
 
 	g_RCInput = new CRCInput(timer_wakeup);
 
