@@ -329,7 +329,7 @@ void CInfoViewer::showRecordIcon (const bool show)
 		int icon_y = box_y + box_h/2 - icon_h/2;
 		int txt_y  = box_y + (box_h + txt_h)/2;
 
-		char records_msg[8];
+		char records_msg[14];
 					
 		if (rec_mode == CRecordManager::RECMODE_REC)
 		{
@@ -1625,7 +1625,7 @@ void CInfoViewer::showSNR ()
 			y_freq -= g_SignalFont->getHeight()/2; //half line up to center freq vertically
 		int y_numbox = numbox->getYPos();
 		if ((newfreq && chanready) || SDT_freq_update) {
-			char freq[20];
+			char freq[22];
 			newfreq = false;
 
 			std::string polarisation = "";
