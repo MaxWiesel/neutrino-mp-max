@@ -390,7 +390,9 @@ fprintf(stderr, "MEC=0x%02x DSN=0x%02x PSN=0x%02x MEL=%02d STATUS=0x%02x MFL=%02
 			free(temp);
 			if (S_Verbose >= 1)
 				printf("Radiotext[%d]: %s\n", RT_Index, RT_Text[RT_Index]);
-			RT_Index +=1; if (RT_Index >= S_RtOsdRows) RT_Index = 0;
+			RT_Index +=1;
+			if (RT_Index >= S_RtOsdRows)
+				RT_Index = 0;
 		}
 		RTP_TToggle = 0x03;		// Bit 0/1 = Title/Artist
 		RT_MsgShow = true;
