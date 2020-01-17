@@ -836,6 +836,7 @@ bool CHDDMenuHandler::scanDevices()
 			hdd.devname = namelist[i]->d_name;
 			hdd.mounted = false;
 			hdd.desc = hdd.devname;
+			hdd.cmf = NULL;
 			hdd_list.push_back(hdd);
 		}
 
