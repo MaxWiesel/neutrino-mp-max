@@ -2598,7 +2598,7 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
 	ca->SetTSClock(ZapStart_arg->ci_clock * 1000000);
 	ca->Start();
 
-#if BOXMODEL_VUPLUS_ALL
+#if BOXMODEL_VUPLUS
 	//dvb wait delay for ci response
 	ca->SetCIDelay(ZapStart_arg->ci_delay);
 #endif
