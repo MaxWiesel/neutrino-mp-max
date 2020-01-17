@@ -54,13 +54,16 @@
 #include <zapit/zapit.h>
 #include <driver/abstime.h>
 
-#if BOXMODEL_VUPLUS_ALL
-#define CI_CLOCK_OPTION_COUNT 3
-static const CMenuOptionChooser::keyval CI_CLOCK_OPTIONS[CI_CLOCK_OPTION_COUNT] = {
+static const CMenuOptionChooser::keyval CI_CLOCK_OPTIONS[] = {
 	{  6, LOCALE_CI_CLOCK_NORMAL },
-	{  7, LOCALE_CI_CLOCK_HIGH },
-	{ 12, LOCALE_CI_CLOCK_EXTRA_HIGH }
+	{  7, LOCALE_CI_CLOCK_HIGH }
+#if BOXMODEL_VUPLUS
+	,{ 12, LOCALE_CI_CLOCK_EXTRA_HIGH }
+#endif
 };
+#define CI_CLOCK_OPTION_COUNT (sizeof(CI_CLOCK_OPTIONS)/sizeof(CMenuOptionChooser::keyval))
+
+#if BOXMODEL_VUPLUS
 #define CI_DELAY_OPTION_COUNT 5
 static const CMenuOptionChooser::keyval_ext CI_DELAY_OPTIONS[CI_DELAY_OPTION_COUNT] = {
 	{  16, NONEXISTANT_LOCALE, "16"  },
@@ -68,12 +71,6 @@ static const CMenuOptionChooser::keyval_ext CI_DELAY_OPTIONS[CI_DELAY_OPTION_COU
 	{  64, NONEXISTANT_LOCALE, "64"  },
 	{ 128, NONEXISTANT_LOCALE, "128" },
 	{ 256, NONEXISTANT_LOCALE, "256" }
-};
-#else
-#define CI_CLOCK_OPTION_COUNT 2
-static const CMenuOptionChooser::keyval CI_CLOCK_OPTIONS[CI_CLOCK_OPTION_COUNT] = {
-	{ 6, LOCALE_CI_CLOCK_NORMAL },
-	{ 7, LOCALE_CI_CLOCK_HIGH }
 };
 #endif
 
