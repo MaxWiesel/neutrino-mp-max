@@ -135,16 +135,7 @@ int CCAMMenuHandler::doMainMenu()
 		cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_DELAY, &g_settings.ci_delay, CI_DELAY_OPTIONS, CI_DELAY_OPTION_COUNT, true, this));
 #endif
 		cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_RESET_STANDBY, &g_settings.ci_standby_reset, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
-#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-		cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock, CI_CLOCK_OPTIONS, CI_CLOCK_OPTION_COUNT, true, this));
-#else
-#if !HAVE_SH4_HARDWARE
-		cammenu->addItem(new CMenuOptionNumberChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock, true, 6, 12, this));
-#endif
-#endif
 	}
-	cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_IGNORE_MSG, &g_settings.ci_ignore_messages, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
-	cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_SAVE_PINCODE, &g_settings.ci_save_pincode, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
 #if HAVE_LIBSTB_HAL
 	cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_CHECK_LIVE_SLOT, &g_settings.ci_check_live, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
 #endif
@@ -190,14 +181,18 @@ int CCAMMenuHandler::doMainMenu()
 			snprintf(tmp, sizeof(tmp), "ca_ci_reset%d", i);
 			cammenu->addItem(new CMenuForwarder(LOCALE_CI_RESET, true, NULL, this, tmp));
 			memset(name1,0,sizeof(name1));
-if (i == 0) { // only for slot 0 valid - fix later
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock[i], CI_CLOCK_OPTIONS, CI_CLOCK_OPTION_COUNT, true, this));
 #else
+#if !HAVE_SH4_HARDWARE
 			cammenu->addItem(new CMenuOptionNumberChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock[i], true, 6, 12, this));
 #endif
+#endif
+#if BOXMODEL_VUPLUS
 			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_RPR, &g_settings.ci_rpr[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
-}
+#endif
+			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_IGNORE_MSG, &g_settings.ci_ignore_messages[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
+			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_SAVE_PINCODE, &g_settings.ci_save_pincode[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
 		} else {
 			snprintf(str1, sizeof(str1), "%s %d", g_Locale->getText(LOCALE_CI_EMPTY), i);
 			tempMenu = new CMenuWidget(str1, NEUTRINO_ICON_SETTINGS);
@@ -464,16 +459,16 @@ int CCAMMenuHandler::handleCamMsg(const neutrino_msg_t msg, neutrino_msg_data_t 
 
 		std::string ENQAnswer;
 
-		if (/* !from_menu && */ g_settings.ci_save_pincode && pMmiEnquiry->blind != 0 && (int) g_settings.ci_pincode.length() == pMmiEnquiry->answerlen) {
+		if (/* !from_menu && */ g_settings.ci_save_pincode[curslot] && pMmiEnquiry->blind != 0 && (int) g_settings.ci_pincode[curslot].length() == pMmiEnquiry->answerlen) {
 			static int acount = 0;
 			static time_t last_ask = 0;
 
-			ENQAnswer = g_settings.ci_pincode;
+			ENQAnswer = g_settings.ci_pincode[curslot];
 			printf("CCAMMenuHandler::handleCamMsg: using saved answer [%s] (#%d, time diff %d)\n", ENQAnswer.c_str(), acount, (int) (time_monotonic() - last_ask));
 			if ((time_monotonic() - last_ask) < 10) {
 				acount++;
 				if (acount > 4)
-					g_settings.ci_pincode.clear();
+					g_settings.ci_pincode[curslot].clear();
 			} else {
 				last_ask = time_monotonic();
 				acount = 0;
@@ -482,7 +477,7 @@ int CCAMMenuHandler::handleCamMsg(const neutrino_msg_t msg, neutrino_msg_data_t 
 			CEnquiryInput *Inquiry = new CEnquiryInput((char *)convertDVBUTF8(pMmiEnquiry->enquiryText, strlen(pMmiEnquiry->enquiryText), 0).c_str(), &ENQAnswer, pMmiEnquiry->answerlen, pMmiEnquiry->blind != 0, NONEXISTANT_LOCALE);
 			Inquiry->exec(NULL, "");
 			delete Inquiry;
-			g_settings.ci_pincode = ENQAnswer;
+			g_settings.ci_pincode[curslot] = ENQAnswer;
 		}
 
 		printf("CCAMMenuHandler::handleCamMsg: input=[%s]\n", ENQAnswer.c_str());
@@ -615,7 +610,7 @@ bool CCAMMenuHandler::changeNotify(const neutrino_locale_t OptionName, void * Da
 		int enabled = *(int *) Data;
 		if (!enabled) {
 			printf("CCAMMenuHandler::changeNotify: clear saved pincode\n");
-			g_settings.ci_pincode.clear();
+			g_settings.ci_pincode[CISlot].clear();
 		}
 	}
 #if HAVE_LIBSTB_HAL

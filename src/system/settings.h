@@ -312,11 +312,11 @@ struct SNeutrinoSettings
 	int ci_delay;
 	int ci_rpr[4];
 #endif
-	int ci_ignore_messages;	// TODO: for each slot
-	int ci_save_pincode;	// TODO: for each slot
+	int ci_ignore_messages[4];
+	int ci_save_pincode[4];
+	std::string ci_pincode[4];
 	int ci_check_live;
 	int ci_tuner;
-	std::string ci_pincode;	// TODO: for each slot
 	int radiotext_enable;
 	int webradio_xml_auto;
 	int webtv_xml_auto;
