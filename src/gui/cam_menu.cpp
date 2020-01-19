@@ -131,7 +131,7 @@ int CCAMMenuHandler::doMainMenu()
 
 	int CiSlots = ca ? ca->GetNumberCISlots() : 0;
 	if(CiSlots) {
-#if BOXMODEL_VUPLUS_ALL
+#if BOXMODEL_VUPLUS
 		cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_DELAY, &g_settings.ci_delay, CI_DELAY_OPTIONS, CI_DELAY_OPTION_COUNT, true, this));
 #endif
 		cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_RESET_STANDBY, &g_settings.ci_standby_reset, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true));
@@ -584,7 +584,7 @@ int CCAMMenuHandler::doMenu(int slot, CA_SLOT_TYPE slotType)
 
 bool CCAMMenuHandler::changeNotify(const neutrino_locale_t OptionName, void * Data)
 {
-#if BOXMODEL_VUPLUS_ALL
+#if BOXMODEL_VUPLUS
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_DELAY)) {
 		printf("CCAMMenuHandler::changeNotify: ci_delay %d\n", g_settings.ci_delay);
 		ca->SetCIDelay(g_settings.ci_delay);
