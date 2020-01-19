@@ -317,6 +317,7 @@ struct SNeutrinoSettings
 	std::string ci_pincode[4];
 	int ci_check_live;
 	int ci_tuner;
+
 	int radiotext_enable;
 	int webradio_xml_auto;
 	int webtv_xml_auto;
