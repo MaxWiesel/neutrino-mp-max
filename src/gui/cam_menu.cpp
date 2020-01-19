@@ -342,7 +342,7 @@ int CCAMMenuHandler::handleCamMsg(const neutrino_msg_t msg, neutrino_msg_data_t 
 		if (ca)
 			ca->ModuleName(SlotType, curslot, name);
 
-		snprintf(str, sizeof(str), "%s %d: %s", 
+		snprintf(str, sizeof(str), "%s %d: %s",
 				g_Locale->getText(SlotType == CA_SLOT_TYPE_CI ? LOCALE_CI_INIT_OK : LOCALE_SC_INIT_OK), (int)curslot+1, name);
 		printf("CCAMMenuHandler::handleCamMsg: %s\n", str);
 		CCamManager::getInstance()->Start(CZapit::getInstance()->GetCurrentChannelID(), CCamManager::PLAY, true);
@@ -352,7 +352,7 @@ int CCAMMenuHandler::handleCamMsg(const neutrino_msg_t msg, neutrino_msg_data_t 
 		if (ca)
 			ca->ModuleName(SlotType, curslot, name);
 
-		snprintf(str, sizeof(str), "%s %d: %s", 
+		snprintf(str, sizeof(str), "%s %d: %s",
 				g_Locale->getText(SlotType == CA_SLOT_TYPE_CI ? LOCALE_CI_INIT_FAILED : LOCALE_SC_INIT_FAILED), (int)curslot+1, name);
 
 		printf("CCAMMenuHandler::handleCamMsg: %s\n", str);
@@ -599,7 +599,7 @@ bool CCAMMenuHandler::changeNotify(const neutrino_locale_t OptionName, void * Da
 	else
 #endif
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_CLOCK)) {
-		printf("CCAMMenuHandler::changeNotify: ci_clock[%d] %d\n", CISlot, g_settings.ci_clock[CISlot]);
+		printf("CCAMMenuHandler::changeNotify: ci_clock[%s] %d\n", CISlot, g_settings.ci_clock[CISlot]);
 		ca->SetTSClock(g_settings.ci_clock[CISlot] * 1000000);
 		return true;
 	}
