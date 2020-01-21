@@ -44,7 +44,7 @@ class CScreenShot
 		bool scale_to_osd;
 
 	public:
-		CScreenShot(const std::string fname = "", screenshot_format_t fmt = CScreenShot::FORMAT_PNG);
+		CScreenShot(const std::string &fname = "", screenshot_format_t fmt = CScreenShot::FORMAT_JPG);
 		~CScreenShot();
 
 		void MakeFileName(const t_channel_id channel_id);
