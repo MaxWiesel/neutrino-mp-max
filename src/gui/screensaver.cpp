@@ -60,8 +60,7 @@ CScreenSaver::CScreenSaver()
 {
 	thrScreenSaver 	= NULL;
 	m_frameBuffer 	= CFrameBuffer::getInstance();
-	//m_viewer	= new CPictureViewer();
-
+	m_viewer	= new CPictureViewer();
 	index 		= 0;
 	status_mute	= CAudioMute::getInstance()->getStatus();
 
@@ -80,7 +79,7 @@ CScreenSaver::~CScreenSaver()
 {
 	thrExit();
 
-	//delete m_viewer;
+	delete m_viewer;
 
 	if (scr_clock){
 		delete scr_clock;
@@ -132,7 +131,6 @@ void CScreenSaver::Start()
 		g_Zapit->stopPip();
 #endif
 
-	/*
 	m_viewer->SetScaling((CPictureViewer::ScalingMode)g_settings.picviewer_scaling);
 	m_viewer->SetVisible(g_settings.screen_StartX, g_settings.screen_EndX, g_settings.screen_StartY, g_settings.screen_EndY);
 
@@ -142,8 +140,13 @@ void CScreenSaver::Start()
 		m_viewer->SetAspectRatio(float(4.0/3));
 
 	m_viewer->Cleanup();
+#if HAVE_ARM_HARDWARE
+	/*
+	   Hack to get sure we have a blank screen.
+	   stopFrame()-function seems not work correctly on ARM_HARDWARE
 	*/
-
+	m_frameBuffer->showFrame("blackscreen.jpg");
+#endif
 	m_frameBuffer->stopFrame();
 	
 	if(!thrScreenSaver)
@@ -182,6 +185,7 @@ void CScreenSaver::Stop()
 #endif
 
 	m_frameBuffer->paintBackground(); //clear entire screen
+	CInfoIcons::getInstance()->enableInfoIcons(status_icons); //NI
 
 	CAudioMute::getInstance()->enableMuteIcon(status_mute);
 
@@ -365,8 +369,8 @@ void CScreenSaver::paint()
 #if 0
 		hideRadioText();
 #endif
-		m_frameBuffer->showFrame(v_bg_files.at(index), CFrameBuffer::SHOW_FRAME_FALLBACK_MODE_IMAGE);
-		//m_viewer->ShowImage(v_bg_files.at(index).c_str(), false /*unscaled*/);
+		//m_frameBuffer->showFrame(v_bg_files.at(index), CFrameBuffer::SHOW_FRAME_FALLBACK_MODE_IMAGE);
+		m_viewer->ShowImage(v_bg_files.at(index).c_str(), false /*unscaled*/);
 #if 1
 		handleRadioText();
 #endif
