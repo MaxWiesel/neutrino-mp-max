@@ -492,6 +492,10 @@ int CNeutrinoApp::loadSetup(const char * fname)
 		g_settings.enabled_auto_modes[i] = configfile.getInt32(cfg_key, 1);
 	}
 
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+	g_settings.zappingmode = configfile.getInt32( "zappingmode", 0);
+#endif
+
 #ifdef CPU_FREQ
 	g_settings.cpufreq = configfile.getInt32("cpufreq", 0);
 #if HAVE_SH4_HARDWARE
@@ -1487,6 +1491,11 @@ void CNeutrinoApp::saveSetup(const char * fname)
 		sprintf(cfg_key, "enabled_auto_mode_%d", i);
 		configfile.setInt32(cfg_key, g_settings.enabled_auto_modes[i]);
 	}
+
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+	configfile.setInt32( "zappingmode", g_settings.zappingmode);
+#endif
+
 	configfile.setInt32( "cpufreq", g_settings.cpufreq);
 	configfile.setInt32( "standby_cpufreq", g_settings.standby_cpufreq);
 
@@ -3019,6 +3028,10 @@ TIMER_START();
 	CFileHelpers::createDir(PUBLIC_HTTPDDIR "/logo");
 
 	CWeather::getInstance()->setCoords(g_settings.weather_location, g_settings.weather_city);
+
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+	videoDecoder->SetControl(VIDEO_CONTROL_ZAPPING_MODE, g_settings.zappingmode);
+#endif
 
 TIMER_STOP("################################## after all ##################################");
 	if (g_settings.softupdate_autocheck) {
