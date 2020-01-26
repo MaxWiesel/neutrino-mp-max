@@ -1762,6 +1762,7 @@ const char * locale_real_names[] =
 	"menu.hint_video_scart_mode",
 	"menu.hint_video_sdosd",
 	"menu.hint_video_tint",
+	"menu.hint_video_zappingmode",
 	"menu.hint_volume",
 	"menu.hint_volume_digits",
 	"menu.hint_volume_pos",
