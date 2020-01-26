@@ -363,17 +363,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	}
 	else
 	{
-#if 0
-		/* try to detect bad / broken config file */
-		if (!configfile.getInt32("screen_EndX_crt_0", 0) ||
-				!configfile.getInt32("screen_EndY_crt_0", 0) ||
-				!configfile.getInt32("screen_EndX_lcd_0", 0) ||
-				!configfile.getInt32("screen_EndY_lcd_0", 0)) {
-			printf("[neutrino] config file %s is broken, using defaults\n", fname);
-			configfile.clear();
-		} else
-#endif
-			migrateConfig(fname);
+		migrateConfig(fname);
 	}
 
 	parentallocked = !access(NEUTRINO_PARENTALLOCKED_FILE, R_OK);
@@ -710,7 +700,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.glcd_percent_channel = configfile.getInt32("glcd_percent_channel", 22);
 	g_settings.glcd_percent_epg = configfile.getInt32("glcd_percent_epg", 16);
 	g_settings.glcd_percent_bar = configfile.getInt32("glcd_percent_bar", 8);
-	g_settings.glcd_percent_time = configfile.getInt32("glcd_percent_time", 32);
+	g_settings.glcd_percent_time = configfile.getInt32("glcd_percent_time", 35);
 	g_settings.glcd_percent_time_standby = configfile.getInt32("glcd_percent_time_standby", 50);
 	g_settings.glcd_percent_logo = configfile.getInt32("glcd_percent_logo", 50);
 	g_settings.glcd_mirror_osd = configfile.getInt32("glcd_mirror_osd", 0);
@@ -964,7 +954,11 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.screen_StartY_lcd_1 = configfile.getInt32("screen_StartY_lcd_1",   25);
 	g_settings.screen_EndX_lcd_1   = configfile.getInt32("screen_EndX_lcd_1"  , 1920 - g_settings.screen_StartX_lcd_1 - 1);
 	g_settings.screen_EndY_lcd_1   = configfile.getInt32("screen_EndY_lcd_1"  , 1080 - g_settings.screen_StartY_lcd_1 - 1);
+#if HAVE_TRIPLEDRAGON
+	g_settings.screen_preset       = configfile.getInt32("screen_preset", COsdSetup::PRESET_CRT);
+#else
 	g_settings.screen_preset       = configfile.getInt32("screen_preset", COsdSetup::PRESET_LCD);
+#endif
 	setScreenSettings();
 
 	// avoid configuration mismatch
@@ -2754,6 +2748,7 @@ TIMER_START();
 	snprintf(start_text, sizeof(start_text), g_Locale->getText(LOCALE_NEUTRINO_STARTING), PACKAGE_NAME, PACKAGE_VERSION );
 	start_text[99] = '\0';
 	CHintBox * hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, start_text);
+
 	hintBox->paint();
 
 	CVFD::getInstance()->init(neutrinoFonts->fontDescr.filename.c_str(), neutrinoFonts->fontDescr.name.c_str());
@@ -2768,6 +2763,7 @@ TIMER_START();
 #ifdef ENABLE_GRAPHLCD
 	nGLCD::getInstance();
 #endif
+
 	if (!scanSettings.loadSettings(NEUTRINO_SCAN_SETTINGS_FILE))
 		dprintf(DEBUG_NORMAL, "Loading of scan settings failed. Using defaults.\n");
 
@@ -2819,7 +2815,7 @@ TIMER_START();
 	g_videoSettings = new CVideoSettings;
 	g_videoSettings->setVideoSettings();
 
-	// show start logo
+	// show startlogo
 	bool startlogo = frameBuffer->showFrame("start.jpg");
 
 	g_RCInput = new CRCInput(timer_wakeup);
@@ -4757,10 +4753,10 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		CCECSetup cecsetup;
 		cecsetup.setCECSettings(false);
 #endif
+
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::StandbyMode(true);
 #endif
-
 		CVFD::getInstance()->ShowText("Standby ...");
 		if( mode == NeutrinoModes::mode_scart ) {
 			//g_Controld->setScartMode( 0 );
@@ -4851,6 +4847,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 #ifdef ENABLE_GRAPHLCD
 		nGLCD::StandbyMode(false);
 #endif
+
 #if HAVE_SH4_HARDWARE
 		if (!timer_wakeup) {
 			CCECSetup cecsetup;
@@ -5259,6 +5256,7 @@ void stop_daemons(bool stopall, bool for_flash)
 #ifdef ENABLE_GRAPHLCD
 	nGLCD::Exit();
 #endif
+
 	if (g_Radiotext) {
 		delete g_Radiotext;
 		g_Radiotext = NULL;
@@ -5607,6 +5605,8 @@ void CNeutrinoApp::StopSubtitles(bool enable_glcd_mirroring)
 #ifdef ENABLE_GRAPHLCD
 	if (enable_glcd_mirroring)
 		nGLCD::MirrorOSD(g_settings.glcd_mirror_osd);
+#else
+	(void) enable_glcd_mirroring; // avoid compiler warning
 #endif
 #if 0
 	if (mode == NeutrinoModes::mode_webtv)
@@ -5965,6 +5965,13 @@ static struct __key_rename key_rename[] = {
 	{ "screen_EndX_lcd",	"screen_EndX_lcd_0" },
 	{ "screen_EndY_lcd",	"screen_EndY_lcd_0" },
 	{ "timing.infobar_movieplayer",	"timing.infobar_media_video" },
+	{ "ci_clock", "ci_clock_0" },
+	{ "ci_save_pincode", "ci_save_pincode_0" },
+	{ "ci_pincode", "ci_pincode_0" },
+	{ "ci_ignore_messages", "ci_ignore_messages_0" },
+#if BOXMODEL_VUPLUS
+	{ "ci_rpr", "ci_rpr_0" },
+#endif
 	{ NULL, NULL }
 };
 
