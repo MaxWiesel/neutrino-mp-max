@@ -831,6 +831,8 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 			if (!firstRun)
 			{
 				const char *buf = "service lcd4linux reload";
+
+				//printf("[CLCD4l] %s: executing '%s'\n", __FUNCTION__, buf);
 				if (my_system(3,"service", "lcd4linux", "reload") != 0)
 					printf("[CLCD4l] %s: executing '%s' failed\n", __FUNCTION__, buf);
 			}
@@ -895,9 +897,9 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		if (CurrentNext.flags & CSectionsdClient::epgflags::has_next)
 		{
 			if (todo)
-				Event += "\nin "+ to_string(todo) + " min:" + CurrentNext.next_name;
+				Event += "\nin " + to_string(todo) + " min:" + CurrentNext.next_name;
 			else
-				Event += "\n"+ CurrentNext.next_name;
+				Event += "\n" + CurrentNext.next_name;
 			time_t next_start_time = CurrentNext.next_zeit.startzeit;
 			tm_struct = localtime(&next_start_time);
 			snprintf(End, sizeof(End), "%02d:%02d", tm_struct->tm_hour, tm_struct->tm_min);
