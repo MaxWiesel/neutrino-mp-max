@@ -191,8 +191,6 @@ void CScreenSaver::Stop()
 	CInfoClock::getInstance()->ClearDisplay(); //provokes reinit
 	CInfoClock::getInstance()->enableInfoClock();
 
-	CInfoIcons::getInstance()->enableInfoIcons(status_icons); //NI
-
 	if (g_RadiotextWin)
 		g_Radiotext->OnAfterDecodeLine.unblock();
 
