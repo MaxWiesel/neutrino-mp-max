@@ -27,7 +27,7 @@
 
 #include <vector>
 #include <string>
-#include <gui/components/cc.h>
+#include "gui/components/cc.h"
 #include <mutex>
 #include <thread>
 
@@ -52,7 +52,7 @@ class CScreenSaver : public sigc::trackable
 		bool		status_mute;
 		uint 		seed[6];
 
-		void		handleRadioText();
+		void		handleRadioText(bool enable_paint);
 		void		hideRadioText();
 
 		bool ReadDir();
@@ -72,12 +72,20 @@ class CScreenSaver : public sigc::trackable
 		sigc::slot<void> sl_scr_stop;
 
 	public:
-		enum
+		typedef enum
 		{
 			SCR_MODE_IMAGE,
 			SCR_MODE_CLOCK,
 			SCR_MODE_CLOCK_COLOR
-		};
+		}SCR_MODE_T;
+
+		typedef enum
+		{
+			SCR_MODE_TEXT_OFF,
+			SCR_MODE_TEXT_ON
+
+		}SCR_MODE_TEXT_T;
+
 		CScreenSaver();
 		~CScreenSaver();
 		static CScreenSaver* getInstance();
