@@ -389,6 +389,8 @@ struct SNeutrinoSettings
 	int ci_standby_reset;
 	int ci_check_live;
 	int ci_tuner;
+	int ci_rec_zapto;
+	int ci_mode;
 #if BOXMODEL_VUPLUS_ALL
 	int ci_delay;
 #endif

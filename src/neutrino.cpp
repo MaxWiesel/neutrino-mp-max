@@ -518,30 +518,24 @@ int CNeutrinoApp::loadSetup(const char *fname)
 
 	// ci-settings
 	g_settings.ci_standby_reset = configfile.getInt32("ci_standby_reset", 0);
-
-#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++)
-	{
-		sprintf(cfg_key, "ci_clock_%d", i);
-		g_settings.ci_clock[i] = configfile.getInt32(cfg_key, 6);
-	}
-#else
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++)
-	{
-		sprintf(cfg_key, "ci_clock_%d", i);
-		g_settings.ci_clock[i] = configfile.getInt32(cfg_key, 9);
-	}
-#endif
-
+	g_settings.ci_check_live = configfile.getInt32("ci_check_live", 0);
+	g_settings.ci_tuner = configfile.getInt32("ci_tuner", -1);
+	g_settings.ci_rec_zapto = configfile.getInt32("ci_rec_zapto", 0);
+	g_settings.ci_mode = configfile.getInt32("ci_mode", 0);
 #if BOXMODEL_VUPLUS_ALL
 	g_settings.ci_delay = configfile.getInt32("ci_delay", 128);
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++)
-	{
-		sprintf(cfg_key, "ci_rpr_%d", i);
-		g_settings.ci_rpr[i] = configfile.getInt32(cfg_key, 9);
-	}
 #endif
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++)
+	// ci-settings for each slot
+	unsigned int ci_slots = cCA::GetInstance()->GetNumberCISlots();
+	if (strcmp(g_info.hw_caps->boxvendor, "Coolstream") == 0)
+	{
+		/*
+		   CST hardware isn't initialized here,
+		   so we assume one ci-slot (two for HD1 BSE).
+		*/
+		ci_slots = (strcmp(g_info.hw_caps->boxname, "HD1") == 0) ? 2 : 1;
+	}
+	for (unsigned int i = 0; i < ci_slots; i++)
 	{
 		sprintf(cfg_key, "ci_ignore_messages_%d", i);
 		g_settings.ci_ignore_messages[i] = configfile.getInt32(cfg_key, 0);
@@ -549,9 +543,17 @@ int CNeutrinoApp::loadSetup(const char *fname)
 		g_settings.ci_save_pincode[i] = configfile.getInt32(cfg_key, 0);
 		sprintf(cfg_key, "ci_pincode_%d", i);
 		g_settings.ci_pincode[i] = configfile.getString(cfg_key, "");
+		sprintf(cfg_key, "ci_clock_%d", i);
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+		g_settings.ci_clock[i] = configfile.getInt32(cfg_key, 6);
+#else
+		g_settings.ci_clock[i] = configfile.getInt32(cfg_key, 9);
+#endif
+#if BOXMODEL_VUPLUS_ALL
+		sprintf(cfg_key, "ci_rpr_%d", i);
+		g_settings.ci_rpr[i] = configfile.getInt32(cfg_key, 9);
+#endif
 	}
-	g_settings.ci_check_live = configfile.getInt32("ci_check_live", 0);
-	g_settings.ci_tuner = configfile.getInt32("ci_tuner", -1);
 
 	g_settings.make_hd_list = configfile.getInt32("make_hd_list", 0);
 	g_settings.make_new_list = configfile.getInt32("make_new_list", 1);
@@ -675,10 +677,23 @@ int CNeutrinoApp::loadSetup(const char *fname)
 
 	for (int i = 0; i < 3; i++)
 	{
+		std::string _lang = "none";
+		switch (i)
+		{
+			case 0:
+				_lang = "German" ;
+				break;
+			case 1:
+				_lang = "English";
+				break;
+			case 2:
+				_lang = "French" ;
+				break;
+		}
 		sprintf(cfg_key, "pref_lang_%d", i);
-		g_settings.pref_lang[i] = configfile.getString(cfg_key, "none");
+		g_settings.pref_lang[i] = configfile.getString(cfg_key, _lang);
 		sprintf(cfg_key, "pref_subs_%d", i);
-		g_settings.pref_subs[i] = configfile.getString(cfg_key, "none");
+		g_settings.pref_subs[i] = configfile.getString(cfg_key, _lang);
 	}
 	g_settings.subs_charset = configfile.getString("subs_charset", "CP1252");
 
@@ -1050,8 +1065,8 @@ int CNeutrinoApp::loadSetup(const char *fname)
 	sub_font_file = &g_settings.sub_font_file;
 	sub_font_size = configfile.getInt32("fontsize.subtitles", 24);
 
-	g_settings.font_scaling_x = configfile.getInt32("font_scaling_x", 100);
-	g_settings.font_scaling_y = configfile.getInt32("font_scaling_y", 100);
+	g_settings.font_scaling_x = configfile.getInt32("font_scaling_x", 105);
+	g_settings.font_scaling_y = configfile.getInt32("font_scaling_y", 105);
 
 	// online services
 	g_settings.weather_api_key = WEATHER_DEV_KEY;
@@ -1480,19 +1495,14 @@ void CNeutrinoApp::saveSetup(const char *fname)
 
 	// ci-settings
 	configfile.setInt32("ci_standby_reset", g_settings.ci_standby_reset);
-	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++)
-	{
-		sprintf(cfg_key, "ci_clock_%d", i);
-		configfile.setInt32(cfg_key, g_settings.ci_clock[i]);
-	}
-
+	configfile.setInt32("ci_check_live", g_settings.ci_check_live);
+	configfile.setInt32("ci_tuner", g_settings.ci_tuner);
+	configfile.setInt32("ci_rec_zapto", g_settings.ci_rec_zapto);
+	configfile.setInt32("ci_mode", g_settings.ci_mode);
 #if BOXMODEL_VUPLUS_ALL
 	configfile.setInt32("ci_delay", g_settings.ci_delay);
-	for (uint32_t i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++) {
-		sprintf(cfg_key, "ci_rpr_%d", i);
-		configfile.setInt32(cfg_key, g_settings.ci_rpr[i]);
-	}
 #endif
+	// ci-settings for each slot
 	for (unsigned int i = 0; i < cCA::GetInstance()->GetNumberCISlots(); i++)
 	{
 		sprintf(cfg_key, "ci_ignore_messages_%d", i);
@@ -1501,9 +1511,13 @@ void CNeutrinoApp::saveSetup(const char *fname)
 		configfile.setInt32(cfg_key, g_settings.ci_save_pincode[i]);
 		sprintf(cfg_key, "ci_pincode_%d", i);
 		configfile.setString(cfg_key, g_settings.ci_pincode[i]);
+		sprintf(cfg_key, "ci_clock_%d", i);
+		configfile.setInt32(cfg_key, g_settings.ci_clock[i]);
+#if BOXMODEL_VUPLUS_ALL
+		sprintf(cfg_key, "ci_rpr_%d", i);
+		configfile.setInt32(cfg_key, g_settings.ci_rpr[i]);
+#endif
 	}
-	configfile.setInt32("ci_check_live", g_settings.ci_check_live);
-	configfile.setInt32("ci_tuner", g_settings.ci_tuner);
 
 	configfile.setInt32("make_hd_list", g_settings.make_hd_list);
 	configfile.setInt32("make_new_list", g_settings.make_new_list);
@@ -2759,7 +2773,7 @@ TIMER_START();
 	if (loadLocale_ret == CLocaleManager::NO_SUCH_LOCALE)
 	{
 		g_settings.language = "deutsch";
-		g_Locale->loadLocale(g_settings.language.c_str());
+		loadLocale_ret = g_Locale->loadLocale(g_settings.language.c_str());
 		show_startwizard = true;
 	}
 
@@ -3391,11 +3405,15 @@ void CNeutrinoApp::RealRun()
 				{
 					if (mode == NeutrinoModes::mode_radio || mode == NeutrinoModes::mode_webradio)
 						tvMode();
+					else if (!g_InfoViewer->is_visible)
+						g_RCInput->postMsg(CRCInput::RC_info, 0);
 				}
 				else if (msg == CRCInput::RC_radio)
 				{
 					if (mode == NeutrinoModes::mode_tv || mode == NeutrinoModes::mode_webtv)
 						radioMode();
+					else if (!g_InfoViewer->is_visible)
+						g_RCInput->postMsg(CRCInput::RC_info, 0);
 				}
 				else
 					switchTvRadioMode(); //used with defined default tv/radio rc key
@@ -5450,6 +5468,7 @@ void stop_daemons(bool stopall, bool for_flash)
 
 void stop_video()
 {
+	CFrameBuffer::getInstance()->paintBackground(); // clear osd
 	delete videoDecoder;
 	delete videoDemux;
 	delete CFrameBuffer::getInstance();
@@ -5518,10 +5537,6 @@ void CNeutrinoApp::loadKeys(const char *fname)
 	g_settings.key_channelList_addrecord = tconfig->getInt32("key_channelList_addrecord", CRCInput::RC_red);
 	g_settings.key_channelList_addremind = tconfig->getInt32("key_channelList_addremind", CRCInput::RC_yellow);
 	g_settings.key_channelList_cancel = tconfig->getInt32("key_channelList_cancel", CRCInput::RC_home);
-	// backward-compatible check
-	if (g_settings.key_channelList_cancel == 174) { /* KEY_EXIT */
-		g_settings.key_channelList_cancel = 102;    /* KEY_HOME */
-	}
 	g_settings.key_channelList_sort = tconfig->getInt32("key_channelList_sort", CRCInput::RC_blue);
 	g_settings.key_current_transponder = tconfig->getInt32("key_current_transponder", CRCInput::RC_games);
 	g_settings.key_favorites = tconfig->getInt32("key_favorites", CRCInput::RC_favorites);
