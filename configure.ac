@@ -4,16 +4,31 @@ define(ver_minor, 10)
 define(ver_micro, 0)
 define(neutrino_rel_cycle, ver_major.ver_minor)
 
+# sync with current git
+define(ver_git, m4_esyscmd([
+	GITBRANCH=$(git rev-parse --abbrev-ref HEAD);
+	GITDESCRIBE=$(git describe --always --tags --dirty);
+	printf "$GITDESCRIBE $GITBRANCH"
+]))
+
+define(ver_date, m4_esyscmd([
+	BUILTDATE=$(date);
+	printf "$BUILTDATE"
+]))
+
+define(rel_cycle, "ver_major.0")
+
 AC_INIT(Neutrino-MP,ver_major.ver_minor.ver_micro)
 AM_INIT_AUTOMAKE([nostdinc foreign])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
 
-AC_DEFINE(RELEASE_CYCLE, "2.5", [Release cycle information; used in update code; only relevant for flash image releases ])
+AC_DEFINE(PACKAGE_RELEASE_CYCLE, rel_cycle, [Release cycle information; used in update code; only relevant for flash image releases ])
 
 AC_DEFINE(PACKAGE_VERSION_MAJOR, ver_major, [Major version number])
 AC_DEFINE(PACKAGE_VERSION_MINOR, ver_minor, [Minor version number])
 AC_DEFINE(PACKAGE_VERSION_MICRO, ver_micro, [Micro version number])
-AC_DEFINE(PACKAGE_VERSION_NEUTRINO_REL_CYCLE, neutrino_rel_cycle, [Neutrino release cycle])
+AC_DEFINE(PACKAGE_VERSION_GIT, "ver_git", [internal vcs version info])
+AC_DEFINE(PACKAGE_VERSION_DATE, "ver_date", [internal built date])
 
 TUXBOX_APPS
 TUXBOX_APPS_DIRECTORY
