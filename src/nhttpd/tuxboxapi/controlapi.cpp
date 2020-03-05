@@ -55,6 +55,8 @@ extern CPictureViewer *g_PicViewer;
 
 extern cVideo * videoDecoder;
 
+#include <system/helpers.h>
+
 extern CPlugins *g_Plugins;//for relodplugins
 extern CBouquetManager *g_bouquetManager;
 
