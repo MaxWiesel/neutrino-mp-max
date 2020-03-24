@@ -1829,9 +1829,6 @@ int CRCInput::translate(int code)
 #elif BOXMODEL_OSMIO4K || BOXMODEL_OSMIO4KPLUS
 		case KEY_VIDEO:
 			return RC_mode;
-		case KEY_PVR:
-			return RC_pvr;
-
 #endif
 		case KEY_SWITCHVIDEOMODE:
 			return RC_mode;
