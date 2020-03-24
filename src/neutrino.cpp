@@ -3411,7 +3411,7 @@ void CNeutrinoApp::RealRun()
 				CMediaPlayerMenu * multimedia_menu = CMediaPlayerMenu::getInstance();
 				multimedia_menu->exec(NULL, "");
 			}
-			else if( msg == CRCInput::RC_video)
+			else if( msg == CRCInput::RC_video || msg == CRCInput::RC_pvr)
 			{
 				//open moviebrowser via media player menu object
 				if (g_settings.recording_type != CNeutrinoApp::RECORDING_OFF)
