@@ -696,7 +696,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 		{
 			bool active = !strcmp(c, to_string(i).c_str());
 			std::string m_title = "Partition " + to_string(i);
-#if BOXMODEL_VUPLUS4K
+#if BOXMODEL_VUPLUS_ARM
 			// own partition blocked, because fix needed for flashing own partition
 			mf = new CMenuForwarder(m_title, !active, NULL, selector, to_string(i).c_str(), CRCInput::convertDigitToKey(i));
 #else

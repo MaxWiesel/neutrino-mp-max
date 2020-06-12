@@ -1837,7 +1837,7 @@ int getActivePartition()
 {
 	int c = -1;
 
-#if BOXMODEL_VUPLUS4K
+#if BOXMODEL_VUPLUS_ARM
 	FILE *f;
 	f = fopen("/proc/cmdline", "r");
 	if (f)
@@ -1912,7 +1912,7 @@ int getActivePartition()
 		}
 		fclose(f);
 	}
-#elif BOXMODEL_HD51 || BOXMODEL_HD60 || BOXMODEL_HD61 || BOXMODEL_BRE2ZE4K || BOXMODEL_H7
+#elif BOXMODEL_HD51 || BOXMODEL_HD60 || BOXMODEL_HD61 || BOXMODEL_BRE2ZE4K || BOXMODEL_H7 || BOXMODEL_OSMIO4K || BOXMODEL_OSMIO4KPLUS
 	FILE *f;
 	// first check for subdirboot layout
 	f = fopen("/sys/firmware/devicetree/base/chosen/bootargs", "r");
