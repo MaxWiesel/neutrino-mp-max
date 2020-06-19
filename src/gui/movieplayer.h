@@ -112,7 +112,16 @@ class CMoviePlayerGui : public CMenuTarget
 	int            m_LastMode;
 	int            m_ThisMode;
 
-	std::string	second_file_name;//separate audio file for ARM BOX
+#ifdef ENABLE_GRAPHLCD
+	struct		tm *tm_struct;
+	int		glcd_position;
+	std::string	channel;
+	std::string	epg;
+	std::string	glcd_duration;
+	std::string	start;
+	std::string	end;
+#endif
+
 	std::string	cookie_header;
 	std::string	info_1, info_2;
 	std::string    	currentaudioname;
@@ -280,6 +289,7 @@ class CMoviePlayerGui : public CMenuTarget
 
 	MI_MOVIE_INFO * p_movie_info;
 	std::string	file_name;
+	std::string	second_file_name;//separate audio file for ARM BOX
 	std::string	pretty_name;
 	int exec(CMenuTarget* parent, const std::string & actionKey);
 	bool Playing() { return playing; };
