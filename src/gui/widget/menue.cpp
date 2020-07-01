@@ -94,11 +94,8 @@ CMenuItem::CMenuItem(bool Active, neutrino_msg_t DirectKey, const char * const I
 	actObserv	= NULL;
 	parent_widget	= NULL;
 
-#ifdef ENABLE_GRAPHLCD
-	graphlcd_text	= "";
-#endif
-#ifdef ENABLE_LCD4LINUX
-	lcd4l_text	= "";
+#if ENABLE_GRAPHLCD || ENABLE_LCD4LINUX
+	lcd_text	= "";
 #endif
 }
 
@@ -246,35 +243,25 @@ void CMenuItem::paintItemCaption(const bool select_mode, const char * right_text
 			char str[len];
 			snprintf(str, len, "%s %s", left_text, right_text);
 			CVFD::getInstance()->showMenuText(0, str, -1, true);
-#ifdef ENABLE_GRAPHLCD
-			if (g_settings.glcd_enable)
-				graphlcd_text = str;
-#endif
-#ifdef ENABLE_LCD4LINUX
-			if (g_settings.lcd4l_support)
-				lcd4l_text = str;
+#if ENABLE_GRAPHLCD || ENABLE_LCD4LINUX
+			lcd_text = str;
 #endif
 		} 
 		else
 		{
 			CVFD::getInstance()->showMenuText(0, left_text, -1, true);
-#ifdef ENABLE_GRAPHLCD
-			if (g_settings.glcd_enable)
-				graphlcd_text = left_text;
-#endif
-#ifdef ENABLE_LCD4LINUX
-			if (g_settings.lcd4l_support)
-				lcd4l_text = left_text;
+#if ENABLE_GRAPHLCD || ENABLE_LCD4LINUX
+			lcd_text = left_text;
 #endif
 		}
 
 #ifdef ENABLE_GRAPHLCD
 		if (g_settings.glcd_enable)
-			cGLCD::lockChannel(g_Locale->getText(LOCALE_MAINMENU_HEAD), graphlcd_text, 0);
+			cGLCD::lockChannel(g_Locale->getText(LOCALE_MAINMENU_HEAD), lcd_text, 0);
 #endif
 #ifdef ENABLE_LCD4LINUX
 		if (g_settings.lcd4l_support)
-			LCD4l->CreateFile("/tmp/lcd/menu", lcd4l_text, g_settings.lcd4l_convert);
+			LCD4l->CreateFile("/tmp/lcd/menu", lcd_text, g_settings.lcd4l_convert);
 #endif
 	}
 	
@@ -421,7 +408,7 @@ void CMenuItem::paintItemButton(const bool select_mode, int item_height, const c
 	if (icon_name && *icon_name)
 	{
                if (!active)
-			icon_name = NEUTRINO_ICON_BUTTON_DUMMY;
+			icon_name = NEUTRINO_ICON_BUTTON_DUMMY_SMALL;
 
 		frameBuffer->getIconSize(icon_name, &icon_w, &icon_h);
 
@@ -1061,11 +1048,11 @@ int CMenuWidget::exec(CMenuTarget* parent, const std::string &)
 
 #ifdef ENABLE_GRAPHLCD
 					if (g_settings.glcd_enable)
-						cGLCD::lockChannel(g_Locale->getText(LOCALE_MAINMENU_HEAD), item->graphlcd_text, 0);
+						cGLCD::lockChannel(g_Locale->getText(LOCALE_MAINMENU_HEAD), item->lcd_text, 0);
 #endif
 #ifdef ENABLE_LCD4LINUX
 					if (g_settings.lcd4l_support)
-						LCD4l->CreateFile("/tmp/lcd/menu", item->lcd4l_text, g_settings.lcd4l_convert);
+						LCD4l->CreateFile("/tmp/lcd/menu", item->lcd_text, g_settings.lcd4l_convert);
 #endif
 
 					switch ( rv ) {
