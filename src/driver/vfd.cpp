@@ -34,7 +34,6 @@
 #include <driver/record.h>
 
 #include <fcntl.h>
-#include <sys/timeb.h>
 #include <time.h>
 #include <unistd.h>
 #include <math.h>
@@ -635,26 +634,25 @@ void CVFD::showTime(bool force)
 	if (fd >= 0 && showclock) {
 		if (mode == MODE_STANDBY || ( g_settings.lcd_info_line && (MODE_TVRADIO == mode))) {
 			char timestr[21];
-			struct timeb tm;
-			struct tm * t;
+			time_t now = time(NULL);
+			struct tm t;
 			static int hour = 0, minute = 0;
 
-			ftime(&tm);
-			t = localtime(&tm.time);
-			if(force || ( switch_name_time_cnt == 0 && ((hour != t->tm_hour) || (minute != t->tm_min))) ) {
-				hour = t->tm_hour;
-				minute = t->tm_min;
+			localtime_r(&now, &t);
+			if(force || ( switch_name_time_cnt == 0 && ((hour != t.tm_hour) || (minute != t.tm_min))) ) {
+				hour = t.tm_hour;
+				minute = t.tm_min;
 #if !defined (BOXMODEL_HS7810A) && !defined (BOXMODEL_HS7819)
 #if defined (BOXMODEL_OCTAGON1008)
 				ShowIcon(ICON_COLON2, true);
 #elif defined (BOXMODEL_OCTAGON1008) || defined (BOXMODEL_HS7119) || defined (BOXMODEL_CUBEREVO_250HD)
-				strftime(timestr, 5, "%H%M", t);
+				strftime(timestr, 5, "%H%M", &t);
 #else
-				strftime(timestr, 6, "%H:%M", t);
+				strftime(timestr, 6, "%H:%M", &t);
 #endif
 				ShowText(timestr);
 #else //HS7810A or HS7819, string should not scroll
-				strftime(timestr, 6, "%H:%M", t);
+				strftime(timestr, 6, "%H:%M", &t);
 				struct vfd_ioctl_data data;
 				memset(data.data, ' ', 6);
 				memcpy (data.data, timestr, 6);
@@ -663,10 +661,10 @@ void CVFD::showTime(bool force)
 				write_to_vfd(VFDDISPLAYCHARS, &data);
 #endif
 				if (support_text) {
-					strftime(timestr, 20, "%H:%M", t);
+					strftime(timestr, 20, "%H:%M", &t);
 					ShowText(timestr);
 				} else if (support_numbers && has_led_segment) {
-					ShowNumber((t->tm_hour*100) + t->tm_min);
+					ShowNumber((t.tm_hour*100) + t.tm_min);
 #ifdef BOXMODEL_CS_HD2
 					ioctl(fd, IOC_FP_SET_COLON, 0x01);
 #endif
