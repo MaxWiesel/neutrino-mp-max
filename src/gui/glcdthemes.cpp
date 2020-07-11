@@ -366,7 +366,7 @@ void CGLCDThemes::getTheme(CConfigFile &configfile)
 	t.glcd_color_bar_red = configfile.getInt32("glcd_color_bar_red", 0x00);
 	t.glcd_color_bar_green = configfile.getInt32("glcd_color_bar_green", 0x32);
 	t.glcd_color_bar_blue = configfile.getInt32("glcd_color_bar_blue", 0x64);
-	t.glcd_font = configfile.getString("glcd_font", "/share/fonts/neutrino.ttf");
+	t.glcd_font = configfile.getString("glcd_font", "/usr/share/fonts/neutrino.ttf");
 	t.glcd_background = configfile.getString("glcd_background", "");
 	t.glcd_show_logo = configfile.getBool("glcd_show_logo", true);
 	t.glcd_show_progressbar = configfile.getBool("glcd_show_progressbar", true);

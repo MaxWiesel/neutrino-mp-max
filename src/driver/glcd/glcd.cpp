@@ -48,7 +48,7 @@
 #include "png.h"
 #include "jpeglib.h"
 
-#define LCD_ICONSDIR	"/share/lcd/icons/"
+#define LCD_ICONSDIR	"/usr/share/lcd/icons/"
 #define ICONSEXT	".png"
 
 static const char * kDefaultConfigFile = "/etc/graphlcd.conf";
