@@ -1647,7 +1647,6 @@ bool CFrameBuffer::showFrame(const std::string & filename, int fallback_mode)
 	return ret;
 }
 
-
 void CFrameBuffer::stopFrame()
 {
 	videoDecoder->StopPicture();
