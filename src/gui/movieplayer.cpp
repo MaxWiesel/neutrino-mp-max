@@ -562,7 +562,19 @@ void CMoviePlayerGui::updateLcd(bool display_playtime)
 		ss -= hh * 3600;
 		int mm = ss/60;
 		ss -= mm * 60;
-		lcd = to_string(hh/10) + to_string(hh%10) + ":" + to_string(mm/10) + to_string(mm%10) + ":" + to_string(ss/10) + to_string(ss%10);
+
+		if (g_info.hw_caps->display_xres >= 8)
+			lcd = to_string(hh/10) + to_string(hh%10) + ":" + to_string(mm/10) + to_string(mm%10) + ":" + to_string(ss/10) + to_string(ss%10);
+		else
+		{
+			std::string colon = g_info.hw_caps->display_has_colon ? ":" : "";
+			if (hh < 1) {
+				lcd = to_string(mm/10) + to_string(mm%10) + colon + to_string(ss/10) + to_string(ss%10);
+			}
+			else {
+				lcd = to_string(hh/10) + to_string(hh%10) + colon + to_string(mm/10) + to_string(mm%10);
+			}
+		}
 	}
 	else
 	{
@@ -1803,9 +1815,10 @@ void CMoviePlayerGui::PlayFileLoop(void)
 
 	while (playstate >= CMoviePlayerGui::PLAY)
 	{
-		if (update_lcd || g_settings.movieplayer_display_playtime) {
+		bool show_playtime = (g_settings.movieplayer_display_playtime || g_info.hw_caps->display_type == HW_DISPLAY_LED_NUM);
+		if (update_lcd || show_playtime) {
 			update_lcd = false;
-			updateLcd(g_settings.movieplayer_display_playtime);
+			updateLcd(show_playtime);
 		}
 		if (first_start) {
 			usleep(80000);
