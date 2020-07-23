@@ -299,7 +299,7 @@ int CLCD4lSetup::showTypeSetup()
 
 	if (temp_lcd4l_display_type == CLCD4l::PEARL320x240)
 		mc = new CMenuOptionChooser(LOCALE_LCD4L_SKIN, &temp_lcd4l_skin, LCD4L_PEARL_SKIN_OPTIONS, LCD4L_PEARL_SKIN_OPTION_COUNT, true, NULL, CRCInput::convertDigitToKey(shortcut++));
-#if BOXMODEL_VUPLUS4K
+#if BOXMODEL_VUPLUS_ARM
 	else if (temp_lcd4l_display_type == CLCD4l::VUPLUS4K480x320)
 		mc = new CMenuOptionChooser(LOCALE_LCD4L_SKIN, &temp_lcd4l_skin, LCD4L_VUPLUS4K_SKIN_OPTIONS, LCD4L_VUPLUS4K_SKIN_OPTION_COUNT, true, NULL, CRCInput::convertDigitToKey(shortcut++));
 #endif
