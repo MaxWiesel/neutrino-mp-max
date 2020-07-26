@@ -580,7 +580,7 @@ int CVideoSettings::showVideoSetup()
 	if (vs_videomodes_fw != NULL)
 		videosetup->addItem(vs_videomodes_fw);	  //video modes submenue
 #ifdef BOXMODEL_CS_HD2
-		videosetup->addItem(vs_automodes_fw);	  //video auto modes submenue
+	videosetup->addItem(vs_automodes_fw);	  //video auto modes submenue
 #endif
 
 #if HAVE_SH4_HARDWARE
@@ -595,37 +595,6 @@ int CVideoSettings::showVideoSetup()
 	videosetup->addItem(md);
 #endif
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
-	CMenuForwarder *mf;
-	CMenuOptionNumberChooser *mc;
-
-	CPSISetup *psiSetup = CPSISetup::getInstance();
-
-	videosetup->addItem(GenericMenuSeparatorLine);
-	mf = new CMenuForwarder(LOCALE_VIDEOMENU_PSI, true, NULL, psiSetup, NULL, CRCInput::RC_red);
-	mf->setHint("", LOCALE_MENU_HINT_VIDEO_PSI);
-	videosetup->addItem(mf);
-
-	mc = new CMenuOptionNumberChooser(LOCALE_VIDEOMENU_PSI_STEP, (int *)&g_settings.psi_step, true, 1, 100, NULL);
-	mc->setHint("", LOCALE_MENU_HINT_VIDEO_PSI_STEP);
-	videosetup->addItem(mc);
-
-	mc = new CMenuOptionNumberChooser(LOCALE_VIDEOMENU_PSI_CONTRAST, (int *)&g_settings.psi_contrast, true, 0, 255, psiSetup);
-	mc->setHint("", LOCALE_MENU_HINT_VIDEO_CONTRAST);
-	videosetup->addItem(mc);
-
-	mc = new CMenuOptionNumberChooser(LOCALE_VIDEOMENU_PSI_SATURATION, (int *)&g_settings.psi_saturation, true, 0, 255, psiSetup);
-	mc->setHint("", LOCALE_MENU_HINT_VIDEO_SATURATION);
-	videosetup->addItem(mc);
-
-	mc = new CMenuOptionNumberChooser(LOCALE_VIDEOMENU_PSI_BRIGHTNESS, (int *)&g_settings.psi_brightness, true, 0, 255, psiSetup);
-	mc->setHint("", LOCALE_MENU_HINT_VIDEO_BRIGHTNESS);
-	videosetup->addItem(mc);
-
-	mc = new CMenuOptionNumberChooser(LOCALE_VIDEOMENU_PSI_TINT, (int *)&g_settings.psi_tint, true, 0, 255, psiSetup);
-	mc->setHint("", LOCALE_MENU_HINT_VIDEO_TINT);
-	videosetup->addItem(mc);
-#endif
 #ifdef BOXMODEL_CS_HD2
 	/* values are from -128 to 127, but brightness really no sense after +/- 40. changeNotify multiply contrast and saturation to 3 */
 	CMenuOptionNumberChooser * bcont = new CMenuOptionNumberChooser(LOCALE_VIDEOMENU_BRIGHTNESS, &g_settings.brightness, true, -42, 42, this);
@@ -654,6 +623,32 @@ int CVideoSettings::showVideoSetup()
 		zm->setHint("", LOCALE_MENU_HINT_VIDEO_ZAPPINGMODE);
 		videosetup->addItem(zm);
 	}
+#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
+	videosetup->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_VIDEOMENU_PSI));
+	CMenuOptionNumberChooser *mc;
+	CPSISetup *psiSetup = CPSISetup::getInstance();
+
+	mc = new CMenuOptionNumberChooser(LOCALE_VIDEOMENU_PSI_STEP, (int *)&g_settings.psi_step, true, 1, 100, NULL);
+	mc->setHint("", LOCALE_MENU_HINT_VIDEO_PSI_STEP);
+	videosetup->addItem(mc);
+
+	mc = new CMenuOptionNumberChooser(LOCALE_VIDEOMENU_PSI_CONTRAST, (int *)&g_settings.psi_contrast, true, 0, 255, psiSetup);
+	mc->setHint("", LOCALE_MENU_HINT_VIDEO_CONTRAST);
+	videosetup->addItem(mc);
+
+	mc = new CMenuOptionNumberChooser(LOCALE_VIDEOMENU_PSI_SATURATION, (int *)&g_settings.psi_saturation, true, 0, 255, psiSetup);
+	mc->setHint("", LOCALE_MENU_HINT_VIDEO_SATURATION);
+	videosetup->addItem(mc);
+
+	mc = new CMenuOptionNumberChooser(LOCALE_VIDEOMENU_PSI_BRIGHTNESS, (int *)&g_settings.psi_brightness, true, 0, 255, psiSetup);
+	mc->setHint("", LOCALE_MENU_HINT_VIDEO_BRIGHTNESS);
+	videosetup->addItem(mc);
+
+	mc = new CMenuOptionNumberChooser(LOCALE_VIDEOMENU_PSI_TINT, (int *)&g_settings.psi_tint, true, 0, 255, psiSetup);
+	mc->setHint("", LOCALE_MENU_HINT_VIDEO_TINT);
+	videosetup->addItem(mc);
+#endif
+
 	int res = videosetup->exec(NULL, "");
 	selected = videosetup->getSelected();
 #if HAVE_SH4_HARDWARE
