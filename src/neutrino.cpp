@@ -1078,7 +1078,11 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	//Movie-Player
 	g_settings.movieplayer_repeat_on = configfile.getInt32("movieplayer_repeat_on", CMoviePlayerGui::REPEAT_OFF);
 	g_settings.movieplayer_bisection_jump = configfile.getInt32("movieplayer_bisection_jump", 5);
+#if BOXMODEL_BRE2ZE4K || BOXMODEL_H7 //lcd on BRE2ZE4K or H7 can only display Numbers
+	g_settings.movieplayer_display_playtime = configfile.getInt32("movieplayer_display_playtime", 1);
+#else
 	g_settings.movieplayer_display_playtime = configfile.getInt32("movieplayer_display_playtime", 0);
+#endif
 	g_settings.movieplayer_timeosd_while_searching = configfile.getInt32("movieplayer_timeosd_while_searching", 1);
 
 	//online services
