@@ -204,10 +204,6 @@ if BOXTYPE_SPARK
 neutrino_LDADD += -lass
 endif
 
-if BOXTYPE_DUCKBOX
-neutrino_LDADD += -lass
-endif
-
 if BOXTYPE_MIPSBOX
 neutrino_LDADD += -lass
 endif
