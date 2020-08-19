@@ -84,15 +84,6 @@ int CCECSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 }
 
 
-#if HAVE_SH4_HARDWARE
-#define VIDEOMENU_HDMI_CEC_STANDBY_OPTION_COUNT 3
-const CMenuOptionChooser::keyval VIDEOMENU_HDMI_CEC_STANDBY_OPTIONS[VIDEOMENU_HDMI_CEC_STANDBY_OPTION_COUNT] =
-{
-	{ 0	, LOCALE_OPTIONS_OFF				},
-	{ 1	, LOCALE_OPTIONS_ON				},
-	{ 2	, LOCALE_VIDEOMENU_HDMI_CEC_STANDBY_NOT_TIMER	}
-};
-#else
 #define VIDEOMENU_HDMI_CEC_MODE_OPTION_COUNT 3
 const CMenuOptionChooser::keyval VIDEOMENU_HDMI_CEC_MODE_OPTIONS[VIDEOMENU_HDMI_CEC_MODE_OPTION_COUNT] =
 {
@@ -100,7 +91,6 @@ const CMenuOptionChooser::keyval VIDEOMENU_HDMI_CEC_MODE_OPTIONS[VIDEOMENU_HDMI_
 	{ VIDEO_HDMI_CEC_MODE_TUNER	, LOCALE_VIDEOMENU_HDMI_CEC_MODE_TUNER    },
 	{ VIDEO_HDMI_CEC_MODE_RECORDER	, LOCALE_VIDEOMENU_HDMI_CEC_MODE_RECORDER }
 };
-#endif
 
 int CCECSetup::showMenu()
 {
@@ -109,13 +99,6 @@ int CCECSetup::showMenu()
 	cec->addIntroItems(LOCALE_VIDEOMENU_HDMI_CEC);
 
 	//cec
-#if HAVE_SH4_HARDWARE
-	CKernelOptions ko;
-	g_settings.hdmi_cec_mode = ko.isEnabled("cec");
-	CMenuOptionChooser *cec_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_HDMI_CEC_MODE, &g_settings.hdmi_cec_mode, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
-	cec1 = new CMenuOptionChooser(LOCALE_VIDEOMENU_HDMI_CEC_STANDBY, &g_settings.hdmi_cec_standby, VIDEOMENU_HDMI_CEC_STANDBY_OPTIONS, VIDEOMENU_HDMI_CEC_STANDBY_OPTION_COUNT, g_settings.hdmi_cec_mode != 0, this);
-	cec2 = new CMenuOptionChooser(LOCALE_VIDEOMENU_HDMI_CEC_BROADCAST, &g_settings.hdmi_cec_broadcast, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, g_settings.hdmi_cec_mode != VIDEO_HDMI_CEC_MODE_OFF, this);
-#else
 	CMenuOptionChooser *cec_ch = new CMenuOptionChooser(LOCALE_VIDEOMENU_HDMI_CEC_MODE, &g_settings.hdmi_cec_mode, VIDEOMENU_HDMI_CEC_MODE_OPTIONS, VIDEOMENU_HDMI_CEC_MODE_OPTION_COUNT, true, this);
 	cec_ch->setHint("", LOCALE_MENU_HINT_CEC_MODE);
 	cec1 = new CMenuOptionChooser(LOCALE_VIDEOMENU_HDMI_CEC_VIEW_ON, &g_settings.hdmi_cec_view_on, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, g_settings.hdmi_cec_mode != VIDEO_HDMI_CEC_MODE_OFF, this);
@@ -126,12 +109,8 @@ int CCECSetup::showMenu()
 	cec3 = new CMenuOptionChooser(LOCALE_VIDEOMENU_HDMI_CEC_VOLUME, &g_settings.hdmi_cec_volume, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, g_settings.hdmi_cec_mode != VIDEO_HDMI_CEC_MODE_OFF, this);
 	cec3->setHint("", LOCALE_MENU_HINT_CEC_VOLUME);
 #endif
-#endif
 
 	cec->addItem(cec_ch);
-#if !HAVE_SH4_HARDWARE
-	cec->addItem(GenericMenuSeparatorLine);
-#endif
 	//-------------------------------------------------------
 	cec->addItem(cec1);
 	cec->addItem(cec2);

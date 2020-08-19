@@ -145,10 +145,6 @@ audiomenu.dts DTS durchleiten
 audiomenu.hdmi_dd Dolby Digital über HDMI
 audiomenu.hdmi_dd_auto automatisch
 audiomenu.hdmi_dd_force erzwingen
-audiomenu.mixer_volume Mixer-Lautstärke
-audiomenu.mixer_volume_analog Analog
-audiomenu.mixer_volume_hdmi HDMI
-audiomenu.mixer_volume_spdif S/PDIF
 audiomenu.monoleft mono links
 audiomenu.monoright mono rechts
 audiomenu.pref_lang Sprache
@@ -519,9 +515,9 @@ extra.fec_7_8 7/8
 extra.fec_8_9 8/9
 extra.fec_9_10 9/10
 extra.fec_auto Auto
-extra.key_current_transponder Aktuelle Transponder Taste
+extra.key_current_transponder Aktueller Transponder
 extra.key_format_mode Videoformat
-extra.key_help Hilfe-Taste
+extra.key_help Hilfe
 extra.key_list_end Listenende
 extra.key_list_start Listenanfang
 extra.key_next43mode Nächstes Seitenformat
@@ -530,11 +526,11 @@ extra.key_pic_size 4:3 Anzeigeverhalten
 extra.key_pip_close Stop/Start PiP
 extra.key_pip_setup PiP Konfiguration
 extra.key_pip_swap Umschalten PiP/live
-extra.key_record Aufnahme-Taste
-extra.key_screenshot Screenshot Taste
+extra.key_record Aufnahme
+extra.key_screenshot Screenshot
 extra.key_switchformat Nächste Auflösung
 extra.key_timeshift Timeshift
-extra.key_unlock Entsperrtaste
+extra.key_unlock Entsperren
 extra.ladirection Breitengrad-Ausrichtung
 extra.latitude Breitengrad
 extra.loadconfig Einstellungen laden
@@ -995,7 +991,7 @@ imageinfo.creator Ersteller:
 imageinfo.date Datum:
 imageinfo.dokumentation Dokus:
 imageinfo.forum Forum:
-imageinfo.gui GUI:
+imageinfo.gui Neutrino:
 imageinfo.head Image-Informationen
 imageinfo.homepage Homepage:
 imageinfo.image Image:
@@ -1040,16 +1036,6 @@ infoviewer.subchan_infobar Infobar
 infoviewer.waittime Warte auf Uhrzeit ...
 ipsetup.hint_1 Benutzen Sie 0..9 oder hoch/runter
 ipsetup.hint_2 OK speichert, EXIT bricht ab
-kerneloptions.apply Einstellungen anwenden
-kerneloptions.head Kernel-Optionen
-kerneloptions.hint.disabled_loaded Das Kernel-Modul ist noch geladen.
-kerneloptions.hint.disabled_not_loaded Das Kernel-Modul ist nicht geladen.
-kerneloptions.hint.enabled_loaded Das Kernel-Modul ist geladen und verwendbar.
-kerneloptions.hint.enabled_not_loaded Wenden Sie die Einstellungen an, um das Kernel-Modul zu laden.
-kerneloptions.modules Kernel-Module
-kerneloptions.reset Einstellungen zurücksetzen
-keybindingmenu.RC Fernbedienung abstimmen
-keybindingmenu.accept_other_remotes Andere Fernbedienungen akzeptieren
 keybindingmenu.addrecord Aufnahme-Timer hinzufügen
 keybindingmenu.addremind Umschalt-Timer hinzufügen
 keybindingmenu.allchannels_on_ok Kanalliste
@@ -1078,12 +1064,6 @@ keybindingmenu.pagedown Seite weiter
 keybindingmenu.pageup Seite zurück
 keybindingmenu.poweroff Standby ein/aus
 keybindingmenu.quickzap Schnellumschaltung
-keybindingmenu.remotecontrol_code Fernbedienung Code
-keybindingmenu.remotecontrol_code_change Code der Fernbedienung ändern
-keybindingmenu.remotecontrol_code_msg1 Für die Umstellung der Fernbedienung bitte die Tasten: Back +
-keybindingmenu.remotecontrol_code_msg2 gleichzeitig betätigen, danach: OK Taste drücken zum Verlassen der Infobox.
-keybindingmenu.remotecontrol_code_not_save Der Code der Fernbedienung wurde nicht geändert !
-keybindingmenu.remotecontrol_code_save Neuen Code speichern
 keybindingmenu.remotecontrol_hardware Hardware
 keybindingmenu.remotecontrol_hardware_coolstream CST
 keybindingmenu.remotecontrol_hardware_dbox DBox Nokia (alt)
@@ -1151,7 +1131,6 @@ lcdmenu.statusline Statuszeile
 lcdmenu.statusline.both Lautstärke/Fortschritt
 lcdmenu.statusline.playtime Sendungsfortschritt
 lcdmenu.statusline.volume Lautstärke
-lcdmenu.vfd_scroll Laufschrift
 ledcontroler.backlight Hintergrundbeleuchtung Buttons
 ledcontroler.backlight.tv TV Modus
 ledcontroler.blink Blinke im Deep-Standby, wenn Timer aktiv
@@ -1225,7 +1204,6 @@ mbkey.truncate Film kürzen
 menu.back Zurück
 menu.cancel Abbrechen
 menu.hint_a_pic Konfigurieren Sie den Audioplayer und den Bildbetrachter
-menu.hint_accept_other_remotes Deaktivieren um andere Fernbedienungen zu ignorieren
 menu.hint_adzap Der Werbezapper schaltet nach der eingestellten Zeit wieder auf den ursprünglichen Kanal zurück
 menu.hint_adzap_active Der Werbezapper ist aktiv. Mit einem erneuten Aufruf wird er deaktiviert.
 menu.hint_adzap_writedata Schreibe Daten über den Status des Werbezappers nach /tmp/adzap.data
@@ -1487,12 +1465,10 @@ menu.hint_menus Wählen Sie die Anzeigeoptionen für die Menüs
 menu.hint_message_fonts Anpassen der Schrift in Meldungsfenstern
 menu.hint_misc_cec HDMI-CEC Optionen
 menu.hint_misc_channellist Erweiterte Einstellungen für die Kanallisten und Zapping-Einstellungen
-menu.hint_misc_cpufreq Legen Sie die Taktfrequenz der CPU fest
 menu.hint_misc_energy Energieverbrauchs- und Standby-Optionen, verzögertes Ausschalten, setzen bzw. ändern des Inaktivitätstimers
 menu.hint_misc_epg Diverse EPG-Einstellungen und Speicherverzeichnis für EPG-Daten
 menu.hint_misc_filebrowser Dateisystem, Dateirechte anzeigen im Dateibrowser, Startverzeichnisoptionen
 menu.hint_misc_general Standby-, Videotext- und Rotor-Einstellungen, Pluginverzeichnis auf externem Datenträger
-menu.hint_misc_kerneloptions Wählen Sie die Kernel-Module aus, die zusätzlich geladen werden sollen
 menu.hint_misc_onlineservices Konfigurieren und steuern von Online-Diensten wie Wetter, YouTube, SHOUTCast und TMDb
 menu.hint_misc_zapit Verwaltung der Start-Kanäle für den TV/Radio-Modus
 menu.hint_movie Wiedergabe von Filmen
@@ -1617,8 +1593,6 @@ menu.hint_record_zap_pre_time Stellen Sie eine Vorlaufzeit in Minuten für den U
 menu.hint_recording Aufnahme-, Timeshift- und Timer-Optionen, Einstellung von aufzunehmenden Tonspuren
 menu.hint_reload_channels Kanallisten neu laden, um Änderungen wirksam zu machen
 menu.hint_reload_plugins Plugins neu laden, um Änderungen wirksam zu machen
-menu.hint_remote_code Den Code der Fernbedienung für die Kathrein UFS912/13 Modelle umstellen. Es sind vier verschiedene Codes möglich ( 1 bis 4 )
-menu.hint_remote_code_save Den neu eingestellten Fernbedienungs-Code speichern und aktivieren
 menu.hint_reset Zurücksetzen der Einstellungen auf Standardwerte. Tuner-Einstellungen und Kanäle bleiben erhalten
 menu.hint_restart_tuner Führen Sie einen Neustart des internen Tuners durch. Das kann Empfangsprobleme beheben.
 menu.hint_restore Wiederherstellen von vorher erstellten Sicherungen
@@ -1777,13 +1751,9 @@ menu.hint_video_43mode Anzeige-Modus für 4:3-Inhalte auf 16:9-Fernsehern
 menu.hint_video_analog_mode Wählen Sie den Modus des Ausgangssignals für den CINCH-Anschluss
 menu.hint_video_brightness Ändert die Helligkeit
 menu.hint_video_cinch_mode Wählen Sie den Modus des Ausgangssignals für den Composite-Video-Anschluss
-menu.hint_video_colorformat_analog Wählt den Farbraum für die analoge Ausgabe (Scart/Cinch)
-menu.hint_video_colorformat_hdmi Wählt den Farbraum für die digitale Ausgabe (HDMI)
 menu.hint_video_contrast Ändert den Kontrast
 menu.hint_video_dbdr Verwendeter MPEG2 Filter
 menu.hint_video_format Wählen Sie das Bildschirmformat ihres Fernsehgerätes
-menu.hint_video_mask Definieren Sie einen kanalspezifischen Rahmen zum Ausblenden unerwünschter Inhalte am Bildschirmrand
-menu.hint_video_mixer_color Wenn kein Signal vorhanden ist, wird die gewählte Farbe als Hintergrundfarbe verwendet.
 menu.hint_video_mode Wählen Sie den Modus des Ausgangssignals für den HDMI-Anschluss
 menu.hint_video_modes Definiert, welche Videosysteme mit der VF-Taste der Fernbedienung ausgewählt werden können
 menu.hint_video_modes_auto Definiert, welche Videosysteme automatisch ausgewählt werden können
@@ -1837,7 +1807,6 @@ miscsettings.colored_events_1 aktuelle
 miscsettings.colored_events_2 nächste
 miscsettings.colored_events_channellist In der Kanalliste
 miscsettings.colored_events_infobar In der Infobar
-miscsettings.cpu CPU
 miscsettings.energy Energieverbrauch
 miscsettings.epg_cache EPG-Cache (Tage)
 miscsettings.epg_cache_hint1 EPG-Daten im Voraus zwischenspeichern?
@@ -2607,7 +2576,6 @@ screensaver.off Bildschirmschoner aus
 screensaver.random Zufällige Bilderwahl
 screensaver.timeout Wechselintervall
 screensetup.lowerright grün = Bildrand unten, rechts
-screensetup.remove Maske entfernen
 screensetup.upperleft rot = Bildrand oben, links
 screenshot.backbuffer Sekundärer Buffer (Back Buffer)
 screenshot.count Anzahl
@@ -2855,15 +2823,6 @@ videomenu.analog_sd_yprpb_scart YPbPr -> Scart (SD)
 videomenu.auto Automatisch
 videomenu.brightness Helligkeit
 videomenu.cinch Cinch
-videomenu.colorformat Farbraum
-videomenu.colorformat.cvbs CVBS
-videomenu.colorformat.rgb RGB
-videomenu.colorformat.svideo S-Video (Y/C)
-videomenu.colorformat.ycbcr422 YCbCr 4:2:2
-videomenu.colorformat.ycbcr444 YCbCr 4:4:4
-videomenu.colorformat.yuv YUV
-videomenu.colorformat_analog Cinch/Scart
-videomenu.colorformat_hdmi HDMI
 videomenu.contrast Kontrast
 videomenu.dbdr MPEG2 Filter
 videomenu.dbdr_both deBlock und deRing
@@ -2873,19 +2832,15 @@ videomenu.enabled_modes Videosysteme auf der VF-Taste
 videomenu.enabled_modes_auto Videosysteme für autom. Wahl
 videomenu.fullscreen Vollbild
 videomenu.hdmi_cec HDMI-CEC
-videomenu.hdmi_cec_broadcast Senden an alle Geräte
-videomenu.hdmi_cec_mode Aktivieren
+videomenu.hdmi_cec_mode Receiver verwenden
 videomenu.hdmi_cec_mode_off nein
 videomenu.hdmi_cec_mode_recorder als Sat/Kabel PVR
 videomenu.hdmi_cec_mode_tuner als Sat/Kabel STB
 videomenu.hdmi_cec_standby Aktiviere CEC Standby
-videomenu.hdmi_cec_standby_not_timer nicht bei Timer
 videomenu.hdmi_cec_view_on Aktiviere CEC View on
 videomenu.hdmi_cec_volume Aktiviere CEC Lautstärkeregelung
 videomenu.hue Farbton
 videomenu.letterbox Letterbox
-videomenu.masksetup Bildmaske
-videomenu.mixer_color Hintergrund-Farbe
 videomenu.panscan Pan & Scan
 videomenu.panscan2 14:9 Pan & Scan
 videomenu.pip PiP Setup

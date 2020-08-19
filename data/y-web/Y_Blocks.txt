@@ -740,7 +740,7 @@ start-block~map_rc_cst_v3_v4
   <area shape="circle" href="javascript:rcsim('KEY_BLUE')" coords="129,447,11" alt="blue" title="{=L:rc.key_blue=}" />
 
   <area shape="circle" href="javascript:rcsim('KEY_WWW')" coords="39,487,9" alt="w" title="{=L:rc.key_www=}" />
-  <!-- area shape="circle" coords="68,487,9" alt="sub" / -->
+  <area shape="circle" href="javascript:rcsim('KEY_SUBTITLES')" coords="68,487,9" alt="sub" title="{=L:rc.key_sub=}" />
   <area shape="circle" coords="96,487,9" alt="recall" href="javascript:rcsim('KEY_LAST')" title="{=L:rc.key_recall=}" />
   <area shape="circle" coords="125,487,9" alt="pos" href="javascript:rcsim('KEY_MOVE')" title="{=L:rc.key_pos=}" />
 
@@ -793,7 +793,7 @@ start-block~rc_cst_v5
   <area shape="rect" href="javascript:rcsim('KEY_INFO')" coords="124,216,166,244" alt="info" title="{=L:rc.key_info=}" />
   <area shape="rect" href="javascript:rcsim('KEY_HOME')" coords="124,280,166,308" alt="exit" title="{=L:rc.key_home=}" />
 
-  <!-- area shape="rect" coords="24,321,66,349" alt="sub" / -->
+  <area shape="rect" href="javascript:rcsim('KEY_SUBTITLES')" coords="24,321,66,349" alt="sub" title="{=L:rc.key_sub=}" />
   <area shape="rect" href="javascript:rcsim('KEY_PREVIOUS')" coords="76,321,118,349" alt="picmode" title="{=L:rc.key_picmode=}" />
   <area shape="rect" href="javascript:rcsim('KEY_FAVORITES')" coords="128,321,170,349" alt="fav" title="{=L:rc.key_favorites=}" />
 

@@ -233,8 +233,8 @@ do_mount()
 		then
 			if [ "$fstype" = "0" ]
 			then
-				options1="ro,soft,udp"
-				options2="nolock,rsize=8192,wsize=8192"
+				options1="soft"
+				options2="nolock"
 			fi
 			if [ "$fstype" = "1" ]
 			then

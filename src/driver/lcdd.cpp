@@ -155,8 +155,8 @@ void CLCD::wake_up() {
 #ifndef BOXMODEL_DM500
 void* CLCD::TimeThread(void *p)
 {
-	set_threadname("lcd:time");
 	((CLCD *)p)->thread_started = true;
+	set_threadname("lcd:time");
 	while (((CLCD *)p)->thread_started)
 	{
 		sleep(1);

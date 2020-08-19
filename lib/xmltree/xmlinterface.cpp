@@ -92,7 +92,6 @@ std::string to_utf8(unsigned int cp)
 		count = 4;
 	else
 		return result;
-
 	result.resize(count);
 	for (int i = count-1; i > 0; --i)
 	{

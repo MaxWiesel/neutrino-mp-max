@@ -468,7 +468,7 @@ int CAudioPlayerGui::show()
 			if (m_state != CAudioPlayerGui::STOP)
 				stop();
 		}
-		//add RC_favorites for internetradio
+		// add RC_favorites for internetradio
 		else if ((msg == CRCInput::RC_favorites) && (m_inetmode))
 		{
 			if (m_key_level == 0)
@@ -1293,6 +1293,7 @@ void CAudioPlayerGui::scanXmlData(xmlDocPtr answer_parser, const char *urltag, c
 				const char *url = NULL;
 				const char *name = NULL;
 				const char *logo = NULL;
+
 				time_t bitrate = 0;
 				bool skip = true;
 				listPos++;
@@ -2949,8 +2950,7 @@ bool CAudioPlayerGui::askToOverwriteFile(const std::string& filename)
 	return res;
 }
 
-std::string CAudioPlayerGui::absPath2Rel(const std::string& fromDir,
-		const std::string& absFilename)
+std::string CAudioPlayerGui::absPath2Rel(const std::string& fromDir, const std::string& absFilename)
 {
 	std::string res = "";
 

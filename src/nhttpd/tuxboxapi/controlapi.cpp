@@ -201,7 +201,7 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[]=
 	{"screenshot",		&CControlAPI::ScreenshotCGI,		""},
 #endif
 #ifdef ENABLE_GRAPHLCD
-        {"glcdscreenshot",	&CControlAPI::GlcdScreenshotCGI,	""},
+	{"glcdscreenshot",	&CControlAPI::GlcdScreenshotCGI,	""},
 #endif
 	// boxcontrol - devices
 	{"volume",		&CControlAPI::VolumeCGI,		"text/plain"},

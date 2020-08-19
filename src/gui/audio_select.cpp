@@ -70,7 +70,6 @@ CAudioSelectMenuHandler::~CAudioSelectMenuHandler()
 
 }
 
-#if !HAVE_SH4_HARDWARE
 // -- this is a copy from neutrino.cpp!!
 #define AUDIOMENU_ANALOGOUT_OPTION_COUNT 3
 const CMenuOptionChooser::keyval AUDIOMENU_ANALOGOUT_OPTIONS[AUDIOMENU_ANALOGOUT_OPTION_COUNT] =
@@ -79,7 +78,6 @@ const CMenuOptionChooser::keyval AUDIOMENU_ANALOGOUT_OPTIONS[AUDIOMENU_ANALOGOUT
 	{ 1, LOCALE_AUDIOMENU_MONOLEFT },
 	{ 2, LOCALE_AUDIOMENU_MONORIGHT }
 };
-#endif
 
 int CAudioSelectMenuHandler::exec(CMenuTarget* parent, const std::string &actionkey)
 {
@@ -103,12 +101,11 @@ int CAudioSelectMenuHandler::exec(CMenuTarget* parent, const std::string &action
 		}
 		perc_str[sel] = to_string(perc_val[sel]) + "%";
 
-#if !HAVE_SH4_HARDWARE
 		int vol =  CZapit::getInstance()->GetVolume();
 		/* keep resulting volume = (vol * percent)/100 not more than 115 */
 		if (vol * perc_val[sel] > 11500)
 			perc_val[sel] = 11500 / vol;
-#endif
+
 		CZapit::getInstance()->SetPidVolume(chan, apid[sel], perc_val[sel]);
 		if (sel == sel_apid)
 			CZapit::getInstance()->SetVolumePercent(perc_val[sel]);
@@ -150,9 +147,7 @@ int CAudioSelectMenuHandler::doMenu ()
 	AudioSelector->addKey(CRCInput::RC_right, this, "+");
 	AudioSelector->addKey(CRCInput::RC_left, this, "-");
 	AudioSelector->addKey(CRCInput::RC_red, this, "x");
-#if !HAVE_SH4_HARDWARE
 	AudioSelector->addKey(CRCInput::RC_green, this, "x");
-#endif
 	AudioSelector->addKey(CRCInput::RC_yellow, this, "x");
 	AudioSelector->addKey(CRCInput::RC_blue, this, "x");
 
@@ -192,7 +187,6 @@ int CAudioSelectMenuHandler::doMenu ()
 		AudioSelector->addItem(fw, sel_apid == i);
 	}
 	unsigned int shortcut_num = p_count;
-#if !HAVE_SH4_HARDWARE
 	if (p_count)
 		AudioSelector->addItem(GenericMenuSeparatorLine);
 
@@ -208,7 +202,6 @@ int CAudioSelectMenuHandler::doMenu ()
 			OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT,
 			true, audioSetupNotifier, CRCInput::RC_green);
 	AudioSelector->addItem( oj );
-#endif
 
 	CZapitChannel * cc = NULL;
 	int subtitleCount = 0;
@@ -298,11 +291,7 @@ int CAudioSelectMenuHandler::doMenu ()
 
 	//tonbug
 	AudioSelector->addItem(GenericMenuSeparatorLine);
-#if !HAVE_SH4_HARDWARE
 	AudioSelector->addItem(new CMenuForwarder(LOCALE_CI_RESET, true, NULL, CNeutrinoApp::getInstance(), "tonbug", CRCInput::convertDigitToKey(++shortcut_num)));
-#else
-	AudioSelector->addItem(new CMenuForwarder(LOCALE_CI_RESET, true, NULL, CNeutrinoApp::getInstance(), "tonbug", CRCInput::RC_green));
-#endif
 
 	int res = AudioSelector->exec(NULL, "");
 

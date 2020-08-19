@@ -94,30 +94,6 @@ extern int allow_flash;
 
 #define LIST_OF_UPDATES_LOCAL_FILENAME "update.list"
 
-#if HAVE_DUCKBOX_HARDWARE
-#define FILEBROWSER_UPDATE_FILTER      "img"
-#if BOXMODEL_UFS910 || BOXMODEL_FORTIS_HDBOX || BOXMODEL_OCTAGON1008
-#define MTD_OF_WHOLE_IMAGE              5
-#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd5"
-#elif BOXMODEL_CUBEREVO_MINI2
-#define MTD_OF_WHOLE_IMAGE              6
-#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd6"
-#elif BOXMODEL_CUBEREVO_3000HD
-#define MTD_OF_WHOLE_IMAGE              5
-#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd5"
-#elif BOXMODEL_UFS922
-#define MTD_OF_WHOLE_IMAGE              4
-#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd4"
-#else // update blocked with invalid data
-#define MTD_OF_WHOLE_IMAGE              999
-#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
-#endif
-#else
-#if HAVE_SPARK_HARDWARE
-#define FILEBROWSER_UPDATE_FILTER      "zip"
-#define MTD_OF_WHOLE_IMAGE              999
-#define MTD_DEVICE_OF_UPDATE_PART       "/dev/mtd999"
-#else
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 #define FILEBROWSER_UPDATE_FILTER      "tgz"
 #define MTD_OF_WHOLE_IMAGE              999
@@ -129,8 +105,6 @@ extern int allow_flash;
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd0"
 #else
 #define MTD_DEVICE_OF_UPDATE_PART      "/dev/mtd3"
-#endif
-#endif
 #endif
 #endif
 
@@ -577,13 +551,11 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 	menu_ret = menu_return::RETURN_REPAINT;
 	paint();
 
-#if !HAVE_DUCKBOX_HARDWARE
 	if(sysfs.size() < 8) {
 		DisplayErrorMessage(g_Locale->getText(LOCALE_FLASHUPDATE_CANTOPENMTD));
 		hide();
 		return menu_return::RETURN_REPAINT;
 	}
-#endif
 	if(!checkVersion4Update()) {
 		hide();
 		return menu_ret;
@@ -615,11 +587,7 @@ int CFlashUpdate::exec(CMenuTarget* parent, const std::string &actionKey)
 	showGlobalStatus(40);
 
 	CFlashTool ft;
-#if HAVE_SH4_HARDWARE
-	ft.setMTDDevice(MTD_DEVICE_OF_UPDATE_PART);
-#else
 	ft.setMTDDevice(sysfs);
-#endif
 	ft.setStatusViewer(this);
 
 	showStatusMessageUTF(g_Locale->getText(LOCALE_FLASHUPDATE_MD5CHECK));
@@ -1013,7 +981,7 @@ void CFlashExpert::readmtd(int preadmtd)
 	}
 
 	bool skipCheck = false;
-#if !HAVE_SH4_HARDWARE && !BOXMODEL_CS_HD2
+#ifndef BOXMODEL_CS_HD2
 	if ((std::string)g_settings.update_dir == "/tmp")
 		skipCheck = true;
 #else

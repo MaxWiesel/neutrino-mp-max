@@ -295,11 +295,7 @@ struct SNeutrinoSettings
 	int analog_mode2;
 	int video_43mode;
 
-#if HAVE_SH4_HARDWARE
-	uint32_t video_mixer_color;
-#endif
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE
-	int hdmi_mode;
+#if HAVE_ARM_HARDWARE
 	int psi_contrast;
 	int psi_saturation;
 	int psi_brightness;
@@ -358,11 +354,6 @@ struct SNeutrinoSettings
 	//audio
 	int audio_AnalogMode;
 	int audio_DolbyDigital;
-#if HAVE_SH4_HARDWARE
-	int audio_mixer_volume_analog;
-	int audio_mixer_volume_spdif;
-	int audio_mixer_volume_hdmi;
-#endif
 	int auto_lang;
 	int auto_subs;
 	int srs_enable;
@@ -386,9 +377,6 @@ struct SNeutrinoSettings
 	int hdmi_cec_view_on;
 	int hdmi_cec_standby;
 	int hdmi_cec_volume;
-#if HAVE_SH4_HARDWARE
-	int hdmi_cec_broadcast;
-#endif
 	int enabled_video_modes[VIDEOMENU_VIDEOMODE_OPTION_COUNT];
 	int enabled_auto_modes[VIDEOMENU_VIDEOMODE_OPTION_COUNT];
 	int cpufreq;
@@ -644,7 +632,7 @@ struct SNeutrinoSettings
 	int recording_stream_vtxt_pid;
 	int recording_stream_subtitle_pids;
 	int recording_stream_pmt_pid;
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	int recording_bufsize;
 	int recording_bufsize_dmx;
 #endif
@@ -808,9 +796,6 @@ struct SNeutrinoSettings
 	int repeat_genericblocker;
 #define LONGKEYPRESS_OFF 499
 	int longkeypress_duration;
-#if HAVE_SH4_HARDWARE
-	int accept_other_remotes;
-#endif
 	int remote_control_hardware;
 	int audiochannel_up_down_enable;
 
@@ -982,9 +967,6 @@ struct SNeutrinoSettings
 	int lcd_info_line;
 	std::string lcd_setting_dim_time;
 	int lcd_setting_dim_brightness;
-#if HAVE_SH4_HARDWARE
-	int lcd_vfd_scroll;
-#endif
 	int led_tv_mode;
 	int led_standby_mode;
 	int led_deep_mode;

@@ -184,9 +184,7 @@ int CCAMMenuHandler::doMainMenu()
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock[i], CI_CLOCK_OPTIONS, CI_CLOCK_OPTION_COUNT, true, this));
 #else
-#if !HAVE_SH4_HARDWARE
 			cammenu->addItem(new CMenuOptionNumberChooser(LOCALE_CI_CLOCK, &g_settings.ci_clock[i], true, 6, 12, this));
-#endif
 #endif
 #if BOXMODEL_VUPLUS_ALL
 			cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_RPR, &g_settings.ci_rpr[i], OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
@@ -592,7 +590,7 @@ bool CCAMMenuHandler::changeNotify(const neutrino_locale_t OptionName, void * Da
 		return true;
 	}
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_RPR)) {
-		for (uint32_t i = 0; i < ca->GetNumberCISlots(); i++) {
+		for (unsigned int i = 0; i < ca->GetNumberCISlots(); i++) {
 			printf("CCAMMenuHandler::changeNotify: ci_rpr[%d] %d\n", i, g_settings.ci_rpr[i]);
 			ca->SetCIRelevantPidsRouting(g_settings.ci_rpr[i], i);
 		}
@@ -601,16 +599,20 @@ bool CCAMMenuHandler::changeNotify(const neutrino_locale_t OptionName, void * Da
 	else
 #endif
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_CLOCK)) {
-		for (uint32_t i = 0; i < ca->GetNumberCISlots(); i++) {
+		for (unsigned int i = 0; i < ca->GetNumberCISlots(); i++) {
 			printf("CCAMMenuHandler::changeNotify: ci_clock[%d] %d\n", i, g_settings.ci_clock[i]);
+#if HAVE_LIBSTB_HAL
 			ca->SetTSClock(g_settings.ci_clock[i] * 1000000, i);
+#else
+			ca->SetTSClock(g_settings.ci_clock[i] * 1000000);
+#endif
 		}
 		return true;
 	}
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CI_SAVE_PINCODE)) {
 		int enabled = *(int *) Data;
 		if (!enabled) {
-			for (uint32_t i = 0; i < ca->GetNumberCISlots(); i++) {
+			for (unsigned int i = 0; i < ca->GetNumberCISlots(); i++) {
 				printf("CCAMMenuHandler::changeNotify: clear saved pincode[%d]\n", i);
 				g_settings.ci_pincode[i].clear();
 			}

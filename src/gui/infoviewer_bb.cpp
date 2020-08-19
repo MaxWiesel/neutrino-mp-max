@@ -588,11 +588,7 @@ void CInfoViewerBB::showIcon_Resolution()
 #if 0
 	if ((scrambledNoSig) || ((!fta) && (scrambledErr)))
 #endif
-#if BOXMODEL_UFS910
-	if (!g_InfoViewer->chanready)
-#else
 	if (!g_InfoViewer->chanready || videoDecoder->getBlank())
-#endif
 	{
 		icon_name = NEUTRINO_ICON_RESOLUTION_000;
 	} else {
@@ -718,11 +714,7 @@ void CInfoViewerBB::showSysfsHdd()
 		// sysfs info
 		int percent = 0;
 		uint64_t t, u;
-#if HAVE_SH4_HARDWARE
-		if (get_fs_usage("/var", t, u))
-#else
 		if (get_fs_usage("/", t, u))
-#endif
 			percent = (int)((u * 100ULL) / t);
 		showBarSys(percent);
 
@@ -972,7 +964,8 @@ void CInfoViewerBB::paint_ca_bar()
 	}
 
 	ca_bar->paint(CC_SAVE_SCREEN_NO);
-#if 1
+
+#if 0
 	if (g_settings.infobar_casystem_dotmatrix)
 	{
 		int xcnt = (g_InfoViewer->BoxEndX - g_InfoViewer->ChanInfoX - (g_settings.infobar_casystem_frame ? 24 : 0)) / 4;

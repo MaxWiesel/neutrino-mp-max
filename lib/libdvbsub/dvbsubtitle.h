@@ -46,9 +46,6 @@ class cDvbSubtitleBitmaps : public cListObject
 class cDvbSubtitleConverter  /*: public cThread */{
 private:
   bool running;
-#if HAVE_SH4_HARDWARE
-  bool painted;
-#endif
   pthread_mutex_t mutex;
   cList<cDvbSubtitleBitmaps> *bitmaps;
   AVCodecContext * avctx;

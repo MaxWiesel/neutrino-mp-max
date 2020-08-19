@@ -41,9 +41,7 @@
 #include "gui/bedit/bouqueteditor_bouquets.h"
 #include "gui/bouquetlist.h"
 #include <gui/daemon_control.h>
-#if !HAVE_SPARK_HARDWARE
 #include "gui/cam_menu.h"
-#endif
 #include "gui/dboxinfo.h"
 #include "gui/epgplus.h"
 #include "gui/favorites.h"
@@ -80,9 +78,7 @@
 
 extern CPlugins       * g_Plugins;
 extern CRemoteControl * g_RemoteControl;
-#if !HAVE_SPARK_HARDWARE
 extern CCAMMenuHandler * g_CamHandler;
-#endif
 // extern bool has_hdd;
 // extern char current_timezone[50];
 // extern bool autoshift;
@@ -250,14 +246,12 @@ void CNeutrinoApp::InitMenuMain()
 	mf->setHint(NEUTRINO_ICON_HINT_INFO, LOCALE_MENU_HINT_INFO);
 	personalize.addItem(MENU_MAIN, mf, &g_settings.personalize[SNeutrinoSettings::P_MAIN_INFOMENU]);
 
-#if !HAVE_SPARK_HARDWARE
 	//cisettings
 	if (cCA::GetInstance()->GetNumberCISlots() > 0 || cCA::GetInstance()->GetNumberSmartCardSlots() > 0) {
 		mf = new CMenuForwarder(LOCALE_CI_SETTINGS, true, NULL, g_CamHandler);
 		mf->setHint(NEUTRINO_ICON_HINT_CI, LOCALE_MENU_HINT_CI);
 		personalize.addItem(MENU_MAIN, mf, &g_settings.personalize[SNeutrinoSettings::P_MAIN_CISETTINGS]);
 	}
-#endif
 
 #ifdef ENABLE_TESTING
 	personalize.addItem(MENU_MAIN, new CMenuForwarder("Test menu", true, NULL, new CTestMenu()), NULL, false, CPersonalizeGui::PERSONALIZE_SHOW_NO);
@@ -359,12 +353,10 @@ void CNeutrinoApp::InitMenuSettings()
 
 	// energy
 
-#if !HAVE_SPARK_HARDWARE
 	// cisettings
 	mf = new CMenuForwarder(LOCALE_CI_SETTINGS, true, NULL, g_CamHandler);
 	mf->setHint(NEUTRINO_ICON_HINT_CI, LOCALE_MENU_HINT_CI);
 	personalize.addItem(MENU_SETTINGS, mf, &g_settings.personalize[SNeutrinoSettings::P_MSET_CISETTINGS]);
-#endif
 
 	// keybindings
 	mf = new CMenuForwarder(LOCALE_MAINSETTINGS_KEYBINDING, true, NULL, new CKeybindSetup());
@@ -395,7 +387,7 @@ void CNeutrinoApp::InitMenuService()
 
 	CMenuForwarder * mf;
 	// tuner setup
-	if(CFEManager::getInstance()->haveSat() || (CFEManager::getInstance()->haveCable() && CFEManager::getInstance()->haveTerr()) || CFEManager::getInstance()->getFrontendCount() > 1) {
+	if (CFEManager::getInstance()->haveSat() || (CFEManager::getInstance()->haveCable() && CFEManager::getInstance()->haveTerr()) || CFEManager::getInstance()->getFrontendCount() > 1) {
 		mf = new CMenuForwarder(LOCALE_SATSETUP_FE_SETUP, true, NULL, CScanSetup::getInstance(), "setup_frontend", CRCInput::RC_red);
 		mf->setHint(NEUTRINO_ICON_HINT_SETTINGS, LOCALE_MENU_HINT_SCAN_FESETUP);
 		personalize.addItem(MENU_SERVICE, mf, &g_settings.personalize[SNeutrinoSettings::P_MSER_TUNER]);

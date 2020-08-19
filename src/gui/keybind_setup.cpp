@@ -121,55 +121,6 @@ int CKeybindSetup::exec(CMenuTarget* parent, const std::string &actionKey)
 		}
 		return menu_return::RETURN_REPAINT;
 	}
-	else if(actionKey == "savecode") {
-		if (remote_code != remote_code_old)
-		{
-			if (setRemoteCode(remote_code))
-			{
-				neutrino_msg_t      msg = 0;
-				neutrino_msg_data_t data = 0;
-				CVFD::getInstance()->Clear();
-				remote_code_old = remote_code;
-				CHintBox *Hint;
-				std::string Text = g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE);
-				Text += " > " + to_string(remote_code) + "\n";
-				Text += g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_MSG1);
-				Text += " " + to_string(remote_code) + "\n";
-				Text += g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_MSG2);
-				Hint = new CHintBox(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_SAVE, Text.c_str());
-				Hint->paint();
-				for (int i = 0; i < 6; i++)
-				{
-					g_RCInput->getMsg(&msg, &data, 1);
-					g_RCInput->clearRCMsg();
-				}
-				system("killall evremote2");
-				usleep(300000);
-				system("/bin/evremote2 10 120 > /dev/null &");
-				std::string vfd_msg = "RC Code: " + to_string(remote_code);
-				sleep(1);
-				CVFD::getInstance()->repaintIcons();
-				CVFD::getInstance()->ShowText(vfd_msg.c_str());
-				while(true)
-				{
-					g_RCInput->getMsg(&msg, &data, 1);
-					if (msg == CRCInput::RC_ok)
-					{
-						//printf("MSG: 0x%lx\n", msg);
-						g_RCInput->clearRCMsg();
-						break;
-					}
-					g_RCInput->clearRCMsg();
-				}
-				Hint->hide();
-			}
-		}
-		else
-		{
-			ShowHint(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_NOT_SAVE), 450, 5);
-		}
-		return menu_return::RETURN_REPAINT;
-	}
 
 	res = showKeySetup();
 
@@ -295,7 +246,7 @@ bool checkLongPress(uint32_t key)
 
 int CKeybindSetup::showKeySetup()
 {
-#if !HAVE_SH4_HARDWARE
+#if !HAVE_SPARK_HARDWARE
 	//save original rc hardware selection and initialize text strings
 	int org_remote_control_hardware = g_settings.remote_control_hardware;
 	char RC_HW_str[4][32];
@@ -333,21 +284,6 @@ int CKeybindSetup::showKeySetup()
 	mf->setHint("", LOCALE_MENU_HINT_KEY_LOAD);
 	keySettings->addItem(mf);
 
-	char * model = g_info.hw_caps->boxname;
-	if(strstr(model, "ufs912") || strstr(model, "ufs913"))
-	{
-		remote_code = getRemoteCode();
-		remote_code_old = remote_code;
-		keySettings->addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_CHANGE));
-		CMenuOptionNumberChooser * nc = new CMenuOptionNumberChooser(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE, &remote_code, true, 1, 4);
-		nc->setHint("", LOCALE_MENU_HINT_REMOTE_CODE);
-		keySettings->addItem(nc);
-
-		mf = new CMenuForwarder(LOCALE_KEYBINDINGMENU_REMOTECONTROL_CODE_SAVE, true, NULL, this, "savecode", CRCInput::RC_blue);
-		mf->setHint("", LOCALE_MENU_HINT_REMOTE_CODE_SAVE);
-		keySettings->addItem(mf);
-	}
-
 	keySettings->addItem(GenericMenuSeparatorLine);
 
 	//rc tuning
@@ -365,7 +301,7 @@ int CKeybindSetup::showKeySetup()
 	cc->setHint("", LOCALE_MENU_HINT_LONGKEYPRESS_DURATION);
 	keySettings->addItem(cc);
 
-#if HAVE_SH4_HARDWARE
+#if 0
 	g_settings.accept_other_remotes = access("/etc/lircd_predata_lock", R_OK) ? 1 : 0;
 	CMenuOptionChooser *mc = new CMenuOptionChooser(LOCALE_KEYBINDINGMENU_ACCEPT_OTHER_REMOTES,
 		&g_settings.accept_other_remotes, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this,
@@ -373,7 +309,7 @@ int CKeybindSetup::showKeySetup()
 	mc->setHint("", LOCALE_MENU_HINT_ACCEPT_OTHER_REMOTES);
 	keySettings->addItem(mc);
 #endif
-#if !HAVE_SH4_HARDWARE
+#if !HAVE_SPARK_HARDWARE
 	if (RC_HW_SELECT) {
 		CMenuOptionChooser * mc = new CMenuOptionChooser(LOCALE_KEYBINDINGMENU_REMOTECONTROL_HARDWARE,
 			&g_settings.remote_control_hardware, KEYBINDINGMENU_REMOTECONTROL_HARDWARE_OPTIONS, KEYBINDINGMENU_REMOTECONTROL_HARDWARE_OPTION_COUNT, true, NULL,
@@ -401,7 +337,7 @@ int CKeybindSetup::showKeySetup()
 
 	int res = keySettings->exec(NULL, "");
 
-#if !HAVE_SH4_HARDWARE
+#if !HAVE_SPARK_HARDWARE
 	//check if rc hardware selection has changed before leaving the menu
 	if (org_remote_control_hardware != g_settings.remote_control_hardware) {
 		g_RCInput->CRCInput::set_rc_hw();
@@ -511,8 +447,8 @@ void CKeybindSetup::showKeyBindSetup(CMenuWidget *bindSettings)
 	mf = new CMenuForwarder(key_settings[NKEY_UNLOCK].keydescription, true, keychooser[NKEY_UNLOCK]->getKeyName(), keychooser[NKEY_UNLOCK]);
 	mf->setHint("", key_settings[NKEY_UNLOCK].hint);
 	bindSettings->addItem(mf);
-	// screenshot
 #ifdef SCREENSHOT
+	// screenshot
 	mf = new CMenuForwarder(key_settings[NKEY_SCREENSHOT].keydescription, true, keychooser[NKEY_SCREENSHOT]->getKeyName(), keychooser[NKEY_SCREENSHOT]);
 	mf->setHint("", key_settings[NKEY_SCREENSHOT].hint);
 	bindSettings->addItem(mf);
@@ -645,7 +581,7 @@ void CKeybindSetup::showKeyBindSpecialSetup(CMenuWidget *bindSettings_special)
 
 bool CKeybindSetup::changeNotify(const neutrino_locale_t OptionName, void * /* data */)
 {
-#if HAVE_SH4_HARDWARE
+#if 0
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_KEYBINDINGMENU_ACCEPT_OTHER_REMOTES)) {
 		struct sockaddr_un sun;
 		memset(&sun, 0, sizeof(sun));
@@ -694,43 +630,4 @@ const char *CKeybindSetup::getMoviePlayerButtonName(const neutrino_msg_t key, bo
 		}
 	}
 	return "";
-}
-
-int CKeybindSetup::getRemoteCode()
-{
-	int code = 1;
-	if (!access("/etc/.rccode", F_OK))
-	{
-		char buf[10];
-		int val;
-		FILE* fd;
-		fd = fopen("/etc/.rccode", "r");
-		if (fd != NULL)
-		{
-			if (fgets (buf , sizeof(buf), fd) != NULL)
-			{
-				val = atoi(buf);
-				if (val > 0 && val < 5)
-					code = val;
-			}
-			fclose(fd);
-		}
-	}
-	return code;
-}
-
-bool CKeybindSetup::setRemoteCode(int code)
-{
-	char buf[10];
-	bool ret = false;
-	FILE* fd;
-	fd = fopen("/etc/.rccode", "w");
-	if (fd != NULL)
-	{
-		sprintf(buf, "%d\n", code);
-		if (fputs(buf, fd) > 0)
-			ret = true;
-		fclose(fd);
-	}
-	return ret;
 }

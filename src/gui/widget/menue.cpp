@@ -2533,8 +2533,8 @@ int CMenuSeparator::paint(bool selected)
 				name_start_x = x + (dx >> 1) - (stringwidth >> 1);
 			
 			frameBuffer->paintBoxRel(name_start_x-OFFSET_INNER_SMALL, y, stringwidth+2*OFFSET_INNER_SMALL, height, item_bgcolor);
-			
-			if ((type & LINE)) //NI - use COL_MENUHEAD_TEXT for CMenuSeparators defined with LINE and STRING
+
+			if ((type & LINE)) // use COL_MENUHEAD_TEXT for CMenuSeparators defined with LINE and STRING
 				item_color = COL_MENUHEAD_TEXT;
 
 			paintItemCaption(selected);

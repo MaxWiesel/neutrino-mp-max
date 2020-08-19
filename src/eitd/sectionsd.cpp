@@ -36,7 +36,6 @@
 #include <pthread.h>
 #include <errno.h>
 #include <signal.h>
-#include <poll.h>
 #include <sys/time.h>
 #include <time.h>
 #include <connection/basicsocket.h>
@@ -57,7 +56,9 @@
 #include "debug.h"
 
 #include <compatibility.h>
-
+#if ! HAVE_COOL_HARDWARE
+#include <poll.h>
+#endif
 //#define ENABLE_SDT //FIXME
 
 //#define DEBUG_SDT_THREAD
@@ -1515,7 +1516,7 @@ void CTimeThread::run()
 
 			debug(DEBUG_ERROR, "%s: get DVB time ch 0x%012" PRIx64 " (isOpen %d)",
 				name.c_str(), current_service, isOpen());
-			int rc;
+			int rc = 0;
 #if HAVE_COOL_HARDWARE
 			/* libcoolstream does not like the repeated read if the dmx is not yet running
 			 * (e.g. during neutrino start) and causes strange openthreads errors which in

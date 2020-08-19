@@ -205,9 +205,6 @@ int CUpnpBrowserGui::exec(CMenuTarget* parent, const std::string & /*actionKey*/
 
 	m_frameBuffer->stopFrame();
 	topbox.kill();
-#if HAVE_SH4_HARDWARE
-	g_Zapit->startPlayBack();
-#endif
 
 	m_frameBuffer->Clear();
 
@@ -852,9 +849,6 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 					}
 					else if (mime.substr(0,6) == "image/")
 					{
-#if HAVE_SH4_HARDWARE
-						videoDecoder->StopPicture();
-#endif
 						videoDecoder->setBlank(true);
 						showPicture((*entries)[selected - liststart].resources[preferred].url);
 						m_playid = selected;
@@ -880,9 +874,6 @@ bool CUpnpBrowserGui::selectItem(std::string id)
 						}
 						m_frameBuffer->Clear();
 						videoDecoder->setBlank(false);
-#if HAVE_SH4_HARDWARE
-						videoDecoder->ShowPicture(DATADIR "/neutrino/icons/mp3.jpg");
-#endif
 						refresh = true;
 					}
 				}

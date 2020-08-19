@@ -69,7 +69,7 @@ DMX::DMX()
 	dmxBufferSizeInKB = 512;
 	init();
 	eit_version = 0;
-	dmx = NULL;
+	dmx = 0;
 }
 
 void DMX::init()

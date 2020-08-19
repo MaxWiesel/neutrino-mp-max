@@ -86,11 +86,6 @@ if BOXTYPE_AZBOX
 libneutrino_driver_a_SOURCES += \
 	simple_display.cpp
 endif
-if BOXTYPE_DUCKBOX
-libneutrino_driver_a_SOURCES += \
-	fb_accel_sti.cpp \
-	vfd.cpp
-endif
 if BOXTYPE_GENERIC
 libneutrino_driver_a_SOURCES += \
 	fb_accel_glfb.cpp \

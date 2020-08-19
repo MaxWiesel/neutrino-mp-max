@@ -15,7 +15,7 @@
 
 #include <poll.h>
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 extern "C" {
 #include <ass/ass.h>
 }
@@ -34,14 +34,14 @@ extern "C" {
 Debug sub_debug;
 static PacketQueue packet_queue;
 static PacketQueue bitmap_queue;
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 static PacketQueue ass_queue;
 static sem_t ass_sem;
 #endif
 
 static pthread_t threadReader;
 static pthread_t threadDvbsub;
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 static pthread_t threadAss = 0;
 #endif
 
@@ -50,7 +50,7 @@ static pthread_mutex_t readerMutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t packetCond = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t packetMutex = PTHREAD_MUTEX_INITIALIZER;
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 static OpenThreads::Mutex ass_mutex;
 static std::map<int,ASS_Track*> ass_map;
 static ASS_Library *ass_library = NULL;
@@ -59,7 +59,7 @@ static ASS_Track *ass_track = NULL;
 #endif
 
 static int reader_running;
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 static int ass_reader_running;
 #endif
 static int dvbsub_running;
@@ -67,14 +67,14 @@ static int dvbsub_paused = true;
 static int dvbsub_pid = 0;
 static int dvbsub_stopped;
 static int pid_change_req;
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 static bool isEplayer = false;
 #endif
 
 cDvbSubtitleConverter *dvbSubtitleConverter;
 static void* reader_thread(void *arg);
 static void* dvbsub_thread(void* arg);
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 static void* ass_reader_thread(void *arg);
 #endif
 static void clear_queue();
@@ -104,7 +104,7 @@ int dvbsub_init() {
 		return -1;
 	}
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	ass_reader_running = true;
 	sem_init(&ass_sem, 0, 0);
 	trc = pthread_create(&threadAss, 0, ass_reader_thread, NULL);
@@ -127,7 +127,7 @@ int dvbsub_pause()
 
 		printf("[dvb-sub] paused\n");
 	}
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(ass_mutex);
 	ass_track = NULL;
 #endif
@@ -135,13 +135,13 @@ int dvbsub_pause()
 	return 0;
 }
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 int dvbsub_start(int pid, bool _isEplayer)
 #else
 int dvbsub_start(int pid)
 #endif
 {
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	isEplayer = _isEplayer;
 	if (isEplayer && !dvbsub_paused)
 		return 0;
@@ -158,8 +158,9 @@ int dvbsub_start(int pid)
 	}
 printf("[dvb-sub] start, stopped %d pid %x\n", dvbsub_stopped, dvbsub_pid);
 	if(dvbsub_pid) {
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
-		if (isEplayer) {
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+		if (isEplayer)
+		{
 			OpenThreads::ScopedLock<OpenThreads::Mutex> m_lock(ass_mutex);
 			std::map<int,ASS_Track*>::iterator it = ass_map.find(dvbsub_pid);
 			if (it != ass_map.end())
@@ -248,7 +249,7 @@ int dvbsub_close()
 		pthread_detach(threadDvbsub);
 		threadDvbsub = 0;
 	}
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	if (ass_reader_running) {
 		ass_reader_running = false;
 		sem_post(&ass_sem);
@@ -265,7 +266,7 @@ extern void getPlayerPts(int64_t *);
 
 void dvbsub_get_stc(int64_t * STC)
 {
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE // requires libeplayer3
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE // requires libeplayer3
 	if (isEplayer) {
 		getPlayerPts(STC);
 		return;
@@ -323,12 +324,10 @@ static void clear_queue()
 	pthread_mutex_unlock(&packetMutex);
 }
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 extern "C" void dvbsub_ass_clear(void);
 extern "C" void dvbsub_ass_write(AVCodecContext *c, AVSubtitle *sub, int pid);
 extern "C" void dvbsub_write(AVSubtitle *sub, int64_t pts);
-#endif
 
 struct ass_data
 {
@@ -372,80 +371,6 @@ extern int sub_font_size;
 static std::string ass_font;
 static int ass_size;
 
-#if HAVE_SH4_HARDWARE
-// Thes functions below are based on ffmpeg-2.1.4/libavcodec/ass.c,
-// Copyright (c) 2010 Aurelien Jacobs <aurel@gnuage.org>
-
-// These are the FFMPEG defaults:
-#define ASS_DEFAULT_FONT		"Arial"
-#define ASS_DEFAULT_FONT_SIZE		16
-#define ASS_DEFAULT_COLOR		0xffffff
-#define ASS_DEFAULT_OUTLINE_COLOR	0
-#define ASS_DEFAULT_BACK_COLOR		0
-#define ASS_DEFAULT_BOLD		0
-#define ASS_DEFAULT_ITALIC		0
-#define ASS_DEFAULT_UNDERLINE		0
-#define ASS_DEFAULT_ALIGNMENT		2
-
-// And this is what we're going to use:
-#define ASS_CUSTOM_FONT			"Arial"
-#define ASS_CUSTOM_FONT_SIZE		36
-#define ASS_CUSTOM_COLOR		0xffffff
-#define ASS_CUSTOM_OUTLINE_COLOR	0
-#define ASS_CUSTOM_BACK_COLOR		0
-#define ASS_CUSTOM_BOLD			0
-#define ASS_CUSTOM_ITALIC		0
-#define ASS_CUSTOM_UNDERLINE		0
-#define ASS_CUSTOM_ALIGNMENT		2
-
-static std::string ass_subtitle_header(const char *font, int font_size,
-		int color, int outline_color, int back_color, int bold, int italic, int underline, int alignment)
-{
-	char buf[8192];
-	snprintf(buf, sizeof(buf), 
-		"[Script Info]\r\n"
-		"ScriptType: v4.00+\r\n"
-		"\r\n"
-		"[V4+ Styles]\r\n"
-		"Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding\r\n"
-		"Style: Default,%s,%d,&H%x,&H%x,&H%x,&H%x,%d,%d,%d,1,1,0,%d,10,10,10,0,0\r\n"
-		"\r\n"
-		"[Events]\r\n"
-		"Format: Layer, Start, End, Style, Text\r\n",
-		font, font_size, color, color, outline_color, back_color, -bold, -italic, -underline, alignment);
-	return std::string(buf);
-}
-
-static std::string ass_subtitle_header_default(void) {
-	return ass_subtitle_header(
-		ASS_DEFAULT_FONT,
-		ASS_DEFAULT_FONT_SIZE,
-		ASS_DEFAULT_COLOR,
-		ASS_DEFAULT_OUTLINE_COLOR,
-		ASS_DEFAULT_BACK_COLOR,
-		ASS_DEFAULT_BOLD,
-		ASS_DEFAULT_ITALIC,
-		ASS_DEFAULT_UNDERLINE,
-		ASS_DEFAULT_ALIGNMENT);
-}
-
-static std::string ass_subtitle_header_custom(void) {
-	return ass_subtitle_header(
-		ASS_CUSTOM_FONT,
-		ASS_CUSTOM_FONT_SIZE,
-		ASS_CUSTOM_COLOR,
-		ASS_CUSTOM_OUTLINE_COLOR,
-		ASS_CUSTOM_BACK_COLOR,
-		ASS_CUSTOM_BOLD,
-		ASS_CUSTOM_ITALIC,
-		ASS_CUSTOM_UNDERLINE,
-		ASS_CUSTOM_ALIGNMENT);
-}
-// The functions above are based on ffmpeg-2.1.4/libavcodec/ass.c,
-// Copyright (c) 2010 Aurelien Jacobs <aurel@gnuage.org>
-#endif
-
-#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 // Thes functions below are based on ffmpeg-3.0.7/libavcodec/ass.c,
 // Copyright (c) 2010 Aurelien Jacobs <aurel@gnuage.org>
 
@@ -487,7 +412,7 @@ static std::string ass_subtitle_header(const char *font, int font_size,
 		"\r\n"
 		"[V4+ Styles]\r\n"
 		/* ASSv4 header */
-                "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\r\n"
+		"Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\r\n"
 		"Style: Default,%s,%d,&H%x,&H%x,&H%x,&H%x,%d,%d,%d,0,100,100,0,0,%d,1,0,%d,10,10,10,0\r\n"
 		"\r\n"
 		"[Events]\r\n"
@@ -525,8 +450,6 @@ static std::string ass_subtitle_header_custom(void) {
 }
 // The functions above are based on ffmpeg-3.0.7/libavcodec/ass.c,
 // Copyright (c) 2010 Aurelien Jacobs <aurel@gnuage.org>
-
-#endif
 
 static void *ass_reader_thread(void *)
 {
@@ -635,11 +558,11 @@ static void* reader_thread(void * /*arg*/)
 	bool bad_startcode = false;
 	set_threadname("dvbsub:reader");
 
-        dmx = new cDemux(0);
+	dmx = new cDemux(0);
 #if HAVE_TRIPLEDRAGON
-        dmx->Open(DMX_PES_CHANNEL, NULL, 16*1024);
+	dmx->Open(DMX_PES_CHANNEL, NULL, 16*1024);
 #else
-        dmx->Open(DMX_PES_CHANNEL, NULL, 64*1024);
+	dmx->Open(DMX_PES_CHANNEL, NULL, 64*1024);
 #endif
 
 	while (reader_running) {
@@ -676,7 +599,7 @@ static void* reader_thread(void * /*arg*/)
 		pfds[0].events = POLLIN;
 		char _tmp[64];
 
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 		if (isEplayer) {
 			poll(pfds, 1, -1);
 			while (0 > read(pfds[0].fd, _tmp, sizeof(tmp)));
@@ -786,25 +709,19 @@ static void* dvbsub_thread(void* /*arg*/)
 		dvbSubtitleConverter = new cDvbSubtitleConverter;
 
 	int timeout = 1000000;
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	CFrameBuffer *fb = CFrameBuffer::getInstance();
-#if HAVE_SH4_HARDWARE
-	int xres = fb->getScreenWidth(true);
-	int yres = fb->getScreenHeight(true);
-	int clr_x0 = xres, clr_y0 = yres, clr_x1 = 0, clr_y1 = 0;
-#else
 	int stride = fb->getStride()/4;
 	int xres = stride;
 	int yres = fb->getScreenHeight(true);
 	int clr_x0 = stride - yres / 4, clr_y0 = yres, clr_x1 = 0, clr_y1 = 0;
-#endif
 	uint32_t colortable[256];
 	memset(colortable, 0, sizeof(colortable));
 	uint32_t last_color = 0;
 #endif
 
 	while(dvbsub_running) {
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 		if (ass_track) {
 			usleep(100000); // FIXME ... should poll instead
 

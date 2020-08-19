@@ -48,9 +48,6 @@
 #include <gui/plugins_hide.h>
 #include <gui/sleeptimer.h>
 #include <gui/zapit_setup.h>
-#if HAVE_SH4_HARDWARE
-#include <gui/kerneloptions.h>
-#endif
 
 #include <gui/widget/icons.h>
 #include <gui/widget/stringinput.h>
@@ -222,33 +219,6 @@ const CMenuOptionChooser::keyval CHANNELLIST_NEW_ZAP_MODE_OPTIONS[CHANNELLIST_NE
 };
 
 #ifdef CPU_FREQ
-#if HAVE_SH4_HARDWARE
-#define CPU_FREQ_OPTION_COUNT 6
-const CMenuOptionChooser::keyval_ext CPU_FREQ_OPTIONS[CPU_FREQ_OPTION_COUNT] =
-{
-	{ 0, LOCALE_CPU_FREQ_DEFAULT, NULL  },
-	{ 450, NONEXISTANT_LOCALE, "450 Mhz"},
-	{ 500, NONEXISTANT_LOCALE, "500 Mhz"},
-	{ 550, NONEXISTANT_LOCALE, "550 Mhz"},
-	{ 600, NONEXISTANT_LOCALE, "600 Mhz"},
-	{ 650, NONEXISTANT_LOCALE, "650 Mhz"}
-};
-#define CPU_FREQ_OPTION_STANDBY_COUNT 11
-const CMenuOptionChooser::keyval_ext CPU_FREQ_OPTIONS_STANDBY[CPU_FREQ_OPTION_STANDBY_COUNT] =
-{
-	{ 0, LOCALE_CPU_FREQ_DEFAULT, NULL  },
-	{ 200, NONEXISTANT_LOCALE, "200 Mhz"},
-	{ 250, NONEXISTANT_LOCALE, "250 Mhz"},
-	{ 300, NONEXISTANT_LOCALE, "300 Mhz"},
-	{ 350, NONEXISTANT_LOCALE, "350 Mhz"},
-	{ 400, NONEXISTANT_LOCALE, "400 Mhz"},
-	{ 450, NONEXISTANT_LOCALE, "450 Mhz"},
-	{ 500, NONEXISTANT_LOCALE, "500 Mhz"},
-	{ 550, NONEXISTANT_LOCALE, "550 Mhz"},
-	{ 600, NONEXISTANT_LOCALE, "600 Mhz"},
-	{ 650, NONEXISTANT_LOCALE, "650 Mhz"}
-};
-#else
 #define CPU_FREQ_OPTION_COUNT 13
 const CMenuOptionChooser::keyval_ext CPU_FREQ_OPTIONS[CPU_FREQ_OPTION_COUNT] =
 {
@@ -266,7 +236,6 @@ const CMenuOptionChooser::keyval_ext CPU_FREQ_OPTIONS[CPU_FREQ_OPTION_COUNT] =
 	{ 550, NONEXISTANT_LOCALE, "550 Mhz"},
 	{ 600, NONEXISTANT_LOCALE, "600 Mhz"}
 };
-#endif
 #endif /*CPU_FREQ*/
 
 const CMenuOptionChooser::keyval EPG_SCAN_OPTIONS[] =
@@ -382,16 +351,8 @@ int CMiscMenue::showMiscSettingsMenu()
 	misc_menue.addItem(mf);
 #endif /*CPU_FREQ*/
 
-#if HAVE_SH4_HARDWARE
-	// kerneloptions
-	CKernelOptions kernelOptions;
-	mf = new CMenuForwarder(LOCALE_KERNELOPTIONS_HEAD, true, NULL, &kernelOptions, NULL, CRCInput::convertDigitToKey(shortcut++));
-	mf->setHint("", LOCALE_MENU_HINT_MISC_KERNELOPTIONS);
-	misc_menue.addItem(mf);
-#endif
-
-	// LCD4Linux Setup
 #ifdef ENABLE_LCD4LINUX
+	// LCD4Linux Setup
 	CLCD4lSetup lcd4lSetup;
 	mf = new CMenuForwarder(LOCALE_LCD4L_SUPPORT, !find_executable("lcd4linux").empty(), NULL, &lcd4lSetup, NULL, CRCInput::convertDigitToKey(shortcut++));
 	mf->setHint(NEUTRINO_ICON_HINT_LCD4LINUX, LOCALE_MENU_HINT_LCD4L_SUPPORT);
@@ -434,11 +395,7 @@ void CMiscMenue::showMiscSettingsMenuGeneral(CMenuWidget *ms_general)
 	//fan speed
 	if (g_info.hw_caps->has_fan)
 	{
-#if defined (BOXMODEL_IPBOX9900) || defined (BOXMODEL_IPBOX99)
-		CMenuOptionNumberChooser * mn = new CMenuOptionNumberChooser(LOCALE_FAN_SPEED, &g_settings.fan_speed, true, 0, 1, fanNotifier, CRCInput::RC_nokey, NULL, 0, 0, LOCALE_OPTIONS_OFF);
-#else
 		CMenuOptionNumberChooser * mn = new CMenuOptionNumberChooser(LOCALE_FAN_SPEED, &g_settings.fan_speed, true, 1, 14, fanNotifier, CRCInput::RC_nokey, NULL, 0, 0, LOCALE_OPTIONS_OFF);
-#endif
 		mn->setHint("", LOCALE_MENU_HINT_FAN_SPEED);
 		ms_general->addItem(mn);
 	}
@@ -840,11 +797,7 @@ void CMiscMenue::showMiscSettingsMenuCPUFreq(CMenuWidget *ms_cpu)
 
 	CCpuFreqNotifier * cpuNotifier = new CCpuFreqNotifier();
 	ms_cpu->addItem(new CMenuOptionChooser(LOCALE_CPU_FREQ_NORMAL, &g_settings.cpufreq, CPU_FREQ_OPTIONS, CPU_FREQ_OPTION_COUNT, true, cpuNotifier));
-#if HAVE_SH4_HARDWARE
-	ms_cpu->addItem(new CMenuOptionChooser(LOCALE_CPU_FREQ_STANDBY, &g_settings.standby_cpufreq, CPU_FREQ_OPTIONS_STANDBY, CPU_FREQ_OPTION_STANDBY_COUNT, true));
-#else
 	ms_cpu->addItem(new CMenuOptionChooser(LOCALE_CPU_FREQ_STANDBY, &g_settings.standby_cpufreq, CPU_FREQ_OPTIONS, CPU_FREQ_OPTION_COUNT, true));
-#endif
 }
 #endif /*CPU_FREQ*/
 

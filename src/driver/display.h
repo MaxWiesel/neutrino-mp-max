@@ -1,5 +1,5 @@
 /* helper for different display CVFD implementations */
-#if HAVE_COOL_HARDWARE || HAVE_DUCKBOX_HARDWARE
+#if HAVE_COOL_HARDWARE
 #include <driver/vfd.h>
 #endif
 #if HAVE_TRIPLEDRAGON

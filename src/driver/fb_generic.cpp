@@ -125,7 +125,7 @@ CFrameBuffer* CFrameBuffer::getInstance()
 	static CFrameBuffer* frameBuffer = NULL;
 
 	if (!frameBuffer) {
-#if HAVE_SH4_HARDWARE
+#if HAVE_SPARK_HARDWARE
 		frameBuffer = new CFbAccelSTi();
 #endif
 #if HAVE_COOL_HARDWARE
@@ -385,10 +385,6 @@ void CFrameBuffer::setBlendMode(uint8_t /*mode*/)
 }
 
 void CFrameBuffer::setBlendLevel(int /*level*/)
-{
-}
-
-void CFrameBuffer::setMixerColor(uint32_t /*mixer_background*/)
 {
 }
 
@@ -1647,6 +1643,7 @@ bool CFrameBuffer::showFrame(const std::string & filename, int fallback_mode)
 	return ret;
 }
 
+
 void CFrameBuffer::stopFrame()
 {
 	videoDecoder->StopPicture();
@@ -2022,11 +2019,6 @@ void CFrameBuffer::mark(int , int , int , int )
 uint32_t CFrameBuffer::getWidth4FB_HW_ACC(const uint32_t /*x*/, const uint32_t w, const bool /*max*/)
 {
 	return w;
-}
-
-void CFrameBuffer::blitArea(int , int , int , int , int , int )
-{
-
 }
 
 void CFrameBuffer::blit()

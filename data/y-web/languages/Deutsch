@@ -624,6 +624,7 @@ rc.key_pause=Pause
 rc.key_games=
 rc.key_trsp=Trsp
 rc.key_time=
+rc_key_sub=Subtitle
 rc.key_picsize=Pic Size
 rc.key_picmode=Pic Mode
 rc.key_pos=Pos

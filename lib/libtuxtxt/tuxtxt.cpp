@@ -2314,7 +2314,6 @@ int GetTeletextPIDs()
 	unsigned char filter[DMX_FILTER_SIZE] = { 0 };
 	unsigned char mask[DMX_FILTER_SIZE] = { 0 };
 	int res;
-
 	cDemux * dmx = new cDemux(0);
 	dmx->Open(DMX_PSI_CHANNEL);
 
@@ -5608,7 +5607,7 @@ void CopyBB2FB()
 	/* copy topmenu in normal height (since PIG also keeps dimensions) */
 	if (screenmode[boxed] == 1)
 	{
-		screenwidth = ( TV43STARTX );
+		screenwidth = TV43STARTX;
 		fbp->blit2FB(lbb, var_screeninfo.xres, var_screeninfo.yres, TV43STARTX, 0, TV43STARTX, 0, true);
 	}
 	else if (screenmode[boxed] == 2)

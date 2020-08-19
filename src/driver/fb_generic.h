@@ -201,7 +201,6 @@ class CFrameBuffer : public sigc::trackable
 		void setTransparency( int tr = 0 );
 		virtual void setBlendMode(uint8_t mode = 1);
 		virtual void setBlendLevel(int level);
-		virtual void setMixerColor(uint32_t mixer_background);
 
 		//Palette stuff
 		void setAlphaFade(int in, int num, int tr);
@@ -291,7 +290,6 @@ class CFrameBuffer : public sigc::trackable
 		virtual void blitBox2FB(const fb_pixel_t* boxBuf, const uint32_t& width, const uint32_t& height, const uint32_t& xoff, const uint32_t& yoff);
 
 		virtual void mark(int x, int y, int dx, int dy);
-		virtual void blitArea(int src_width, int src_height, int fb_x, int fb_y, int width, int height);
 /* Remove this when pu/fb-setmode branch is merged to master */
 #define SCALE2RES_DEFINED
 		virtual int scale2Res(int size) { return size; };

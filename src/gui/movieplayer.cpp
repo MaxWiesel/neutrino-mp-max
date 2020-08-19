@@ -87,11 +87,9 @@
 #include <gui/widget/stringinput_ext.h>
 #include <gui/screensetup.h>
 #include <gui/widget/msgbox.h>
-#if HAVE_SH4_HARDWARE
 #include <libavcodec/avcodec.h>
-#endif
 
-#if HAVE_COOL_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE || HAVE_SH4_HARDWARE
+#if HAVE_COOL_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 #define LCD_MODE CVFD::MODE_MENU_UTF8
 #else
 #define LCD_MODE CVFD::MODE_MOVIE
@@ -550,7 +548,6 @@ void CMoviePlayerGui::updateLcd(bool display_playtime)
 			glcd_channel = g_Locale->getText(LOCALE_MOVIEPLAYER_HEAD);
 	}
 #endif
-#if !HAVE_SPARK_HARDWARE
 	char tmp[20];
 	std::string lcd;
 	std::string name;
@@ -621,28 +618,8 @@ void CMoviePlayerGui::updateLcd(bool display_playtime)
 					lcd = tmp;
 				}
 				else
-#if !defined(BOXMODEL_UFS910) \
- && !defined(BOXMODEL_UFS912) \
- && !defined(BOXMODEL_UFS913) \
- && !defined(BOXMODEL_UFS922) \
- && !defined(BOXMODEL_FORTIS_HDBOX) \
- && !defined(BOXMODEL_OCTAGON1008) \
- && !defined(BOXMODEL_HS7110) \
- && !defined(BOXMODEL_HS7420) \
- && !defined(BOXMODEL_HS7810A) \
- && !defined(BOXMODEL_HS7119) \
- && !defined(BOXMODEL_HS7429) \
- && !defined(BOXMODEL_HS7819) \
- && !defined(BOXMODEL_CUBEREVO_MINI2) \
- && !defined(BOXMODEL_IPBOX9900) \
- && !defined(BOXMODEL_IPBOX99) \
- && !defined(BOXMODEL_IPBOX55)
 					lcd = "|| ";
-#else
-					lcd = "";
-#endif
 				break;
-#if !defined(BOXMODEL_OCTAGON1008)
 			case CMoviePlayerGui::REW:
 #ifdef ENABLE_GRAPHLCD
 				if (!bgThread) {
@@ -671,7 +648,6 @@ void CMoviePlayerGui::updateLcd(bool display_playtime)
 				sprintf(tmp, "%dx>> ", abs(speed));
 				lcd = tmp;
 				break;
-#endif
 			case CMoviePlayerGui::PLAY:
 #ifdef ENABLE_GRAPHLCD
 				if (!bgThread) {
@@ -683,26 +659,7 @@ void CMoviePlayerGui::updateLcd(bool display_playtime)
 					cGLCD::ShowLcdIcon(true);
 				}
 #endif
-#if !defined(BOXMODEL_UFS910) \
- && !defined(BOXMODEL_UFS912) \
- && !defined(BOXMODEL_UFS913) \
- && !defined(BOXMODEL_UFS922) \
- && !defined(BOXMODEL_FORTIS_HDBOX) \
- && !defined(BOXMODEL_OCTAGON1008) \
- && !defined(BOXMODEL_HS7110) \
- && !defined(BOXMODEL_HS7420) \
- && !defined(BOXMODEL_HS7810A) \
- && !defined(BOXMODEL_HS7119) \
- && !defined(BOXMODEL_HS7429) \
- && !defined(BOXMODEL_HS7819) \
- && !defined(BOXMODEL_CUBEREVO_MINI2) \
- && !defined(BOXMODEL_IPBOX9900) \
- && !defined(BOXMODEL_IPBOX99) \
- && !defined(BOXMODEL_IPBOX55)
 				lcd = "> ";
-#else
-				lcd = "";
-#endif
 				break;
 			default:
 				break;
@@ -712,7 +669,6 @@ void CMoviePlayerGui::updateLcd(bool display_playtime)
 
 	CVFD::getInstance()->setMode(LCD_MODE);
 	CVFD::getInstance()->showMenuText(0, lcd.c_str(), -1, true);
-#endif
 }
 
 void CMoviePlayerGui::fillPids()
@@ -1484,9 +1440,7 @@ extern void MoviePlayerStop(void)
 void CMoviePlayerGui::stopPlayBack(void)
 {
 	printf("%s: stopping...\n", __func__);
-#if HAVE_SH4_HARDWARE
-	playback->RequestAbort();
-#endif
+	//playback->RequestAbort();
 
 	repeat_mode = REPEAT_OFF;
 	if (bgThread) {
@@ -1647,7 +1601,7 @@ bool CMoviePlayerGui::PlayFileStart(void)
 		repeat_mode = (repeat_mode_enum) g_settings.movieplayer_repeat_on;
 		playstate = CMoviePlayerGui::PLAY;
 		CVFD::getInstance()->ShowIcon(FP_ICON_PLAY, true);
-#if HAVE_SH4_HARDWARE
+#if HAVE_SPARK_HARDWARE
 		CVFD::getInstance()->ShowIcon(FP_ICON_FR, false);
 		CVFD::getInstance()->ShowIcon(FP_ICON_FF, false);
 		CVFD::getInstance()->ShowIcon(FP_ICON_PAUSE, false);
@@ -1680,7 +1634,7 @@ bool CMoviePlayerGui::PlayFileStart(void)
 				{
 					speed = 0;
 					playstate = CMoviePlayerGui::PAUSE;
-#if HAVE_SH4_HARDWARE
+#if HAVE_SPARK_HARDWARE
 					CVFD::getInstance()->ShowIcon(FP_ICON_PLAY, false);
 					CVFD::getInstance()->ShowIcon(FP_ICON_FR, false);
 					CVFD::getInstance()->ShowIcon(FP_ICON_FF, false);
@@ -2063,7 +2017,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			FileTimeOSD->setMpTimeForced(false);
 			if (playstate > CMoviePlayerGui::PLAY) {
 				playstate = CMoviePlayerGui::PLAY;
-#if HAVE_SH4_HARDWARE
+#if HAVE_SPARK_HARDWARE
 				CVFD::getInstance()->ShowIcon(FP_ICON_PLAY, true);
 				CVFD::getInstance()->ShowIcon(FP_ICON_PAUSE, false);
 				CVFD::getInstance()->ShowIcon(FP_ICON_FR, false);
@@ -2108,7 +2062,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			if (playstate == CMoviePlayerGui::PAUSE) {
 				playstate = CMoviePlayerGui::PLAY;
 				//CVFD::getInstance()->ShowIcon(VFD_ICON_PAUSE, false);
-#if HAVE_SH4_HARDWARE
+#if HAVE_SPARK_HARDWARE
 				CVFD::getInstance()->ShowIcon(FP_ICON_PLAY, true);
 				CVFD::getInstance()->ShowIcon(FP_ICON_PAUSE, false);
 				CVFD::getInstance()->ShowIcon(FP_ICON_FR, false);
@@ -2119,7 +2073,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			} else {
 				playstate = CMoviePlayerGui::PAUSE;
 				//CVFD::getInstance()->ShowIcon(VFD_ICON_PAUSE, true);
-#if HAVE_SH4_HARDWARE
+#if HAVE_SPARK_HARDWARE
 				CVFD::getInstance()->ShowIcon(FP_ICON_PLAY, false);
 				CVFD::getInstance()->ShowIcon(FP_ICON_PAUSE, true);
 				CVFD::getInstance()->ShowIcon(FP_ICON_FR, false);
@@ -2171,7 +2125,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			bool setSpeed = false;
 			if (msg == (neutrino_msg_t) g_settings.mpkey_rewind) {
 				newspeed = (speed >= 0) ? -1 : (speed - 1);
-#if HAVE_SH4_HARDWARE
+#if HAVE_SPARK_HARDWARE
 				CVFD::getInstance()->ShowIcon(FP_ICON_PLAY, true);
 				CVFD::getInstance()->ShowIcon(FP_ICON_PAUSE, false);
 				CVFD::getInstance()->ShowIcon(FP_ICON_FR, true);
@@ -2179,7 +2133,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #endif
 			} else {
 				newspeed = (speed <= 0) ? 2 : (speed + 1);
-#if HAVE_SH4_HARDWARE
+#if HAVE_SPARK_HARDWARE
 				CVFD::getInstance()->ShowIcon(FP_ICON_PLAY, true);
 				CVFD::getInstance()->ShowIcon(FP_ICON_PAUSE, false);
 				CVFD::getInstance()->ShowIcon(FP_ICON_FR, false);
@@ -2316,7 +2270,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 		} else if (msg == CRCInput::RC_yellow) {
 			showFileInfos();
 		} else if (CNeutrinoApp::getInstance()->listModeKey(msg)) {
-			//FIXME do nothing ?
+			// do nothing
 		} else if (msg == (neutrino_msg_t) CRCInput::RC_setup) {
 			CNeutrinoApp::getInstance()->handleMsg(NeutrinoMessages::SHOW_MAINMENU, 0);
 			update_lcd = true;
@@ -2392,7 +2346,7 @@ void CMoviePlayerGui::PlayFileEnd(bool restore)
 
 	CVFD::getInstance()->ShowIcon(FP_ICON_PLAY, false);
 	CVFD::getInstance()->ShowIcon(FP_ICON_PAUSE, false);
-#if HAVE_SH4_HARDWARE
+#if HAVE_SPARK_HARDWARE
 	CVFD::getInstance()->ShowIcon(FP_ICON_FR, false);
 	CVFD::getInstance()->ShowIcon(FP_ICON_FF, false);
 #endif
@@ -2635,7 +2589,7 @@ void CMoviePlayerGui::addAudioFormat(int count, std::string &apidtitle, bool& en
 		case 6: /*DTS*/
 			if (apidtitle.find("DTS") == std::string::npos)
 				apidtitle.append(" (DTS)");
-#if ! defined(HAVE_SPARK_HARDWARE) && ! defined (BOXMODEL_CS_HD2)
+#ifndef BOXMODEL_CS_HD2
 			enabled = false;
 #endif
 			break;
@@ -3052,7 +3006,7 @@ void CMoviePlayerGui::UpdatePosition()
 
 void CMoviePlayerGui::StopSubtitles(bool enable_glcd_mirroring __attribute__((unused)))
 {
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	printf("[CMoviePlayerGui] %s\n", __FUNCTION__);
 	int ttx, ttxpid, ttxpage;
 
@@ -3103,7 +3057,7 @@ void CMoviePlayerGui::showHelp()
 
 void CMoviePlayerGui::StartSubtitles(bool show __attribute__((unused)))
 {
-#if HAVE_SH4_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	printf("[CMoviePlayerGui] %s: %s\n", __FUNCTION__, show ? "Show" : "Not show");
 #ifdef ENABLE_GRAPHLCD
 	cGLCD::MirrorOSD(false);

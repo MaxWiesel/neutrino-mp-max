@@ -597,6 +597,7 @@ int CBouquetList::show(bool bShowChannelList)
 #ifdef ENABLE_GRAPHLCD
 	cGLCD::unlockChannel();
 #endif
+
 #ifdef ENABLE_LCD4LINUX
 	LCD4l->RemoveFile("/tmp/lcd/menu");
 #endif

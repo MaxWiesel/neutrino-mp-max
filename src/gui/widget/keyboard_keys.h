@@ -73,7 +73,7 @@ struct keyboard_layout keyboards[] =
 {
 	{ "English", "english", keys_english },
 	{ "Deutsch", "deutsch", keys_deutsch },
-	{ "Русский", "russkij", keys_russian },
+//	{ "Русский", "russkij", keys_russian },
 };
 #define LAYOUT_COUNT (sizeof(keyboards)/sizeof(struct keyboard_layout))
 

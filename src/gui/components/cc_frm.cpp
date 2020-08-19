@@ -161,17 +161,9 @@ void CComponentsForm::execPageScroll(neutrino_msg_t& msg, neutrino_msg_data_t& /
 		return;
 
 	if (page_scroll_mode & PG_SCROLL_M_UP_DOWN_KEY){
-#if HAVE_SH4_HARDWARE
-		if (msg == CRCInput::RC_page_up || msg == CRCInput::RC_up)
-#else
 		if (msg == CRCInput::RC_page_up)
-#endif
 			ScrollPage(SCROLL_P_DOWN);
-#if HAVE_SH4_HARDWARE
-		if (msg == CRCInput::RC_page_down || msg == CRCInput::RC_down)
-#else
 		if (msg == CRCInput::RC_page_down)
-#endif
 			ScrollPage(SCROLL_P_UP);
 	}
 

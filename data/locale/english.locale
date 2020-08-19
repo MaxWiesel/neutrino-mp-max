@@ -145,10 +145,6 @@ audiomenu.dts DTS passthrough
 audiomenu.hdmi_dd Encoded DD on HDMI
 audiomenu.hdmi_dd_auto auto
 audiomenu.hdmi_dd_force force
-audiomenu.mixer_volume Mixer volume
-audiomenu.mixer_volume_analog Analog
-audiomenu.mixer_volume_hdmi HDMI
-audiomenu.mixer_volume_spdif S/PDIF
 audiomenu.monoleft mono left
 audiomenu.monoright mono right
 audiomenu.pref_lang Prefered language
@@ -415,8 +411,8 @@ daemon_item.emmremind_desc Show different EMM's in the Infoicons
 daemon_item.emmremind_name EMM-Change Notification
 daemon_item.fcm_desc Shows FRITZ!Box call list and much more ...
 daemon_item.fcm_name FritzCallMonitor
-daemon_item.inadyn_desc DynDNS client
-daemon_item.inadyn_name Inadyn
+daemon_item.inadyn_desc Internet Automated Dynamic DNS Client
+daemon_item.inadyn_name In-a-Dyn
 daemon_item.nfsserver_desc NFS kernel server
 daemon_item.nfsserver_name NFS server
 daemon_item.sambaserver_desc Server-Message-Block-Protocol (SMB) implementation
@@ -519,22 +515,22 @@ extra.fec_7_8 7/8
 extra.fec_8_9 8/9
 extra.fec_9_10 9/10
 extra.fec_auto Auto
-extra.key_current_transponder Current Transponder Key
+extra.key_current_transponder Current transponder
 extra.key_format_mode Video format
-extra.key_help Help key
-extra.key_list_end end
-extra.key_list_start home
+extra.key_help Help
+extra.key_list_end End
+extra.key_list_start Home
 extra.key_next43mode Next aspect ratio
 extra.key_pic_mode Screen format
 extra.key_pic_size 4:3 Display behavior
 extra.key_pip_close Stop/Start PiP
 extra.key_pip_setup Configure PiP
 extra.key_pip_swap Swap PiP/live
-extra.key_record Record key
-extra.key_screenshot Screenshot key
+extra.key_record Record
+extra.key_screenshot Screenshot
 extra.key_switchformat Next resolution
 extra.key_timeshift Timeshift
-extra.key_unlock Unlock key
+extra.key_unlock Unlock
 extra.ladirection LaDirection
 extra.latitude Latitude
 extra.loadconfig Load settings
@@ -853,8 +849,24 @@ fsk.from_7 from 7
 fsk.to_12 to 12
 fsk.to_16 to 16
 fsk.to_7 to 7
+glcd.align_center centered
+glcd.align_channel Align the transmitter
+glcd.align_duration Align the duration of the broadcast
+glcd.align_end Align the end of the shipment
+glcd.align_epg Align EPG
+glcd.align_left left
+glcd.align_none no
+glcd.align_right right
+glcd.align_start Align the shipment start
+glcd.align_time Align the time
+glcd.bar_width Progress bar width
+glcd.bar_x_position Progress bar x position
+glcd.bar_y_position Progress bar y position
 glcd.brightness Brightness
 glcd.brightness_standby Brightness in standby
+glcd.brightness_dim Dimming
+glcd.brightness_dim_time Dimming to
+glcd.brightness_settings Brightness
 glcd.color.amber Amber
 glcd.color.black Black
 glcd.color.blue Blue
@@ -876,25 +888,62 @@ glcd.color.red Red
 glcd.color.teal Teal
 glcd.color.white White
 glcd.color.yellow Yellow
+glcd.channel_x_position Transmitter x-position
+glcd.channel_y_position Transmitter y-position
+glcd.digital_clock_y_position Digital clock y position
 glcd.display Display type
+glcd.duration_x_position Sendungsdauer x-Position
+glcd.duration_y_position Sendungsdauer y-Position
 glcd.enable GraphLCD enabled
+glcd.end_x_position Sendungsende x-Position
+glcd.end_y_position Sendungsende y-Position
+glcd.epg_x_position EPG x-Position
+glcd.epg_y_position EPG x-Position
 glcd.font Font
+glcd.font_autoresize Automatische SChriftgröße
 glcd.head GraphLCD-Support
+glcd.logo_x_position Senderlogo x-Position
+glcd.logo_y_position Senderlogo y-Position
 glcd.mirror_osd Show OSD menu on GraphLCD
 glcd.mirror_video Show running video on GraphLCD
+glcd.position_settings Positionen und Größen
 glcd.restart Rescan
 glcd.scroll_speed Scrolling Speed
 glcd.select.bar Progress bar color
 glcd.select.bg Background color
 glcd.select.fg Foreground color
+glcd.show_duration Sendungsdauer anzeigen
+glcd.show_end Sendungsende anzeigen
 glcd.show_logo Show channel logo
+glcd.show_progressbar Fortschrittsbalken anzeigen
+glcd.show_start Sendungsstart anzeigen
+glcd.show_time Uhrzeit anzeigen
+glcd.show_weather Wetter anzeigen
+glcd.simple_clock_y_position Einfache Uhr y-Position
 glcd.size_bar Progress bar height
 glcd.size_channel Channel height
+glcd.size_duration Sendungsdauer Höhe
+glcd.size_end Sendungsende Höhe
 glcd.size_epg EPG height
 glcd.size_logo Logo height
+glcd.size_simple_clock Einfache Uhr Höhe
+glcd.size_start Sendungsstart Höhe
 glcd.size_time Time height
 glcd.size_time_standby Time height in standby
+glcd.theme Theme auswählen
+glcd.theme_settings Themes
+glcd.standby_analog_clock Analoge Uhr
+glcd.standby_digital_clock Digitale Uhr
+glcd.standby_lcd_clock LCD-Uhr
+glcd.standby_led_clock LED-Uhr
+glcd.standby_settings Standby-Einstellungen
+glcd.standby_simple_clock Einfache Uhr
+glcd.standby_weather Wetter im Standby
+glcd.start_x_position Sendungsstart x-Position
+glcd.start_y_position Sendungsstart y-Position
 glcd.time_in_standby Display time in standby
+glcd.time_x_position Time x-Position
+glcd.time_y_position Time y-Position
 glcd.volume Volume
 hdd_10min 10 min.
 hdd_1min 1 min.
@@ -942,7 +991,7 @@ imageinfo.creator Creator:
 imageinfo.date Date:
 imageinfo.dokumentation Docs:
 imageinfo.forum Forum:
-imageinfo.gui GUI:
+imageinfo.gui Neutrino:
 imageinfo.head Image informations
 imageinfo.homepage Home page:
 imageinfo.image Image:
@@ -987,16 +1036,6 @@ infoviewer.subchan_infobar Full infobar
 infoviewer.waittime Waiting for time ...
 ipsetup.hint_1 Use 0..9, or use Up/Down,
 ipsetup.hint_2 OK saves, Exit aborts
-kerneloptions.apply Apply
-kerneloptions.head Kernel Options
-kerneloptions.hint.disabled_loaded The kernel module is still loaded.
-kerneloptions.hint.disabled_not_loaded The kernel module isn't loaded.
-kerneloptions.hint.enabled_loaded The kernel module is loaded and may be used.
-kerneloptions.hint.enabled_not_loaded Apply the settings to load the module.
-kerneloptions.modules Kernel modules
-kerneloptions.reset Reset settings
-keybindingmenu.RC Tune Remote-Control
-keybindingmenu.accept_other_remotes Accept other remote controls
 keybindingmenu.addrecord add record timer
 keybindingmenu.addremind add zapto timer
 keybindingmenu.allchannels_on_ok all-services
@@ -1025,12 +1064,6 @@ keybindingmenu.pagedown Page down
 keybindingmenu.pageup Page up
 keybindingmenu.poweroff Power toggle
 keybindingmenu.quickzap Quickzap
-keybindingmenu.remotecontrol_code Remote control code
-keybindingmenu.remotecontrol_code_change Change remote control code
-keybindingmenu.remotecontrol_code_msg1 For changing the remote control code please press the buttons: back +
-keybindingmenu.remotecontrol_code_msg2 at the same time, after that press the button: OK for leaving the infobox.
-keybindingmenu.remotecontrol_code_not_save The remote control code has not been changed !
-keybindingmenu.remotecontrol_code_save Save new code
 keybindingmenu.remotecontrol_hardware Hardware
 keybindingmenu.remotecontrol_hardware_coolstream CST
 keybindingmenu.remotecontrol_hardware_dbox d-box Nokia (old)
@@ -1098,7 +1131,6 @@ lcdmenu.statusline Status line
 lcdmenu.statusline.both Volume and playtime
 lcdmenu.statusline.playtime Playtime
 lcdmenu.statusline.volume Volume
-lcdmenu.vfd_scroll Scrolling
 ledcontroler.backlight Buttons backlight
 ledcontroler.backlight.tv TV mode
 ledcontroler.blink Blink in deep-standby, if timer set
@@ -1172,7 +1204,6 @@ mbkey.truncate Truncate movie
 menu.back Back
 menu.cancel Cancel
 menu.hint_a_pic Configure audio player and picture viewer
-menu.hint_accept_other_remotes Disable to ignore other remote controls
 menu.hint_adzap AdZap will switch back to the current channel when the selected time is up
 menu.hint_adzap_active AdZap is active. With a new call it will be deactivated.
 menu.hint_adzap_writedata Write data according to adzap status to /tmp/adzap.data
@@ -1434,12 +1465,10 @@ menu.hint_menus Configure menu options
 menu.hint_message_fonts Change message text font sizes
 menu.hint_misc_cec HDMI-CEC Options
 menu.hint_misc_channellist HD/New/Removed channel lists\nZap cycle
-menu.hint_misc_cpufreq Set the CPU frequency
 menu.hint_misc_energy Enable soft-standby, delayed shutdown\ninactivity timers
 menu.hint_misc_epg Save/load EPG options, EPG cache options\nEPG save directory
 menu.hint_misc_filebrowser Filesystem encoding, file rights\ndeny directory leave
 menu.hint_misc_general Start to standby, cache teletext, swp rotor\nplugin hdd dir
-menu.hint_misc_kerneloptions Select the kernel modules to be loaded in addition to the standard ones
 menu.hint_misc_onlineservices Configure and control online services like Weather, YouTube, SHOUTCast and TMDb
 menu.hint_misc_zapit Initial TV/Radio channels
 menu.hint_movie Play movies
@@ -1564,8 +1593,6 @@ menu.hint_record_zap_pre_time For ZapTo timers, switch channel\nbefore event sta
 menu.hint_recording Recording and timeshift options\nTimers safety, audio pids options
 menu.hint_reload_channels Reload channels from flash
 menu.hint_reload_plugins Reload plugins from flash
-menu.hint_remote_code For changing the code of the remote controls for Kathrein UFS912/13 models. It is possible to use four different codes ( 1 to 4 )
-menu.hint_remote_code_save Save and activate the new choosen code for remote control
 menu.hint_reset Reset GUI settings to defaults\nTuner config and channels not affected
 menu.hint_restart_tuner Restart the internal tuner. This may help if you're experiencing reception problems
 menu.hint_restore Restore files from selected backup
@@ -1724,13 +1751,9 @@ menu.hint_video_43mode Display mode for 4:3 content\non 16:9 TV
 menu.hint_video_analog_mode Select analog output mode\nfor SCART and RCA connectors
 menu.hint_video_brightness Change picture brightness
 menu.hint_video_cinch_mode Select analog output mode for\ncomposite video out
-menu.hint_video_colorformat_analog Select color space for analog output (SCART/RCA)
-menu.hint_video_colorformat_hdmi Select color space for digital output (HDMI)
 menu.hint_video_contrast Change picture contrast
 menu.hint_video_dbdr MPEG2 enhancement filters
 menu.hint_video_format TV aspect ratio
-menu.hint_video_mask Define a channel-specific border to hide unwanted screen content
-menu.hint_video_mixer_color This color will be used for the background if there is no signal available.
 menu.hint_video_mode HDMI output video mode
 menu.hint_video_modes VF key will cycle between enabled modes 
 menu.hint_video_modes_auto Enable modes to auto-select based on content
@@ -1783,7 +1806,6 @@ miscsettings.colored_events_1 current
 miscsettings.colored_events_2 next
 miscsettings.colored_events_channellist In channellist
 miscsettings.colored_events_infobar In infobar
-miscsettings.cpu CPU
 miscsettings.energy Energy
 miscsettings.epg_cache EPG-Cache (Days)
 miscsettings.epg_cache_hint1 How long will EPG-Data in the future cached?
@@ -2553,7 +2575,6 @@ screensaver.off Screensaver off
 screensaver.random Random Images
 screensaver.timeout Change interval
 screensetup.lowerright green = setup lower right
-screensetup.remove remove mask
 screensetup.upperleft red = setup upper left
 screenshot.backbuffer Secondary buffer (back buffer)
 screenshot.count Screenshot count
@@ -2801,15 +2822,6 @@ videomenu.analog_sd_yprpb_scart YPbPr on scart (SD)
 videomenu.auto Auto
 videomenu.brightness Brightness
 videomenu.cinch Cinch
-videomenu.colorformat Color space
-videomenu.colorformat.cvbs CVBS
-videomenu.colorformat.rgb RGB
-videomenu.colorformat.svideo S-Video (Y/C)
-videomenu.colorformat.ycbcr422 YCbCr 4:2:2
-videomenu.colorformat.ycbcr444 YCbCr 4:4:4
-videomenu.colorformat.yuv YUV
-videomenu.colorformat_analog Cinch/Scart
-videomenu.colorformat_hdmi HDMI
 videomenu.contrast Contrast
 videomenu.dbdr MPEG2 de-block/de-ring
 videomenu.dbdr_both de-block+de-ring
@@ -2830,8 +2842,6 @@ videomenu.hdmi_cec_view_on Enable CEC View on
 videomenu.hdmi_cec_volume Activate CEC volume control
 videomenu.hue Hue
 videomenu.letterbox Letterbox
-videomenu.masksetup Mask Setup
-videomenu.mixer_color Background color
 videomenu.panscan Pan & Scan
 videomenu.panscan2 14:9 Pan & Scan
 videomenu.pip PiP setup
