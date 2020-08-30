@@ -218,7 +218,6 @@ const CMenuOptionChooser::keyval CHANNELLIST_NEW_ZAP_MODE_OPTIONS[CHANNELLIST_NE
 	{ 2, LOCALE_CHANNELLIST_NEW_ZAP_MODE_ACTIVE	}
 };
 
-#ifdef CPU_FREQ
 #define CPU_FREQ_OPTION_COUNT 13
 const CMenuOptionChooser::keyval_ext CPU_FREQ_OPTIONS[CPU_FREQ_OPTION_COUNT] =
 {
@@ -236,7 +235,6 @@ const CMenuOptionChooser::keyval_ext CPU_FREQ_OPTIONS[CPU_FREQ_OPTION_COUNT] =
 	{ 550, NONEXISTANT_LOCALE, "550 Mhz"},
 	{ 600, NONEXISTANT_LOCALE, "600 Mhz"}
 };
-#endif /*CPU_FREQ*/
 
 const CMenuOptionChooser::keyval EPG_SCAN_OPTIONS[] =
 {
@@ -342,22 +340,15 @@ int CMiscMenue::showMiscSettingsMenu()
 	mf->setHint("", LOCALE_MENU_HINT_MISC_ONLINESERVICES);
 	misc_menue.addItem(mf);
 
-#ifdef CPU_FREQ
 	//CPU
-	CMenuWidget misc_menue_cpu(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
-	showMiscSettingsMenuCPUFreq(&misc_menue_cpu);
-	mf = new CMenuForwarder(LOCALE_MISCSETTINGS_CPU, true, NULL, &misc_menue_cpu, NULL, CRCInput::convertDigitToKey(shortcut++));
-	mf->setHint("", LOCALE_MENU_HINT_MISC_CPUFREQ);
-	misc_menue.addItem(mf);
-#endif /*CPU_FREQ*/
-
-#ifdef ENABLE_LCD4LINUX
-	// LCD4Linux Setup
-	CLCD4lSetup lcd4lSetup;
-	mf = new CMenuForwarder(LOCALE_LCD4L_SUPPORT, !find_executable("lcd4linux").empty(), NULL, &lcd4lSetup, NULL, CRCInput::convertDigitToKey(shortcut++));
-	mf->setHint(NEUTRINO_ICON_HINT_LCD4LINUX, LOCALE_MENU_HINT_LCD4L_SUPPORT);
-	misc_menue.addItem(mf);
-#endif
+	if (g_info.hw_caps->can_cpufreq)
+	{
+		CMenuWidget misc_menue_cpu(LOCALE_MAINSETTINGS_HEAD, NEUTRINO_ICON_SETTINGS, width);
+		showMiscSettingsMenuCPUFreq(&misc_menue_cpu);
+		mf = new CMenuForwarder(LOCALE_MISCSETTINGS_CPU, true, NULL, &misc_menue_cpu, NULL, CRCInput::convertDigitToKey(shortcut++));
+		mf->setHint("", LOCALE_MENU_HINT_MISC_CPUFREQ);
+		misc_menue.addItem(mf);
+	}
 
 	// plugins
 	mf = new CMenuForwarder(LOCALE_PLUGINS_CONTROL, true, NULL, this, "plugins", CRCInput::convertDigitToKey(shortcut++));
@@ -789,7 +780,6 @@ int CMiscMenue::showMiscSettingsSelectWeatherLocation()
 	return res;
 }
 
-#ifdef CPU_FREQ
 //CPU
 void CMiscMenue::showMiscSettingsMenuCPUFreq(CMenuWidget *ms_cpu)
 {
@@ -799,7 +789,6 @@ void CMiscMenue::showMiscSettingsMenuCPUFreq(CMenuWidget *ms_cpu)
 	ms_cpu->addItem(new CMenuOptionChooser(LOCALE_CPU_FREQ_NORMAL, &g_settings.cpufreq, CPU_FREQ_OPTIONS, CPU_FREQ_OPTION_COUNT, true, cpuNotifier));
 	ms_cpu->addItem(new CMenuOptionChooser(LOCALE_CPU_FREQ_STANDBY, &g_settings.standby_cpufreq, CPU_FREQ_OPTIONS, CPU_FREQ_OPTION_COUNT, true));
 }
-#endif /*CPU_FREQ*/
 
 bool CMiscMenue::changeNotify(const neutrino_locale_t OptionName, void * /*data*/)
 {
