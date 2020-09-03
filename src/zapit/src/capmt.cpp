@@ -142,7 +142,7 @@ bool CCam::setCaPmt(bool update)
 	return sendMessage((char *)cabuf, calen, update);
 }
 
-#if ! HAVE_COOL_HARDWARE
+#if ! HAVE_CST_HARDWARE
 bool CCam::sendCaPmt(uint64_t tpid, uint8_t *rawpmt, int rawlen, uint8_t type, unsigned char scrambled, casys_map_t camap, int mode, bool enable)
 {
 	return cCA::GetInstance()->SendCAPMT(tpid, source_demux, camask,
@@ -236,12 +236,12 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 	//INFO("channel %llx [%s] mode %d %s update %d", channel_id, channel->getName().c_str(), mode, start ? "START" : "STOP", force_update);
 
 	/* FIXME until proper demux management */
-#if ! HAVE_COOL_HARDWARE && ! HAVE_GENERIC_HARDWARE
+#if ! HAVE_CST_HARDWARE && ! HAVE_GENERIC_HARDWARE
 	CFrontend *frontend = CFEManager::getInstance()->getFrontend(channel);
 #endif
 	switch(mode) {
 		case PLAY:
-#if HAVE_COOL_HARDWARE
+#if HAVE_CST_HARDWARE
 			source = DEMUX_SOURCE_0;
 			demux = LIVE_DEMUX;
 #else
@@ -284,7 +284,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			mode, start ? "START" : "STOP", source, oldmask, newmask, force_update);
 
 	//INFO("source %d old mask %d new mask %d force update %s", source, oldmask, newmask, force_update ? "yes" : "no");
-#if ! HAVE_COOL_HARDWARE
+#if ! HAVE_CST_HARDWARE
 	/* stop decoding if record stops unless it's the live channel. TODO:PIP? */
 	/* all the modes: RECORD, STREAM, PIP except PLAY now stopping here !! */
 	if (mode && start == false && source != cDemux::GetSource(0)) {
@@ -406,7 +406,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI, channel->scrambled, channel->camap, 0, true);
 
 			/* out commented: causes a double send of capmt, the second without needed parameters */
-#if HAVE_COOL_HARDWARE
+#if HAVE_CST_HARDWARE
 			if (tunerno >= 0 && tunerno != cDemux::GetSource(cam->getSource())) {
 				INFO("CI: configured tuner %d do not match %d, skip [%s]\n", tunerno, cam->getSource(), channel->getName().c_str());
 			} else if (filter_channels && !channel->bUseCI) {

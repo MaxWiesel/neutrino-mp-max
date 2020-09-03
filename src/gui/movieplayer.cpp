@@ -89,7 +89,7 @@
 #include <gui/widget/msgbox.h>
 #include <libavcodec/avcodec.h>
 
-#if HAVE_COOL_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+#if HAVE_CST_HARDWARE || HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 #define LCD_MODE CVFD::MODE_MENU_UTF8
 #else
 #define LCD_MODE CVFD::MODE_MOVIE
@@ -165,7 +165,7 @@ CMoviePlayerGui::~CMoviePlayerGui()
 	filelist.clear();
 }
 
-#if !HAVE_COOL_HARDWARE
+#if !HAVE_CST_HARDWARE
 // used by libdvbsub/dvbsub.cpp
 void getPlayerPts(int64_t *pts)
 {
@@ -351,7 +351,7 @@ void CMoviePlayerGui::restoreNeutrino()
 
 	if (isUPNP)
 		return;
-#if ! HAVE_COOL_HARDWARE
+#if ! HAVE_CST_HARDWARE
 	g_Zapit->unlockPlayBack();
 #else
 	CZapit::getInstance()->EnablePlayback(true);
@@ -497,7 +497,7 @@ int CMoviePlayerGui::exec(CMenuTarget * parent, const std::string & actionKey)
 			break;
 		}
 		do {
-#if ! HAVE_COOL_HARDWARE
+#if ! HAVE_CST_HARDWARE
 			is_file_player = true;
 #endif
 			PlayFile();
@@ -1752,7 +1752,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 	bool first_start = true;
 	bool update_lcd = true;
 	neutrino_msg_t lastmsg = 0;
-#if HAVE_COOL_HARDWARE
+#if HAVE_CST_HARDWARE
 	int eof = 0;
 	int eof2 = 0;
 	int position_tmp = 0;
@@ -1866,7 +1866,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 #ifdef DEBUG
 				printf("CMoviePlayerGui::%s: spd %d pos %d/%d (%d, %d%%)\n", __func__, speed, position, duration, duration-position, file_prozent);
 #endif
-#if HAVE_COOL_HARDWARE
+#if HAVE_CST_HARDWARE
 				/* in case ffmpeg report incorrect values */
 				if(file_prozent > 89 && (playstate == CMoviePlayerGui::PLAY) && (speed == 1)){
 					if(position_tmp != position){
@@ -1895,7 +1895,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 					eof = 0;
 #endif
 			}
-#if ! HAVE_COOL_HARDWARE
+#if ! HAVE_CST_HARDWARE
 			else
 			{
 				at_eof = true;
@@ -2087,7 +2087,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			if (timeshift == TSHIFT_MODE_OFF)
 				callInfoViewer();
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_bookmark) {
-#if HAVE_COOL_HARDWARE || HAVE_ARM_HARDWARE
+#if HAVE_CST_HARDWARE || HAVE_ARM_HARDWARE
 			if (is_file_player)
 				selectChapter();
 			else
