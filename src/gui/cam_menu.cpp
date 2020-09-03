@@ -140,7 +140,7 @@ int CCAMMenuHandler::doMainMenu()
 	cammenu->addItem(new CMenuOptionChooser(LOCALE_CI_CHECK_LIVE_SLOT, &g_settings.ci_check_live, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this));
 #endif
 
-#ifdef BOXMODEL_CS_HD2
+#ifdef BOXMODEL_CST_HD2
 	int fecount = CFEManager::getInstance()->getFrontendCount();
 	char fename[fecount+1][255];
 

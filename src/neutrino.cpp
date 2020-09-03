@@ -840,7 +840,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	g_settings.webradio_xml_auto = configfile.getInt32("webradio_xml_auto", 1);
 	g_settings.webradio_xml.clear();
-#ifndef BOXMODEL_CS_HD1
+#ifndef BOXMODEL_CST_HD1
 	/*
 	   Coolstream's HD1 generation can't play audiostreams via movieplayer
 	   because of driver- or firmware-issues or so. Not sure.
@@ -1180,7 +1180,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 		erg = 2;
 	}
 
-#ifdef BOXMODEL_CS_HD2
+#ifdef BOXMODEL_CST_HD2
 	g_settings.brightness = configfile.getInt32("brightness", 0);
 	g_settings.contrast = configfile.getInt32("contrast", 0);
 	g_settings.saturation = configfile.getInt32("saturation", 0);
@@ -1965,7 +1965,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32("window_size", g_settings.window_size);
 	configfile.setInt32("window_width", g_settings.window_width);
 	configfile.setInt32("window_height", g_settings.window_height);
-#ifdef BOXMODEL_CS_HD2
+#ifdef BOXMODEL_CST_HD2
 	configfile.setInt32("brightness", g_settings.brightness );
 	configfile.setInt32("contrast", g_settings.contrast );
 	configfile.setInt32("enable_sd_osd", g_settings.enable_sd_osd );
