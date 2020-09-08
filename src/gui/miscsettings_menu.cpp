@@ -41,9 +41,6 @@
 #include <gui/cec_setup.h>
 #include <gui/filebrowser.h>
 #include <gui/keybind_setup.h>
-#ifdef ENABLE_LCD4LINUX
-#include <gui/lcd4l_setup.h>
-#endif
 #include <gui/plugins.h>
 #include <gui/plugins_hide.h>
 #include <gui/sleeptimer.h>

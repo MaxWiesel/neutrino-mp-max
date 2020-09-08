@@ -145,7 +145,7 @@ class CMoviePlayerGui : public CMenuTarget
 	int vpid;
 	int vtype;
 	std::string    language[REC_MAX_APIDS];
-#if HAVE_COOL_HARDWARE
+#if HAVE_CST_HARDWARE
 	uint16_t apids[REC_MAX_APIDS];
 	unsigned short ac3flags[REC_MAX_APIDS];
 #else
