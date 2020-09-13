@@ -288,7 +288,7 @@ void CColorSetupNotifier::setPalette()
 
 	frameBuffer->paletteGenFade(COL_INFOBAR,
 	                              convertSetupColor2RGB(t.infobar_red, t.infobar_green, t.infobar_blue),
-	                              convertSetupColor2RGB(t.infobar_red, t.infobar_green, t.infobar_blue),
+	                              convertSetupColor2RGB(t.infobar_Text_red, t.infobar_Text_green, t.infobar_Text_blue),
 	                              8, convertSetupAlpha2Alpha(t.infobar_alpha) );
 
 	frameBuffer->paletteGenFade(COL_SHADOW,
@@ -298,7 +298,7 @@ void CColorSetupNotifier::setPalette()
 
 	frameBuffer->paletteGenFade(COL_INFOBAR_CASYSTEM,
 	                              convertSetupColor2RGB(t.infobar_casystem_red, t.infobar_casystem_green, t.infobar_casystem_blue),
-	                              convertSetupColor2RGB(t.infobar_casystem_red, t.infobar_casystem_green, t.infobar_casystem_blue),
+	                              convertSetupColor2RGB(t.infobar_Text_red, t.infobar_Text_green, t.infobar_Text_blue),
 	                              8, convertSetupAlpha2Alpha(t.infobar_casystem_alpha) );
 
 	frameBuffer->paletteGenFade(COL_COLORED_EVENTS_INFOBAR,
@@ -795,6 +795,7 @@ bool CAutoModeNotifier::changeNotify(const neutrino_locale_t /*OptionName*/, voi
 			continue;
 		}
 #ifdef BOXMODEL_CST_HD2
+	for(i = 0; i < VIDEOMENU_VIDEOMODE_OPTION_COUNT; i++)
 		modes[VIDEOMENU_VIDEOMODE_OPTIONS[i].key] = g_settings.enabled_auto_modes[i];
 #else
 		modes[VIDEOMENU_VIDEOMODE_OPTIONS[i].key] = g_settings.enabled_video_modes[i];
