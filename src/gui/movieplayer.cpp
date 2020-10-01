@@ -194,11 +194,6 @@ void CMoviePlayerGui::Init(void)
 
 	// video files
 	filefilter_video.addFilter("ts");
-#if !HAVE_TRIPLEDRAGON
-	filefilter_video.addFilter("asf");
-	filefilter_video.addFilter("avi");
-	filefilter_video.addFilter("mkv");
-#endif
 	filefilter_video.addFilter("flv");
 	filefilter_video.addFilter("iso");
 	filefilter_video.addFilter("m2p");
@@ -1839,11 +1834,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 					cGLCD::lockEnd(glcd_end);
 				}
 #endif
-#if HAVE_TRIPLEDRAGON
-				CVFD::getInstance()->showPercentOver(file_prozent, true, CVFD::MODE_MOVIE);
-#else
 				CVFD::getInstance()->showPercentOver(file_prozent);
-#endif
 
 				playback->GetSpeed(speed);
 				/* at BOF lib set speed 1, check it */
