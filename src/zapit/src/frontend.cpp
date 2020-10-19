@@ -517,14 +517,14 @@ void CFrontend::reset(void)
 void CFrontend::Lock()
 {
 	usecount++;
-	INFO("[fe%d/%d] usecount %d tp %" PRIx64, adapter, fenumber, usecount, getTsidOnid());
+	INFO("[fe%d/%d] usecount %d tp %" PRIx64 "\n", adapter, fenumber, usecount, getTsidOnid());
 }
 
 void CFrontend::Unlock()
 {
 	if(usecount > 0)
 		usecount--;
-	INFO("[fe%d/%d] usecount %d tp %" PRIx64, adapter, fenumber, usecount, getTsidOnid());
+	INFO("[fe%d/%d] usecount %d tp %" PRIx64 "\n", adapter, fenumber, usecount, getTsidOnid());
 }
 
 fe_code_rate_t CFrontend::getCFEC()
@@ -916,13 +916,13 @@ struct dvb_frontend_event CFrontend::getEvent(void)
 				continue;
 
 			if (event.status & FE_HAS_LOCK) {
-				INFO("[fe%d/%d] ******** FE_HAS_LOCK: freq %lu", adapter, fenumber, (long unsigned int)event.parameters.frequency);
+				INFO("[fe%d/%d] ******** FE_HAS_LOCK: freq %lu\n", adapter, fenumber, (long unsigned int)event.parameters.frequency);
 				tuned = true;
 				break;
 			} else if (event.status & FE_TIMEDOUT) {
 				if(timedout < timer_msec)
 					timedout = timer_msec;
-				INFO("[fe%d/%d] ######## FE_TIMEDOUT (max %d)", adapter, fenumber, timedout);
+				INFO("[fe%d/%d] ######## FE_TIMEDOUT (max %d)\n", adapter, fenumber, timedout);
 				/*break;*/
 			} else {
 				if (event.status & FE_HAS_SIGNAL)
@@ -1193,7 +1193,7 @@ void CFrontend::getDelSys(delivery_system_t delsys, int f, int m, const char *&f
 		}
 		break;
 	default:
-		INFO("[frontend] unknown delsys %d!", delsys);
+		INFO("[frontend] unknown delsys %d!\n", delsys);
 		sys = "UNKNOWN";
 		mod = "UNKNOWN";
 		break;
@@ -1610,14 +1610,14 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 			cmdseq.props[MIS].u.data	= feparams->plp_id | (feparams->pls_code << 8) | (feparams->pls_mode << 26);
 #endif
 			if (zapit_debug)
-				printf("[fe%d/%d] tuner pilot %d (feparams %d)\n", adapter, fenumber, pilot, feparams->pilot);
+				printf("[fe%d/%d] tuner pilot %d (feparams %d) streamid (%d/%d/%d)\n", adapter, fenumber, pilot, feparams->pilot, feparams->plp_id, feparams->pls_code, feparams->pls_mode);
 		} else {
 			memcpy(cmdseq.props, dvbs_cmdargs, sizeof(dvbs_cmdargs));
 			nrOfProps			= FE_DVBS_PROPS;
 		}
 		cmdseq.props[FREQUENCY].u.data		= feparams->frequency;
 		cmdseq.props[SYMBOL_RATE].u.data	= feparams->symbol_rate;
-		cmdseq.props[INNER_FEC].u.data		= fec; /*_inner*/ ;
+		cmdseq.props[INNER_FEC].u.data		= fec; /*_inner*/
 		break;
 	case DVB_S2X:
 		nrOfProps				= FE_DVBS2X_PROPS;
@@ -1627,10 +1627,10 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		cmdseq.props[PILOTS].u.data		= pilot;
 		cmdseq.props[MIS].u.data		= feparams->plp_id | (feparams->pls_code << 8) | (feparams->pls_mode << 26);
 		if (zapit_debug)
-			printf("[fe%d/%d] tuner pilot %d (feparams %d) streamid (%d/%d/%d)\n", adapter, fenumber, pilot, feparams->pilot, feparams->plp_id, feparams->pls_code, feparams->pls_mode );
+			printf("[fe%d/%d] tuner pilot %d (feparams %d) streamid (%d/%d/%d)\n", adapter, fenumber, pilot, feparams->pilot, feparams->plp_id, feparams->pls_code, feparams->pls_mode);
 		cmdseq.props[FREQUENCY].u.data		= feparams->frequency;
 		cmdseq.props[SYMBOL_RATE].u.data	= feparams->symbol_rate;
-		cmdseq.props[INNER_FEC].u.data		= fec; /*_inner*/ ;
+		cmdseq.props[INNER_FEC].u.data		= fec; /*_inner*/
 		break;
 	case DVB_C:
 		memcpy(cmdseq.props, dvbc_cmdargs, sizeof(dvbc_cmdargs));
@@ -1671,7 +1671,7 @@ bool CFrontend::buildProperties(const FrontendParameters *feparams, struct dtv_p
 		cmdseq.props[PLP_ID].u.data		= feparams->plp_id;
 		break;
 	default:
-		INFO("[frontend] unknown frontend type, exiting");
+		INFO("[frontend] unknown frontend type, exiting\n");
 		return false;
 	}
 
@@ -2038,7 +2038,7 @@ uint32_t CFrontend::sendEN50494TuningCommand(const uint32_t frequency, const int
 		}
 		fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_18);
 		usleep(20 * 1000);		/* en50494 says: >4ms and < 22 ms */
-		sendDiseqcCommand(&cmd, 120);	/* en50494 says: >2ms and < 60 ms -- it seems we must add the lengthe of telegramm itself (~65ms)*/
+		sendDiseqcCommand(&cmd, 80);	/* en50494 says: >2ms and < 60 ms -- it seems we must add the lengthe of telegramm itself (~65ms) */
 		fop(ioctl, FE_SET_VOLTAGE, unicable_lowvolt);
 	}
 	return ret;
@@ -2075,7 +2075,7 @@ uint32_t CFrontend::sendEN50607TuningCommand(const uint32_t frequency, const int
 				high_band;					/* high_band  == 0x01 */
 			fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_18);
 			usleep(20 * 1000);					/* en50494 says: >4ms and < 22 ms */
-			sendDiseqcCommand(&cmd, 120);				/* en50494 says: >2ms and < 60 ms -- it seems we must add the lengthe of telegramm itself (~65ms)*/
+			sendDiseqcCommand(&cmd, 80);				/* en50494 says: >2ms and < 60 ms -- it seems we must add the lengthe of telegramm itself (~65ms) */
 			fop(ioctl, FE_SET_VOLTAGE, unicable_lowvolt);
 		}
 		return ret;
