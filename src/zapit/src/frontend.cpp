@@ -2193,6 +2193,9 @@ void CFrontend::sendDiseqcReset(uint32_t ms)
 void CFrontend::sendDiseqcStandby(uint32_t ms)
 {
 	printf("[fe%d/%d] diseqc standby\n", adapter, fenumber);
+	if (config.diseqcType == DISEQC_UNICABLE)
+		sendEN50494TuningCommand(0, 0, 0, 2);
+	/* en50494 switches don't seem to be hurt by this */
 	if (config.diseqcType > DISEQC_ADVANCED)
 	{
 		/* use ODU_Power_OFF command for unicable or jess here
