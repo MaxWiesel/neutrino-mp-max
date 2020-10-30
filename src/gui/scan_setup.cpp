@@ -2176,13 +2176,8 @@ int CTPSelectHandler::exec(CMenuTarget* parent, const std::string &actionkey)
 			scansettings.sat_TP_delsys = tmpI->second.feparams.delsys;
 			scansettings.sat_TP_mod = tmpI->second.feparams.modulation;
 			scansettings.sat_TP_pilot = tmpI->second.feparams.pilot;
-<<<<<<< HEAD
-			scansettings.sat_TP_pli = to_string(tmpI->second.feparams.plp_id);
+			scansettings.sat_TP_pli = (tmpI->second.feparams.plp_id == NO_STREAM_ID_FILTER ? "0" : to_string(tmpI->second.feparams.plp_id));
 			scansettings.sat_TP_plc = to_string(tmpI->second.feparams.pls_code);
-=======
-			scansettings.sat_TP_pli = (tmpI->second.feparams.plp_id == NO_STREAM_ID_FILTER ? "0" : std::to_string(tmpI->second.feparams.plp_id));
-			scansettings.sat_TP_plc = std::to_string(tmpI->second.feparams.pls_code);
->>>>>>> 29dcd1ebc... adopt scansettings to new frontend handling
 			scansettings.sat_TP_plm = tmpI->second.feparams.pls_mode;
 		}
 		else if (CFrontend::isCable(tmpI->second.feparams.delsys)) {
@@ -2200,11 +2195,7 @@ int CTPSelectHandler::exec(CMenuTarget* parent, const std::string &actionkey)
 			scansettings.terrestrial_TP_transmit_mode = tmpI->second.feparams.transmission_mode;
 			scansettings.terrestrial_TP_coderate_HP = tmpI->second.feparams.code_rate_HP;
 			scansettings.terrestrial_TP_coderate_LP = tmpI->second.feparams.code_rate_LP;
-<<<<<<< HEAD
-			scansettings.terrestrial_TP_pli = to_string(tmpI->second.feparams.plp_id);
-=======
-			scansettings.terrestrial_TP_pli = (tmpI->second.feparams.plp_id == NO_STREAM_ID_FILTER ? "0" : std::to_string(tmpI->second.feparams.plp_id));
->>>>>>> 29dcd1ebc... adopt scansettings to new frontend handling
+			scansettings.terrestrial_TP_pli = (tmpI->second.feparams.plp_id == NO_STREAM_ID_FILTER ? "0" : to_string(tmpI->second.feparams.plp_id));
 			//scansettings.terrestrialName = CServiceManager::getInstance()->GetSatelliteName(channel->getSatellitePosition());
 		}
 	}
