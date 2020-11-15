@@ -1655,7 +1655,7 @@ std::string downloadUrlToRandomFile(std::string url, std::string directory, unsi
 	if (strstr(url.c_str(), "://"))
 	{
 		std::string file = randomFile(url.substr(url.find_last_of(".") + 1), directory, length);
-		if (downloadUrl(url, file))
+		if (downloadUrl(url, file, " ", 1))
 			return file;
 	}
 	return url;
