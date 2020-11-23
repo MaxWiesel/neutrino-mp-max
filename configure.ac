@@ -365,6 +365,7 @@ AC_SUBST(LUA_CFLAGS)
 AC_SUBST(LUA_LIBS)
 AC_SUBST(BLURAY_LIBS)
 
+# Makefiles
 AC_CONFIG_FILES([
 Makefile
 data/Makefile
@@ -411,13 +412,12 @@ data/pictures/screensaver/Makefile
 data/policy/Makefile
 data/scripts/Makefile
 data/themes/Makefile
-data/themes/Material_Blue-Grey.theme
-data/themes/Grey-Blue/Makefile
-data/themes/Grey-Blue/icons/Makefile
-data/themes/Grey-Blue/icons/buttons/Makefile
 data/themes/Grey-3.0/Makefile
 data/themes/Grey-3.0/icons/Makefile
 data/themes/Grey-3.0/icons/buttons/Makefile
+data/themes/Grey-Blue/Makefile
+data/themes/Grey-Blue/icons/Makefile
+data/themes/Grey-Blue/icons/buttons/Makefile
 data/themes/Neutrino-3.0/Makefile
 data/themes/Neutrino-3.0/icons/Makefile
 data/themes/Neutrino-3.0/icons/buttons/Makefile
@@ -464,7 +464,6 @@ src/gui/widget/Makefile
 src/gui/widget/yaft/Makefile
 src/lcddisplay/Makefile
 src/nhttpd/Makefile
-src/nhttpd/nhttpd.conf
 src/nhttpd/tuxboxapi/Makefile
 src/nhttpd/yhttpd_core/Makefile
 src/nhttpd/yhttpd_mods/Makefile
@@ -475,6 +474,16 @@ src/timerd/Makefile
 src/zapit/Makefile
 src/zapit/lib/Makefile
 src/zapit/src/Makefile
+])
+
+# Webserver config
+AC_CONFIG_FILES([
+src/nhttpd/nhttpd.conf
+])
+
+# Themes
+AC_CONFIG_FILES([
+data/themes/Material_Blue-Grey.theme
 ])
 
 AC_OUTPUT
