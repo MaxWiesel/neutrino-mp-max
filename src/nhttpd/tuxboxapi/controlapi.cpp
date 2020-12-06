@@ -829,7 +829,7 @@ void CControlAPI::InfoCGI(CyhookHandler *hh)
 		if (hh->ParamList["1"] == "streaminfo")		// print streaminfo
 			SendStreamInfo(hh);
 		else if (hh->ParamList["1"] == "version")	// send version file
-			hh->SendFile("/.version");
+			hh->SendFile(IMAGE_VERSION_FILE);
 		else if (hh->ParamList["1"] == "httpdversion")	// print httpd version typ (just for compatibility)
 			hh->Write("3");
 		else if (hh->ParamList["1"] == "nhttpd_version")// print nhttpd version
@@ -893,7 +893,7 @@ unsigned int revert_translate(unsigned int code)
 		case RC_page_down:
 			return KEY_CHANNELDOWN;
 #ifdef HAVE_ARM_HARDWARE
-#if BOXMODEL_HD51 || BOXMODEL_HD60 || BOXMODEL_BRE2ZE4K || BOXMODEL_H7 || BOXMODEL_OSMIO4K || BOXMODEL_OSMIO4KPLUS
+#if BOXMODEL_HD51 || BOXMODEL_HD60 || BOXMODEL_HD61 || BOXMODEL_BRE2ZE4K || BOXMODEL_H7 || BOXMODEL_OSMIO4K || BOXMODEL_OSMIO4KPLUS
 		case RC_favorites:
 			return KEY_VIDEO;
 #endif
@@ -2106,7 +2106,7 @@ void CControlAPI::EpgCGI(CyhookHandler *hh)
 //-----------------------------------------------------------------------------
 void CControlAPI::VersionCGI(CyhookHandler *hh)
 {
-	hh->SendFile("/.version");
+	hh->SendFile(IMAGE_VERSION_FILE);
 }
 //-----------------------------------------------------------------------------
 void CControlAPI::ReloadNeutrinoSetupCGI(CyhookHandler *hh)
