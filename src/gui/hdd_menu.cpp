@@ -67,11 +67,10 @@
 #include <driver/record.h>
 #include <driver/display.h>
 
-#define BLKID_BIN    "/sbin/blkid"
-#define EJECT_BIN    "/bin/eject"
-
 #define MDEV_MOUNT	"/etc/udev/mount-helper.sh "
 #define MOUNT_BASE	"/media/"
+
+#define MKFS_LABEL_DEFAULT "RECORD"
 
 #define HDD_NOISE_OPTION_COUNT 4
 const CMenuOptionChooser::keyval HDD_NOISE_OPTIONS[HDD_NOISE_OPTION_COUNT] =
@@ -95,14 +94,14 @@ const CMenuOptionChooser::keyval HDD_SLEEP_OPTIONS[HDD_SLEEP_OPTION_COUNT] =
 };
 
 devtool_s CHDDMenuHandler::devtools[] = {
-	{ "ext4",  "/sbin/fsck.ext4",  "-C 1 -f -y", "/sbin/mkfs.ext4",  "-T largefile -m 0", false, false },
-	{ "ext3",  "/sbin/fsck.ext3",  "-C 1 -f -y", "/sbin/mkfs.ext3",  "-T largefile -m 0", false, false },
-	{ "ext2",  "/sbin/fsck.ext2",  "-C 1 -f -y", "/sbin/mkfs.ext2",  "-T largefile -m 0", false, false },
-	{ "f2fs",  "/sbin/fsck.f2fs" , ""          , "/sbin/mkfs.f2fs" , "-f",               false, false },
-	{ "jfs",   "/sbin/fsck.jfs",   "-a -f -p",   "/sbin/mkfs.jfs",   "-q",                false, false },
-	{ "vfat",  "/sbin/fsck.vfat",  "-a",         "/sbin/mkfs.vfat",  "",                  false, false },
-	{ "exfat", "/sbin/fsck.exfat", "",           "/sbin/mkfs.exfat", "",                  false, false },
-	{ "xfs",   "/sbin/xfs_repair", "",           "/sbin/mkfs.xfs",   "-f",               false, false }
+	{ "ext4",  "fsck.ext4",  "-C 1 -f -y", "mkfs.ext4",  "-m 0", "-L", false, false },
+	{ "ext3",  "fsck.ext3",  "-C 1 -f -y", "mkfs.ext3",  "-m 0", "-L", false, false },
+	{ "ext2",  "fsck.ext2",  "-C 1 -f -y", "mkfs.ext2",  "-m 0", "-L", false, false },
+	{ "jfs",   "fsck.jfs",   "-a -f -p",   "mkfs.jfs",   "",     "-q", false, false },
+	{ "f2fs",  "fsck.f2fs",  "",           "mkfs.f2fs",  "-f",   "-l", false, false },
+	{ "vfat",  "fsck.vfat",  "-a",         "mkfs.vfat",  "",     "-n", false, false },
+	{ "exfat", "fsck.exfat", "",           "mkfs.exfat", "",     "-n", false, false },
+	{ "xfs",   "xfs_repair", "",           "mkfs.xfs",   "-f",   "-L", false, false }
 };
 #define FS_MAX (sizeof(CHDDMenuHandler::devtools)/sizeof(devtool_s))
 
@@ -117,8 +116,8 @@ CHDDMenuHandler::CHDDMenuHandler()
 	show_menu = false;
 	in_menu = false;
 	lock_refresh = false;
-	fmt_label = "RECORD";
-	fmt_mpoint = "/hdd";
+	mkfs_label = MKFS_LABEL_DEFAULT;
+	mkfs_mpoint = MOUNT_BASE;
 }
 
 CHDDMenuHandler::~CHDDMenuHandler()
@@ -291,7 +290,7 @@ std::string CHDDMenuHandler::getDefaultPart(std::string dev)
 
 std::string CHDDMenuHandler::getFmtType(std::string name, std::string part)
 {
-	std::string ret;
+	std::string ret = "";
 	std::string dev = name + part;
 	for (std::vector<hdd_s>::iterator it = hdd_list.begin(); it != hdd_list.end(); ++it) {
 		if (it->devname == dev) {
@@ -333,11 +332,19 @@ void CHDDMenuHandler::check_dev_tools()
 				__func__, devtools[i].fmt.c_str());
 			continue;
 		}
-		if (!access(devtools[i].fsck.c_str(), X_OK))
+		std::string fsck = find_executable(devtools[i].fsck.c_str());
+		if (!fsck.empty())
+		{
+			devtools[i].fsck = fsck;
 			devtools[i].fsck_supported = true;
-		if (!access(devtools[i].mkfs.c_str(), X_OK))
+		}
+		std::string mkfs = find_executable(devtools[i].mkfs.c_str());
+		if (!mkfs.empty())
+		{
+			devtools[i].mkfs = mkfs;
 			devtools[i].mkfs_supported = true;
-		printf("check_dev_tools: %s: fsck %d mkfs %d\n", devtools[i].fmt.c_str(), devtools[i].fsck_supported, devtools[i].mkfs_supported);
+		}
+		printf("check_dev_tools: %s: fsck (%s) %d mkfs (%s) %d\n", devtools[i].fmt.c_str(), devtools[i].fsck.c_str(), devtools[i].fsck_supported, devtools[i].mkfs.c_str(), devtools[i].mkfs_supported);
 	}
 }
 
@@ -353,8 +360,10 @@ devtool_s * CHDDMenuHandler::get_dev_tool(std::string fmt)
 bool CHDDMenuHandler::mount_dev(std::string name)
 {
 	std::string dev = name.substr(0, 2);
-	if (dev == "sr" && !access(EJECT_BIN, X_OK)) {
-		std::string eject = std::string(EJECT_BIN) + " -t /dev/" + name;
+	std::string eject = find_executable("eject");
+	printf("CHDDMenuHandler::mount_dev: eject = %s\n", eject.c_str());
+	if (dev == "sr" && !eject.empty()) {
+		eject += " -t /dev/" + name;
 		system(eject.c_str());
 		sleep(3);
 	}
@@ -369,7 +378,7 @@ bool CHDDMenuHandler::mount_dev(std::string name)
 			std::string device = "/dev/"+it->devname;
 			if (it->mountpoint == "no mountpoint")
 			{
-				int ret = b.exec("/mnt");
+				int ret = b.exec(MOUNT_BASE);
 				if (ret)
 					it->mountpoint = b.getSelectedFile()->Name.c_str();
 			}
@@ -402,8 +411,10 @@ bool CHDDMenuHandler::umount_dev(std::string name)
 	}
 #endif
 	std::string dev = name.substr(0, 2);
-	if (dev == "sr" && !access(EJECT_BIN, X_OK)) {
-		std::string eject = std::string(EJECT_BIN) + " /dev/" + name;
+	std::string eject = find_executable("eject");
+	printf("CHDDMenuHandler::umount_dev: eject = %s\n", eject.c_str());
+	if (dev == "sr" && !eject.empty()) {
+		eject += " /dev/" + name;
 		system(eject.c_str());
 	}
 	lock_refresh = true;
@@ -649,9 +660,9 @@ int CHDDMenuHandler::exec(CMenuTarget* parent, const std::string &actionkey)
 	else if (actionkey[0] == 'g') {
 		CFileBrowser b;
 		b.Dir_Mode=true;
-		int res = b.exec(fmt_mpoint.c_str());
+		int res = b.exec(mkfs_mpoint.c_str());
 		if (res)
-			fmt_mpoint = b.getSelectedFile()->Name.c_str();
+			mkfs_mpoint = b.getSelectedFile()->Name.c_str();
 		return menu_return::RETURN_REPAINT;
 	}
 	return menu_return::RETURN_REPAINT;
@@ -710,18 +721,20 @@ int CHDDMenuHandler::showDeviceMenu(std::string dev)
 	if (found)
 		hddmenu->addItem(new CMenuSeparator(CMenuSeparator::LINE));
 
-	CMenuOptionChooser * mc = new CMenuOptionChooser(LOCALE_HDD_FS, &g_settings.hdd_fs, fsoptions, opcount, mkfs_enabled);
+	CMenuOptionChooser * mc = new CMenuOptionChooser(LOCALE_HDD_FS, &g_settings.hdd_fs, fsoptions, opcount, mkfs_enabled, NULL, RC_NOKEY, NULL, true);
 	mc->setHint("", LOCALE_MENU_HINT_HDD_FMT);
 	hddmenu->addItem(mc);
 
-	CKeyboardInput choseLabel(LOCALE_HDD_FMT_LABEL, &fmt_label, 0, NULL, NULL, LOCALE_HDD_LABEL_HINT1, LOCALE_HDD_LABEL_HINT2);
-	mf = new CMenuForwarder(LOCALE_HDD_FMT_LABEL, true, fmt_label, &choseLabel);
+	char hint2[1024];
+	snprintf(hint2, sizeof(hint2)-1, g_Locale->getText(LOCALE_HDD_LABEL_HINT2), MKFS_LABEL_DEFAULT);
+	CKeyboardInput choseLabel((std::string) g_Locale->getText(LOCALE_HDD_LABEL), &mkfs_label, 0, NULL, NULL, (std::string) g_Locale->getText(LOCALE_HDD_LABEL_HINT1), (std::string) hint2);
+	mf = new CMenuForwarder(LOCALE_HDD_LABEL, true, mkfs_label, &choseLabel);
 	mf->setHint("", LOCALE_MENU_HINT_HDD_LABEL);
 	hddmenu->addItem(mf);
 
 	std::string cmd = "g" + dev;
-	mf = new CMenuForwarder(LOCALE_HDD_FMT_MOUNTPOINT, true, fmt_mpoint, this, cmd.c_str());
-	mf->setHint("", LOCALE_MENU_HINT_HDD_MOUNTPOINT);
+	mf = new CMenuForwarder(LOCALE_HDD_MOUNT_POINT, true, mkfs_mpoint, this, cmd.c_str());
+	mf->setHint("", LOCALE_MENU_HINT_HDD_MOUNT_POINT);
 	hddmenu->addItem(mf);
 
 	std::string key = "f" + dev;
@@ -836,6 +849,7 @@ bool CHDDMenuHandler::scanDevices()
 			hdd_s hdd;
 			hdd.devname = namelist[i]->d_name;
 			hdd.mounted = false;
+			hdd.fmt = "";
 			hdd.desc = hdd.devname;
 			hdd.cmf = NULL;
 			hdd_list.push_back(hdd);
@@ -877,9 +891,10 @@ _show_menu:
 	mc->setHint("", LOCALE_MENU_HINT_HDD_SLEEP);
 	hddmenu->addItem(mc);
 
-	const char hdparm[] = "/sbin/hdparm";
+	std::string hdparm = find_executable("hdparm");
+	printf("CHDDMenuHandler::doMenu: hdparm = %s\n", hdparm.c_str());
 	struct stat stat_buf;
-	bool have_nonbb_hdparm = !::lstat(hdparm, &stat_buf) && !S_ISLNK(stat_buf.st_mode);
+	bool have_nonbb_hdparm = !::lstat(hdparm.c_str(), &stat_buf) && !S_ISLNK(stat_buf.st_mode);
 	if (have_nonbb_hdparm) {
 		mc = new CMenuOptionChooser(LOCALE_HDD_NOISE, &g_settings.hdd_noise, HDD_NOISE_OPTIONS, HDD_NOISE_OPTION_COUNT, true);
 		mc->setHint("", LOCALE_MENU_HINT_HDD_NOISE);
@@ -1115,14 +1130,10 @@ int CHDDMenuHandler::formatDevice(std::string dev)
 	std::string devpart = dev + part;
 	std::string partname = devname + part;
 
-	std::string mkfscmd;
-	if (fmt_label.empty())
-		mkfscmd = devtool->mkfs + " " + devtool->mkfs_options + " " + partname;
-	else
-		if (devtool->mkfs == "/sbin/mkfs.f2fs")
-			mkfscmd = devtool->mkfs + " " + "-l " + fmt_label + " " + devtool->mkfs_options + " " + partname;
-		else
-			mkfscmd = devtool->mkfs + " " + "-L " + fmt_label + " " + devtool->mkfs_options + " " + partname;
+	std::string mkfscmd = devtool->mkfs + " " + devtool->mkfs_options + " ";
+	if (!devtool->mkfs_labelswitch.empty() && !mkfs_label.empty())
+		mkfscmd += devtool->mkfs_labelswitch + " \"" + mkfs_label + "\" ";
+	mkfscmd += partname;
 	printf("mkfs cmd: [%s]\n", mkfscmd.c_str());
 
 	res = ShowMsg(LOCALE_HDD_FORMAT, g_Locale->getText(LOCALE_HDD_FORMAT_WARN), CMsgBox::mbrNo, CMsgBox::mbYes | CMsgBox::mbNo );
@@ -1157,12 +1168,13 @@ int CHDDMenuHandler::formatDevice(std::string dev)
 	sfdisk  = find_executable("sfdisk");
 	sgdisk  = find_executable("sgdisk");
 	tune2fs = find_executable("tune2fs");
-	if (! sfdisk.empty()) {
+
+	if (! sgdisk.empty()) {
+		snprintf(cmd, sizeof(cmd), "%s -Z -N 0 %s", sgdisk.c_str(), devname.c_str());
+	}
+	else if (! sfdisk.empty()) {
 		std::string conf = "echo 'label: gpt\n;' | ";
 		snprintf(cmd, sizeof(cmd), "%s %s -f %s", conf.c_str(), sfdisk.c_str(), devname.c_str());
-	}
-	else if (! sgdisk.empty()) {
-		snprintf(cmd, sizeof(cmd), "%s -Z -N 0 %s", sgdisk.c_str(), devname.c_str());
 	}
 	else if (! fdisk.empty()) {
 		snprintf(cmd, sizeof(cmd), "%s -u %s", fdisk.c_str(), devname.c_str());
@@ -1307,13 +1319,14 @@ _remount:
 		for (std::vector<hdd_s>::iterator it = hdd_list.begin(); it != hdd_list.end(); ++it) {
 			if (it->devname == devpart) {
 				it->fmt = devtool->fmt;
-				it->mountpoint = fmt_mpoint;
+				it->mountpoint = mkfs_mpoint;
 			}
 		}
 
 		res = mount_dev(devpart);
 
-		if(res && fmt_label == "RECORD") {
+		if (res && mkfs_label == MKFS_LABEL_DEFAULT)
+		{
 			std::string dst;
 			for (std::vector<hdd_s>::iterator it = hdd_list.begin(); it != hdd_list.end(); ++it) {
 				if (it->devname == devpart) {
@@ -1476,10 +1489,9 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 	if (g_settings.hdd_sleep > 0 && g_settings.hdd_sleep < 60)
 		g_settings.hdd_sleep = 60;
 
-	const char hdidle[] = "/sbin/hd-idle";
-	bool have_hdidle = !access(hdidle, X_OK);
-
-	if (have_hdidle && g_settings.hdd_sleep > 0) {
+	std::string hdidle = find_executable("hd-idle");
+	printf("CHDDDestExec::exec: hd-idle = %s\n", hdidle.c_str());
+	if (!hdidle.empty() && g_settings.hdd_sleep > 0) {
 		system("kill $(pidof hd-idle)");
 		int sleep_seconds = g_settings.hdd_sleep;
 		switch (sleep_seconds) {
@@ -1493,16 +1505,26 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 					sleep_seconds *= 5;
 		}
 		if (sleep_seconds)
-			my_system(3, hdidle, "-i", to_string(sleep_seconds).c_str());
+			my_system(3, hdidle.c_str(), "-i", to_string(sleep_seconds).c_str());
+
+		while (n--)
+			free(namelist[n]);
+		free(namelist);
+		return menu_return::RETURN_NONE;
 	}
 
-	const char hdparm[] = "/sbin/hdparm";
-	bool have_hdparm = !access(hdparm, X_OK);
-	if (!have_hdparm || !have_hdidle)
+	std::string hdparm = find_executable("hdparm");
+	printf("CHDDDestExec::exec: hdparm = %s\n", hdparm.c_str());
+	if (!hdparm.empty())
+	{
+		while (n--)
+			free(namelist[n]);
+		free(namelist);
 		return menu_return::RETURN_NONE;
+	}
 
 	struct stat stat_buf;
-	bool have_nonbb_hdparm = !::lstat(hdparm, &stat_buf) && !S_ISLNK(stat_buf.st_mode);
+	bool have_nonbb_hdparm = !::lstat(hdparm.c_str(), &stat_buf) && !S_ISLNK(stat_buf.st_mode);
 
 	for (int i = 0; i < n; i++) {
 		removable = 0;
@@ -1518,17 +1540,17 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 		fclose(f);
 
 		if (removable) {
-			// show USB icon, no need for hdparm/hd-idle
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+			// show USB icon, no need for hdparm/hd-idle
 			CVFD::getInstance()->ShowIcon(FP_ICON_USB, true);
 #endif
 			printf("CHDDDestExec: /dev/%s is not a hdd, no sleep needed\n", namelist[i]->d_name);
 		} else {
-			//show HDD icon and set hdparm for all hdd's
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+			//show HDD icon and set hdparm for all hdd's
 			CVFD::getInstance()->ShowIcon(FP_ICON_HDD, true);
 #endif
-			if (!have_hdidle && have_hdparm) {
+			if (!hdparm.empty() || !hdidle.empty()) {
 				printf("CHDDDestExec: noise %d sleep %d /dev/%s\n",
 					 g_settings.hdd_noise, g_settings.hdd_sleep, namelist[i]->d_name);
 
@@ -1538,9 +1560,9 @@ int CHDDDestExec::exec(CMenuTarget* /*parent*/, const std::string&)
 				snprintf(opt, sizeof(opt), "/dev/%s",namelist[i]->d_name);
 
 				if (have_nonbb_hdparm)
-					my_system(4, hdparm, M_opt, S_opt, opt);
+					my_system(4, hdparm.c_str(), M_opt, S_opt, opt);
 				else // busybox hdparm doesn't support "-M"
-					my_system(3, hdparm, S_opt, opt);
+					my_system(3, hdparm.c_str(), S_opt, opt);
 			}
 		}
 		free(namelist[i]);

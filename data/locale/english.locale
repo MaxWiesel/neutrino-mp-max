@@ -982,19 +982,19 @@ hdd_check Check filesystem
 hdd_check_failed Filesystem-check failed!
 hdd_extended_settings Extended settings
 hdd_fast Fast
-hdd_fmt_label HDD label
-hdd_fmt_mountpoint Directory for mountpoint
 hdd_format Format device
 hdd_format_failed Formating failed! Make sure device not in use, reboot and try again
 hdd_format_warn All data on device will be lost! Continue with formatting?
 hdd_fs Filesystem used to format
-hdd_label_hint1 Put in disc label and press save
-hdd_label_hint2 Only if RECORD (default disc label for recording) the necassary folders were written to disc
+hdd_label HDD label
+hdd_label_hint1 Enter device label and press save
+hdd_label_hint2 Only with "%s" (recording medium) the necessary folders will be written to device
 hdd_manage Manage device
 hdd_middle Mid
 hdd_mount Mount
 hdd_mount_failed Failed to mount.
 hdd_mount_ok Device ready to use.
+hdd_mount_point Directory for mountpoint
 hdd_mount_umount Mount/Unmount
 hdd_noise Acoustic-control (AAM)
 hdd_not_found No device found

@@ -985,16 +985,16 @@ hdd_fast Schnell
 hdd_format Formatiere Datenträger
 hdd_format_failed Formatierung fehlgeschlagen! Stellen Sie sicher, dass der Datenträger nicht in Verwendung ist und versuchen Sie es erneut.
 hdd_format_warn Alle Daten auf dem Datenträger werden gelöscht! Formatierung starten?
-hdd_fmt_label HDD Bezeichnung
-hdd_fmt_mountpoint Verzeichnis zum einhängen
 hdd_fs Dateisystem zum formatieren
-hdd_label_hint1 Datenträger Bezeichnung eingeben und mit Speichern übernehmen
-hdd_label_hint2 Nur bei RECORD (Standard Aufnahme HDD) werden die nötigen Verzeichnisse auf den Datenträger geschrieben
+hdd_label Datenträger-Bezeichnung
+hdd_label_hint1 Datenträger-Bezeichnung eingeben und mit Speichern übernehmen
+hdd_label_hint2 Nur bei "%s" (Aufnahme-Medium) werden die nötigen Verzeichnisse auf den Datenträger geschrieben
 hdd_manage Datenträger verwalten
 hdd_middle Mittel
 hdd_mount einhängen
 hdd_mount_failed Fehler! Bitte Datenträgereinstellungen überprüfen.
 hdd_mount_ok Datenträger bereit
+hdd_mount_point Verzeichnis zum einhängen
 hdd_mount_umount Datenträger ein-/aushängen
 hdd_noise Akustikkontrolle (AAM)
 hdd_not_found Kein Datenträger

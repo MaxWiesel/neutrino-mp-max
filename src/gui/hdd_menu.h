@@ -34,6 +34,7 @@ struct devtool_s {
 	std::string fsck_options;
 	std::string mkfs;
 	std::string mkfs_options;
+	std::string mkfs_labelswitch;
 	bool fsck_supported;
 	bool mkfs_supported;
 };
@@ -48,8 +49,8 @@ class CHDDMenuHandler : public CMenuTarget
 {
 	private:
 		int width;
-		std::string fmt_label;
-		std::string fmt_mpoint;
+		std::string mkfs_label;
+		std::string mkfs_mpoint;
 		bool show_menu;
 		bool in_menu;
 		bool lock_refresh;
