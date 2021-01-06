@@ -412,8 +412,10 @@ daemon_item.emmremind_desc Zeigt eine Änderung der EMM's in den Infoicons an
 daemon_item.emmremind_name EMM-Änderungsbenachrichtigung
 daemon_item.fcm_desc Zeigt die Anrufliste der FRITZ!Box und noch vieles mehr ...
 daemon_item.fcm_name FritzCallMonitor
-daemon_item.inadyn_desc DynDNS Client
-daemon_item.inadyn_name Inadyn
+daemon_item.inadyn_desc Internet Automated Dynamic DNS Client
+daemon_item.inadyn_name In-a-Dyn
+daemon_item.minidlna_desc Einfacher DLNA-Server
+daemon_item.minidlna_name ReadyMedia (MiniDLNA)
 daemon_item.nfsserver_desc NFS Kernel Server
 daemon_item.nfsserver_name NFS-Server
 daemon_item.sambaserver_desc Server-Message-Block-Protokoll (SMB) Implementierung
@@ -710,7 +712,7 @@ filesystem.is.utf8.option.iso8859.1 ISO-8859-1
 filesystem.is.utf8.option.utf8 UTF-8
 flashupdate.actionreadflash lese Flash
 flashupdate.apply_settings Sollen die aktuellen Einstellungen in das neue Image übernommen werden?
-flashupdate.autocheck Beim Start nach Updates suchen
+flashupdate.autocheck Regelmäßig nach Updates suchen
 flashupdate.cantopenfile kann Datei nicht öffnen
 flashupdate.cantopenmtd kann MTD nicht öffnen
 flashupdate.checkupdate_internet Online-Update
