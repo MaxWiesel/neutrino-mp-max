@@ -813,9 +813,9 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.plugins_script = configfile.getString( "plugins_script", "" );
 	g_settings.plugins_lua = configfile.getString( "plugins_lua", "" );
 
-	g_settings.logo_hdd_dir = configfile.getString( "logo_hdd_dir", "/logos" );
+	g_settings.logo_hdd_dir = configfile.getString( "logo_hdd_dir", LOGODIR );
 
-	g_settings.webtv_xml_auto = configfile.getInt32("webtv_xml_auto", 1); //NI
+	g_settings.webtv_xml_auto = configfile.getInt32("webtv_xml_auto", 1);
 	g_settings.webtv_xml.clear();
 	int webtv_count = configfile.getInt32("webtv_xml_count", 0);
 	if (webtv_count) {
