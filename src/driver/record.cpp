@@ -411,7 +411,7 @@ bool CRecordInstance::Update()
 
 					audio_pids.AudioPid = allpids.APIDs[i].pid;
 					audio_pids.AudioPidName = allpids.APIDs[i].desc;
-					audio_pids.atype = allpids.APIDs[i].is_ac3 ? 1 : allpids.APIDs[i].is_aac ? 5 : allpids.APIDs[i].is_eac3 ? 7 : 0;
+					audio_pids.atype = allpids.APIDs[i].is_ac3 ? CZapitAudioChannel::AC3 : allpids.APIDs[i].is_aac ? CZapitAudioChannel::AAC : allpids.APIDs[i].is_eac3 ? CZapitAudioChannel::EAC3 : CZapitAudioChannel::MPEG;
 					audio_pids.selected = 0;
 					recMovieInfo->audioPids.push_back(audio_pids);
 				}
@@ -714,7 +714,7 @@ void CRecordInstance::FillMovieInfo(CZapitChannel * channel, APIDList & apid_lis
 			if(allpids.APIDs[i].pid == it->apid) {
 				audio_pids.AudioPid = allpids.APIDs[i].pid;
 				audio_pids.AudioPidName = allpids.APIDs[i].desc;
-				audio_pids.atype = allpids.APIDs[i].is_ac3 ? 1 : allpids.APIDs[i].is_aac ? 5 : allpids.APIDs[i].is_eac3 ? 7 : 0;
+				audio_pids.atype = allpids.APIDs[i].is_ac3 ? CZapitAudioChannel::AC3 : allpids.APIDs[i].is_aac ? CZapitAudioChannel::AAC : allpids.APIDs[i].is_eac3 ? CZapitAudioChannel::EAC3 : CZapitAudioChannel::MPEG;
 				audio_pids.selected = (audio_pids.AudioPid == channel->getAudioPid()) ? 1 : 0;
 				recMovieInfo->audioPids.push_back(audio_pids);
 			}
@@ -725,7 +725,7 @@ void CRecordInstance::FillMovieInfo(CZapitChannel * channel, APIDList & apid_lis
 		int i = 0;
 		audio_pids.AudioPid = allpids.APIDs[i].pid;
 		audio_pids.AudioPidName = allpids.APIDs[i].desc;
-		audio_pids.atype = allpids.APIDs[i].is_ac3 ? 1 : allpids.APIDs[i].is_aac ? 5 : allpids.APIDs[i].is_eac3 ? 7 : 0;
+		audio_pids.atype = allpids.APIDs[i].is_ac3 ? CZapitAudioChannel::AC3 : allpids.APIDs[i].is_aac ? CZapitAudioChannel::AAC : allpids.APIDs[i].is_eac3 ? CZapitAudioChannel::EAC3 : CZapitAudioChannel::MPEG;
 		audio_pids.selected = 1;
 		recMovieInfo->audioPids.push_back(audio_pids);
 	}
@@ -2051,17 +2051,17 @@ void CStreamRec::FillMovieInfo(CZapitChannel * /*channel*/, APIDList & /*apid_li
 			}
 			switch(codec->codec_id) {
 				case AV_CODEC_ID_AC3:
-					audio_pids.atype = 1;
+					audio_pids.atype = CZapitAudioChannel::AC3;
 					break;
 				case AV_CODEC_ID_AAC:
-					audio_pids.atype = 5;
+					audio_pids.atype = CZapitAudioChannel::AAC;
 					break;
 				case AV_CODEC_ID_EAC3:
-					audio_pids.atype = 7;
+					audio_pids.atype = CZapitAudioChannel::EAC3;
 					break;
 				case AV_CODEC_ID_MP2:
 				default:
-					audio_pids.atype = 0;
+					audio_pids.atype = CZapitAudioChannel::MPEG;
 					break;
 			}
 
