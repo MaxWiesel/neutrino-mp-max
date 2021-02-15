@@ -8,6 +8,7 @@ install_DATA = \
 	hint_back.png \
 	hint_backup.png \
 	hint_bedit.png \
+	hint_blank_screen.png \
 	hint_ci.png \
 	hint_dboxinfo.png \
 	hint_default.png \

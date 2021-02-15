@@ -489,6 +489,7 @@ struct SNeutrinoSettings
 		P_MAIN_STANDBY,
 		P_MAIN_REBOOT,
 		P_MAIN_SHUTDOWN,
+		P_MAIN_BLANK_SCREEN,
 		P_MAIN_INFOMENU,
 		P_MAIN_CISETTINGS,
 
@@ -918,6 +919,7 @@ struct SNeutrinoSettings
 	int infoClockSeconds;
 	int infoClockBackground;
 
+#ifdef ENABLE_GRAPHLCD
 	// graphlcd
 	int glcd_enable;
 
@@ -933,7 +935,9 @@ struct SNeutrinoSettings
 	std::string glcd_brightness_dim_time;
 	int glcd_scroll_speed;
 	int glcd_selected_config;
+#endif
 
+#ifdef ENABLE_LCD4LINUX
 	// lcd4linux
 	int lcd4l_support;
 	std::string lcd4l_logodir;
@@ -943,6 +947,7 @@ struct SNeutrinoSettings
 	int lcd4l_skin;
 	int lcd4l_skin_radio;
 	int lcd4l_convert;
+#endif
 
 	// lcdd
 	enum LCD_SETTINGS {

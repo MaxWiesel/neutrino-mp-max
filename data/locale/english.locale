@@ -213,6 +213,7 @@ audioplayer.streamripper_dir Streamripper directory
 audioplayer.streamripper_start Start streamripper
 audioplayer.streamripper_stop Stop streamripper
 audioplayer.title_artist Title, artist
+blank_screen Blank screen
 bookmarkmanager.delete delete
 bookmarkmanager.name bookmarks
 bookmarkmanager.rename rename
@@ -1269,6 +1270,7 @@ menu.hint_back_brief Return to previous menu
 menu.hint_backlight Configure buttons backlight
 menu.hint_backup Backup configs and channels to selected dir
 menu.hint_bedit Edit favorites and bouquets
+menu.hint_blank_screen Turn off VideoDecoder until next event (keypress, timer etc.)
 menu.hint_buildinfo Information about compilers, compiler flags, kernel
 menu.hint_cache_txt Start teletext caching after channel switch
 menu.hint_camd_control Softcams and emulators\nStart, stop, version info

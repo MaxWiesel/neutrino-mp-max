@@ -270,6 +270,7 @@ CNeutrinoApp::CNeutrinoApp()
 	channels_init		= false;
 	channelList_allowed	= true;
 	channelList_painted	= false;
+	blank_screen		= false;
 }
 
 /*-------------------------------------------------------------------------------------
@@ -3137,7 +3138,7 @@ void CNeutrinoApp::RealRun()
 		{
 			if (msg == CRCInput::RC_timeout || msg == NeutrinoMessages::EVT_TIMER)
 			{
-				if (CScreenSaver::getInstance()->canStart() && !CScreenSaver::getInstance()->isActive())
+				if (!blank_screen && CScreenSaver::getInstance()->canStart() && !CScreenSaver::getInstance()->isActive())
 				{
 					CScreenSaver::getInstance()->Start();
 				}
@@ -3163,7 +3164,25 @@ void CNeutrinoApp::RealRun()
 		}
 
 		if( ( mode == NeutrinoModes::mode_tv ) || ( mode == NeutrinoModes::mode_radio ) || ( mode == NeutrinoModes::mode_webtv ) || ( mode == NeutrinoModes::mode_webradio ) ) {
-			if( (msg == NeutrinoMessages::SHOW_EPG) /* || (msg == CRCInput::RC_info) */ ) {
+			if (blank_screen) {
+				if (!videoDecoder->getBlank()) {
+					INFO("blank_screen auto off");
+					blank_screen = false;
+					if (mode == NeutrinoModes::mode_radio || mode == NeutrinoModes::mode_webradio)
+						frameBuffer->showFrame("radiomode.jpg");
+				}
+				else if (msg <= CRCInput::RC_MaxRC) {
+					INFO("blank_screen manual off");
+					blank_screen = false;
+					videoDecoder->setBlank(blank_screen);
+					if (mode == NeutrinoModes::mode_radio || mode == NeutrinoModes::mode_webradio)
+						frameBuffer->showFrame("radiomode.jpg");
+					//eat key - just leave blank screen
+					g_RCInput->clearRCMsg();
+					continue;
+				}
+			}
+			if (msg == NeutrinoMessages::SHOW_EPG) {
 				InfoClock->enableInfoClock(false);
 				StopSubtitles();
 				t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
@@ -5095,6 +5114,21 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 	{
 		g_RCInput->postMsg(NeutrinoMessages::STANDBY_ON, 0);
 		return menu_return::RETURN_EXIT_ALL;
+	}
+	else if (actionKey == "blank_screen") {
+		INFO("blank_screen on");
+		blank_screen = true;
+		frameBuffer->paintBackground(); //clear entire screen
+#if HAVE_ARM_HARDWARE
+		/*
+		   Hack to get sure we have a blank screen.
+		   stopFrame()-function seems not work correctly on ARM_HARDWARE
+		*/
+		frameBuffer->showFrame("blackscreen.jpg");
+#endif
+		frameBuffer->stopFrame();
+		videoDecoder->setBlank(blank_screen);
+		returnval = menu_return::RETURN_EXIT_ALL;
 	}
 
 	return returnval;

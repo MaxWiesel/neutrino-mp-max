@@ -213,6 +213,7 @@ audioplayer.streamripper_dir Streamripper-Verzeichnis
 audioplayer.streamripper_start Streamripper starten
 audioplayer.streamripper_stop Streamripper stoppen
 audioplayer.title_artist Titel, Interpret
+blank_screen Blanker Bildschirm
 bookmarkmanager.delete Löschen
 bookmarkmanager.name Bookmarks
 bookmarkmanager.rename Umbenennen
@@ -1269,6 +1270,7 @@ menu.hint_back_brief Zurück zum vorherigen Menü.
 menu.hint_backlight Konfigurieren Sie die Hintergrundbeleuchtung der Buttons
 menu.hint_backup Sichern von Konfigurationen und Kanallisten
 menu.hint_bedit Bearbeiten ihrer Favoriten und der Bouquets
+menu.hint_blank_screen Schaltet den VideoDecoder bis zum nächsten Event (Tastendruck, Timer o.ä.) ab
 menu.hint_buildinfo Informationen über Compiler, Compilerflags, Kernel
 menu.hint_cache_txt Startet das Zwischenspeichern des Videotextes nach einem Kanalwechsel
 menu.hint_camd_control Softcams und Emulatoren\nStart, Stop, Versionsinfo

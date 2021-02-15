@@ -111,6 +111,7 @@ private:
 	int				first_mode_found;
 	int				osd_resolution_tmp;
 	bool				frameBufferInitialized;
+	bool				blank_screen;
 
 	void SDT_ReloadChannels();
 	void setupNetwork( bool force= false );
