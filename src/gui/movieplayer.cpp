@@ -1985,7 +1985,6 @@ void CMoviePlayerGui::PlayFileLoop(void)
 			g_videoSettings->SwitchFormat();
 		} else if (msg == (neutrino_msg_t) CRCInput::RC_home) {
 			playstate = CMoviePlayerGui::STOPPED;
-			playback->RequestAbort();
 			filelist.clear();
 			repeat_mode = REPEAT_OFF;
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_play && handle_key_play) {
