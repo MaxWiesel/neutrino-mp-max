@@ -113,22 +113,6 @@ extern CPictureViewer *g_PicViewer;
 #define FLAG_LCD4LINUX		"/tmp/.lcd4linux"
 #define PIDFILE			"/var/run/lcd4linux.pid"
 
-static void lcd4linux(bool run)
-{
-	const char *buf = "lcd4linux";
-	if (run == true)
-	{
-		if (my_system(3,"service", "lcd4linux", "start") != 0)
-			printf("[CLCD4l] %s: executing '%s' failed\n", __FUNCTION__, buf);
-		sleep(2);
-	}
-	else
-	{
-		if (my_system(3,"service", "lcd4linux", "stop") != 0)
-			printf("[CLCD4l] %s: terminating '%s' failed\n", __FUNCTION__, buf);
-	}
-}
-
 /* ----------------------------------------------------------------- */
 
 CLCD4l::CLCD4l()
@@ -161,7 +145,6 @@ void CLCD4l::StartLCD4l()
 		printf("[CLCD4l] %s: starting thread\n", __FUNCTION__);
 		pthread_create(&thrLCD4l, NULL, LCD4lProc, (void*) this);
 		pthread_detach(thrLCD4l);
-		lcd4linux(true);
 	}
 	if (g_settings.lcd4l_support)
 		exec_initscript("lcd4linux", "start");
@@ -174,7 +157,6 @@ void CLCD4l::StopLCD4l()
 		printf("[CLCD4l] %s: stopping thread\n", __FUNCTION__);
 		pthread_cancel(thrLCD4l);
 		thrLCD4l = 0;
-		lcd4linux(false);
 	}
 	exec_initscript("lcd4linux", "stop");
 }
