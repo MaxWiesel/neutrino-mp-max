@@ -1682,7 +1682,7 @@ int CEpgData::showIMDb(bool splash)
 		return 0;
 	}
 
-	//titel
+	//title
 	std::string title = imdb->getIMDbElement("Title");
 
 	if(((title.find(imdb->search_error)) != std::string::npos))
@@ -1696,6 +1696,35 @@ int CEpgData::showIMDb(bool splash)
 	std::string txt;
 	txt.clear();
 	imdb->getIMDbData(txt);
+
+	// create mp_movie_info->epgInfo2
+	if (imdb->checkIMDbElement("Plot"))
+	{
+		epgTextSwitch = imdb->getIMDbElement("Plot") + "\n";
+		if (imdb->checkIMDbElement("Title"))
+		{
+			epgTextSwitch += "\n";
+			epgTextSwitch += g_Locale->getString(LOCALE_IMDB_DATA_TITLE) + ": ";
+			epgTextSwitch += imdb->getIMDbElement("Title");
+		}
+		if (imdb->checkIMDbElement("Country"))
+		{
+			epgTextSwitch += "\n";
+			epgTextSwitch += g_Locale->getString(LOCALE_IMDB_DATA_RELEASED) + ": ";
+			epgTextSwitch += imdb->getIMDbElement("Country");
+			if (imdb->checkIMDbElement("Released"))
+			{
+				epgTextSwitch += ", " + imdb->getIMDbElement("Released");
+			}
+		}
+		if (imdb->checkIMDbElement("Actors"))
+		{
+			epgTextSwitch += "\n";
+			epgTextSwitch += g_Locale->getString(LOCALE_IMDB_DATA_ACTORS) + ": ";
+			epgTextSwitch += imdb->getIMDbElement("Actors");
+		}
+	}
+
 	processTextToArray(" ", 0, imdb->gotPoster()); // empty line to get space for the rating stars
 	processTextToArray(txt, 0, imdb->gotPoster());
 
