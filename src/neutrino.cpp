@@ -97,9 +97,11 @@
 #include "gui/start_wizard.h"
 #include "gui/update_ext.h"
 #include "gui/update.h"
+//#include "gui/update_check.h"
+#include "gui/update_check_packages.h"
 #include "gui/videosettings.h"
 #include "gui/audio_select.h"
-#include <gui/weather.h>
+#include "gui/weather.h"
 #include "gui/webchannels_setup.h"
 
 #include "gui/widget/hintbox.h"
@@ -166,7 +168,7 @@ CTimeOSD	*FileTimeOSD;
 
 #ifdef ENABLE_LCD4LINUX
 #include "driver/lcd4l.h"
-CLCD4l *LCD4l;
+CLCD4l *LCD4l = NULL;
 #endif
 
 int allow_flash = 1;
@@ -394,6 +396,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.show_menu_hints_line = configfile.getBool("show_menu_hints_line", false);
 
 	g_settings.softupdate_autocheck = configfile.getBool("softupdate_autocheck" , false);
+	g_settings.softupdate_autocheck_packages = configfile.getInt32("softupdate_autocheck_packages" , false);
 
 	// video
 	int vid_Mode_default = VIDEO_STD_720P50;
@@ -1866,6 +1869,7 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32 ("softupdate_name_mode_apply", g_settings.softupdate_name_mode_apply);
 	configfile.setInt32 ("softupdate_name_mode_backup", g_settings.softupdate_name_mode_backup);
 	configfile.setBool("softupdate_autocheck", g_settings.softupdate_autocheck);
+	configfile.setInt32("softupdate_autocheck_packages", g_settings.softupdate_autocheck_packages);
 
 	configfile.setInt32("flashupdate_createimage_add_var",    g_settings.flashupdate_createimage_add_var);
 	configfile.setInt32("flashupdate_createimage_add_root1",  g_settings.flashupdate_createimage_add_root1);
@@ -3046,6 +3050,7 @@ TIMER_START();
 #endif
 
 TIMER_STOP("################################## after all ##################################");
+#if 0
 	if (g_settings.softupdate_autocheck) {
 		hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FLASHUPDATE_CHECKUPDATE_INTERNET));
 		hintBox->paint();
@@ -3057,7 +3062,10 @@ TIMER_STOP("################################## after all #######################
 		}
 		hintBox->hide();
 		delete hintBox;
+
+		CUpdateCheck::getInstance()->startThread();
 	}
+#endif
 
 	for (std::list<std::string>::iterator it = g_settings.xmltv_xml.begin(); it != g_settings.xmltv_xml.end(); it++)
 		g_Sectionsd->readSIfromXMLTV((*it).c_str());
