@@ -97,8 +97,9 @@
 #include "gui/start_wizard.h"
 #include "gui/update_ext.h"
 #include "gui/update.h"
-//#include "gui/update_check.h"
+#if ENABLE_PKG_MANAGEMENT
 #include "gui/update_check_packages.h"
+#endif
 #include "gui/videosettings.h"
 #include "gui/audio_select.h"
 #include "gui/weather.h"
@@ -168,7 +169,7 @@ CTimeOSD	*FileTimeOSD;
 
 #ifdef ENABLE_LCD4LINUX
 #include "driver/lcd4l.h"
-CLCD4l *LCD4l = NULL;
+CLCD4l *LCD4l;
 #endif
 
 int allow_flash = 1;
@@ -396,7 +397,9 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.show_menu_hints_line = configfile.getBool("show_menu_hints_line", false);
 
 	g_settings.softupdate_autocheck = configfile.getBool("softupdate_autocheck" , false);
+#if ENABLE_PKG_MANAGEMENT
 	g_settings.softupdate_autocheck_packages = configfile.getInt32("softupdate_autocheck_packages" , false);
+#endif
 
 	// video
 	int vid_Mode_default = VIDEO_STD_720P50;
@@ -432,7 +435,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.video_Format = configfile.getInt32("video_Format", DISPLAY_AR_16_9);
 	g_settings.video_43mode = configfile.getInt32("video_43mode", DISPLAY_AR_MODE_LETTERBOX);
 	g_settings.current_volume = configfile.getInt32("current_volume", 75);
-	g_settings.current_volume_step = configfile.getInt32("current_volume_step", 2);
+	g_settings.current_volume_step = configfile.getInt32("current_volume_step", 5);
 	g_settings.start_volume = configfile.getInt32("start_volume", -1);
 	if (g_settings.start_volume >= 0)
 		g_settings.current_volume = g_settings.hdmi_cec_volume ? 75 : g_settings.start_volume;
@@ -454,7 +457,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	g_settings.srs_enable = configfile.getInt32( "srs_enable", 0);
 	g_settings.srs_algo = configfile.getInt32( "srs_algo", 1);
-	g_settings.srs_ref_volume = configfile.getInt32( "srs_ref_volume", 40);
+	g_settings.srs_ref_volume = configfile.getInt32( "srs_ref_volume", 75);
 	g_settings.srs_nmgr_enable = configfile.getInt32( "srs_nmgr_enable", 0);
 #if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 	g_settings.ac3_pass = configfile.getInt32( "ac3_pass", 0);
@@ -546,7 +549,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 	g_settings.lcd_notify_rclock = configfile.getInt32("lcd_notify_rclock", 1);
 
 	g_settings.hdd_fs = configfile.getInt32( "hdd_fs", 0);
-	g_settings.hdd_sleep = configfile.getInt32( "hdd_sleep", 0);
+	g_settings.hdd_sleep = configfile.getInt32( "hdd_sleep", 60);
 	g_settings.hdd_noise = configfile.getInt32( "hdd_noise", 254);
 	g_settings.hdd_statfs_mode = configfile.getInt32( "hdd_statfs_mode", SNeutrinoSettings::HDD_STATFS_RECORDING);
 
@@ -1202,7 +1205,7 @@ int CNeutrinoApp::loadSetup(const char * fname)
 
 	g_settings.infoClockFontSize = configfile.getInt32("infoClockFontSize", 30);
 	g_settings.infoClockBackground = configfile.getInt32("infoClockBackground", 0);
-	g_settings.infoClockSeconds = configfile.getInt32("infoClockSeconds", 1);
+	g_settings.infoClockSeconds = configfile.getInt32("infoClockSeconds", 0);
 
 	g_settings.livestreamResolution = configfile.getInt32("livestreamResolution", 1920);
 	g_settings.livestreamScriptPath = configfile.getString("livestreamScriptPath", WEBTVDIR);
@@ -1353,9 +1356,11 @@ void CNeutrinoApp::upgradeSetup(const char * fname)
 	}
 	if (g_settings.version_pseudo < "20190106000000")
 	{
+#ifdef ENABLE_LCD4LINUX
 		// move lcd4linux user skin from value 4 to value 100
 		if (g_settings.lcd4l_skin == 4)
 			g_settings.lcd4l_skin = 100;
+#endif
 	}
 	if (g_settings.version_pseudo < "20190115220100")
 	{
@@ -1869,7 +1874,9 @@ void CNeutrinoApp::saveSetup(const char * fname)
 	configfile.setInt32 ("softupdate_name_mode_apply", g_settings.softupdate_name_mode_apply);
 	configfile.setInt32 ("softupdate_name_mode_backup", g_settings.softupdate_name_mode_backup);
 	configfile.setBool("softupdate_autocheck", g_settings.softupdate_autocheck);
+#if ENABLE_PKG_MANAGEMENT
 	configfile.setInt32("softupdate_autocheck_packages", g_settings.softupdate_autocheck_packages);
+#endif
 
 	configfile.setInt32("flashupdate_createimage_add_var",    g_settings.flashupdate_createimage_add_var);
 	configfile.setInt32("flashupdate_createimage_add_root1",  g_settings.flashupdate_createimage_add_root1);
@@ -3052,6 +3059,7 @@ TIMER_START();
 TIMER_STOP("################################## after all ##################################");
 #if 0
 	if (g_settings.softupdate_autocheck) {
+
 		hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FLASHUPDATE_CHECKUPDATE_INTERNET));
 		hintBox->paint();
 		CFlashUpdate flash;
@@ -3066,8 +3074,7 @@ TIMER_STOP("################################## after all #######################
 		CUpdateCheck::getInstance()->startThread();
 	}
 #endif
-	}
-#if 0
+#if ENABLE_PKG_MANAGEMENT
 	if (g_settings.softupdate_autocheck_packages)
 		CUpdateCheckPackages::getInstance()->startThread();
 #endif

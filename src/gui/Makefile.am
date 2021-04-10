@@ -79,7 +79,6 @@ libneutrino_gui_a_SOURCES = \
 	network_service.cpp \
 	network_setup.cpp \
 	nfs.cpp \
-	opkg_manager.cpp \
 	osd_helpers.cpp \
 	osd_progressbar_setup.cpp \
 	osd_setup.cpp \
@@ -108,7 +107,6 @@ libneutrino_gui_a_SOURCES = \
 	themes.cpp \
 	timeosd.cpp \
 	update.cpp \
-	update_check_packages.cpp \
 	update_menue.cpp \
 	update_settings.cpp \
 	user_menue.cpp \
@@ -120,6 +118,12 @@ libneutrino_gui_a_SOURCES = \
 	webchannels_setup.cpp \
 	xmltv_setup.cpp \
 	zapit_setup.cpp
+
+if ENABLE_PKG_MANAGEMENT
+libneutrino_gui_a_SOURCES += \
+	opkg_manager.cpp \
+	update_check_packages.cpp
+endif
 
 if ENABLE_LCD4LINUX
 libneutrino_gui_a_SOURCES += \
