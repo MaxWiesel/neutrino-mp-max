@@ -97,6 +97,7 @@
 #include "gui/start_wizard.h"
 #include "gui/update_ext.h"
 #include "gui/update.h"
+#include "gui/update_check.h"
 #if ENABLE_PKG_MANAGEMENT
 #include "gui/update_check_packages.h"
 #endif
@@ -3057,8 +3058,8 @@ TIMER_START();
 #endif
 
 TIMER_STOP("################################## after all ##################################");
-#if 0
 	if (g_settings.softupdate_autocheck) {
+#if 0
 		hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FLASHUPDATE_CHECKUPDATE_INTERNET));
 		hintBox->paint();
 		CFlashUpdate flash;
@@ -3069,8 +3070,9 @@ TIMER_STOP("################################## after all #######################
 		}
 		hintBox->hide();
 		delete hintBox;
-	}
 #endif
+		CFlashUpdateCheck::getInstance()->startThread();
+	}
 #if ENABLE_PKG_MANAGEMENT
 	if (g_settings.softupdate_autocheck_packages)
 		CUpdateCheckPackages::getInstance()->startThread();
