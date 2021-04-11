@@ -162,8 +162,10 @@ int CUpdateSettings::initMenu()
 #endif
 
 	CMenuOptionChooser *autocheck = NULL;
+#if 0
 	autocheck = new CMenuOptionChooser(LOCALE_FLASHUPDATE_AUTOCHECK, &g_settings.softupdate_autocheck, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true, this);
 	autocheck->setHint("", LOCALE_MENU_HINT_AUTO_UPDATE_CHECK);
+#endif
 
 #if ENABLE_PKG_MANAGEMENT
 	CMenuOptionChooser *package_autocheck = NULL;
@@ -174,7 +176,8 @@ int CUpdateSettings::initMenu()
 #endif
 
 	w_upsettings.addItem(fw_update_dir);
-	w_upsettings.addItem(fw_url);
+	if (fw_url)
+		w_upsettings.addItem(fw_url);
 #if ENABLE_EXTUPDATE
 	w_upsettings.addItem(name_backup);
 #ifndef BOXMODEL_CST_HD2
@@ -203,13 +206,12 @@ bool CUpdateSettings::changeNotify(const neutrino_locale_t OptionName, void * /*
 {
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_FLASHUPDATE_AUTOCHECK) || ARE_LOCALES_EQUAL(OptionName, LOCALE_FLASHUPDATE_AUTOCHECK_PACKAGES))
 	{
-		CFlashUpdateCheck::getInstance()->stopThread();
-		if (g_settings.softupdate_autocheck)
-			CFlashUpdateCheck::getInstance()->startThread();
-#if ENABLE_PKG_MANAGEMENT
+#if 0
 		CUpdateCheck::getInstance()->stopTimer();
 		if (g_settings.softupdate_autocheck)
 			CUpdateCheck::getInstance()->startThread();
+#endif
+#if ENABLE_PKG_MANAGEMENT
 		CUpdateCheckPackages::getInstance()->stopTimer();
 		if (g_settings.softupdate_autocheck_packages)
 			CUpdateCheckPackages::getInstance()->startThread();

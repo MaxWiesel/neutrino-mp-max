@@ -3059,7 +3059,6 @@ TIMER_START();
 TIMER_STOP("################################## after all ##################################");
 #if 0
 	if (g_settings.softupdate_autocheck) {
-
 		hintBox = new CHintBox(LOCALE_MESSAGEBOX_INFO, g_Locale->getText(LOCALE_FLASHUPDATE_CHECKUPDATE_INTERNET));
 		hintBox->paint();
 		CFlashUpdate flash;
@@ -3070,8 +3069,6 @@ TIMER_STOP("################################## after all #######################
 		}
 		hintBox->hide();
 		delete hintBox;
-
-		CUpdateCheck::getInstance()->startThread();
 	}
 #endif
 #if ENABLE_PKG_MANAGEMENT
