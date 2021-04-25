@@ -2069,9 +2069,7 @@ void CMoviePlayerGui::PlayFileLoop(void)
 				callInfoViewer();
 		} else if (msg == (neutrino_msg_t) g_settings.mpkey_bookmark) {
 #if HAVE_CST_HARDWARE || HAVE_ARM_HARDWARE
-			if (is_file_player)
-				selectChapter();
-			else
+			if (selectChapter() != 0)
 #endif
 				handleMovieBrowser((neutrino_msg_t) g_settings.mpkey_bookmark, position);
 			update_lcd = true;
@@ -3056,48 +3054,10 @@ void CMoviePlayerGui::StartSubtitles(bool show __attribute__((unused)))
 #endif
 }
 
-#if HAVE_ARM_HARDWARE
-void CMoviePlayerGui::selectChapter()
+int CMoviePlayerGui::selectChapter()
 {
 	if (!is_file_player)
-		return;
-
-	std::vector<int> positions; std::vector<std::string> titles;
-	playback->GetChapters(positions, titles);
-
-	if (positions.empty())
-		return;
-
-	CMenuWidget ChSelector(LOCALE_MOVIEBROWSER_MENU_MAIN_BOOKMARKS, NEUTRINO_ICON_AUDIO);
-
-	ChSelector.addItem(GenericMenuCancel);
-
-	int select = -1;
-	CMenuSelectorTarget * selector = new CMenuSelectorTarget(&select);
-
-	char cnt[5];
-	if (!positions.empty()) {
-		ChSelector.addItem(new CMenuSeparator(CMenuSeparator::LINE | CMenuSeparator::STRING, LOCALE_MOVIEPLAYER_CHAPTERS));
-		for (unsigned i = 0; i < positions.size(); i++) {
-			sprintf(cnt, "%d", i);
-			CMenuForwarder * item = new CMenuForwarder(titles[i].c_str(), true, NULL, selector, cnt, CRCInput::convertDigitToKey(i + 1));
-			ChSelector.addItem(item, position > positions[i]);
-		}
-	}
-	ChSelector.exec(NULL, "");
-	delete selector;
-	printf("CMoviePlayerGui::selectChapter: selected %d (%d)\n", select, (select >= 0) ? positions[select] : -1);
-	if (select >= 0) {
-		playback->SetPosition(positions[select], true);
-	}
-}
-#endif
-
-#if 0
-void CMoviePlayerGui::selectChapter()
-{
-	if (!is_file_player)
-		return;
+		return 1;
 
 	std::vector<int> positions; std::vector<std::string> titles;
 	playback->GetChapters(positions, titles);
@@ -3107,7 +3067,7 @@ void CMoviePlayerGui::selectChapter()
 	playback->GetTitles(playlists, ptitles, current);
 
 	if (positions.empty() && playlists.empty())
-		return;
+		return -1;
 
 	CMenuWidget ChSelector(LOCALE_MOVIEBROWSER_MENU_MAIN_BOOKMARKS, NEUTRINO_ICON_AUDIO);
 	//ChSelector.addIntroItems();
@@ -3145,13 +3105,13 @@ void CMoviePlayerGui::selectChapter()
 	if (select >= 0) {
 		playback->SetPosition(positions[select], true);
 	} else if (pselect >= 0) {
-		numsubs = numpida = 0;
-		currentspid = -1;
-		currentapid = 0;
 		playback->SetTitle(playlists[pselect]);
 	}
+
+	return 0;
 }
 
+#if 0
 void CMoviePlayerGui::selectSubtitle()
 {
 	if (!is_file_player)
