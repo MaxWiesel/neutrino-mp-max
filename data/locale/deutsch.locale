@@ -1070,11 +1070,8 @@ ipsetup.hint_1 Benutzen Sie 0..9 oder hoch/runter
 ipsetup.hint_2 OK speichert, EXIT bricht ab
 keybindingmenu.addrecord Aufnahme-Timer hinzufügen
 keybindingmenu.addremind Umschalt-Timer hinzufügen
-keybindingmenu.allchannels_on_ok Kanalliste
-keybindingmenu.bouquetchannels_on_ok Bouquet-Kanäle
 keybindingmenu.bouquetdown Bouquet zurück
 keybindingmenu.bouquethandling OK-Taste für
-keybindingmenu.bouquetlist_on_ok Bouquetliste
 keybindingmenu.bouquetup Bouquet weiter
 keybindingmenu.cancel Kanalliste schließen
 keybindingmenu.channeldown Kanal runter
@@ -2311,15 +2308,11 @@ opkg.upgrade Installierte Pakete aktualisieren
 opkg.warning_3rdparty_packages Drittanbieter-Pakete könnten Ihr System beschädigen! Sind Sie sicher, dieses Paket zu installieren?
 options.always immer
 options.default Voreinstellungen benutzen
-options.fb framebuffer
 options.hint_default Setzen Sie die Werte auf die Voreinstellung zurück.
 options.ntp_off DVB
 options.ntp_on NTP
-options.null null
 options.off aus
 options.on ein
-options.on.without_messages ohne Msg
-options.serial seriell
 options.start starten
 options.stop stoppen
 osd.preset_screen_a Bildschirm 1

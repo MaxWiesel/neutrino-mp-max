@@ -1070,11 +1070,8 @@ ipsetup.hint_1 Use 0..9, or use Up/Down,
 ipsetup.hint_2 OK saves, Exit aborts
 keybindingmenu.addrecord add record timer
 keybindingmenu.addremind add zapto timer
-keybindingmenu.allchannels_on_ok all-services
-keybindingmenu.bouquetchannels_on_ok current bouquet
 keybindingmenu.bouquetdown bouquet back
 keybindingmenu.bouquethandling Bouquet-control
-keybindingmenu.bouquetlist_on_ok bouquet-list
 keybindingmenu.bouquetup next bouquet
 keybindingmenu.cancel close channellist
 keybindingmenu.channeldown channel down
@@ -2311,15 +2308,11 @@ opkg.upgrade Upgrade installed packages
 opkg.warning_3rdparty_packages 3rd party packages could damage your system! Are you sure install this package?
 options.always always
 options.default Reset to defaults
-options.fb framebuffer
 options.hint_default Reset the values to their defaults
 options.ntp_off DVB
 options.ntp_on NTP
-options.null null
 options.off off
 options.on on
-options.on.without_messages Without msg
-options.serial serial
 options.start start
 options.stop stop
 osd.preset_screen_a Screen 1
