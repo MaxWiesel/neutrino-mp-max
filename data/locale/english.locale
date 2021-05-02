@@ -1053,6 +1053,7 @@ imdb.data_website Website
 imdb.data_writer Screenplay author
 imdb.info IMDb-Info
 imdb.info_save save Cover
+imdb.read_data Search IMDb data ...
 inetradio.autostart Internetradio Auto-Start
 inetradio.name Internetradio
 infoviewer.epgnotload EPG not loaded ...
