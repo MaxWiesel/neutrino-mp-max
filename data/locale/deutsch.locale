@@ -551,6 +551,7 @@ extra.key_next43mode Nächstes Seitenformat
 extra.key_pic_mode Bildschirmformat
 extra.key_pic_size 4:3 Anzeigeverhalten
 extra.key_pip_close Stop/Start PiP
+extra.key_pip_close_avinput Stop/Start PiP (HDMI)
 extra.key_pip_setup PiP Konfiguration
 extra.key_pip_swap Umschalten PiP/live
 extra.key_record Aufnahme
@@ -934,6 +935,7 @@ glcd.epg_y_position EPG y-Position
 glcd.font Schrift
 glcd.font_autoresize Automatische Schriftgröße
 glcd.head GraphLCD-Unterstützung
+glcd.logodir Senderlogo-Verzeichnis
 glcd.logo_x_position Senderlogo x-Position
 glcd.logo_y_position Senderlogo y-Position
 glcd.mirror_osd OSD-Menü auf GraphLCD anzeigen
@@ -1202,6 +1204,8 @@ mainmenu.reboot Neustart
 mainmenu.recording Aufnehmen
 mainmenu.recording_start Start
 mainmenu.recording_stop Stopp
+mainmenu.avinputmode HDMI-Eingang (Modus)
+mainmenu.avinputmode_pip HDMI-Eingang (PiP)
 mainmenu.scripts Skripte
 mainmenu.service Service
 mainmenu.settings Einstellungen

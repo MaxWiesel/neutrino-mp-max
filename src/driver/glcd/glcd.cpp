@@ -1501,7 +1501,7 @@ bool cGLCD::showImage(uint64_t cid, std::string cname, uint32_t dx, uint32_t dy,
 	std::string logo;
 	int sw, sh;
 
-	if (g_PicViewer->GetLogoName(cid, cname, logo, &sw, &sh))
+	if (g_PicViewer->GetLogoName(cid, cname, logo, &sw, &sh, CPictureViewer::GRAPHLCD, true))
 	{
 		return showImage(logo, (uint32_t) sw, (uint32_t) sh, dx, dy, dw, dh, transp, maximize);
 	}
@@ -1768,4 +1768,26 @@ std::string cGLCD::GetConfigName(int driver)
 	if ((driver < 0) || (driver > GetConfigSize() - 1))
 		driver = 0;
 	return GLCD::Config.driverConfigs[driver].name;
+}
+
+void cGLCD::AVInputMode(bool b)
+{
+	if (cglcd)
+	{
+		bool mo = cglcd->doMirrorOSD;
+		if (b)
+		{
+			cglcd->doScrollChannel = false;
+			cglcd->doScrollEpg = false;
+			cglcd->MirrorOSD(false);
+			cglcd->lockChannel(g_info.hw_caps->boxname, g_Locale->getText(LOCALE_MAINMENU_AVINPUTMODE), 0);
+		}
+		else
+		{
+			cglcd->doScrollChannel = true;
+			cglcd->doScrollEpg = true;
+			cglcd->MirrorOSD(mo);
+			cglcd->unlockChannel();
+		}
+	}
 }
