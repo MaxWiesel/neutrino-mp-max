@@ -994,7 +994,7 @@ hdd_format Format device
 hdd_format_failed Formating failed! Make sure device not in use, reboot and try again
 hdd_format_warn All data on device will be lost! Continue with formatting?
 hdd_fs Filesystem used to format
-hdd_label HDD label
+hdd_label Device label
 hdd_label_hint1 Enter device label and press save
 hdd_label_hint2 Only with "%s" (recording medium) the necessary folders will be written to device
 hdd_manage Manage device
@@ -1370,8 +1370,8 @@ menu.hint_hdd_apply Apply sleep/noise parameters
 menu.hint_hdd_check Check filesystem (fsck)
 menu.hint_hdd_fmt Select the data storage format
 menu.hint_hdd_format Create HDD partition and format it
-menu.hint_hdd_label Type in your HDD label
-menu.hint_hdd_mountpoint Choose the HDD mountpoint
+menu.hint_hdd_label Enter device label
+menu.hint_hdd_mount_point Choose the device mountpoint
 menu.hint_hdd_noise Set Automatic Acoustic Management\nnot all drives support this
 menu.hint_hdd_sleep Select time to stop hdd on inactivity
 menu.hint_hdd_statfs Specify when the recording directory fill level in infoviewer and, if available, on VFD, may be updated
@@ -2618,7 +2618,6 @@ screensaver.random Random Images
 screensaver.timeout Change interval
 screensetup.lowerright green = setup lower right
 screensetup.upperleft red = setup upper left
-screenshot.backbuffer Secondary buffer (back buffer)
 screenshot.count Screenshot count
 screenshot.cover Create Moviecover for Moviebrowser
 screenshot.defdir Destination directory
@@ -2873,13 +2872,11 @@ videomenu.enabled_modes VF key enabled modes
 videomenu.enabled_modes_auto Auto-select enabled modes
 videomenu.fullscreen Full screen
 videomenu.hdmi_cec HDMI-CEC
-videomenu.hdmi_cec_broadcast Send to all devices
 videomenu.hdmi_cec_mode Receiver to use
 videomenu.hdmi_cec_mode_off no
 videomenu.hdmi_cec_mode_recorder as Sat/Cable PVR
 videomenu.hdmi_cec_mode_tuner as Sat/Cable STB
 videomenu.hdmi_cec_standby Enable CEC standby
-videomenu.hdmi_cec_standby_not_timer unless timer-wakeup
 videomenu.hdmi_cec_view_on Enable CEC View on
 videomenu.hdmi_cec_volume CEC volume control
 videomenu.hdmi_cec_vol_audiosystem Audiosystem

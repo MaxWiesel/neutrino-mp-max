@@ -1371,7 +1371,7 @@ menu.hint_hdd_check Überprüft das Dateisystem und führt gegebenfalls eine Rep
 menu.hint_hdd_fmt Wählen Sie das Datenträgerformat aus
 menu.hint_hdd_format Erstellt eine Partition auf dem Datenträger und formatiert diese
 menu.hint_hdd_label Geben Sie die HDD Bezeichnung ein
-menu.hint_hdd_mountpoint Wählen Sie das Einhängeverzeichnis
+menu.hint_hdd_mount_point Wählen Sie das Einhängeverzeichnis
 menu.hint_hdd_noise Setzen Sie Parameter für das Automatic Acoustic Management.\nNicht alle Datenträger unterstützen diese Funktion
 menu.hint_hdd_sleep Dieser Wert definiert, nach wieviel Minuten die Festplatte bei Inaktivität in den Sleep-Modus geschaltet wird
 menu.hint_hdd_statfs Legen Sie fest, wann die Aufnahmeverzeichnis-Füllstandsanzeige im InfoViewer (und ggf. am VFD-Display) aktualisiert werden darf
@@ -2618,7 +2618,6 @@ screensaver.random Zufällige Bilderwahl
 screensaver.timeout Wechselintervall
 screensetup.lowerright grün = Bildrand unten, rechts
 screensetup.upperleft rot = Bildrand oben, links
-screenshot.backbuffer Sekundärer Buffer (Back Buffer)
 screenshot.count Anzahl
 screenshot.cover Erzeuge Filmcover für Moviebrowser
 screenshot.defdir Ziel-Verzeichnis
