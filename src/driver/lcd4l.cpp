@@ -31,7 +31,7 @@
 #include <config.h>
 #endif
 
-#include <pthread.h>
+
 #include <sstream>
 #include <stdio.h>
 #include <unistd.h>
@@ -42,7 +42,7 @@
 
 #include <timerdclient/timerdclient.h>
 #include <system/helpers.h>
-
+#include <system/debug.h>
 #include <driver/record.h>
 #include <driver/audioplay.h>
 #include <driver/radiotext.h>
@@ -117,14 +117,17 @@ extern CPictureViewer *g_PicViewer;
 
 CLCD4l::CLCD4l()
 {
-	thrLCD4l = 0;
+	thrLCD4l = NULL;
+	exit_proc = false;
 }
 
 CLCD4l::~CLCD4l()
 {
+	exit_proc = true;
 	if (thrLCD4l)
-		pthread_cancel(thrLCD4l);
-	thrLCD4l = 0;
+		thrLCD4l->join();
+	delete thrLCD4l;
+	thrLCD4l = NULL;
 }
 
 /* ----------------------------------------------------------------- */
@@ -133,7 +136,7 @@ void CLCD4l::InitLCD4l()
 {
 	if (thrLCD4l)
 	{
-		printf("[CLCD4l] %s: initializing\n", __FUNCTION__);
+		dprintf(DEBUG_NORMAL,"\033[32m[CLCD4l] [%s - %d] initializing %d \033[0m\n", __func__, __LINE__);
 		Init();
 	}
 }
@@ -142,9 +145,11 @@ void CLCD4l::StartLCD4l()
 {
 	if (!thrLCD4l && (g_settings.lcd4l_support == 1 || g_settings.lcd4l_support == 2))
 	{
-		printf("[CLCD4l] %s: starting thread\n", __FUNCTION__);
-		pthread_create(&thrLCD4l, NULL, LCD4lProc, (void*) this);
-		pthread_detach(thrLCD4l);
+		dprintf(DEBUG_NORMAL,"\033[32m[CLCD4l] [%s - %d] starting thread with mode %d \033[0m\n", __func__, __LINE__, g_settings.lcd4l_support);
+
+		exit_proc = false;
+		thrLCD4l = new std::thread (LCD4lProc, this);
+		dprintf(DEBUG_NORMAL,"\033[32m[CLCD4l] [%s - %d] thread [%p] is running\033[0m\n", __func__, __LINE__, thrLCD4l);
 	}
 	if (g_settings.lcd4l_support)
 		exec_initscript("lcd4linux", "start");
@@ -154,9 +159,15 @@ void CLCD4l::StopLCD4l()
 {
 	if (thrLCD4l)
 	{
-		printf("[CLCD4l] %s: stopping thread\n", __FUNCTION__);
-		pthread_cancel(thrLCD4l);
-		thrLCD4l = 0;
+		dprintf(DEBUG_NORMAL,"\033[32m[CLCD4l] [%s - %d] stopping thread [%p]\033[0m\n", __func__, __LINE__, thrLCD4l);
+
+		exit_proc = true;
+		thrLCD4l->join();
+		dprintf(DEBUG_NORMAL,"\033[32m[CLCD4l] [%s - %d] thread [%p] joined\033[0m\n", __func__, __LINE__, thrLCD4l);
+
+		delete thrLCD4l;
+		thrLCD4l = NULL;
+		dprintf(DEBUG_NORMAL,"\033[32m[CLCD4l] [%s - %d] thread [%p] terminated\033[0m\n", __func__, __LINE__, thrLCD4l);
 	}
 	exec_initscript("lcd4linux", "stop");
 }
@@ -273,9 +284,6 @@ void CLCD4l::Init()
 
 void* CLCD4l::LCD4lProc(void* arg)
 {
-	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, 0);
-	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, 0);
-
 	CLCD4l *PLCD4l = static_cast<CLCD4l*>(arg);
 
 	PLCD4l->Init();
@@ -287,7 +295,7 @@ void* CLCD4l::LCD4lProc(void* arg)
 	bool NewParseID = false;
 
 	//printf("[CLCD4l] %s: starting loop\n", __FUNCTION__);
-	while(1)
+	while(!PLCD4l->exit_proc)
 	{
 		if ( (!access(PIDFILE, F_OK) == 0) && (!FirstRun) )
 		{
