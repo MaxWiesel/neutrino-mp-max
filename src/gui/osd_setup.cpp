@@ -595,7 +595,7 @@ int COsdSetup::showOsdSetup()
 	CMenuOptionChooser * mc = NULL;
 
 	// osd main menu
-	osd_menu = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_COLORS, width, MN_WIDGET_ID_OSDSETUP);
+	osd_menu = new CMenuWidget(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_OSDSETUP);
 	osd_menu->setWizardMode(is_wizard);
 
 	// intro with subhead and back button
@@ -612,7 +612,7 @@ int COsdSetup::showOsdSetup()
 	osd_menu->addItem(mf);
 
 	// fonts
-	CMenuWidget osd_menu_fonts(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_COLORS, width, MN_WIDGET_ID_OSDSETUP_FONT);
+	CMenuWidget osd_menu_fonts(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_OSDSETUP_FONT);
 	showOsdFontSizeSetup(&osd_menu_fonts);
 	mf = new CMenuForwarder(LOCALE_FONTMENU_HEAD, true, NULL, &osd_menu_fonts, NULL, CRCInput::RC_green);
 	mf->setHint("", LOCALE_MENU_HINT_FONTS);
@@ -626,9 +626,10 @@ int COsdSetup::showOsdSetup()
 	osd_menu->addItem(mf);
 
 	// screen
-	CScreenSetup screensetup;
-	mf = new CMenuForwarder(LOCALE_VIDEOMENU_SCREENSETUP, true, NULL, &screensetup, NULL, CRCInput::RC_blue);
-	mf->setHint("", LOCALE_MENU_HINT_SCREEN_SETUP);
+	CMenuWidget osd_menu_screen(LOCALE_MAINMENU_SETTINGS, NEUTRINO_ICON_SETTINGS, width, MN_WIDGET_ID_OSDSETUP_SCREEN);
+	showOsdScreenSetup(&osd_menu_screen);
+	mf = new CMenuForwarder(LOCALE_SCREEN_MENU, true, NULL, &osd_menu_screen, NULL, CRCInput::RC_blue);
+	mf->setHint("", LOCALE_MENU_HINT_SCREEN);
 	osd_menu->addItem(mf);
 
 	// menus
@@ -742,11 +743,6 @@ int COsdSetup::showOsdSetup()
 	osd_res->setHint("", LOCALE_MENU_HINT_OSD_RESOLUTION);
 	osd_menu->addItem(osd_res);
 #endif
-
-	// monitor
-	mc = new CMenuOptionChooser(LOCALE_COLORMENU_OSD_PRESET, &g_settings.screen_preset, OSD_PRESET_OPTIONS, OSD_PRESET_OPTIONS_COUNT, true, this);
-	mc->setHint("", LOCALE_MENU_HINT_OSD_PRESET);
-	osd_menu->addItem(mc);
 
 	// fade windows
 	mc = new CMenuOptionChooser(LOCALE_COLORMENU_FADE, &g_settings.widget_fade, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true );
@@ -1719,6 +1715,24 @@ int COsdSetup::showContextChanlistMenu(CChannelList *parent_channellist)
 	delete channellistNotifier;
 	delete menu_chanlist;
 	return res;
+}
+
+void COsdSetup::showOsdScreenSetup(CMenuWidget *menu_screen)
+{
+	CMenuForwarder *mf = NULL;
+	CMenuOptionChooser *mc = NULL;
+
+	menu_screen->addIntroItems(LOCALE_SCREEN_MENU);
+
+	// screen
+	mf = new CMenuForwarder(LOCALE_VIDEOMENU_SCREENSETUP, true, NULL, new CScreenSetup, NULL, CRCInput::RC_red);
+	mf->setHint("", LOCALE_MENU_HINT_SCREENSETUP);
+	menu_screen->addItem(mf);
+
+	// monitor
+	mc = new CMenuOptionChooser(LOCALE_COLORMENU_OSD_PRESET, &g_settings.screen_preset, OSD_PRESET_OPTIONS, OSD_PRESET_OPTIONS_COUNT, true, this, CRCInput::RC_green);
+	mc->setHint("", LOCALE_MENU_HINT_OSD_PRESET);
+	menu_screen->addItem(mc);
 }
 
 #ifdef SCREENSHOT
