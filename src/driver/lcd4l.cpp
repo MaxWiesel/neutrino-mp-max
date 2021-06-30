@@ -8,6 +8,7 @@
 	Homepage: http://www.neutrino-images.de/
 
 	Copyright (C) 2016-2019 'TangoCash'
+	Copyright (C) 2021, Thilo Graf 'dbt'
 
 	License: GPL
 
@@ -152,6 +153,7 @@ void CLCD4l::InitLCD4l()
 
 void CLCD4l::StartLCD4l()
 {
+	OnBeforeStart();
 	if (!thrLCD4l && (g_settings.lcd4l_support == 1 || g_settings.lcd4l_support == 2))
 	{
 		dprintf(DEBUG_NORMAL, "\033[32m[CLCD4l] [%s - %d] starting thread with mode %d \033[0m\n", __func__, __LINE__, g_settings.lcd4l_support);
@@ -160,12 +162,17 @@ void CLCD4l::StartLCD4l()
 		thrLCD4l = new std::thread(LCD4lProc, this);
 		dprintf(DEBUG_NORMAL, "\033[32m[CLCD4l] [%s - %d] thread [%p] is running\033[0m\n", __func__, __LINE__, thrLCD4l);
 	}
+
 	if (g_settings.lcd4l_support)
-		exec_initscript("lcd4linux", "start");
+	{
+		if (exec_initscript("lcd4linux", "start"))
+			OnAfterStart();
+	}
 }
 
 void CLCD4l::StopLCD4l()
 {
+	OnBeforeStop();
 	if (thrLCD4l)
 	{
 		dprintf(DEBUG_NORMAL, "\033[32m[CLCD4l] [%s - %d] stopping thread [%p]\033[0m\n", __func__, __LINE__, thrLCD4l);
@@ -178,7 +185,9 @@ void CLCD4l::StopLCD4l()
 		thrLCD4l = NULL;
 		dprintf(DEBUG_NORMAL, "\033[32m[CLCD4l] [%s - %d] thread [%p] terminated\033[0m\n", __func__, __LINE__, thrLCD4l);
 	}
-	exec_initscript("lcd4linux", "stop");
+
+	if (exec_initscript("lcd4linux", "stop"))
+		OnAfterStop();
 }
 
 void CLCD4l::SwitchLCD4l()
@@ -534,6 +543,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 			m_Tuner = Tuner;
 		}
 	}
+
 	/* ----------------------------------------------------------------- */
 
 	int Volume = g_settings.current_volume;
@@ -840,7 +850,11 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 			m_Layout = Layout;
 
 			if (!firstRun)
-				exec_initscript("lcd4linux", "reload");
+			{
+				OnBeforeRestart();
+				if (exec_initscript("lcd4linux", "restart"))
+					OnAfterRestart();
+			}
 		}
 	}
 
