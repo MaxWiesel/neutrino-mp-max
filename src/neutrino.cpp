@@ -1046,8 +1046,8 @@ int CNeutrinoApp::loadSetup(const char *fname)
 	sub_font_file = &g_settings.sub_font_file;
 	sub_font_size = configfile.getInt32("fontsize.subtitles", 24);
 
-	g_settings.font_scaling_x = configfile.getInt32("font_scaling_x", 105);
-	g_settings.font_scaling_y = configfile.getInt32("font_scaling_y", 105);
+	g_settings.font_scaling_x = configfile.getInt32("font_scaling_x", 100);
+	g_settings.font_scaling_y = configfile.getInt32("font_scaling_y", 100);
 
 	// online services
 	g_settings.weather_api_key = WEATHER_DEV_KEY;
@@ -1440,12 +1440,6 @@ void CNeutrinoApp::upgradeSetup(const char * fname)
 		//align fontsize.filebrowser_item to new default
 		if (configfile.getInt32("fontsize.filebrowser_item", 16) == 16)
 			configfile.setInt32("fontsize.filebrowser_item", 17);
-	}
-	if (g_settings.version_pseudo < "20170904080000")
-	{
-		//add flagfile for periodically update-check
-		if (g_settings.mode_icons_flag[4].empty())
-			g_settings.mode_icons_flag[4] = FLAGDIR "/.update";
 	}
 	if (g_settings.version_pseudo < "20170913110000")
 	{
