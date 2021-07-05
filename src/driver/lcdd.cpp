@@ -664,7 +664,8 @@ void CLCD::showRCLock(int duration)
 
 void CLCD::showVolume(const char vol, const bool perform_update)
 {
-	volume = vol;
+	setVolume(vol);
+
 	if (
 	    ((mode == MODE_TVRADIO) && (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME])) ||
 	    ((mode == MODE_MOVIE) && (g_settings.lcd_setting[SNeutrinoSettings::LCD_SHOW_VOLUME])) ||
@@ -698,13 +699,19 @@ void CLCD::showVolume(const char vol, const bool perform_update)
 	wake_up();
 }
 
-void CLCD::showPercentOver(const unsigned char perc, const bool perform_update, const MODES /*m*/)
+void CLCD::setVolume(const char vol)
 {
-/*
+	if (vol == volume)
+		return;
+
+	volume = vol;
+}
+
+void CLCD::showPercentOver(const unsigned char perc, const bool perform_update, const MODES m)
+{
 	if (mode != m)
-		printf("CLCD::showPercentOver: mode (%d) != m (%d), please report\n", (int)mode, (int)m);
-		// return;
-*/
+		return;
+
 	int left, top, width, height = 5;
 	bool draw = true;
 	percentOver = perc;
@@ -887,14 +894,13 @@ void CLCD::showAudioPlayMode(AUDIOMODES m)
 	displayUpdate();
 }
 
-void CLCD::showAudioProgress(const char perc) //, bool isMuted)
+void CLCD::showAudioProgress(const char perc, bool isMuted)
 {
 	if (mode == MODE_AUDIO)
 	{
 		display.draw_fill_rect (11,53,73,61, CLCDDisplay::PIXEL_OFF);
 		int dp = perc * 61 / 100 + 12;
 		display.draw_fill_rect (11,54,dp,60, CLCDDisplay::PIXEL_ON);
-#if 0
 		if(isMuted)
 		{
 			if(dp > 12)
@@ -905,7 +911,6 @@ void CLCD::showAudioProgress(const char perc) //, bool isMuted)
 			else
 				display.draw_line (12,55,72,59, CLCDDisplay::PIXEL_ON);
 		}
-#endif
 		displayUpdate();
 	}
 }
