@@ -43,9 +43,10 @@
 #include <hardware/video.h>
 #include <cs_api.h>
 #include <driver/screenshot.h>
-#include <system/set_threadname.h>
 #include <system/helpers.h>
+#include <system/set_threadname.h>
 
+/* constructor, defaults is empty fname and CScreenShot::FORMAT_PNG format */
 CScreenShot::CScreenShot(const std::string &fname, screenshot_format_t fmt)
 {
 	format = fmt;
@@ -84,7 +85,8 @@ bool CScreenShot::Start(const std::string custom_cmd)
 		get = "";
 	cmd += get;
 
-	switch (format) {
+	switch (format)
+	{
 		default:
 		case FORMAT_PNG:
 			cmd += "-p ";
@@ -106,7 +108,13 @@ bool CScreenShot::Start(const std::string custom_cmd)
 
 	fprintf(stderr, "running: %s\n", cmd.c_str());
 	system(cmd.c_str());
+
 	return true;
+}
+
+bool CScreenShot::StartSync()
+{
+	return Start();
 }
 
 /*

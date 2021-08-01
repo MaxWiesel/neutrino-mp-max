@@ -53,6 +53,7 @@ class CScreenShot
 		void EnableOSD(bool enable) { get_osd = enable; }
 		void ScaleToOSD(bool enable) { scale_to_osd = enable; }
 		bool Start(const std::string custom_cmd = "");
+		bool StartSync();
 };
 
 #endif
