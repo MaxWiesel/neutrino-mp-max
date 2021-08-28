@@ -169,11 +169,11 @@ bool CFfmpegDec::Init(void *_in, const CFile::FileType ft)
 	avc->pb = avioc;
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59,0,100)
 	avc->flags |= AVFMT_FLAG_CUSTOM_IO|AVFMT_FLAG_KEEP_SIDE_DATA;
+	AVInputFormat *input_format = NULL;
 #else
 	avc->flags |= AVFMT_FLAG_CUSTOM_IO;
+	const AVInputFormat *input_format = NULL;
 #endif
-
-	AVInputFormat *input_format = NULL;
 
 	switch (ft) {
 	case CFile::FILE_OGG:
