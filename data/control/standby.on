@@ -2,7 +2,12 @@
 
 echo "StandBy aktiviert"
 
-service tuxcald stop
-service tuxmaild stop
+if [ -e /usr/bin/tuxcald ]; then
+	service tuxcald stop
+fi
+
+if [ -e /usr/bin/tuxmaild ]; then
+	service tuxmaild stop
+fi
 
 exit 0
