@@ -190,6 +190,7 @@ const CControlAPI::TyCgiCall CControlAPI::yCgiCallList[]=
 	{"standby",		&CControlAPI::StandbyCGI,		"text/plain"},
 	{"shutdown",		&CControlAPI::ShutdownCGI,		"text/plain"},
 	{"reboot",		&CControlAPI::RebootCGI,		"text/plain"},
+	{"restart",		&CControlAPI::RestartCGI,		"text/plain"},
 	{"getdate",		&CControlAPI::GetDateCGI,		"text/plain"},
 	{"gettime",		&CControlAPI::GetTimeCGI,		"text/plain"},
 	{"info",		&CControlAPI::InfoCGI,			"text/plain"},
@@ -876,6 +877,18 @@ void CControlAPI::RebootCGI(CyhookHandler *hh)
 	if (hh->ParamList.empty())
 	{
 		NeutrinoAPI->EventServer->sendEvent(NeutrinoMessages::REBOOT, CEventServer::INITID_HTTPD);
+		hh->SendOk();
+	}
+	else
+		hh->SendError();
+}
+
+//-----------------------------------------------------------------------------
+void CControlAPI::RestartCGI(CyhookHandler *hh)
+{
+	if (hh->ParamList.empty())
+	{
+		NeutrinoAPI->EventServer->sendEvent(NeutrinoMessages::RESTART, CEventServer::INITID_HTTPD);
 		hh->SendOk();
 	}
 	else
