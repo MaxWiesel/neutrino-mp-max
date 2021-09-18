@@ -98,7 +98,9 @@ extern CPictureViewer *g_PicViewer;
 #define START			LCD_DATADIR "start"
 #define END			LCD_DATADIR "end"
 
-#define LCD_FONT		LCD_DATADIR "font"
+#define MENU			LCD_DATADIR "menu"
+
+#define LCD_FONT			LCD_DATADIR "font"
 #define FGCOLOR			LCD_DATADIR "fgcolor"
 #define BGCOLOR			LCD_DATADIR "bgcolor"
 
@@ -232,6 +234,16 @@ int CLCD4l::RemoveFile(const char *file)
 	}
 
 	return ret;
+}
+
+int CLCD4l::CreateMenuFile(std::string content, bool convert)
+{
+	return CreateFile(MENU, content, convert);
+}
+
+int CLCD4l::RemoveMenuFile()
+{
+	return RemoveFile(MENU);
 }
 
 int CLCD4l::GetMaxBrightness()
