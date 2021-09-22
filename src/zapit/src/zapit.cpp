@@ -45,6 +45,7 @@
 #include <zapit/getservices.h>
 #include <zapit/pat.h>
 #include <zapit/scanpmt.h>
+#include <zapit/scanait.h>
 #include <zapit/scan.h>
 //#include <zapit/fastscan.h>
 #include <zapit/scansdt.h>
@@ -490,6 +491,7 @@ bool CZapit::ParsePatPmt(CZapitChannel * channel)
 
 	CPat pat(channel->getRecordDemux());
 	CPmt pmt(channel->getRecordDemux());
+	CAit ait(channel->getRecordDemux());
 	DBG("looking up pids for channel_id " PRINTF_CHANNEL_ID_TYPE "\n", channel->getChannelID());
 
 	if(!pat.Parse(channel)) {
@@ -500,6 +502,10 @@ bool CZapit::ParsePatPmt(CZapitChannel * channel)
 		printf("[zapit] pmt parsing failed\n");
 		return false;
 	}
+	if (channel == current_channel)
+		if(!ait.Parse(channel)) {
+			printf("[zapit] ait parsing failed\n");
+		}
 
 	return true;
 }
