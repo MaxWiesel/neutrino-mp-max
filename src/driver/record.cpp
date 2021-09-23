@@ -81,11 +81,8 @@ class CStreamRec : public CRecordInstance, OpenThreads::Thread
 	private:
 		AVFormatContext *ifcx;
 		AVFormatContext *ofcx;
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 48, 100)
-		AVBitStreamFilterContext *bsfc;
-#else
 		AVBSFContext *bsfc;
-#endif
+
 		bool stopped;
 		bool interrupt;
 		time_t time_started;
@@ -2011,11 +2008,7 @@ void CStreamRec::Close()
 		avformat_free_context(ofcx);
 	}
 	if (bsfc){
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 48, 100)
-		av_bitstream_filter_close(bsfc);
-#else
 		av_bsf_free(&bsfc);
-#endif
 	}
 	ifcx = NULL;
 	ofcx = NULL;
@@ -2033,11 +2026,8 @@ void CStreamRec::FillMovieInfo(CZapitChannel * /*channel*/, APIDList & /*apid_li
 
 	for (unsigned i = 0; i < ofcx->nb_streams; i++) {
 		AVStream *st = ofcx->streams[i];
-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57, 25, 101)
-		AVCodecContext * codec = st->codec;
-#else
 		AVCodecParameters * codec = st->codecpar;
-#endif
+
 		if (codec->codec_type == AVMEDIA_TYPE_AUDIO) {
 			AUDIO_PIDS audio_pids;
 			AVDictionaryEntry *lang = av_dict_get(st->metadata, "language", NULL, 0);
@@ -2209,11 +2199,6 @@ bool CStreamRec::Open(CZapitChannel * channel)
 		return false;
 	}
 
-	//av_log_set_level(AV_LOG_VERBOSE);
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 9, 100)
-	av_register_all();
-	avcodec_register_all();
-#endif
 	avformat_network_init();
 	printf("%s: Open input [%s]....\n", __FUNCTION__, url.c_str());
 
@@ -2242,11 +2227,9 @@ bool CStreamRec::Open(CZapitChannel * channel)
 		printf("%s: Cannot find stream info [%s]!\n", __FUNCTION__, channel->getUrl().c_str());
 		return false;
 	}
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 27, 102)
-	const char *hls = "applehttp";
-#else
+
 	const char *hls = "hls";
-#endif
+
 	if (!strstr(ifcx->iformat->name, hls) &&
 		!strstr(ifcx->iformat->name, "mpegts") &&
 		!strstr(ifcx->iformat->name, "matroska") &&
@@ -2259,12 +2242,7 @@ bool CStreamRec::Open(CZapitChannel * channel)
 	AVIOInterruptCB int_cb = { Interrupt, this };
 	ifcx->interrupt_callback = int_cb;
 
-#if (LIBAVFORMAT_VERSION_MAJOR < 58)
-	snprintf(ifcx->filename, sizeof(ifcx->filename), "%s", channel->getUrl().c_str());
-	av_dump_format(ifcx, 0, ifcx->filename, 0);
-#else
 	av_dump_format(ifcx, 0, ifcx->url, 0);
-#endif
 
 	std::string tsfile = std::string(filename) + ".ts";
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59, 0, 100)
@@ -2286,24 +2264,14 @@ bool CStreamRec::Open(CZapitChannel * channel)
 	}
 
 	av_dict_copy(&ofcx->metadata, ifcx->metadata, 0);
-#if (LIBAVFORMAT_VERSION_MAJOR < 58)
-	snprintf(ofcx->filename, sizeof(ofcx->filename), "%s", tsfile.c_str());
-#else
 	ofcx->url = av_strdup(!tsfile.empty() ? tsfile.c_str() : "");
-#endif
 
 	stream_index = -1;
 	int stid = 0x200;
 	for (unsigned i = 0; i < ifcx->nb_streams; i++) {
-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57, 25, 101)
-		AVCodecContext * iccx = ifcx->streams[i]->codec;
-		AVStream *ost = avformat_new_stream(ofcx, iccx->codec);
-		avcodec_copy_context(ost->codec, iccx);
-#else
 		AVCodecParameters * iccx = ifcx->streams[i]->codecpar;
 		AVStream *ost = avformat_new_stream(ofcx, NULL);
 		avcodec_parameters_copy(ost->codecpar, iccx);
-#endif
 		av_dict_copy(&ost->metadata, ifcx->streams[i]->metadata, 0);
 		ost->time_base = ifcx->streams[i]->time_base;
 		ost->id = stid++;
@@ -2313,17 +2281,8 @@ bool CStreamRec::Open(CZapitChannel * channel)
 			stream_index = i;
 	}
 	av_log_set_level(AV_LOG_VERBOSE);
-#if (LIBAVFORMAT_VERSION_MAJOR < 58)
-	av_dump_format(ofcx, 0, ofcx->filename, 1);
-#else
 	av_dump_format(ofcx, 0, ofcx->url, 1);
-#endif
 	av_log_set_level(AV_LOG_WARNING);
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 48, 100)
-	bsfc = av_bitstream_filter_init("h264_mp4toannexb");
-	if (!bsfc)
-		printf("%s: av_bitstream_filter_init h264_mp4toannexb failed!\n", __FUNCTION__);
-#else
 	const AVBitStreamFilter *bsf = av_bsf_get_by_name("h264_mp4toannexb");
 	if(!bsf) {
 		return false;
@@ -2331,7 +2290,6 @@ bool CStreamRec::Open(CZapitChannel * channel)
 	if ((av_bsf_alloc(bsf, &bsfc))) {
 		return false;
 	}
-#endif
 	return true;
 }
 
@@ -2355,20 +2313,11 @@ void CStreamRec::run()
 			break;
 		if (pkt.stream_index < 0)
 			continue;
-#if LIBAVFORMAT_VERSION_INT < AV_VERSION_INT(57, 25, 101)
-		AVCodecContext *codec = ifcx->streams[pkt.stream_index]->codec;
-#else
+
 		AVCodecParameters *codec = ifcx->streams[pkt.stream_index]->codecpar;
-#endif
+
 		if (bsfc && codec->codec_id == AV_CODEC_ID_H264) {
 			AVPacket newpkt = pkt;
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 48, 100)
-			if (av_bitstream_filter_filter(bsfc, codec, NULL, &newpkt.data, &newpkt.size, pkt.data, pkt.size, pkt.flags & AV_PKT_FLAG_KEY) >= 0) {
-				av_packet_unref(&pkt);
-				newpkt.buf = av_buffer_create(newpkt.data, newpkt.size, av_buffer_default_free, NULL, 0);
-				pkt = newpkt;
-			}
-#else
 			int ret = av_bsf_send_packet(bsfc, &pkt);
 			if (ret < 0){
 				break;
@@ -2381,7 +2330,6 @@ void CStreamRec::run()
 				av_packet_unref(&pkt);
 				pkt = newpkt;
 			}
-#endif
 		}
 		pkt.pts = av_rescale_q(pkt.pts, ifcx->streams[pkt.stream_index]->time_base, ofcx->streams[pkt.stream_index]->time_base);
 		pkt.dts = av_rescale_q(pkt.dts, ifcx->streams[pkt.stream_index]->time_base, ofcx->streams[pkt.stream_index]->time_base);
