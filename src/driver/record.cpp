@@ -2295,7 +2295,7 @@ bool CStreamRec::Open(CZapitChannel * channel)
 
 void CStreamRec::run()
 {
-	AVPacket pkt;
+	AVPacket *pkt;
 
 	time_t now = 0;
 	time_t tstart = time_monotonic();
@@ -2308,37 +2308,37 @@ void CStreamRec::run()
 
 	double total = 0;
 	while (!stopped) {
-		av_init_packet(&pkt);
-		if (av_read_frame(ifcx, &pkt) < 0)
+		pkt = av_packet_alloc();
+		if (av_read_frame(ifcx, pkt) < 0)
 			break;
-		if (pkt.stream_index < 0)
+		if (pkt->stream_index < 0)
 			continue;
 
-		AVCodecParameters *codec = ifcx->streams[pkt.stream_index]->codecpar;
+		AVCodecParameters *codec = ifcx->streams[pkt->stream_index]->codecpar;
 
 		if (bsfc && codec->codec_id == AV_CODEC_ID_H264) {
-			AVPacket newpkt = pkt;
-			int ret = av_bsf_send_packet(bsfc, &pkt);
+			AVPacket *newpkt = pkt;
+			int ret = av_bsf_send_packet(bsfc, pkt);
 			if (ret < 0){
 				break;
 			}
-			ret = av_bsf_receive_packet(bsfc, &newpkt);
+			ret = av_bsf_receive_packet(bsfc, newpkt);
 			if (ret == AVERROR(EAGAIN)){
 				break;
 			}
 			if(ret != AVERROR_EOF){
-				av_packet_unref(&pkt);
+				av_packet_unref(pkt);
 				pkt = newpkt;
 			}
 		}
-		pkt.pts = av_rescale_q(pkt.pts, ifcx->streams[pkt.stream_index]->time_base, ofcx->streams[pkt.stream_index]->time_base);
-		pkt.dts = av_rescale_q(pkt.dts, ifcx->streams[pkt.stream_index]->time_base, ofcx->streams[pkt.stream_index]->time_base);
+		pkt->pts = av_rescale_q(pkt->pts, ifcx->streams[pkt->stream_index]->time_base, ofcx->streams[pkt->stream_index]->time_base);
+		pkt->dts = av_rescale_q(pkt->dts, ifcx->streams[pkt->stream_index]->time_base, ofcx->streams[pkt->stream_index]->time_base);
 
-		av_write_frame(ofcx, &pkt);
-		av_packet_unref(&pkt);
+		av_write_frame(ofcx, pkt);
+		av_packet_unref(pkt);
 
-		if (pkt.stream_index == stream_index) {
-			total += (double) 1000 * pkt.duration * av_q2d(ifcx->streams[stream_index]->time_base);
+		if (pkt->stream_index == stream_index) {
+			total += (double) 1000 * pkt->duration * av_q2d(ifcx->streams[stream_index]->time_base);
 			//printf("PKT: duration %d (%f) total %f (ifcx->duration %016llx\n", pkt.duration, duration, total, ifcx->duration);
 		}
 

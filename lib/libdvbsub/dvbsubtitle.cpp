@@ -236,7 +236,7 @@ int cDvbSubtitleConverter::Convert(AVSubtitle *sub, int64_t pts)
 
 int cDvbSubtitleConverter::Convert(const uchar *Data, int Length, int64_t pts)
 {
-	AVPacket avpkt;
+	AVPacket *avpkt;
 	int got_subtitle = 0;
 
 	if(!avctx) {
@@ -248,13 +248,13 @@ int cDvbSubtitleConverter::Convert(const uchar *Data, int Length, int64_t pts)
 
  	AVSubtitle * sub = Bitmaps->GetSub();
 
-	av_init_packet(&avpkt);
-	avpkt.data = (uint8_t*) Data;
-	avpkt.size = Length;
+	avpkt = av_packet_alloc();
+	avpkt->data = (uint8_t*) Data;
+	avpkt->size = Length;
 
-//	dbgconverter("cDvbSubtitleConverter::Convert: sub %x pkt %x pts %lld\n", sub, &avpkt, pts);
+//	dbgconverter("cDvbSubtitleConverter::Convert: sub %x pkt %x pts %lld\n", sub, avpkt, pts);
 
-	avcodec_decode_subtitle2(avctx, sub, &got_subtitle, &avpkt);
+	avcodec_decode_subtitle2(avctx, sub, &got_subtitle, avpkt);
 //	dbgconverter("cDvbSubtitleConverter::Convert: pts %lld subs ? %s, %d bitmaps\n", pts, got_subtitle? "yes" : "no", sub->num_rects);
 
 	if(got_subtitle) {

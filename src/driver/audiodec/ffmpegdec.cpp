@@ -269,8 +269,8 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 #endif
 
 	AVFrame *frame = NULL;
-	AVPacket rpacket;
-	av_init_packet(&rpacket);
+	AVPacket *rpacket;
+	rpacket = av_packet_alloc();
 	c->channel_layout = c->channel_layout ? c->channel_layout : AV_CH_LAYOUT_STEREO;
 
 	av_opt_set_int(swr, "in_channel_layout",	c->channel_layout,	0);
@@ -331,18 +331,18 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 		while(*state==PAUSE && !is_stream)
 			usleep(10000);
 
-		if (av_read_frame(avc, &rpacket)) {
+		if (av_read_frame(avc, rpacket)) {
 			Status=DATA_ERR;
 			break;
 		}
 
-		if (rpacket.stream_index != best_stream) {
-			av_packet_unref(&rpacket);
+		if (rpacket->stream_index != best_stream) {
+			av_packet_unref(rpacket);
 			continue;
 		}
 
-		AVPacket packet = rpacket;
-		while (packet.size > 0) {
+		AVPacket *packet = rpacket;
+		while (packet->size > 0) {
 			int got_frame = 0;
 			if (!frame) {
 				if (!(frame = av_frame_alloc())) {
@@ -352,12 +352,12 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 			} else{
 				av_frame_unref(frame);
 			}
-			int ret = avcodec_send_packet(c, &packet);
+			int ret = avcodec_send_packet(c, packet);
 			if (ret < 0 && ret != AVERROR(EAGAIN) && ret != AVERROR_EOF){
 				break;
 			}
 			if (ret >= 0){
-				packet.size = 0;
+				packet->size = 0;
 			}
 			ret = avcodec_receive_frame(c, frame);
 			if (ret < 0){
@@ -378,7 +378,7 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 					if (av_samples_alloc(&outbuf, &out_samples, mChannels, //c->channels,
 								frame->nb_samples, AV_SAMPLE_FMT_S16, 1) < 0) {
 						Status=WRITE_ERR;
-						packet.size = 0;
+						packet->size = 0;
 						break;
 					}
 					outsamples_max = outsamples;
@@ -402,7 +402,7 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 		}
 		if (time_played && avc->streams[best_stream]->time_base.den)
 			*time_played = (pts - start_pts) * avc->streams[best_stream]->time_base.num / avc->streams[best_stream]->time_base.den;
-		av_packet_unref(&rpacket);
+		av_packet_unref(rpacket);
 	} while (*state!=STOP_REQ && Status==OK);
 
 	audioDecoder->StopClip();
@@ -410,7 +410,7 @@ CBaseDec::RetCode CFfmpegDec::Decoder(FILE *_in, int /*OutputFd*/, State* state,
 
 	swr_free(&swr);
 	av_free(outbuf);
-	av_packet_unref(&rpacket);
+	av_packet_unref(rpacket);
 	av_frame_free(&frame);
 
 	DeInit();
