@@ -70,11 +70,7 @@ extern "C" {
 #endif
 }
 
-#if (LIBAVCODEC_VERSION_MAJOR > 55)
-#define	av_free_packet av_packet_unref
-#else
-#define av_packet_unref	av_free_packet
-#endif
+#define av_free_packet av_packet_unref
 
 class CStreamRec : public CRecordInstance, OpenThreads::Thread
 {

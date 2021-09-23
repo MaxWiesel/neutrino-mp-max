@@ -47,17 +47,7 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 }
 
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 28, 1)
-#define av_frame_alloc	avcodec_alloc_frame
-#define av_frame_unref	avcodec_get_frame_defaults
-#define av_frame_free	avcodec_free_frame
-#endif
-
-#if (LIBAVCODEC_VERSION_MAJOR > 55)
 #define	av_free_packet av_packet_unref
-#else
-#define av_packet_unref	av_free_packet
-#endif
 
 #include <OpenThreads/ScopedLock>
 
