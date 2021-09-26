@@ -15,7 +15,7 @@ install_SCRIPTS = \
 	install.sh 
 
 install_SCRIPTS += \
-	start_flash.sh \
+	start_flash.sh
 
 if BOXTYPE_ARMBOX
 install_SCRIPTS += \
