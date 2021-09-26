@@ -6,6 +6,9 @@ install_SCRIPTS = \
 	wakeup.sh \
 	install.sh 
 
+install_SCRIPTS += \
+	start_flash.sh \
+
 if BOXTYPE_ARMBOX
 install_SCRIPTS += \
 	restore_flash.sh

@@ -5505,11 +5505,16 @@ void stop_daemons(bool stopall, bool for_flash)
 	CMoviePlayerGui::getInstance().stopPlayBack();
 	if (for_flash)
 	{
+		if ( FILE *f = fopen("/tmp/.flash.start", "w") )
+			fclose(f);
+
 		CVFD::getInstance()->Clear();
 		CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
 		CVFD::getInstance()->ShowText("Stop daemons...");
 		g_settings.epg_scan_mode = CEpgScan::MODE_OFF;
-		my_system(NEUTRINO_ENTER_FLASH_SCRIPT);
+		std::string start_flash_sh = find_executable("start_flash.sh");
+		if (!start_flash_sh.empty())
+			my_system(start_flash_sh.c_str());
 	}
 
 	InfoClock->enableInfoClock(false);

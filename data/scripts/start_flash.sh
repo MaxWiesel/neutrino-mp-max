@@ -15,3 +15,6 @@ if [ -e /var/etc/.djmount ]; then
 	echo "Kill djmount"
 	fusermount -u /media/00upnp
 fi
+
+# run shutdown routine
+init 6
