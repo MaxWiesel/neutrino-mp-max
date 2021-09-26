@@ -1,20 +1,7 @@
 #!/bin/sh
 
-if pidof vsftpd > /dev/null; then
-	echo "Kill vsftpd"
-	killall vsftpd
-fi
-
-if pidof ushare > /dev/null; then
-	echo "Kill ushare"
-	trap "" INT
-	kill -INT `pidof ushare`
-fi
-
-if [ -e /var/etc/.djmount ]; then
-	echo "Kill djmount"
-	fusermount -u /media/00upnp
-fi
+# kill start script first to ignore neutrino's exit codes
+killall start_neutrino
 
 # run shutdown routine
 init 6
