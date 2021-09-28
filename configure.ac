@@ -171,8 +171,8 @@ if test "$BOXTYPE" = "coolstream" ||
 fi
 
 AC_ARG_ENABLE(lcd4linux,
-	AS_HELP_STRING([--enable-lcd4linux], [enable Lcd4Linux support @<:@default=no@:>@]),
-	AC_DEFINE(ENABLE_LCD4LINUX, 1, [enable Lcd4Linux support]))
+	AS_HELP_STRING([--enable-lcd4linux], [enable LCD4Linux support @<:@default=no@:>@]),
+	AC_DEFINE(ENABLE_LCD4LINUX, 1, [enable LCD4Linux support]))
 AM_CONDITIONAL(ENABLE_LCD4LINUX, test "$enable_lcd4linux" = "yes")
 
 AC_ARG_ENABLE(graphlcd,
@@ -289,8 +289,8 @@ AC_ARG_ENABLE(pip,
 	AC_DEFINE(ENABLE_PIP, 1, [enable picture in picture support]))
 
 AC_ARG_ENABLE(dynamicdemux,
-	AS_HELP_STRING([--enable-dynamicdemux], [enable use dynamic demux @<:@default=no@:>@]),
-	AC_DEFINE(DYNAMIC_DEMUX, 1, [enable use dynamic demux]))
+	AS_HELP_STRING([--enable-dynamicdemux], [enable dynamic demux @<:@default=no@:>@]),
+	AC_DEFINE(DYNAMIC_DEMUX, 1, [enable dynamic demux]))
 
 AC_ARG_ENABLE(testing,
 	AS_HELP_STRING([--enable-testing], [enable development code @<:@default=no@:>@]),
@@ -485,6 +485,14 @@ src/nhttpd/nhttpd.conf
 # Migration script
 AC_CONFIG_FILES([
 data/scripts/migration.sh
+])
+
+# Backup scripts
+AC_CONFIG_FILES([
+data/scripts/backup.sh
+data/scripts/restore.sh
+data/scripts/backup_flash.sh
+data/scripts/restore_flash.sh
 ])
 
 # Backup configs
