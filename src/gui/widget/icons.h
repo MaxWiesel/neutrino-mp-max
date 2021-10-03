@@ -92,7 +92,6 @@
 #define NEUTRINO_ICON_BOXINFO		"boxinfo"
 #define NEUTRINO_ICON_COLORS		"colors"
 #define NEUTRINO_ICON_EDIT		"edit"
-#define NEUTRINO_ICON_EDIT_FIND		"edit_find"
 #define NEUTRINO_ICON_ERROR		"error"
 #define NEUTRINO_ICON_FEATURES		"features"
 #define NEUTRINO_ICON_GAMES		"games"

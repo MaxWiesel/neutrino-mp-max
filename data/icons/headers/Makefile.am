@@ -6,7 +6,6 @@ install_DATA = \
 	boxinfo.png \
 	colors.png \
 	edit.png \
-	edit_find.png \
 	error.png \
 	features.png \
 	games.png \
@@ -22,7 +21,6 @@ install_DATA = \
 	lcd.png \
 	lock.png \
 	mainmenue.png \
-	mp3.png \
 	multimedia.png \
 	network.png \
 	personalize.png \
