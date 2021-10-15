@@ -681,7 +681,7 @@ bool CZapit::ZapIt(const t_channel_id channel_id, bool forupdate, bool startplay
 }
 
 #ifdef ENABLE_PIP
-bool CZapit::StopPip()
+bool CZapit::StopPip(int pip)
 {
 	if (!g_info.hw_caps->can_pip)
 		return false;
@@ -707,7 +707,7 @@ bool CZapit::StopPip()
 	return false;
 }
 
-bool CZapit::StartPip(const t_channel_id channel_id)
+bool CZapit::StartPip(const t_channel_id channel_id, int pip)
 {
 	if (!g_info.hw_caps->can_pip)
 		return false;
