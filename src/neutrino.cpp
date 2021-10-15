@@ -5032,6 +5032,7 @@ void CNeutrinoApp::standbyMode( bool bOnOff, bool fromDeepStandby )
 		exec_controlscript(NEUTRINO_ENTER_STANDBY_SCRIPT);
 
 		CEpgScan::getInstance()->Start(true);
+
 		bool alive = recordingstatus || CEpgScan::getInstance()->Running() || CStreamManager::getInstance()->StreamStatus();
 		if (!alive && cpuFreq)
 			cpuFreq->SetCpuFreq(g_settings.standby_cpufreq * 1000 * 1000);

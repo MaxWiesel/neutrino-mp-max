@@ -626,7 +626,9 @@ struct SNeutrinoSettings
 		P_MAIN_GAMES,
 		P_MAIN_TOOLS,
 		P_MAIN_AVINPUT,
+#if ENABLE_PIP
 		P_MAIN_AVINPUT_PIP,
+#endif
 		P_MAIN_SCRIPTS,
 		P_MAIN_LUA,
 		P_MAIN_SETTINGS,
@@ -1167,10 +1169,12 @@ struct SNeutrinoSettings
 	int key_pageup;
 	int key_pic_mode_active;
 	int key_pic_size_active;
+#if ENABLE_PIP
 	int key_pip_close;
 	int key_pip_close_avinput;
 	int key_pip_setup;
 	int key_pip_swap;
+#endif
 	int key_power_off;
 	int key_playbutton;
 	int key_quickzap_down;
