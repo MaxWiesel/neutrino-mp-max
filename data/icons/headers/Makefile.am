@@ -11,16 +11,15 @@ install_DATA = \
 	games.png \
 	icon_blue.png \
 	icon_green.png \
-	icon_movieplayer.png \
 	icon_red.png \
 	icon_yellow.png \
-	icon_ytplay.png \
 	information.png \
 	keybinding.png \
 	language.png \
 	lcd.png \
 	lock.png \
 	mainmenue.png \
+	movieplayer.png \
 	multimedia.png \
 	network.png \
 	personalize.png \
@@ -34,4 +33,5 @@ install_DATA = \
 	streaming.png \
 	timer.png \
 	upnp.png \
-	video.png
+	video.png \
+	ytplay.png
