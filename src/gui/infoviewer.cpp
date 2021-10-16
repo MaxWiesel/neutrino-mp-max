@@ -1153,7 +1153,7 @@ void CInfoViewer::loop(bool show_dot)
 
 		showLivestreamInfo();
 
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 		if ((msg == (neutrino_msg_t) g_settings.key_pip_close) || 
 		    (msg == (neutrino_msg_t) g_settings.key_pip_setup) || 
 		    (msg == (neutrino_msg_t) g_settings.key_pip_swap)) {

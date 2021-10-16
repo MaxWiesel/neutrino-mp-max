@@ -926,7 +926,7 @@ int CChannelList::show()
 		{
 			moveChannelToBouquet();
 		}
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 		else if (!empty && ((msg == CRCInput::RC_play) || (msg == CRCInput::RC_playpause) || (msg == (neutrino_msg_t) g_settings.key_pip_close))) {
 			int boxmode = getBoxMode();
 			if (boxmode > -1 && boxmode != 12)
@@ -1129,7 +1129,7 @@ bool CChannelList::checkLockStatus(neutrino_msg_data_t data, bool pip)
 out:
 	if (startvideo) {
 		if(pip) {
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 			if (CNeutrinoApp::getInstance()->StartPip((*chanlist)[selected]->getChannelID())) {
 				calcSize();
 				paintBody();
@@ -1925,7 +1925,7 @@ void CChannelList::paintButtonBar(bool is_current)
 		}
 		if (i == 5) {
 			//manage pip button
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 			if (!is_current || IS_WEBCHAN(channel_id))
 #endif
 				continue;
@@ -2042,7 +2042,7 @@ void CChannelList::paintItem(int pos, const bool firstpaint)
 
 		//set pip icon
 		const char *pip_icon = NULL;
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 		if ((*chanlist)[curr]->getChannelID() == CZapit::getInstance()->GetPipChannelID())
 			pip_icon = NEUTRINO_ICON_MARKER_PIP;
 #endif

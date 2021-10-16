@@ -96,7 +96,7 @@ extern cAudio *audioDecoder;
 extern cDemux *audioDemux;
 extern cDemux *videoDemux;
 
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 extern cVideo *pipVideoDecoder[3];
 extern cDemux *pipVideoDemux[3];
 extern cAudio * pipAudioDecoder[3];
@@ -557,7 +557,7 @@ bool CZapit::ZapIt(const t_channel_id channel_id, bool forupdate, bool startplay
 		return true;
 	}
 
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 	/* executed async if zap NOWAIT, race possible with record lock/allocate */
 	CFEManager::getInstance()->Lock();
 	if (pip_fe[0])
@@ -618,7 +618,7 @@ bool CZapit::ZapIt(const t_channel_id channel_id, bool forupdate, bool startplay
 	}
 	SendEvent(CZapitClient::EVT_TUNE_COMPLETE, &live_channel_id, sizeof(t_channel_id));
 
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 	if (transponder_change && (live_fe == pip_fe[0]))
 		StopPip();
 #endif
@@ -682,7 +682,7 @@ bool CZapit::ZapIt(const t_channel_id channel_id, bool forupdate, bool startplay
 	return true;
 }
 
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 bool CZapit::StopPip(int pip)
 {
 	if (!g_info.hw_caps->can_pip)
@@ -856,7 +856,7 @@ bool CZapit::ZapForRecord(const t_channel_id channel_id)
 		goto again;
 	}
 
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 	if (transponder_change && (frontend == pip_fe[0]))
 		StopPip();
 #endif
@@ -892,7 +892,7 @@ bool CZapit::ZapForEpg(const t_channel_id channel_id, bool instandby)
 	if (!instandby) {
 		if (!IS_WEBCHAN(live_channel_id))
 			CFEManager::getInstance()->lockFrontend(live_fe);
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 		if (pip_fe[0] /* && pip_fe[0] != live_fe */)
 			CFEManager::getInstance()->lockFrontend(pip_fe[0]);
 #endif
@@ -902,7 +902,7 @@ bool CZapit::ZapForEpg(const t_channel_id channel_id, bool instandby)
 	if (!instandby) {
 		if (!IS_WEBCHAN(live_channel_id))
 			CFEManager::getInstance()->unlockFrontend(live_fe);
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 		if (pip_fe[0] /* && pip_fe[0] != live_fe */)
 			CFEManager::getInstance()->unlockFrontend(pip_fe[0]);
 #endif
@@ -1304,7 +1304,7 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 		CBasicServer::receive_data(connfd, &msgZaptoServiceID, sizeof(msgZaptoServiceID));
 		if(msgZaptoServiceID.record)
 			msgResponseZapComplete.zapStatus = ZapForRecord(msgZaptoServiceID.channel_id);
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 		else if(msgZaptoServiceID.pip)
 			msgResponseZapComplete.zapStatus = StartPip(msgZaptoServiceID.channel_id, msgZaptoServiceID.pip_dev);
 #endif
@@ -1874,7 +1874,7 @@ bool CZapit::ParseCommand(CBasicMessage::Header &rmsg, int connfd)
 		break;
 	}
 
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 	case CZapitMessages::CMD_STOP_PIP:
 		for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)
 		{
@@ -2486,7 +2486,7 @@ void CZapit::enterStandby(void)
 	SaveAudioMap();
 	SaveVolumeMap();
 	StopPlayBack(true);
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 	for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)
 	{
 		StopPip(i);
@@ -2617,7 +2617,7 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
 	audioDecoder->SetDemux(audioDemux);
 	audioDecoder->SetVideo(videoDecoder);
 
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 #if HAVE_CST_HARDWARE
 	int dnum = 1; // FIXME?
 #endif
@@ -2640,7 +2640,7 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
         videoDecoder->Standby(false);
         audioDecoder = new cAudio(audioDemux->getBuffer(), videoDecoder->GetTVEnc(), NULL /*videoDecoder->GetTVEncSD()*/);
 
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 	if (g_info.hw_caps->can_pip)
 	{
 #if HAVE_CST_HARDWARE
@@ -2853,7 +2853,7 @@ void CZapit::run()
 	delete pmtDemux;
 	delete audioDecoder;
 	delete audioDemux;
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 	for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)
 	{
 		StopPip(i);

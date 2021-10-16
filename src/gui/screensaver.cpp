@@ -126,7 +126,7 @@ void CScreenSaver::Start()
 	if (g_RadiotextWin)
 		g_Radiotext->OnAfterDecodeLine.block();
 
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 	pip_channel_id[0] = CZapit::getInstance()->GetPipChannelID();
 	if (pip_channel_id[0])
 		g_Zapit->stopPip();
@@ -178,7 +178,7 @@ void CScreenSaver::Stop()
 		scr_clock = NULL;
 	}
 
-#ifdef ENABLE_PIP
+#if ENABLE_PIP
 	if(pip_channel_id[0]) {
 		CNeutrinoApp::getInstance()->StartPip(pip_channel_id[0]);
 		pip_channel_id[0] = 0;
