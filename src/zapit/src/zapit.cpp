@@ -2607,6 +2607,9 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
 	audioDemux = new cDemux();
 	audioDemux->Open(DMX_AUDIO_CHANNEL);
 
+#if defined ENABLE_PIP && defined HAVE_CST_HARDWARE
+	int dnum = 1; // FIXME?
+#endif
 #ifdef BOXMODEL_CST_HD2
 	videoDecoder = cVideo::GetDecoder(0);
 	audioDecoder = cAudio::GetDecoder(0);
@@ -2621,9 +2624,6 @@ bool CZapit::Start(Z_start_arg *ZapStart_arg)
 	audioDecoder->SetVideo(videoDecoder);
 
 #if ENABLE_PIP
-#if HAVE_CST_HARDWARE
-	int dnum = 1; // FIXME?
-#endif
 	if (g_info.hw_caps->can_pip)
 	{
 		pipVideoDemux[0] = new cDemux(dnum);
@@ -2860,14 +2860,24 @@ void CZapit::run()
 	for (unsigned i=0; i < (unsigned int) g_info.hw_caps->pip_devs; i++)
 	{
 		StopPip(i);
-		if (pipVideoDecoder[i])
+		if (pipVideoDecoder[i]) {
+			delete pipVideoDecoder[i];
 			pipVideoDecoder[i] = NULL;
-		if (pipVideoDemux[i])
+		}
+		if (pipVideoDemux[i]) {
+			delete pipVideoDemux[i];
 			pipVideoDemux[i] = NULL;
-		if (pipAudioDecoder[i])
+		}
+#if !HAVE_CST_HARDWARE
+		if (pipAudioDecoder[i]) {
+			delete pipAudioDecoder[i];
 			pipAudioDecoder[i] = NULL;
-		if (pipAudioDemux[i])
+		}
+		if (pipAudioDemux[i]) {
+			delete pipAudioDemux[i];
 			pipAudioDemux[i] = NULL;
+		}
+#endif
 	}
 #endif
 
