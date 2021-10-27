@@ -43,7 +43,6 @@
 #include <system/debug.h>
 #include <gui/color_custom.h>
 #include <gui/infoclock.h>
-#include <gui/infoicons.h>
 #include <gui/infoviewer.h>
 #include <zapit/zapit.h>
 #include <driver/pictureviewer/pictureviewer.h>
