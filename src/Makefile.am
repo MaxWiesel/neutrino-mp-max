@@ -117,7 +117,6 @@ neutrino_LDADD = \
 	@AVFORMAT_LIBS@ \
 	@AVUTIL_LIBS@ \
 	@AVCODEC_LIBS@ \
-	@SWSCALE_LIBS@ \
 	$(ADEC_LIBS) \
 	@SIGC_LIBS@ \
 	$(PUGIXML_LIBS) \
@@ -126,7 +125,8 @@ neutrino_LDADD = \
 	-lutil \
 	-lOpenThreads \
 	-lrt -lpthread \
-	-ldl -lblkid \
+	-ldl \
+	-lblkid \
 	-lz
 
 if ENABLE_GRAPHLCD
@@ -191,16 +191,16 @@ neutrino_LDFLAGS = \
 	$(STB_HAL_LIB)
 endif
 
-if BOXTYPE_SPARK
-neutrino_LDADD += -lass
-endif
-
 if BOXTYPE_MIPSBOX
-neutrino_LDADD += -lass
+neutrino_LDADD += \
+	@SWSCALE_LIBS@ \
+	-lass
 endif
 
 if BOXTYPE_ARMBOX
-neutrino_LDADD += -lass
+neutrino_LDADD += \
+	@SWSCALE_LIBS@ \
+	-lass
 endif
 
 if BOXMODEL_RASPI
