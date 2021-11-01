@@ -246,7 +246,7 @@ int cDvbSubtitleConverter::Convert(const uchar *Data, int Length, int64_t pts)
 
 	cDvbSubtitleBitmaps *Bitmaps = new cDvbSubtitleBitmaps(pts);
 
- 	AVSubtitle * sub = Bitmaps->GetSub();
+	AVSubtitle * sub = Bitmaps->GetSub();
 
 	avpkt = av_packet_alloc();
 	avpkt->data = (uint8_t*) Data;
