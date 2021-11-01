@@ -47,15 +47,7 @@
 #include <cs_api.h>
 #include <hardware/video.h>
 
-#if HAVE_SH4_HARDWARE
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <gui/kerneloptions.h>
-#else
 extern cVideo *videoDecoder;
-#endif
 
 CCECSetup::CCECSetup()
 {
@@ -83,7 +75,6 @@ int CCECSetup::exec(CMenuTarget* parent, const std::string &/*actionKey*/)
 	return res;
 }
 
-
 #define VIDEOMENU_HDMI_CEC_MODE_OPTION_COUNT 3
 const CMenuOptionChooser::keyval VIDEOMENU_HDMI_CEC_MODE_OPTIONS[VIDEOMENU_HDMI_CEC_MODE_OPTION_COUNT] =
 {
@@ -91,6 +82,8 @@ const CMenuOptionChooser::keyval VIDEOMENU_HDMI_CEC_MODE_OPTIONS[VIDEOMENU_HDMI_
 	{ VIDEO_HDMI_CEC_MODE_TUNER	, LOCALE_VIDEOMENU_HDMI_CEC_MODE_TUNER    },
 	{ VIDEO_HDMI_CEC_MODE_RECORDER	, LOCALE_VIDEOMENU_HDMI_CEC_MODE_RECORDER }
 };
+
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 #define VIDEOMENU_HDMI_CEC_VOL_OPTION_COUNT 3
 const CMenuOptionChooser::keyval VIDEOMENU_HDMI_CEC_VOL_OPTIONS[VIDEOMENU_HDMI_CEC_VOL_OPTION_COUNT] =
 {
@@ -98,6 +91,7 @@ const CMenuOptionChooser::keyval VIDEOMENU_HDMI_CEC_VOL_OPTIONS[VIDEOMENU_HDMI_C
 	{ VIDEO_HDMI_CEC_VOL_AUDIOSYSTEM, LOCALE_VIDEOMENU_HDMI_CEC_VOL_AUDIOSYSTEM },
 	{ VIDEO_HDMI_CEC_VOL_TV			, LOCALE_VIDEOMENU_HDMI_CEC_VOL_TV }
 };
+#endif
 
 int CCECSetup::showMenu()
 {
@@ -118,6 +112,7 @@ int CCECSetup::showMenu()
 #endif
 
 	cec->addItem(cec_ch);
+	cec->addItem(GenericMenuSeparatorLine);
 	//-------------------------------------------------------
 	cec->addItem(cec1);
 	cec->addItem(cec2);
@@ -131,32 +126,6 @@ int CCECSetup::showMenu()
 	return res;
 }
 
-#if HAVE_SH4_HARDWARE
-void CCECSetup::setCECSettings(bool b)
-{	
-	printf("[neutrino CEC Settings] %s init CEC settings...\n", __FUNCTION__);
-	if (b) {
-		// wakeup
-		if (g_settings.hdmi_cec_mode &&
-			 ((g_settings.hdmi_cec_standby == 1) ||
-			 (g_settings.hdmi_cec_standby == 2 && !CNeutrinoApp::getInstance()->timer_wakeup))) {
-			int otp = ::open("/proc/stb/cec/onetouchplay", O_WRONLY);
-			if (otp > -1) {
-				write(otp, g_settings.hdmi_cec_broadcast ? "f\n" : "0\n", 2);
-				close(otp);
-			}
-		}
-	} else {
-		if (g_settings.hdmi_cec_mode && g_settings.hdmi_cec_standby) {
-			int otp = ::open("/proc/stb/cec/systemstandby", O_WRONLY);
-			if (otp > -1) {
-				write(otp, g_settings.hdmi_cec_broadcast ? "f\n" : "0\n", 2);
-				close(otp);
-			}
-		}
-	}
-}
-#else
 void CCECSetup::setCECSettings()
 {
 	printf("[neutrino CEC Settings] %s init CEC settings...\n", __FUNCTION__);
@@ -167,22 +136,9 @@ void CCECSetup::setCECSettings()
 #endif
 	videoDecoder->SetCECMode((VIDEO_HDMI_CEC_MODE)g_settings.hdmi_cec_mode);
 }
-#endif
 
 bool CCECSetup::changeNotify(const neutrino_locale_t OptionName, void * /*data*/)
 {
-#if HAVE_SH4_HARDWARE
-	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_HDMI_CEC_MODE))
-	{
-		printf("[neutrino CEC Settings] %s set CEC settings...\n", __FUNCTION__);
-		cec1->setActive(g_settings.hdmi_cec_mode != 0);
-		cec2->setActive(g_settings.hdmi_cec_mode != 0);
-		CKernelOptions ko;
-		ko.Enable("cec", g_settings.hdmi_cec_mode != 0);
-		g_settings.hdmi_cec_mode = ko.isEnabled("cec");
-	}
-#else
-
 	if (ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_HDMI_CEC_MODE))
 	{
 		printf("[neutrino CEC Settings] %s set CEC settings...\n", __FUNCTION__);
@@ -203,13 +159,14 @@ bool CCECSetup::changeNotify(const neutrino_locale_t OptionName, void * /*data*/
 	}
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_VIDEOMENU_HDMI_CEC_VOLUME))
 	{
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
 		if (g_settings.hdmi_cec_mode != VIDEO_HDMI_CEC_MODE_OFF)
 		{
 			g_settings.current_volume = 100;
 			videoDecoder->SetAudioDestination(g_settings.hdmi_cec_volume);
 		}
-	}
 #endif
+	}
 
 	return false;
 }
