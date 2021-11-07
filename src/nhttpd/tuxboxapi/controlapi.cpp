@@ -33,7 +33,6 @@
 #include <configfile.h>
 #include <system/configure_network.h>
 #include <cs_api.h>
-#include <global.h>
 #include <gui/plugins.h>//for relodplugins
 #include <neutrino.h>
 #include <driver/display.h>
@@ -61,7 +60,7 @@ extern cVideo * videoDecoder;
 extern CPlugins *g_Plugins;//for relodplugins
 extern CBouquetManager *g_bouquetManager;
 
-#if HAVE_SPARK_HARDWARE || HAVE_CST_HARDWARE
+#if HAVE_CST_HARDWARE
 	#define RC_DEVICE "/dev/input/nevis_ir"
 #elif BOXMODEL_H7
 	#define RC_DEVICE "/dev/input/event2"

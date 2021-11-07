@@ -325,10 +325,6 @@ const lcd_setting_struct_t lcd_setting[SNeutrinoSettings::LCD_SETTING_COUNT] =
 #if USE_STB_HAL
 	,{ "lcd_epgmode"        , 0 /*DEFAULT_LCD_EPGMODE*/ }
 #endif
-#if HAVE_SPARK_HARDWARE
-	,{"lcd_displaymode"      , DEFAULT_LCD_DISPLAYMODE    }
-	,{"lcd_standbydisplaymode", DEFAULT_LCD_DISPLAYMODE   }
-#endif
 };
 
 static SNeutrinoSettings::usermenu_t usermenu_default[] = {
@@ -342,11 +338,6 @@ static SNeutrinoSettings::usermenu_t usermenu_default[] = {
 	{ CRCInput::RC_play,            "9",                                    "",     "5"             },
 #endif
 	{ CRCInput::RC_audio,           "27",                                   "",     "6"             },
-#if HAVE_SPARK_HARDWARE
-	{ CRCInput::RC_timer,           "19",                                   "",     "7"             },
-	{ CRCInput::RC_usb,             "31",                                   "",     "6"             },
-	{ CRCInput::RC_archive,         "30",                                   "",     "4"             },
-#endif
 	{ CRCInput::RC_nokey,           "",                                     "",     ""              },
 };
 

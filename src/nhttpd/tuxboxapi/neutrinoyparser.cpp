@@ -1264,6 +1264,9 @@ std::string  CNeutrinoYParser::func_set_bouquet_edit_form(CyhookHandler *hh, std
 		return "No Bouquet selected";
 }
 
+//-------------------------------------------------------------------------
+// y-funcs : func_get_webtv/webradio/xmltv_list
+//-------------------------------------------------------------------------
 std::string CNeutrinoYParser::func_get_webtv_list(CyhookHandler *, std::string)
 {
 	std::string yresult;
