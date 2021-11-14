@@ -9,6 +9,11 @@ AC_ARG_WITH(target,
 	[TARGET="$withval"],
 	[TARGET="native"])
 
+AC_ARG_WITH(generic-root-prefix,
+	AS_HELP_STRING([--with-generic-root-prefix=PATH], [prefix relative to target root (only applicable in native mode)]),
+	[GENERIC_ROOT_PREFIX="$withval"],
+	[GENERIC_ROOT_PREFIX=""])
+
 AC_ARG_WITH(targetprefix,
 	AS_HELP_STRING([--with-targetprefix=PATH], [prefix relative to target root (only applicable in cdk mode)]),
 	[TARGET_PREFIX="$withval"],
@@ -161,6 +166,7 @@ if test "$TARGET" = "native"; then
 	targetprefix=$prefix
 	TARGET_PREFIX=$prefix
 	AC_DEFINE_UNQUOTED(TARGET_PREFIX, "$TARGET_PREFIX", [The targets prefix])
+	AC_DEFINE_UNQUOTED(GENERIC_ROOT_PREFIX, "$GENERIC_ROOT_PREFIX", [The targets root prefix native])
 elif test "$TARGET" = "cdk"; then
 	AC_MSG_RESULT(cdk)
 

@@ -29,7 +29,7 @@
 #define NEUTRINO_CPP extern
 #endif
 
-#define IMAGE_VERSION_FILE "/.version"
+#define IMAGE_VERSION_FILE GENERIC_ROOT_PREFIX "/.version"
 
 #define NEUTRINO_SETTINGS_FILE CONFIGDIR "/neutrino.conf"
 #define NEUTRINO_SCAN_SETTINGS_FILE CONFIGDIR "/scan.conf"
@@ -110,6 +110,10 @@ NEUTRINO_CPP CRadioTextGUI *g_RadiotextWin;
 
 #ifndef TARGET_PREFIX
 #define TARGET_PREFIX ""
+#endif
+
+#ifndef GENERIC_ROOT_PREFIX
+#define GENERIC_ROOT_PREFIX ""
 #endif
 
 #endif /* __neutrino_global_h__ */
