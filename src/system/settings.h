@@ -1145,8 +1145,6 @@ struct SNeutrinoSettings
 		WIZARD_ON = 2
 	};
 
-	std::string version_pseudo;
-
 	// key configuration; alphabetical order
 	int key_bouquet_down;
 	int key_bouquet_up;
