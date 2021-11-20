@@ -446,6 +446,8 @@ data/themes/Grey-Blue/icons/buttons/Makefile
 data/themes/Neutrino-3.0/Makefile
 data/themes/Neutrino-3.0/icons/Makefile
 data/themes/Neutrino-3.0/icons/buttons/Makefile
+data/themes/NI/Makefile
+data/themes/NI/icons/Makefile
 data/themes/Olive-3.0/Makefile
 data/themes/Olive-3.0/icons/Makefile
 data/themes/Olive-3.0/icons/buttons/Makefile
