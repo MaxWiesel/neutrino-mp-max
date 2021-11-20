@@ -51,7 +51,6 @@
 #include <gui/psisetup.h>
 #endif
 
-#include <driver/display.h>
 #include <driver/screen_max.h>
 #include <driver/display.h>
 

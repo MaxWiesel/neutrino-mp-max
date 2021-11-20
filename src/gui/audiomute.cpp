@@ -31,7 +31,6 @@
 #include <global.h>
 #include <neutrino.h>
 #include <hardware/video.h>
-#include <driver/display.h>
 #include <gui/infoclock.h>
 #include <gui/volumebar.h>
 #include <gui/audiomute.h>

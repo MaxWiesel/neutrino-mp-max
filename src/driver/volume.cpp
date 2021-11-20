@@ -37,7 +37,6 @@
 #include <system/settings.h>
 #include <system/helpers.h>
 #include <daemonc/remotecontrol.h>
-#include <driver/display.h>
 #include <driver/volume.h>
 #include <driver/display.h>
 #include <gui/audiomute.h>

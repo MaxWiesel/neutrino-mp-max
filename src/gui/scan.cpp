@@ -31,7 +31,6 @@
 #include <gui/scan.h>
 #include <gui/scan_setup.h>
 
-#include <driver/display.h>
 #include <driver/rcinput.h>
 #include <driver/screen_max.h>
 #include <driver/record.h>
