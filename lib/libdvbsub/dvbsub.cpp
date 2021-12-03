@@ -779,7 +779,6 @@ static void* dvbsub_thread(void* /*arg*/)
 					}
 					image = image->next;
 				}
-				fb->getInstance()->blit();
 			}
 			continue;
 		} else {
@@ -788,7 +787,6 @@ static void* dvbsub_thread(void* /*arg*/)
 				clr_x0 = xres;
 				clr_y0 = yres;
 				clr_x1 = clr_y1 = 0;
-				fb->getInstance()->blit();
 			}
 		}
 #endif
