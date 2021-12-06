@@ -256,7 +256,6 @@ int CVfdSetup::showSetup()
 		}
 	}
 
->>>>>>> bf5a87939... - vfd-setup: formatting code using astyle; some manual code nicenings
 	delete vfds;
 	return res;
 }

@@ -392,7 +392,7 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 			case SNeutrinoSettings::ITEM_IMAGEINFO:
 			{
 				keyhelper.get(&key, &icon);
-				menu_item = new CMenuDForwarder(LOCALE_SERVICEMENU_IMAGEINFO, true, NULL, new CImageInfoNI, NULL, key, icon);
+				menu_item = new CMenuDForwarder(LOCALE_SERVICEMENU_IMAGEINFO, true, NULL, new CImageInfo, NULL, key, icon);
 				menu_item->setHint(NEUTRINO_ICON_HINT_IMAGEINFO, LOCALE_MENU_HINT_IMAGEINFO);
 				break;
 			}
@@ -540,13 +540,6 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 				keyhelper.get(&key, &icon, CRCInput::RC_blue);
 				menu_item = new CMenuForwarder(LOCALE_USERMENU_ITEM_ADZAP, true, adzap_active ? g_Locale->getText(LOCALE_OPTIONS_OFF) : NULL, CAdZapMenu::getInstance(), "adzap", key, icon);
 				menu_item->setHint(NEUTRINO_ICON_HINT_ADZAP, adzap_active ? LOCALE_MENU_HINT_ADZAP_ACTIVE : LOCALE_MENU_HINT_ADZAP);
-				break;
-			}
-			case SNeutrinoSettings::ITEM_TESTMENU:
-			{
-				keyhelper.get(&key, &icon);
-				menu_item = new CMenuDForwarder(LOCALE_TESTMENU, true, NULL, new CTestMenu(), NULL, key, icon);
-				// FIXME menu_item->setHint("", NONEXISTANT_LOCALE);
 				break;
 			}
 			case -1: // plugin
