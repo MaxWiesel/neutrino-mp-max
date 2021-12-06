@@ -52,6 +52,7 @@
 #include <blkid/blkid.h>
 
 #include <gui/widget/icons.h>
+#include <gui/widget/menue_options.h>
 #include <gui/widget/stringinput.h>
 #include <gui/widget/msgbox.h>
 #include <gui/widget/hintbox.h>
@@ -62,7 +63,6 @@
 #include <system/settings.h>
 #include <system/debug.h>
 
-#include <mymenu.h>
 #include <driver/screen_max.h>
 #include <driver/record.h>
 #include <driver/display.h>

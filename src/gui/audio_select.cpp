@@ -36,9 +36,9 @@
 
 #include <global.h>
 #include <neutrino.h>
-#include <mymenu.h>
 #include <gui/widget/icons.h>
 #include <gui/widget/menue.h>
+#include <gui/widget/menue_options.h>
 #include <driver/screen_max.h>
 #include <zapit/zapit.h>
 #include <system/helpers.h>

@@ -52,6 +52,7 @@
 #include <gui/lua/luainstance.h>
 #include <gui/lua/lua_video.h>
 #include <gui/screensaver.h>
+#include <gui/widget/menue_options.h>
 #include <driver/screenshot.h>
 #include <driver/volume.h>
 #include <driver/display.h>
@@ -61,8 +62,6 @@
 #include <eitd/edvbstring.h>
 #include <system/helpers.h>
 #include <system/helpers-json.h>
-
-#include <src/mymenu.h>
 
 #include <unistd.h>
 #include <stdlib.h>
