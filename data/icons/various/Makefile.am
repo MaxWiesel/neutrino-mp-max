@@ -15,3 +15,7 @@ install_DATA = \
 	stars_bg.png \
 	tmdb.png \
 	volume.png
+
+# used by testmenu only
+install_DATA += \
+	tux.svg
