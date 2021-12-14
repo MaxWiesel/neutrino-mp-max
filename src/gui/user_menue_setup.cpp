@@ -87,22 +87,25 @@ static keyvals usermenu_items[] =
 	{ SNeutrinoSettings::ITEM_CLOCK,		LOCALE_CLOCK_SWITCH_ON,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_GAMES,		LOCALE_MAINMENU_GAMES,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_SCRIPTS,		LOCALE_MAINMENU_SCRIPTS,		usermenu_show },
+	{ SNeutrinoSettings::ITEM_CAMD_RESET,		LOCALE_CAMD_RESET,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_YOUTUBE,		LOCALE_MOVIEPLAYER_YTPLAYBACK,		usermenu_show },
 	{ SNeutrinoSettings::ITEM_FILEPLAY_VIDEO,	LOCALE_MOVIEPLAYER_FILEPLAYBACK_VIDEO,	usermenu_show },
 	{ SNeutrinoSettings::ITEM_TOOLS,		LOCALE_MAINMENU_TOOLS,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_LUA,			LOCALE_MAINMENU_LUA,			usermenu_show },
+	{ SNeutrinoSettings::ITEM_TUNER_RESTART,	LOCALE_SERVICEMENU_RESTART_TUNER,	usermenu_show },
 	{ SNeutrinoSettings::ITEM_HDDMENU,		LOCALE_HDD_SETTINGS,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_AUDIOPLAY,		LOCALE_AUDIOPLAYER_NAME,		usermenu_show },
 	{ SNeutrinoSettings::ITEM_INETPLAY,		LOCALE_INETRADIO_NAME,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_NETSETTINGS,		LOCALE_MAINSETTINGS_NETWORK,		usermenu_show },
+#ifdef ENABLE_LCD4LINUX
 	{ SNeutrinoSettings::ITEM_LCD4LINUX,		LOCALE_LCD4L_SUPPORT,			usermenu_show },
+#endif
 	{ SNeutrinoSettings::ITEM_SWUPDATE,		LOCALE_SERVICEMENU_UPDATE,		usermenu_show },
 	{ SNeutrinoSettings::ITEM_LIVESTREAM_RESOLUTION, LOCALE_LIVESTREAM_RESOLUTION,		usermenu_show },
 	{ SNeutrinoSettings::ITEM_ADZAP,		LOCALE_USERMENU_ITEM_ADZAP,		usermenu_show },
-	{ SNeutrinoSettings::ITEM_TUNER_RESTART,	LOCALE_SERVICEMENU_RESTART_TUNER,	usermenu_show },
+	{ SNeutrinoSettings::ITEM_TESTMENU,		LOCALE_TESTMENU,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_FILEPLAY_AUDIO,	LOCALE_MOVIEPLAYER_FILEPLAYBACK_AUDIO,	usermenu_show },
 	{ SNeutrinoSettings::ITEM_TIMESHIFT,		LOCALE_RECORDINGMENU_TIMESHIFT,		usermenu_show },
-	{ SNeutrinoSettings::ITEM_CAMD_RESET,		LOCALE_CAMD_RESET,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_MAX,			NONEXISTANT_LOCALE,			usermenu_show }
 };
 
