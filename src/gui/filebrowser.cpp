@@ -667,7 +667,7 @@ bool CFileBrowser::exec(const char * const dirname)
 				ChangeDir(Path);
 			}
 		}
-		else if (msg == CRCInput::RC_home)
+		else if (CNeutrinoApp::getInstance()->backKey(msg))
 		{
 			loop = false;
 		}
@@ -970,7 +970,7 @@ bool CFileBrowser::playlist_manager(CFileList &playlist, unsigned int playing, b
 			m_SMSKeyInput.resetOldKey();
 			paintSMSKey();
 		}
-		if (msg == CRCInput::RC_home)
+		if (CNeutrinoApp::getInstance()->backKey(msg))
 		{
 			loop = false;
 		}
@@ -1126,7 +1126,7 @@ void CFileBrowser::addRecursiveDir(CFileList * re_filelist, std::string rpath, b
 	if (bRootCall) bCancel=false;
 
 	g_RCInput->getMsg_us(&msg, &data, 1);
-	if (msg==CRCInput::RC_home)
+	if (CNeutrinoApp::getInstance()->backKey(msg))
 	{
 		// home key cancel scan
 		bCancel=true;

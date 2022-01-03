@@ -3510,7 +3510,7 @@ void CNeutrinoApp::RealRun()
 			else if (msg == CRCInput::RC_aux)
 				AVInputMode(true);
 			else {
-				if (msg == CRCInput::RC_home)
+				if (CNeutrinoApp::getInstance()->backKey(msg))
 					CVFD::getInstance()->setMode(CVFD::MODE_TVRADIO);
 
 				if (msg != CRCInput::RC_timeout)
@@ -3519,7 +3519,7 @@ void CNeutrinoApp::RealRun()
 		}
 		else {
 			// mode == NeutrinoModes::mode_avinput
-			if (msg == CRCInput::RC_home || msg == CRCInput::RC_aux) {
+			if (backKey(msg) || msg == CRCInput::RC_aux) {
 				if( mode == NeutrinoModes::mode_avinput ) {
 					// AVInput-Mode verlassen
 					AVInputMode(false);
@@ -3737,6 +3737,19 @@ bool CNeutrinoApp::listModeKey(const neutrino_msg_t msg)
 	)
 	{
 		printf("CNeutrinoApp::listModeKey: true\n");
+		return true;
+	}
+	return false;
+}
+
+bool CNeutrinoApp::backKey(const neutrino_msg_t msg)
+{
+	if (
+		   msg == CRCInput::RC_home
+		|| msg == CRCInput::RC_back
+	)
+	{
+		printf("CNeutrinoApp::backKey: true\n");
 		return true;
 	}
 	return false;

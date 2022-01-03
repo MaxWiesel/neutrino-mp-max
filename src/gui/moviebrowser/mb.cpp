@@ -1174,7 +1174,7 @@ int CMovieBrowser::exec(const char* path)
 					hintBox.hide();
 				}
 			}
-			else if (msg == CRCInput::RC_home)
+			else if (CNeutrinoApp::getInstance()->backKey(msg))
 			{
 				loop = false;
 			}
@@ -2188,7 +2188,7 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 			}
 		}
 	}
-	else if (msg == CRCInput::RC_home)
+	else if (CNeutrinoApp::getInstance()->backKey(msg))
 	{
 		if (m_settings.gui == MB_GUI_FILTER)
 			onSetGUIWindow(MB_GUI_MOVIE_INFO);
