@@ -381,11 +381,11 @@ bool CUserMenu::showUserMenu(neutrino_msg_t msg)
 				menu_item->setHint("", LOCALE_MENU_HINT_CLOCK_MODE);
 				break;
 			}
-			case SNeutrinoSettings::ITEM_USER_MENU_22:
+			case SNeutrinoSettings::ITEM_ECMINFO:
 			{
 				keyhelper.get(&key, &icon);
-				// menu_item = new CMenuForwarder(PLACEHOLDER);
-				// menu_item->setHint("", NONEXISTANT_LOCALE);
+				menu_item = new CMenuForwarder(LOCALE_ECMINFO_SHOW, file_size("/tmp/ecm.info"), NULL, neutrino, "ecmInfo", key, icon);
+				// FIXME menu_item->setHint("", NONEXISTANT_LOCALE);
 				break;
 			}
 			case SNeutrinoSettings::ITEM_CAMD_RESET:

@@ -2,7 +2,7 @@ installdir = $(ICONSDIR)
 
 install_DATA = \
 	ci+_green.png \
-	ci+_white.png \
+	ci+_grey.png \
 	dec_card.png \
 	dec_fta.png \
 	dec_int.png \

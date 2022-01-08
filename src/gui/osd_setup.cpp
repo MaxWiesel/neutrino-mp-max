@@ -143,7 +143,8 @@ const SNeutrinoSettings::FONT_TYPES infobar_font_sizes[] =
 	SNeutrinoSettings::FONT_TYPE_INFOBAR_NUMBER,
 	SNeutrinoSettings::FONT_TYPE_INFOBAR_CHANNAME,
 	SNeutrinoSettings::FONT_TYPE_INFOBAR_INFO,
-	SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL
+	SNeutrinoSettings::FONT_TYPE_INFOBAR_SMALL,
+	SNeutrinoSettings::FONT_TYPE_INFOBAR_ECMINFO
 };
 size_t infobar_font_items = sizeof(infobar_font_sizes)/sizeof(infobar_font_sizes[0]);
 
@@ -230,6 +231,7 @@ font_sizes_struct neutrino_font[SNeutrinoSettings::FONT_TYPE_COUNT] =
 	{LOCALE_FONTSIZE_INFOBAR_CHANNAME   ,  30, CNeutrinoFonts::FONT_STYLE_BOLD   , 0},
 	{LOCALE_FONTSIZE_INFOBAR_INFO       ,  20, CNeutrinoFonts::FONT_STYLE_REGULAR, 1},
 	{LOCALE_FONTSIZE_INFOBAR_SMALL      ,  14, CNeutrinoFonts::FONT_STYLE_REGULAR, 1},
+	{LOCALE_FONTSIZE_INFOBAR_ECMINFO    ,  15, CNeutrinoFonts::FONT_STYLE_REGULAR, 0},
 	{LOCALE_FONTSIZE_FILEBROWSER_ITEM   ,  17, CNeutrinoFonts::FONT_STYLE_REGULAR, 1},
 	{LOCALE_FONTSIZE_MENU_HINT          ,  16, CNeutrinoFonts::FONT_STYLE_REGULAR, 0},
 	{LOCALE_FONTSIZE_MOVIEBROWSER_HEAD  ,  15, CNeutrinoFonts::FONT_STYLE_REGULAR, 2},
@@ -1246,6 +1248,16 @@ const CMenuOptionChooser::keyval HDD_STATFS_OPTIONS[HDD_STATFS_OPTION_COUNT] =
 	{ SNeutrinoSettings::HDD_STATFS_RECORDING, LOCALE_HDD_STATFS_RECORDING }
 };
 
+// ecm-Info
+const CMenuOptionChooser::keyval INFOVIEWER_ECMINFO_OPTIONS[] =
+{
+	{ 0, LOCALE_OPTIONS_OFF },
+	{ 1, LOCALE_SETTINGS_POS_TOP_LEFT },
+	{ 2, LOCALE_SETTINGS_POS_TOP_CENTER },
+	{ 3, LOCALE_SETTINGS_POS_TOP_RIGHT }
+};
+#define INFOVIEWER_ECMINFO_OPTION_COUNT (sizeof(INFOVIEWER_ECMINFO_OPTIONS)/sizeof(CMenuOptionChooser::keyval))
+
 // channellogos
 void COsdSetup::showOsdChannellogosSetup(CMenuWidget *menu_channellogos)
 {
@@ -1342,6 +1354,11 @@ void COsdSetup::showOsdInfobarSetup(CMenuWidget *menu_infobar)
 	mc->setHint("", LOCALE_MENU_HINT_INFOBAR_CASYS_FRAME);
 	menu_infobar->addItem(mc);
 	casystemActivate.Add(mc);
+
+	// ecm-Info
+	mc = new CMenuOptionChooser(LOCALE_ECMINFO_SHOW, &g_settings.show_ecm_pos, INFOVIEWER_ECMINFO_OPTIONS, INFOVIEWER_ECMINFO_OPTION_COUNT, true, this);
+	mc->setHint(NEUTRINO_ICON_HINT_IMAGELOGO, LOCALE_MENU_HINT_INFOBAR_ECMINFO);
+	menu_infobar->addItem(mc);
 
 	menu_infobar->addItem(GenericMenuSeparator);
 
@@ -1606,6 +1623,16 @@ bool COsdSetup::changeNotify(const neutrino_locale_t OptionName, void * data)
 		submenu_menus->hide();
 		g_settings.show_menu_hints_line = * (int*) data;
 		return true;
+	}
+	// ecm-Info
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_ECMINFO_SHOW))
+	{
+		printf("g_settings.show_ecm_pos: %d\n", g_settings.show_ecm_pos);
+		if (g_settings.show_ecm_pos == 0)
+			g_settings.show_ecm = 0;
+		else
+			g_settings.show_ecm = 1;
+
 	}
 #ifdef ENABLE_LCD4LINUX
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_CHANNELLIST_SHOW_EVENTLOGO))

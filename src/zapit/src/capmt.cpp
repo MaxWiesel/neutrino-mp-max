@@ -180,6 +180,7 @@ CCamManager::CCamManager()
 	channel_map.clear();
 	tunerno = -1;
 	filter_channels = false;
+	useCI = false;
 }
 
 CCamManager::~CCamManager()
@@ -207,6 +208,7 @@ void CCamManager::StopCam(t_channel_id channel_id, CCam *cam)
 
 bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start, bool force_update)
 {
+	useCI = false;
 	if (IS_WEBCHAN(channel_id))
 		return false;
 
@@ -406,7 +408,7 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 				ci_use_count++;
 		}
 		if (ci_use_count == 0) {
-			INFO("CI: not used, disabling TS\n");
+			INFO("CI: not used, disabling TS");
 			cCA::GetInstance()->SetTS(CA_DVBCI_TS_INPUT_DISABLED);
 		}
 #endif
@@ -434,9 +436,9 @@ bool CCamManager::SetMode(t_channel_id channel_id, enum runmode mode, bool start
 			/* out commented: causes a double send of capmt, the second without needed parameters */
 #if HAVE_CST_HARDWARE
 			if (tunerno >= 0 && tunerno != cDemux::GetSource(cam->getSource())) {
-				INFO("CI: configured tuner %d do not match %d, skip [%s]\n", tunerno, cam->getSource(), channel->getName().c_str());
+				INFO("CI: configured tuner %d do not match %d, skip [%s]", tunerno, cam->getSource(), channel->getName().c_str());
 			} else if (filter_channels && !channel->bUseCI) {
-				INFO("CI: filter enabled, CI not used for [%s]\n", channel->getName().c_str());
+				INFO("CI: filter enabled, CI not used for [%s]", channel->getName().c_str());
 			} else {
 				cam->sendCaPmt(channel->getChannelID(), buffer, len, CA_SLOT_TYPE_CI);
 			}

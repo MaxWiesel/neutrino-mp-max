@@ -106,6 +106,8 @@ CInfoViewer::CInfoViewer ()
 	frameBuffer = CFrameBuffer::getInstance();
 	infoViewerBB = CInfoViewerBB::getInstance();
 
+	ecmInfoBox = NULL;
+	md5_ecmInfo = "0";
 	InfoHeightY = 0;
 	ButtonWidth = 0;
 	ChanNameX = 0;
@@ -702,8 +704,6 @@ void CInfoViewer::check_channellogo_ca_SettingsChange()
 		infoViewerBB->initBBOffset();
 		start();
 	}
-	else
-		infoViewerBB->Init();
 }
 
 void CInfoViewer::showTitle(t_channel_id chid, const bool calledFromNumZap, int epgpos, bool forcePaintButtonBar/*=false*/)
@@ -1153,6 +1153,22 @@ void CInfoViewer::loop(bool show_dot)
 
 		showLivestreamInfo();
 
+		if (msg == CRCInput::RC_help && g_settings.show_ecm_pos)
+		{
+			if (g_settings.show_ecm)
+			{
+				g_settings.show_ecm = 0;
+				ecmInfoBox_hide();
+			}
+			else
+			{
+				g_settings.show_ecm = 1;
+				infoViewerBB->paint_ca_icons(0);
+			}
+			g_RCInput->clearRCMsg();
+			setInfobarTimeout();
+			continue;
+		} else
 #if ENABLE_PIP
 		if ((msg == (neutrino_msg_t) g_settings.key_pip_close) || 
 		    (msg == (neutrino_msg_t) g_settings.key_pip_setup) || 
@@ -1205,10 +1221,6 @@ void CInfoViewer::loop(bool show_dot)
 			if (frameBuffer->getActive())
 			{
 				showSNR ();
-				// doesn't belong here, but easiest way to check for a change ...
-				if (is_visible && showButtonBar)
-					infoViewerBB->paint_ca_icons(0);
-
 				if (timeset)
 				{
 					if (g_settings.infobar_analogclock)
@@ -1224,6 +1236,16 @@ void CInfoViewer::loop(bool show_dot)
 
 				infoViewerBB->showIcon_16_9();
 				//infoViewerBB->paint_ca_icons(0);
+				if(file_exists("/tmp/ecm.info"))
+				{
+					std::string md5_tmp = filehash((char *)"/tmp/ecm.info");
+					//printf("CInfoViewer::loop() ecm.info.tmp = %s\nCInfoViewer::loop() ecm.info     = %s\n",md5_ecmInfo.c_str(),md5_tmp.c_str());
+					if (md5_ecmInfo != md5_tmp)
+					{
+						puts("CInfoViewer::loop() CA reload");
+						infoViewerBB->paint_ca_icons(0);
+					}
+				}
 				infoViewerBB->showIcon_Resolution();
 			}
 		} else if ((msg == NeutrinoMessages::EVT_RECORDMODE) && 
@@ -2120,6 +2142,10 @@ void CInfoViewer::killTitle()
 		is_visible = false;
 		infoViewerBB->is_visible = false;
 
+		// hide ecm.info
+		if (g_settings.show_ecm)
+			ecmInfoBox_hide();
+
 		if (!(zap_mode & IV_MODE_VIRTUAL_ZAP))
 		{
 			if (infobar_txt)
@@ -2391,6 +2417,85 @@ void CInfoViewer::ResetModules()
 	if (analogclock_buf) {
 		delete analogclock_buf;
 		analogclock_buf = NULL;
+	}
+}
+
+void CInfoViewer::ecmInfoBox_show(const char * txt, int w, int h, Font * font)
+{
+	if (ecmInfoBox != NULL)
+		ecmInfoBox_hide();
+
+	// manipulate title font
+	int storedSize = g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->getSize();
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->setSize((int)(font->getSize() * 150 / 100));
+
+	//create new window
+	ecmInfoBox = new CComponentsWindowMax(LOCALE_ECMINFO, NEUTRINO_ICON_INFO);
+
+	//calc available width (width of Infobar)
+	int max_w = BoxEndX - BoxStartX;
+	//calc available height (space between Top and Infobar)
+	int max_h = BoxStartY - frameBuffer->getScreenY() - 2*OFFSET_SHADOW;
+
+	//get window header object
+	CComponentsHeader* winheader = ecmInfoBox->getHeaderObject();
+	int h_header = winheader->getHeight();
+
+	//remove window footer object
+	ecmInfoBox->showFooter(false);
+
+	//set new window dimensions
+	int h_offset = OFFSET_INNER_SMALL;
+	int w_offset = OFFSET_INNER_MID;
+	ecmInfoBox->setWidth(std::min(max_w, w + 2*w_offset));
+	ecmInfoBox->setHeight(std::min(max_h, h_header + h + 2*h_offset));
+	ecmInfoBox->Refresh();
+
+	//calc window position
+	int pos_x;
+	switch (g_settings.show_ecm_pos)
+	{
+		case 3: // right
+			pos_x = BoxEndX - ecmInfoBox->getWidth();
+			break;
+		case 1: // left
+			pos_x = BoxStartX;
+			break;
+		case 2: // center
+		default:
+			pos_x = frameBuffer->getScreenX() + (max_w/2) - (ecmInfoBox->getWidth()/2);
+			break;
+	}
+
+	int pos_y = frameBuffer->getScreenY() + (max_h/2) - (ecmInfoBox->getHeight()/2);
+	ecmInfoBox->setXPos(pos_x);
+	ecmInfoBox->setYPos(pos_y);
+
+	//get window body object
+	CComponentsForm* winbody = ecmInfoBox->getBodyObject();
+
+	// create textbox object
+	CComponentsText* ecmText = new CComponentsText(0, 0, winbody->getWidth(), winbody->getHeight());
+	ecmText->setTextBorderWidth(w_offset, h_offset);
+	ecmText->setText(txt, CTextBox::TOP | CTextBox::NO_AUTO_LINEBREAK, font);
+	ecmText->setCorner(RADIUS_LARGE, CORNER_BOTTOM);
+
+	// add textbox object to window
+	ecmInfoBox->addWindowItem(ecmText);
+	ecmInfoBox->enableShadow(CC_SHADOW_ON);
+	ecmInfoBox->paint(CC_SAVE_SCREEN_NO);
+
+	// restore title font
+	g_Font[SNeutrinoSettings::FONT_TYPE_MENU_TITLE]->setSize(storedSize);
+}
+
+void CInfoViewer::ecmInfoBox_hide()
+{
+	if (ecmInfoBox != NULL)
+	{
+		ecmInfoBox->kill();
+		delete ecmInfoBox;
+		ecmInfoBox = NULL;
 	}
 }
 

@@ -1423,6 +1423,9 @@ void CNeutrinoApp::saveSetup(const char *fname)
 	configfile.setInt32("lcd4l_convert", g_settings.lcd4l_convert);
 #endif
 
+	configfile.setInt32("show_ecm", g_settings.show_ecm);
+	configfile.setInt32("show_ecm_pos", g_settings.show_ecm_pos);
+
 	// video
 	configfile.setInt32("video_Mode", g_settings.video_Mode);
 	configfile.setInt32("analog_mode1", g_settings.analog_mode1);
@@ -5246,6 +5249,35 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 			printf("[neutrino.cpp] executing failed\n");
 
 		hint.hide();
+
+		return menu_return::RETURN_EXIT_ALL;
+	}
+	else if (actionKey == "ecmInfo")
+	{
+		char *buffer = NULL;
+		ssize_t read;
+		size_t len;
+		FILE *fh;
+
+		CFileHelpers fhlp;
+		if (fhlp.copyFile("/tmp/ecm.info", "/tmp/ecm.info.tmp", 0644))
+		{
+			if ((fh = fopen("/tmp/ecm.info.tmp", "r")))
+			{
+				std::string str = "";
+				while ((read = getline(&buffer, &len, fh)) != -1)
+				{
+					str += buffer;
+				}
+				fclose(fh);
+				remove("/tmp/ecm.info.tmp");
+				if(buffer)
+					free(buffer);
+				ShowHint(LOCALE_ECMINFO, str.c_str(), 450, 20);
+			}
+		}
+		else
+			ShowHint(LOCALE_ECMINFO, LOCALE_ECMINFO_NULL, 450, 20);
 
 		return menu_return::RETURN_EXIT_ALL;
 	}

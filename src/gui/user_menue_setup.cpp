@@ -86,7 +86,7 @@ static keyvals usermenu_items[] =
 	{ SNeutrinoSettings::ITEM_RCLOCK,		LOCALE_RCLOCK_TITLE,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_CAM,			LOCALE_CI_SETTINGS,			usermenu_show_cam },
 	{ SNeutrinoSettings::ITEM_CLOCK,		LOCALE_CLOCK_SWITCH_ON,			usermenu_show },
-	{ SNeutrinoSettings::ITEM_USER_MENU_22,		NONEXISTANT_LOCALE,			usermenu_hide },
+	{ SNeutrinoSettings::ITEM_ECMINFO,		LOCALE_ECMINFO_SHOW,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_CAMD_RESET,		LOCALE_CAMD_RESET,			usermenu_show },
 	{ SNeutrinoSettings::ITEM_USER_MENU_24,		NONEXISTANT_LOCALE,			usermenu_hide },
 	{ SNeutrinoSettings::ITEM_YOUTUBE,		LOCALE_MOVIEPLAYER_YTPLAYBACK,		usermenu_show },

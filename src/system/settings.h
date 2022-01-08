@@ -323,6 +323,9 @@ struct SNeutrinoSettings
 	int lcd4l_convert;
 #endif
 
+	int show_ecm;
+	int show_ecm_pos;
+
 	// video
 	int video_Mode;
 	int analog_mode1;
@@ -848,6 +851,7 @@ struct SNeutrinoSettings
 		FONT_TYPE_INFOBAR_CHANNAME,
 		FONT_TYPE_INFOBAR_INFO,
 		FONT_TYPE_INFOBAR_SMALL,
+		FONT_TYPE_INFOBAR_ECMINFO,
 		FONT_TYPE_FILEBROWSER_ITEM,
 		FONT_TYPE_MENU_HINT,
 		FONT_TYPE_MOVIEBROWSER_HEAD,
@@ -1113,7 +1117,7 @@ struct SNeutrinoSettings
 		ITEM_CLOCK = 19,
 		ITEM_GAMES = 20,
 		ITEM_SCRIPTS = 21,
-		ITEM_USER_MENU_22 = 22,
+		ITEM_ECMINFO = 22,
 		ITEM_CAMD_RESET = 23,
 		ITEM_USER_MENU_24 = 24,
 		ITEM_YOUTUBE = 25,

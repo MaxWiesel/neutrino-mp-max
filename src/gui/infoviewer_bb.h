@@ -86,12 +86,10 @@ class CInfoViewerBB
 		enum CAM_DECODE_NUM {UNKNOWN, NA, FTA, LOCAL, CARD, REMOTE};
 		void paint_cam_icons();
 		unsigned short int decode;
-		void check_emupid();
-		void check_ecmInfo(CaIdVector &ecm_caids);
-		void check_ecmInfo_GB(CaIdVector &ecm_caids);
-		bool ecm_OK;
+		int DecEndx;
+		int parse_ecmInfo(const char * file);
+		int check_ecmInfo();
 		bool camCI;
-		bool useCI;
 
 		typedef struct
 		{
