@@ -372,10 +372,10 @@ void CImageInfo::InitInfoData()
 	v_info.push_back({g_Locale->getText(LOCALE_IMAGEINFO_VCS),	VCS});
 #else
 	v_info.push_back({g_Locale->getText(LOCALE_IMAGEINFO_VCS),	PACKAGE_VERSION_GIT});
-#endif
 
 	//stb info
 	initHalInfo();
+#endif
 
 	//internal api versions
 	initAPIVersions();

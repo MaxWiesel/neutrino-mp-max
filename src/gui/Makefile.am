@@ -3,19 +3,6 @@ AM_CPPFLAGS = -fno-rtti -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS
 else
 AM_CPPFLAGS = -fno-rtti -fno-exceptions -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS
 endif
-BUILT_SOURCES = version.h
-version.h:
-	@rm -f $@; \
-	echo '#define BUILT_DATE "'`date`'"' > $@
-	@if test -d $(top_srcdir)/.git ; then \
-		pushd $(top_srcdir) ; \
-		GITBRANCH=$$(git rev-parse --abbrev-ref HEAD) ; \
-		GITDESCRIBE=$$(git describe --always --tags --dirty || echo 'VCS failed') ; \
-		popd ; \
-		echo '#define VCS "'$${GITDESCRIBE} [$${GITBRANCH}]'"' >> $@ ; \
-	fi
-noinst_HEADERS = version.h
-.PHONY: version.h
 
 SUBDIRS = bedit components moviebrowser widget
 
