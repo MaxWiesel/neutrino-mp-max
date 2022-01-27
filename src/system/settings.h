@@ -337,6 +337,7 @@ struct SNeutrinoSettings
 	int lcd4l_brightness;
 	int lcd4l_brightness_standby;
 	int lcd4l_convert;
+	int lcd4l_screenshots;
 #endif
 
 	int show_ecm;

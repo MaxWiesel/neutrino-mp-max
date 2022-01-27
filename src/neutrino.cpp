@@ -406,6 +406,7 @@ int CNeutrinoApp::loadSetup(const char *fname)
 	g_settings.lcd4l_brightness = configfile.getInt32("lcd4l_brightness", 7);
 	g_settings.lcd4l_brightness_standby = configfile.getInt32("lcd4l_brightness_standby", 3);
 	g_settings.lcd4l_convert = configfile.getInt32("lcd4l_convert", 1);
+	g_settings.lcd4l_screenshots = configfile.getInt32("lcd4l_screenshots", 0);
 #endif
 
 	// video
@@ -1429,6 +1430,7 @@ void CNeutrinoApp::saveSetup(const char *fname)
 	configfile.setInt32("lcd4l_brightness", g_settings.lcd4l_brightness);
 	configfile.setInt32("lcd4l_brightness_standby", g_settings.lcd4l_brightness_standby);
 	configfile.setInt32("lcd4l_convert", g_settings.lcd4l_convert);
+	configfile.setInt32("lcd4l_screenshots", g_settings.lcd4l_screenshots);
 #endif
 
 	configfile.setInt32("show_ecm", g_settings.show_ecm);
