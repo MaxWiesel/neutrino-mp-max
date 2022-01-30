@@ -820,7 +820,7 @@ struct SNeutrinoSettings
 	// fonts
 	std::string font_file;
 	std::string sub_font_file;
-	std::string ttx_font_file;
+	std::string font_file_monospace;
 
 	int font_scaling_x;
 	int font_scaling_y;

@@ -345,7 +345,7 @@ static SNeutrinoSettings::usermenu_t usermenu_default[] = {
 *          CNeutrinoApp -  loadSetup, load the application-settings                   *
 **************************************************************************************/
 
-std::string ttx_font_file = "";
+std::string font_file_monospace = "";
 std::string *sub_font_file;
 int sub_font_size;
 
@@ -1054,13 +1054,13 @@ int CNeutrinoApp::loadSetup(const char *fname)
 
 	// fonts
 	g_settings.font_file = configfile.getString("font_file", FONTDIR"/neutrino.ttf");
-	g_settings.ttx_font_file = configfile.getString("ttx_font_file", FONTDIR"/tuxtxt.ttf");
-	if (access(g_settings.ttx_font_file, F_OK) != 0)
+	g_settings.font_file_monospace = configfile.getString("font_file_monospace", FONTDIR"/tuxtxt.ttf");
+	if (access(g_settings.font_file_monospace, F_OK) != 0)
 	{
-		g_settings.ttx_font_file = FONTDIR "/tuxtxt.ttf";
+		g_settings.font_file_monospace = FONTDIR "/tuxtxt.ttf";
 		configfile.setUnknownKeyQueryedFlag(true); // force saving config
 	}
-	ttx_font_file = g_settings.ttx_font_file.c_str();
+	font_file_monospace = g_settings.font_file_monospace.c_str();
 
 	g_settings.sub_font_file = configfile.getString("sub_font_file", FONTDIR"/neutrino.ttf");
 	sub_font_file = &g_settings.sub_font_file;
@@ -1864,7 +1864,7 @@ void CNeutrinoApp::saveSetup(const char *fname)
 
 	// fonts
 	configfile.setString("font_file", g_settings.font_file);
-	configfile.setString("ttx_font_file", g_settings.ttx_font_file);
+	configfile.setString("font_file_monospace", g_settings.font_file_monospace);
 	configfile.setString("sub_font_file", g_settings.sub_font_file);
 
 	configfile.setInt32("font_scaling_x", g_settings.font_scaling_x);
