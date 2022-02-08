@@ -65,9 +65,10 @@ extern CPictureViewer *g_PicViewer;
 
 #define LCD_DATADIR		"/tmp/lcd/"
 
+#define LCD_ICONSDIR		LCD4L_ICONSDIR
 #define ICONSEXT		".png"
 
-#define LOGO_DUMMY		ICONSDIR "blank.png"
+#define LOGO_DUMMY		LCD_ICONSDIR "blank.png"
 
 #define BRIGHTNESS		LCD_DATADIR "brightness"
 #define BRIGHTNESS_STANDBY	LCD_DATADIR "brightness_standby"
@@ -82,7 +83,6 @@ extern CPictureViewer *g_PicViewer;
 #define TUNER_BER		LCD_DATADIR "tuner_ber"
 #define VOLUME			LCD_DATADIR "volume"
 #define MODE_REC		LCD_DATADIR "mode_rec"
-#define MODE_REC_ICON		LCD_DATADIR "mode_rec_icon"
 #define MODE_TSHIFT		LCD_DATADIR "mode_tshift"
 #define MODE_TIMER		LCD_DATADIR "mode_timer"
 #define MODE_ECM		LCD_DATADIR "mode_ecm"
@@ -103,7 +103,7 @@ extern CPictureViewer *g_PicViewer;
 
 #define MENU			LCD_DATADIR "menu"
 
-#define LCD_FONT			LCD_DATADIR "font"
+#define LCD_FONT		LCD_DATADIR "font"
 #define FGCOLOR			LCD_DATADIR "fgcolor"
 #define BGCOLOR			LCD_DATADIR "bgcolor"
 
@@ -255,14 +255,14 @@ int CLCD4l::GetMaxBrightness()
 
 	switch (g_settings.lcd4l_display_type)
 	{
-		case SAMSUNG800x480:
-		case SAMSUNG800x600:
-		case SAMSUNG1024x600:
+		case SPF800x480:
+		case SPF800x600:
+		case SPF1024x600:
 		case PNG:
 		case VUPLUS4K480x320:
 			max_brightness = 10;
 			break;
-		case PEARL320x240:
+		case DPF320x240:
 		default:
 			max_brightness = 7;
 			break;
@@ -474,7 +474,8 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 
 	int x_res, y_res, framerate;
 	if (videoDecoder)
-	{	// Hack: That should not happen, but while shutting down there
+	{
+		// Hack: That should not happen, but while shutting down there
 		// could be a null pointer and this can lead to a crash.
 		// This behavior was observed with LeakSanitizer on pc hardware.
 		videoDecoder->getPictureInfo(x_res, y_res, framerate);
@@ -845,13 +846,13 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 
 		switch (g_settings.lcd4l_display_type)
 		{
-			case SAMSUNG800x480:
+			case SPF800x480:
 				DisplayType = "Samsung800x480_";
 				break;
-			case SAMSUNG800x600:
+			case SPF800x600:
 				DisplayType = "Samsung800x600_";
 				break;
-			case SAMSUNG1024x600:
+			case SPF1024x600:
 				DisplayType = "Samsung1024x600_";
 				break;
 			case PNG:
@@ -862,7 +863,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 				DisplayType = "VUPLUS4K_";
 				break;
 #endif
-			case PEARL320x240:
+			case DPF320x240:
 			default:
 				DisplayType = "Pearl_";
 				break;
@@ -1218,7 +1219,7 @@ bool CLCD4l::WriteFile(const char *file, std::string content, bool convert)
 		strReplace(content, "Ä", "\xc4\0");
 		strReplace(content, "Ö", "\xd6\0");
 		strReplace(content, "Ü", "\xdc\0");
-		if (g_settings.lcd4l_display_type == PEARL320x240)
+		if (g_settings.lcd4l_display_type == DPF320x240)
 			strReplace(content, "ß", "\xe2\0");
 
 		strReplace(content, "Ą", "\x41\0");
