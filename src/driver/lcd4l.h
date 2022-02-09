@@ -48,7 +48,7 @@ class CLCD4l
 			DPF320x240	= 0,
 			SPF800x480	= 1,
 			SPF800x600	= 2,
-			SPF1024x600	= 3
+			SPF1024x600	= 3,
 			PNG		= 4,
 			VUPLUS4K480x320	= 5
 		};
