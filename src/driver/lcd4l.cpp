@@ -860,11 +860,19 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 				DisplayRes = "1024x600";
 				break;
 			case PNG:
-				DisplayType = "PNG_";
+				DisplayDriver = "PNG";
+				DisplayRes = "800x480";
 				break;
-#if BOXMODEL_VUPLUS_ARM
+#if BOXMODEL_VUSOLO4K || BOXMODEL_VUDUO4K || BOXMODEL_VUUNO4KSE || BOXMODEL_VUUNO4K
 			case VUPLUS4K480x320:
-				DisplayType = "VUPLUS4K_";
+				DisplayDriver = "VUPLUS4K";
+				DisplayRes = "480x320";
+				break;
+#endif
+#if BOXMODEL_VUULTIMO4K
+			case VUPLUS4K800x480:
+				DisplayDriver = "VUPLUS4K";
+				DisplayRes = "800x480";
 				break;
 #endif
 			case DPF320x240:
