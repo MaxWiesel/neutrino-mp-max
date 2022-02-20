@@ -711,8 +711,6 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		int dummy;
 		int ModeLogo = 0;
 
-		int ModeStandby	= 0;
-
 		if (m_ModeChannel)
 		{
 			if (m_ModeChannel > 1)
@@ -808,7 +806,6 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		else if (parseID == NeutrinoModes::mode_standby)
 		{
 			Service = "STANDBY";
-			ModeStandby = 1;
 		}
 
 		/* --- */
@@ -889,7 +886,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 
 		std::string DisplayMode;
 
-		if (ModeStandby)
+		if (m_Mode == NeutrinoModes::mode_standby)
 		{
 			DisplayMode = "standby";
 		}
