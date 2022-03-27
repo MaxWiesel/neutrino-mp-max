@@ -44,7 +44,6 @@ extern "C" {
 #include <libavutil/opt.h>
 #include <libavutil/samplefmt.h>
 #include <libswresample/swresample.h>
-#include <libavcodec/avcodec.h>
 }
 
 #define	av_free_packet av_packet_unref
