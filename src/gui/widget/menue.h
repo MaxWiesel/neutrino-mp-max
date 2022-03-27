@@ -654,6 +654,7 @@ class CMenuWidget : public CMenuTarget, public CComponentsSignals
 		void initSelectable();
 		int getSelected()const { return selected; };
 		void move(int xoff, int yoff);
+		void setPos(int X, int Y);
 		int getHeight() {calcSize(); return full_height;}
 		int getFullWidth() {calcSize(); return full_width;}
 		int getWidth() {calcSize(); return full_width - DETAILSLINE_WIDTH;}
@@ -672,7 +673,7 @@ class CMenuWidget : public CMenuTarget, public CComponentsSignals
 			MENU_POS_BOTTOM_LEFT	,
 			MENU_POS_BOTTOM_RIGHT	,
 
-			MENU_POS_PRESET
+			MENU_POS_CUSTOM
 		};
 		void addKey(neutrino_msg_t key, CMenuTarget *menue, const std::string &action);
 		void setFooter(const struct button_label *_fbutton_label, const int _fbutton_count, bool repaint = false);
