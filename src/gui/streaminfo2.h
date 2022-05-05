@@ -1,7 +1,6 @@
 /*
 	Neutrino-GUI  -   DBoxII-Project
 
-
 	License: GPL
 
 	This program is free software; you can redistribute it and/or modify
@@ -18,7 +17,6 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
-
 
 #ifndef __streaminfo2__
 #define __streaminfo2__
@@ -118,7 +116,7 @@ class CStreamInfo2 : public CMenuTarget
 
 		void paint(int mode);
 		void paint_techinfo(int x, int y);
-		void paintCASystem(int xpos, int ypos);
+		void paintCASystem(int xpos, int ypos, bool fake = false);
 		void paint_signal_fe_box(int x, int y, int w, int h);
 		void paint_signal_fe(struct bitrate rate, struct feSignal s);
 		int y_signal_fe(unsigned long value, unsigned long max_range, int max_y);
@@ -139,4 +137,3 @@ class CStreamInfo2 : public CMenuTarget
 		int readPacket(uint8_t *buf, int buf_size);
 };
 #endif
-

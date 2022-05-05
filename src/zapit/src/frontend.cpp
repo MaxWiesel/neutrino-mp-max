@@ -301,7 +301,7 @@ void CFrontend::getFEInfo(void)
 				fe_can_multistream = info.caps & FE_CAN_MULTISTREAM;
 				if (fe_can_multistream) {
 					deliverySystemMask |= DVB_S2X;
-					printf("[fe%d/%d] add delivery system DVB-S2X (delivery_system: %d / Multistream: %s)\n", adapter, fenumber, (fe_delivery_system_t)prop[0].u.buffer.data[i], fe_can_multistream ? "yes" :"no");					
+					printf("[fe%d/%d] add delivery system DVB-S2X (delivery_system: %d / Multistream: %s)\n", adapter, fenumber, (fe_delivery_system_t)prop[0].u.buffer.data[i], fe_can_multistream ? "yes" :"no");
 				}
 				break;
 			case SYS_DTMB:
