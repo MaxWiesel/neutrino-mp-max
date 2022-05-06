@@ -1209,8 +1209,8 @@ int CNeutrinoApp::loadSetup(const char *fname)
 	g_settings.channellist_displaymode = DISPLAY_MODE_NOW;
 
 	g_settings.channellist_additional = configfile.getInt32("channellist_additional", 1); // default no minitv
-	g_settings.channellist_epgtext_align_right = configfile.getBool("channellist_epgtext_align_right", false);
-	g_settings.channellist_foot = configfile.getInt32("channellist_foot", 0); // default transponder data
+	g_settings.channellist_epgtext_alignment = configfile.getInt32("channellist_epgtext_alignment", EPGTEXT_ALIGN_LEFT_MIDDLE);
+	g_settings.channellist_foot = configfile.getInt32("channellist_foot", 1); // default next Event
 	g_settings.channellist_new_zap_mode = configfile.getInt32("channellist_new_zap_mode", 0);
 	g_settings.channellist_numeric_adjust = configfile.getInt32("channellist_numeric_adjust", 0);
 	g_settings.channellist_show_channellogo = configfile.getInt32("channellist_show_channellogo", CCHeaderTypes::CC_LOGO_RIGHT);
@@ -1993,7 +1993,7 @@ void CNeutrinoApp::saveSetup(const char *fname)
 
 	// channellist
 	configfile.setInt32("channellist_additional", g_settings.channellist_additional);
-	configfile.setBool("channellist_epgtext_align_right", g_settings.channellist_epgtext_align_right);
+	configfile.setInt32("channellist_epgtext_alignment", g_settings.channellist_epgtext_alignment);
 	configfile.setInt32("channellist_foot", g_settings.channellist_foot);
 	configfile.setInt32("channellist_new_zap_mode", g_settings.channellist_new_zap_mode);
 	configfile.setInt32("channellist_numeric_adjust", g_settings.channellist_numeric_adjust);
