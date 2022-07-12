@@ -1429,7 +1429,7 @@ int CChannelList::numericZap(int key)
 			// do nothing
 		}
 		else if (CRCInput::isNumeric(msg)) {
-			if (pos == 4) {
+			if (pos == (int) maxchansize) {
 				chn = 0;
 				pos = 1;
 			} else {
