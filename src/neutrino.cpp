@@ -4544,7 +4544,8 @@ void CNeutrinoApp::ExitRun(int exit_code)
 	printf("[neutrino] hw_caps->can_shutdown: %d\n", g_info.hw_caps->can_shutdown);
 
 #ifdef ENABLE_LCD4LINUX
-	CLCD4l::getInstance()->StopLCD4l();
+	if (g_settings.lcd4l_support)
+		CLCD4l::getInstance()->StopLCD4l();
 #endif
 
 	if (SDTreloadChannels)
@@ -5320,7 +5321,8 @@ int CNeutrinoApp::exec(CMenuTarget* parent, const std::string & actionKey)
 			hint->paint();
 
 #ifdef ENABLE_LCD4LINUX
-			CLCD4l::getInstance()->StopLCD4l();
+			if (g_settings.lcd4l_support)
+				CLCD4l::getInstance()->StopLCD4l();
 #endif
 
 			saveSetup(NEUTRINO_SETTINGS_FILE);
@@ -5433,6 +5435,11 @@ void stop_daemons(bool stopall, bool for_flash)
 	tuxtxt_stop();
 	tuxtxt_close();
 
+#ifdef ENABLE_LCD4LINUX
+	if (g_settings.lcd4l_support)
+		CLCD4l::getInstance()->StopLCD4l();
+	delete CLCD4l::getInstance();
+#endif
 #ifdef ENABLE_GRAPHLCD
 	cGLCD::Exit();
 #endif
@@ -5516,10 +5523,7 @@ void sighandler (int signum)
 	switch (signum) {
 	case SIGTERM:
 	case SIGINT:
-#ifdef ENABLE_LCD4LINUX
-		CLCD4l::getInstance()->StopLCD4l();
-		delete CLCD4l::getInstance();
-#endif
+		CVFD::getInstance()->ShowText("Exiting ...");
 		delete cHddStat::getInstance();
 		delete CRecordManager::getInstance();
 		//CNeutrinoApp::getInstance()->saveSetup(NEUTRINO_SETTINGS_FILE);
