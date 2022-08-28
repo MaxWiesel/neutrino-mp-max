@@ -2859,6 +2859,7 @@ const char * locale_real_names[] =
 	"tunersetup.hybrid",
 	"tunersetup.mode",
 	"tunersetup.power",
+	"tunersetup.sat",
 	"tunersetup.terr",
 	"unicable.lnb",
 	"unicable.pin",
