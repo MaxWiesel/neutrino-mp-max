@@ -421,7 +421,7 @@ live.timer-sync.status=Status
 
 # ===== INFO
 info.help=Hilfe
-info.About=&uuml;ber
+info.about=&Uuml;ber
 info.check_for_updates=Auf Updates pr&uuml;fen
 info.your_version=Deine Version
 info.actual_version=Aktuelle Version

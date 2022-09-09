@@ -49,4 +49,3 @@ function do_submit() {
 </body>
 </html>
 {=include-block:Y_Blocks.txt;management_check_bottom=}
-
