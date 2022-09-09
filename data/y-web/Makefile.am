@@ -12,6 +12,7 @@ install_DATA =	channels.js \
 		Y_Baselib.js \
 		Y_blank.htm \
 		Y_Blocks.txt \
+		Y_Blocks_Neutrino.txt \
 		Y_Boxcontrol_Bouquet_Editor_Edit.yhtm \
 		Y_Boxcontrol_Bouquet_Editor_Main.yhtm \
 		Y_Boxcontrol_Bouquetlist.yhtm \
@@ -36,7 +37,6 @@ install_DATA =	channels.js \
 		Y_Live_EPG.yhtm \
 		Y_Main.css \
 		Y_Menue.yhtm \
-		Y_neutrino_Blocks.txt \
 		Y_Refresh.yhtm \
 		Y_Settings_automount_liste.yhtm \
 		Y_Settings_automount.yhtm \
@@ -77,9 +77,9 @@ install_DATA =	channels.js \
 # file manager
 install_DATA +=	accordion.js \
 		effects.js \
+		Y_Blocks_Filemgr.txt \
 		Y_Filemgr.yhtm \
-		Y_Filemgr_Edit.yhtm \
-		Y_Filemgr_blocks.txt
+		Y_Filemgr_Edit.yhtm
 
 install_DATA +=	lcd4linux.html \
 		Y_Tools_m3uConvert.yhtm
