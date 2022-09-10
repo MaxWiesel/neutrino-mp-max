@@ -7,7 +7,7 @@ install_DATA =	accept.png \
 		arrowright.png \
 		arrowup.png \
 		audiobar.png \
-		blank.gif \
+		blank.png \
 		check_green.png \
 		comment.png \
 		cross.png \
