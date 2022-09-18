@@ -3,7 +3,7 @@ SUBDIRS = images scripts languages styles
 installdir = $(PRIVATE_HTTPDDIR)
 
 install_DATA =	channels.js \
-		extentions.txt \
+		extensions.txt \
 		favicon.ico \
 		index.html \
 		prototype.js \
