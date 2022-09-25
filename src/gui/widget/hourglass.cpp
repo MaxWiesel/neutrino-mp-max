@@ -156,6 +156,8 @@ CHourGlassProc::CHourGlassProc(	const int x_pos,
 
 void CHourGlassProc::paint(const bool &do_save_bg)
 {
+	if (g_settings.theme.hourglass_pos)
+		setXPos(CFrameBuffer::getInstance()->getScreenWidth() - getWidth() - OFFSET_INNER_MID);
 	CHourGlass::paint(do_save_bg);
 }
 
