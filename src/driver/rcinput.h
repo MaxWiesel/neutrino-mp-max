@@ -204,6 +204,8 @@ class CRCInput
 #if BOXMODEL_HD51 || BOXMODEL_HD60 || BOXMODEL_HD61 || BOXMODEL_BRE2ZE4K || BOXMODEL_H7
 			RC_playpause_long = KEY_PLAYPAUSE_LONG,
 #endif
+			RC_touchpad_toggle = KEY_TOUCHPAD_TOGGLE,
+			RC_vod		= KEY_VOD,
 
 			RC_f1		= KEY_F1,
 			RC_f2		= KEY_F2,

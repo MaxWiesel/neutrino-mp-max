@@ -1737,6 +1737,10 @@ const char * CRCInput::getSpecialKeyName(const unsigned int key)
 #endif
 			case RC_pvr:
 				return "pvr";
+			case RC_touchpad_toggle:
+				return "touchpad toggle";
+			case RC_vod:
+				return "vod";
 			case RC_f1:
 				return "f1";
 			case RC_f2:
