@@ -759,6 +759,11 @@ struct SNeutrinoSettings
 	std::string plugins_script;
 	std::string plugins_tool;
 
+	// streaming;
+	int streaming_ecmmode;
+	int streaming_decryptmode;
+	int streaming_port;
+
 	// default plugin for movieplayer
 	std::string movieplayer_plugin;
 
