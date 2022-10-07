@@ -3395,6 +3395,7 @@ void CControlAPI::xmltvm3uCGI(CyhookHandler *hh)
 
 	// build url
 	std::string url = host;
+	/* strip off optional custom port */
 	if (url.rfind(":") != 4)
 		url = url.substr(0, url.rfind(":")); // strip off optional custom port
 	url += ":";
@@ -3450,6 +3451,7 @@ void CControlAPI::xmltvlistCGI(CyhookHandler *hh)
 	std::vector<std::string>::iterator it;
 	std::vector<std::string> url_list;
 	std::string tmp;
+	std::string::size_type i = 0;
 
 	if (!hh->ParamList["webtv"].empty())
 	{
