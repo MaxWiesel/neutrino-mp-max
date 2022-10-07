@@ -3397,7 +3397,9 @@ void CControlAPI::xmltvm3uCGI(CyhookHandler *hh)
 	std::string url = host;
 	if (url.rfind(":") != 4)
 		url = url.substr(0, url.rfind(":")); // strip off optional custom port
-	url += ":31339/id=";
+	url += ":";
+	url += std::to_string(g_settings.streaming_port);
+	url += "/id=";
 
 	for (unsigned int i = 0; i < g_bouquetManager->Bouquets.size(); i++)
 	{
@@ -3506,73 +3508,6 @@ void CControlAPI::xmltvlistCGI(CyhookHandler *hh)
 	hh->SendOk();
 }
 //-------------------------------------------------------------------------
-#if 0
-// audio_no : (optional) audio channel
-// host : (optional) ip of dbox
-void CControlAPI::build_live_url(CyhookHandler *hh)
-{
-	std::string xpids;
-	int mode = NeutrinoAPI->Zapit->getMode();
-
-	if ( mode == CZapitClient::MODE_TV)
-	{
-		CZapitClient::responseGetPIDs pids;
-		int apid=0,apid_no=0,apid_idx=0;
-		pids.PIDs.vpid=0;
-
-		if(!hh->ParamList["audio_no"].empty())
-			apid_no = atoi(hh->ParamList["audio_no"].c_str());
-		NeutrinoAPI->Zapit->getPIDS(pids);
-
-		if( apid_no < (int)pids.APIDs.size())
-			apid_idx=apid_no;
-		if(!pids.APIDs.empty())
-			apid = pids.APIDs[apid_idx].pid;
-		xpids = string_printf("0x%04x,0x%04x,0x%04x",pids.PIDs.pmtpid,pids.PIDs.vpid,apid);
-		if (pids.PIDs.pcrpid != pids.PIDs.vpid)
-			xpids += string_printf(",0x%04x", pids.PIDs.pcrpid);
-	}
-	else if ( mode == CZapitClient::MODE_RADIO)
-	{
-		CZapitClient::responseGetPIDs pids;
-		int apid=0;
-
-		NeutrinoAPI->Zapit->getPIDS(pids);
-		if(!pids.APIDs.empty())
-			apid = pids.APIDs[0].pid;
-
-		//xpids = string_printf("0x%04x",apid);
-		xpids = string_printf("0x%04x,0x%04x",pids.PIDs.pmtpid,apid);
-	}
-	else
-		hh->SendError();
-	// build url
-	std::string url = "";
-	if(!hh->ParamList["host"].empty())
-		url = "http://"+hh->ParamList["host"];
-	else
-		url = "http://"+hh->HeaderList["Host"];
-	/* strip off optional custom port */
-	if (url.rfind(":") != 4)
-		url = url.substr(0, url.rfind(":"));
-
-	//url += (mode == CZapitClient::MODE_TV) ? ":31339/0," : ":31338/";
-	url += ":31339/0,";
-	url += xpids;
-
-	// response url
-	if(!hh->ParamList["vlc_link"].empty())
-	{
-		write_to_file("/tmp/vlc.m3u", url);
-		hh->SendRedirect("/tmp/vlc.m3u");
-	}
-	else
-	{
-		hh->SetHeader(HTTP_OK, "text/html; charset=UTF-8");
-		hh->Write(url);
-	}
-}
-#else
 void CControlAPI::build_live_url(CyhookHandler *hh)
 {
 	int mode = NeutrinoAPI->Zapit->getMode();
@@ -3586,7 +3521,9 @@ void CControlAPI::build_live_url(CyhookHandler *hh)
 	if (url.rfind(":") != 4)
 		url = url.substr(0, url.rfind(":"));
 
-	url += ":31339/id=";
+	url += ":";
+	url += std::to_string(g_settings.streaming_port);
+	url += "/id=";
 
 	// response url
 	if(!hh->ParamList["vlc_link"].empty())
@@ -3611,7 +3548,7 @@ void CControlAPI::build_live_url(CyhookHandler *hh)
 	} else
 		hh->SendError();
 }
-#endif
+
 //-------------------------------------------------------------------------
 void CControlAPI::build_playlist(CyhookHandler *hh)
 {
@@ -3625,7 +3562,9 @@ void CControlAPI::build_playlist(CyhookHandler *hh)
 	if (url.rfind(":") != 4)
 		url = url.substr(0, url.rfind(":"));
 
-	url += ":31339/id=";
+	url += ":";
+	url += std::to_string(g_settings.streaming_port);
+	url += "/id=";
 
 	if(!hh->ParamList["id"].empty()) {
 		url += hh->ParamList["id"];

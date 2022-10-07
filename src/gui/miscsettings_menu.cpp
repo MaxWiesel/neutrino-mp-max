@@ -50,6 +50,7 @@
 
 #include <driver/screen_max.h>
 #include <driver/scanepg.h>
+#include <driver/streamts.h>
 
 #include <zapit/femanager.h>
 #include <eitd/sectionsd.h>
@@ -746,7 +747,7 @@ int CMiscMenue::showMiscSettingsMenuStreaming()
 	ms_sservices->addIntroItems(LOCALE_MISCSETTINGS_STREAMING);
 
 	// port
-	CIntInput * miscSettings_streamingport = new CIntInput(LOCALE_STREAMING_PORT, &g_settings.streaming_port, 5);
+	CIntInput * miscSettings_streamingport = new CIntInput(LOCALE_STREAMING_PORT, &g_settings.streaming_port, 5, NONEXISTANT_LOCALE, NONEXISTANT_LOCALE, this);
 	CMenuForwarder * mf = new CMenuDForwarder(LOCALE_STREAMING_PORT, true, to_string(g_settings.streaming_port), miscSettings_streamingport);
 	ms_sservices->addItem(mf);
 
@@ -757,7 +758,7 @@ int CMiscMenue::showMiscSettingsMenuStreaming()
 
 	// ecm
 	dec_onoff = new CMenuOptionChooser(LOCALE_STREAMING_DECRYPTMODE, &g_settings.streaming_decryptmode, OPTIONS_OFF0_ON1_OPTIONS, OPTIONS_OFF0_ON1_OPTION_COUNT, true);
-	//ecm_onoff->setHint(NEUTRINO_ICON_HINT_SETTINGS, LOCALE_MENU_HINT_DECRYPTMODE_ENABLED);
+	//dec_onoff->setHint(NEUTRINO_ICON_HINT_SETTINGS, LOCALE_MENU_HINT_DECRYPTMODE_ENABLED);
 	ms_sservices->addItem(dec_onoff);
 
 	int res = ms_sservices->exec(NULL, "");
@@ -870,6 +871,7 @@ bool CMiscMenue::changeNotify(const neutrino_locale_t OptionName, void */*data*/
 			omdb_api_key_short.clear();
 		omdb_onoff->setActive(CApiKey::check_omdb_api_key());
 	}
+<<<<<<< HEAD
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_YOUTUBE_DEV_ID))
 	{
 		g_settings.youtube_enabled = g_settings.youtube_enabled && CApiKey::check_youtube_dev_id();
@@ -887,6 +889,11 @@ bool CMiscMenue::changeNotify(const neutrino_locale_t OptionName, void */*data*/
 		else
 			shoutcast_dev_id_short.clear();
 		shoutcast_onoff->setActive(CApiKey::check_shoutcast_dev_id());
+=======
+	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_STREAMING_PORT))
+	{
+		CStreamManager::getInstance()->SetPort(g_settings.streaming_port);
+>>>>>>> 8fbe84889 (rework streaming part3)
 	}
 	return ret;
 }
