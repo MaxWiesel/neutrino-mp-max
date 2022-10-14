@@ -871,7 +871,6 @@ bool CMiscMenue::changeNotify(const neutrino_locale_t OptionName, void */*data*/
 			omdb_api_key_short.clear();
 		omdb_onoff->setActive(CApiKey::check_omdb_api_key());
 	}
-<<<<<<< HEAD
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_YOUTUBE_DEV_ID))
 	{
 		g_settings.youtube_enabled = g_settings.youtube_enabled && CApiKey::check_youtube_dev_id();
@@ -889,11 +888,10 @@ bool CMiscMenue::changeNotify(const neutrino_locale_t OptionName, void */*data*/
 		else
 			shoutcast_dev_id_short.clear();
 		shoutcast_onoff->setActive(CApiKey::check_shoutcast_dev_id());
-=======
+	}
 	else if (ARE_LOCALES_EQUAL(OptionName, LOCALE_STREAMING_PORT))
 	{
 		CStreamManager::getInstance()->SetPort(g_settings.streaming_port);
->>>>>>> 8fbe84889 (rework streaming part3)
 	}
 	return ret;
 }

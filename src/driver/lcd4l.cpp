@@ -959,7 +959,6 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 	char Duration[sizeof(m_Duration)] = {0};
 	char Start[6] = {0};
 	char End[6] = {0};
-	int todo = 0;
 
 	bool writeEvent = true;
 
@@ -1008,7 +1007,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 
 				int total = cur_duration / 60;
 				int done = (abs(time(NULL) - cur_start_time) + 30) / 60;
-				todo = total - done;
+				int todo = total - done;
 				if ((time(NULL) < cur_start_time) && todo >= 0)
 				{
 					done = 0;
@@ -1027,10 +1026,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 
 		if (CurrentNext.flags & CSectionsdClient::epgflags::has_next)
 		{
-			if (todo)
-				Event += "\nin " + to_string(todo) + " min:" + CurrentNext.next_name;
-			else
-				Event += "\n" + CurrentNext.next_name;
+			Event += "\n" + CurrentNext.next_name;
 			time_t next_start_time = CurrentNext.next_zeit.startzeit;
 			tm_struct = localtime(&next_start_time);
 			snprintf(End, sizeof(End), "%02d:%02d", tm_struct->tm_hour, tm_struct->tm_min);
