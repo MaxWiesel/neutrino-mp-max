@@ -82,10 +82,12 @@ endif
 if BOXTYPE_ARMBOX
 if ENABLE_LCD
 libneutrino_driver_a_SOURCES += \
+	hdmi_cec.cpp \
 	fb_accel_arm.cpp \
 	lcdd.cpp
 else
 libneutrino_driver_a_SOURCES += \
+	hdmi_cec.cpp \
 	fb_accel_arm.cpp \
 	simple_display.cpp
 endif
@@ -93,6 +95,7 @@ endif
 
 if BOXTYPE_MIPSBOX
 libneutrino_driver_a_SOURCES += \
+	hdmi_cec.cpp \
 	fb_accel_mips.cpp \
 	simple_display.cpp
 endif
