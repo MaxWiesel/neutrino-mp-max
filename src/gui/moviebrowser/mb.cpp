@@ -2202,28 +2202,28 @@ bool CMovieBrowser::onButtonPressMainFrame(neutrino_msg_t msg)
 			}
 		}
 	}
-	else if (CNeutrinoApp::getInstance()->backKey(msg))
+	else if (msg == (neutrino_msg_t) g_settings.mbkey_toggle_view_cw)
 	{
-		if (m_settings.gui == MB_GUI_FILTER)
-			onSetGUIWindow(MB_GUI_MOVIE_INFO);
-		else
-			result = false;
+		if (m_settings.browserAdditional && m_windowFocus == MB_FOCUS_BROWSER)
+			onSetFocusNext();
+		else if (show_mode != MB_SHOW_YT)
+			onSetGUIWindowNext();
 	}
-	else if (msg == CRCInput::RC_left)
+	else if (msg == (neutrino_msg_t) g_settings.mbkey_toggle_view_ccw)
 	{
 		hideDetailsLine();
-		if (m_windowFocus == MB_FOCUS_MOVIE_INFO2 && m_settings.browserAdditional)
+		if (m_settings.browserAdditional && m_windowFocus == MB_FOCUS_MOVIE_INFO2)
 			onSetFocusNext();
 		else if (show_mode != MB_SHOW_YT)
 			onSetGUIWindowPrev();
 	}
-	else if (msg == CRCInput::RC_right)
+	else if (CNeutrinoApp::getInstance()->backKey(msg))
 	{
 		hideDetailsLine();
-		if (m_windowFocus == MB_FOCUS_BROWSER && m_settings.browserAdditional)
-			onSetFocusNext();
-		else if (show_mode != MB_SHOW_YT)
-			onSetGUIWindowNext();
+		if (m_settings.gui == MB_GUI_FILTER)
+			onSetGUIWindow(MB_GUI_MOVIE_INFO);
+		else
+			result = false;
 	}
 	else if (msg == CRCInput::RC_green)
 	{
@@ -3543,7 +3543,7 @@ int CMovieBrowser::showMovieInfoMenu(MI_MOVIE_INFO* movie_info)
 	movieInfoMenu.addIntroItems(LOCALE_MOVIEBROWSER_INFO_HEAD);
 	movieInfoMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_SAVE,           true, NULL, this,                    "save_movie_info",                  CRCInput::RC_red));
 	movieInfoMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_HEAD_UPDATE,    true, NULL,                          &movieInfoMenuUpdate, NULL,         CRCInput::RC_green));
-	movieInfoMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_DATA_REQUEST,   true, NULL, this,                    "get_db_data",                    CRCInput::RC_yellow));
+	movieInfoMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_MENU_DATA_REQUEST,   true, NULL, this,                    "get_db_data",                      CRCInput::RC_yellow));
 	movieInfoMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_BOOK_HEAD,           true, NULL,                          &bookmarkMenu, NULL,                CRCInput::RC_blue));
 	movieInfoMenu.addItem(GenericMenuSeparatorLine);
 	movieInfoMenu.addItem(new CMenuForwarder(LOCALE_MOVIEBROWSER_INFO_TITLE,          true, movie_info->epgTitle,          &titelUserInput, NULL,              CRCInput::RC_1));
@@ -4114,7 +4114,7 @@ bool CMovieBrowser::getMovieInfoItem(MI_MOVIE_INFO& movie_info, MB_INFO_ITEM ite
 				*item_string = str_tmp;
 			}
 			break;
-		case MB_INFO_PERCENT_ELAPSED:	// = 23,
+		case MB_INFO_PERCENT_ELAPSED:			// = 23,
 			*item_string = "";
 			if (movie_info.bookmarks.lastPlayStop > 0 && movie_info.length > 0)
 			{
@@ -4124,7 +4124,7 @@ bool CMovieBrowser::getMovieInfoItem(MI_MOVIE_INFO& movie_info, MB_INFO_ITEM ite
 				*item_string = to_string(pos);
 			}
 			break;
-		case MB_INFO_MAX_NUMBER:  // = 24,
+		case MB_INFO_MAX_NUMBER:			// = 24,
 		default:
 			*item_string="";
 			result = false;
