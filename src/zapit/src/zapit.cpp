@@ -706,6 +706,7 @@ bool CZapit::StopPip(int pip)
 		CCamManager::getInstance()->Stop(pip_channel_id[pip], CCamManager::PIP);
 		pipVideoDemux[pip]->Stop();
 		pipVideoDecoder[pip]->Stop();
+		pipVideoDecoder[pip]->setBlank(pip);
 		pipAudioDemux[pip]->Stop();
 		pipAudioDecoder[pip]->Stop();
 		pip_fe[pip] = NULL;
