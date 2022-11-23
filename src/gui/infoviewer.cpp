@@ -590,7 +590,6 @@ void CInfoViewer::showMovieTitle(const int playState, const t_channel_id &Channe
 	frameBuffer->paintIcon(playicon, icon_x, icon_y);
 	showLcdPercentOver ();
 	showInfoFile();
-	//loop(fadeValue, show_dot , fadeIn);
 	loop(show_dot);
 	aspectRatio = 0;
 	fileplay = 0;
@@ -858,7 +857,6 @@ void CInfoViewer::showTitle(CZapitChannel * channel, const bool calledFromNumZap
 	}
 
 	if (!calledFromNumZap) {
-		//loop(fadeValue, show_dot , fadeIn);
 		loop(show_dot);
 	}
 	aspectRatio = 0;
@@ -1047,8 +1045,7 @@ void CInfoViewer::loop(bool show_dot)
 {
 	bool hideIt = true;
 	resetSwitchMode(); //no virtual zap
-	//bool fadeOut = false;
-	timeoutEnd=0;;
+	timeoutEnd=0;
 	setInfobarTimeout();
 
 	int res = messages_return::none;
