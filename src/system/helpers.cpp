@@ -2055,6 +2055,7 @@ int getActivePartition()
 				if (strncmp("linuxrootfs", p, 11) == 0)
 				{
 					c = atoi(p + 11);
+					dprintf(DEBUG_NORMAL, "Current subdirboot partition: %d\n", c);
 					break;
 				}
 				p = strtok(NULL, " =");
@@ -2070,7 +2071,10 @@ int getActivePartition()
 		{
 			if (fseek(f, -2, SEEK_END) == 0)
 			{
-				c = (int)fgetc(f);
+				char c2[2] = {0};
+				c2[0] = fgetc(f);
+				c = atoi(c2);
+				dprintf(DEBUG_NORMAL, "Current partition: %d\n", c);
 			}
 			fclose(f);
 		}
