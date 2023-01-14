@@ -10,7 +10,7 @@ install_DATA =	channels.js \
 		robots.txt \
 		Y_About.yhtm \
 		Y_Baselib.js \
-		Y_blank.htm \
+		Y_Blank.yhtm \
 		Y_Blocks.txt \
 		Y_Blocks_Neutrino.txt \
 		Y_Boxcontrol_Bouquet_Editor_Edit.yhtm \
