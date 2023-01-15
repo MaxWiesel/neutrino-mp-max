@@ -15,6 +15,7 @@
 #include <config.h>
 #endif
 
+#include <pthread.h>
 #include "dvbsubtitle.h"
 
 extern "C" {
