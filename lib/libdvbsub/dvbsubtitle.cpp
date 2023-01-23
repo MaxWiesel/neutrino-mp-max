@@ -15,7 +15,6 @@
 #include <config.h>
 #endif
 
-#include <pthread.h>
 #include "dvbsubtitle.h"
 
 extern "C" {
@@ -27,6 +26,7 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavutil/avutil.h>
 #include <libavcodec/version.h>
+#include <pthread.h>
 }
 #include <driver/framebuffer.h>
 #include "Debug.hpp"
