@@ -395,7 +395,7 @@ class CMenuOptionChooserOptions
 		std::string       valname;
 };
 
-struct CMenuOptionChooserCompareItem: public std::binary_function <const CMenuOptionChooserOptions * const, const CMenuOptionChooserOptions * const, bool>
+struct CMenuOptionChooserCompareItem
 {
 	static bool cmpToLower(const char a, const char b)
 	{
