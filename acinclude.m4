@@ -241,19 +241,30 @@ AC_SUBST(TARGET_$2)
 AC_DEFUN([TUXBOX_APPS_DIRECTORY], [
 AC_REQUIRE([TUXBOX_APPS])
 
+#
+# FIXME:
+# This breaks --sysconfdir= etc. switches in cdk mode.
+# Is --with-targetprefix= and the resulting ${TARGET_PREFIX} really needed?
+#
 if test "$TARGET" = "cdk"; then
 	datadir="\${prefix}/share"
-	sysconfdir="/etc"
-	localstatedir="/var"
-	libdir="\${prefix}/lib"
-	mntdir="/mnt"
 	targetdatadir="\${TARGET_PREFIX}/share"
-	targetsysconfdir="/etc"
-	targetlocalstatedir="/var"
+
+	libdir="\${prefix}/lib"
 	targetlibdir="\${TARGET_PREFIX}/lib"
+
+	sysconfdir="/etc"
+	targetsysconfdir="/etc"
+
+	localstatedir="/var"
+	targetlocalstatedir="/var"
+
+	mntdir="/mnt"
 	targetmntdir="/mnt"
+	MNTDIR=$targetmntdir
 else
-	mntdir="/mnt" # hack
+	mntdir="/mnt"
+	MNTDIR=$mntdir
 fi
 
 TUXBOX_APPS_DIRECTORY_ONE(configdir, CONFIGDIR, localstatedir, /var, /tuxbox/config,
@@ -591,17 +602,8 @@ elif test "$BOXTYPE" = "mipsbox"; then
 	AC_DEFINE(HAVE_MIPS_HARDWARE, 1, [building for an mipsbox])
 fi
 
-# BOXTYPEs that use libstb-hal
-case "$BOXTYPE" in
-	coolstream)
-		libstb_hal=no
-	;;
-	*)
-		AC_DEFINE(HAVE_LIBSTB_HAL, 1, [use libstb-hal])
-		libstb_hal=yes
-	;;
-esac
-AM_CONDITIONAL(HAVE_LIBSTB_HAL, test "$libstb_hal" = "yes")
+# uclibc
+AM_CONDITIONAL(HAVE_UCLIBC, test "$targetlibdir/ld-uClibc.so.0")
 
 # generic
 if test "$BOXMODEL" = "generic"; then
