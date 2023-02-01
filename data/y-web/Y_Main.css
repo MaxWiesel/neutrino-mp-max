@@ -806,6 +806,9 @@ tr.bouquetlist
 	padding-right: 20px;
 	margin:0px;
 }
+#epglist thead {
+	background-color: #fff;
+}
 #epglist th { 
 	font-weight:bold;
 	text-align: center;
@@ -1046,4 +1049,14 @@ img#shot:hover {
 .detail_img {
 	max-width: 300px;
 	max-height:300px;
+}
+
+#startjpg {
+	display: block;
+	text-align: center;
+	width: 750px;
+	margin: 1.5em auto;
+	padding: .5em;
+	border: 1px solid #a0a0a0;
+	box-shadow: .5em .5em .5em rgba(0, 0, 0, 0.5);
 }

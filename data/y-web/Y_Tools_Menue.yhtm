@@ -56,7 +56,10 @@ function init(){
 					=}
 				</li>
 				<li>
-					<a target="work" href="Y_Tools_m3uConvert.yhtm">m3uConvert</a>
+					{=var-set:m_link_href=Y_Tools_m3uConvert.yhtm=}
+					{=var-set:m_link_desc==}
+					{=var-set:m_link_text=m3uConvert=}
+					{=include-block:Y_Blocks.txt;management_link=}
 				</li>
 			</ul>
 		</div>
@@ -71,7 +74,7 @@ function init(){
 					{=var-set:m_link_desc==}
 					{=var-set:m_link_text={=L:tools.command_shell=}=}
 					{=include-block:Y_Blocks.txt;management_link=}
-					<a class="y_menu_popup_link" title="{=L:tools.command_shell=} (popup)" href="javascript:cmd_popup()"><img src="/images/popup.png"/></a>
+					<a title="{=L:tools.command_shell=} (popup)" href="javascript:cmd_popup()" class="y_menu_popup_link" ><img src="/images/popup.png"/></a>
 				</li>
 			</ul>
 		</div>
@@ -81,7 +84,7 @@ function init(){
 				<li>
 					<a target="work" href="Y_Tools_Check_Install.yhtm">{=L:tools.check_install=}</a>
 				</li>
-				{=comment:NI - disable yinstaller~
+				{=comment:NI - disable yInstaller~
 				<li>
 					{=var-set:m_link_href=Y_Tools_Installer.yhtm=}
 					{=var-set:m_link_desc==}
