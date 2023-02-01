@@ -35,8 +35,13 @@ function get_data() {
 }
 //]]>
 </script>
+<<<<<<< HEAD
 </head>
 <body>
+=======
+{=include-block:Y_Blocks.txt;head_close=}
+<body onload="init()">
+>>>>>>> 25b6cc49b... - yWeb: introduce head_close block
 <div class="work_box">
 	<div class="work_box_head"><div class="work_box_head_h2">
 	{=var-set:menu={=L:bc.menue.control=}=}{=include-block:Y_Blocks.txt;work_menu=}</div></div>

@@ -62,6 +62,7 @@ date.fr=Fr
 date.sa=Sa
 
 # ===== Main Menue
+main.blank=yWeb
 main.boxcontrol=Boxsteuerung
 main.boxcontrol_desc=Boxcontrol & Bouquets
 main.tools=Werkzeuge

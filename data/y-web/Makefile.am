@@ -1,5 +1,7 @@
 SUBDIRS = images scripts languages styles
 
+SUBDIRS += jquery
+
 installdir = $(PRIVATE_HTTPDDIR)
 
 install_DATA =	channels.js \
