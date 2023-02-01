@@ -219,7 +219,6 @@ start-block~work_menu
 <div>{=var-get:menu=}</div>
 end-block~work_menu
 
-
 # ============= LAYOUT
 # ------- Lay-HEAD
 start-block~head
@@ -286,6 +285,54 @@ start-block~frame_iso_head
 <link rel="stylesheet" type="text/css" href="/Y_User.css" />
 <title>yWeb</title>
 end-block~frame_iso_head
+
+# ------- Lay-HEAD NI
+start-block~head_ni
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta name="author" content="Neutino-MP">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="Thu, 01 Jan 1970 00:00:00 GMT" />
+<title>yWeb</title>
+<link rel="stylesheet" type="text/css" href="/Y_Main.css" />
+<link rel="stylesheet" type="text/css" href="/Y_Dist.css" />
+<link rel="stylesheet" type="text/css" href="/Y_User.css" />
+<script type="text/javascript" src="/Y_Baselib.js"></script>
+<script type="text/javascript" src="/prototype.js"></script>
+<script type="text/javascript">
+//<![CDATA[
+	// Clear y-Cache in our pages
+	yhttpd_cache_clear('');
+//]]>
+</script>
+{=include-block:Y_Blocks.txt;jQuery=}
+{=include-block:Y_Blocks.txt;jQuery_ui=}
+end-block~head_ni
+
+# ------- Lay-HEAD close
+start-block~head_close
+</head>
+end-block~head_close
+
+# ============= jQuery
+# ------- jQuery library
+start-block~jQuery
+<script type="text/javascript" src="/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+//<![CDATA[
+	// Use jQuery via jQuery(...)
+	jQuery.noConflict();
+//]]>
+</script>
+end-block~jQuery
+
+# ------- jQuery user interface
+start-block~jQuery_ui
+<script type="text/javascript" src="/jquery/jquery-ui.min.js"></script>
+end-block~jQuery_ui
 
 # ------- nhttpd save Settings
 start-block~start_wizard_save_settings
