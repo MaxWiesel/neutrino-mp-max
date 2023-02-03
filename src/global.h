@@ -29,7 +29,7 @@
 #define NEUTRINO_CPP extern
 #endif
 
-#define IMAGE_VERSION_FILE GENERIC_ROOT_PREFIX "/.version"
+#define IMAGE_VERSION_FILE TARGET_ROOT "/.version"
 
 #define NEUTRINO_SETTINGS_FILE CONFIGDIR "/neutrino.conf"
 #define NEUTRINO_SCAN_SETTINGS_FILE CONFIGDIR "/scan.conf"

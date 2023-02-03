@@ -54,8 +54,8 @@
 #include <nhttpd/yconfig.h>
 #include <ctype.h>
 
-#define OS_RELEASE_FILE GENERIC_ROOT_PREFIX "/usr/lib/os-release"
-#define OE_IMAGE_VERSION_FILE GENERIC_ROOT_PREFIX "/etc/image-version"
+#define OS_RELEASE_FILE TARGET_ROOT "/usr/lib/os-release"
+#define OE_IMAGE_VERSION_FILE TARGET_ROOT "/etc/image-version"
 
 using namespace std;
 
@@ -372,10 +372,10 @@ void CImageInfo::InitInfoData()
 	v_info.push_back({g_Locale->getText(LOCALE_IMAGEINFO_VCS),	VCS});
 #else
 	v_info.push_back({g_Locale->getText(LOCALE_IMAGEINFO_VCS),	PACKAGE_VERSION_GIT});
+#endif
 
 	//stb info
 	initHalInfo();
-#endif
 
 	//internal api versions
 	initAPIVersions();

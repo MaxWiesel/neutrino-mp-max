@@ -9,10 +9,10 @@ AC_ARG_WITH(target,
 	[TARGET="$withval"],
 	[TARGET="native"])
 
-AC_ARG_WITH(generic-root-prefix,
-	AS_HELP_STRING([--with-generic-root-prefix=PATH], [the target root (only applicable in native mode)]),
-	[GENERIC_ROOT_PREFIX="$withval"],
-	[GENERIC_ROOT_PREFIX="NONE"])
+AC_ARG_WITH(targetroot,
+	AS_HELP_STRING([--with-targetroot=PATH], [the target root (only applicable in native mode)]),
+	[TARGET_ROOT="$withval"],
+	[TARGET_ROOT="NONE"])
 
 AC_ARG_WITH(targetprefix,
 	AS_HELP_STRING([--with-targetprefix=PATH], [prefix relative to target root, e.g. /usr (only applicable in cdk mode)]),
@@ -38,9 +38,9 @@ if test "$TARGET" = "native"; then
 		prefix=/usr/local
 	fi
 
-	if test "$GENERIC_ROOT_PREFIX" = "NONE"; then
-		AC_MSG_ERROR([invalid generic-root-prefix, you need to specify one in native mode])
-		GENERIC_ROOT_PREFIX=""
+	if test "$TARGET_ROOT" = "NONE"; then
+		AC_MSG_ERROR([invalid targetroot, you need to specify one in native mode])
+		TARGET_ROOT=""
 	fi
 	TARGET_PREFIX=$prefix
 
@@ -55,7 +55,7 @@ elif test "$TARGET" = "cdk"; then
 		AC_MSG_ERROR([invalid prefix, you need to specify one in cdk mode])
 	fi
 
-	GENERIC_ROOT_PREFIX=""
+	TARGET_ROOT=""
 	if test "$TARGET_PREFIX" = "NONE"; then
 		AC_MSG_ERROR([invalid targetprefix, you need to specify one in cdk mode])
 		TARGET_PREFIX=""
@@ -73,7 +73,7 @@ else
 fi
 
 AC_DEFINE_UNQUOTED([TARGET], ["$TARGET"], [target for compilation])
-AC_DEFINE_UNQUOTED([GENERIC_ROOT_PREFIX], ["$GENERIC_ROOT_PREFIX"], [native: the target root; cdk: empty])
+AC_DEFINE_UNQUOTED([TARGET_ROOT], ["$TARGET_ROOT"], [native: the target root; cdk: empty])
 AC_DEFINE_UNQUOTED([TARGET_PREFIX], ["$TARGET_PREFIX"], [native: auto-assigned path; cdk: path relative to target root])
 
 if test "$exec_prefix" = "NONE"; then
