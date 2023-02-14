@@ -607,6 +607,8 @@ data/y-web/Makefile
 data/y-web/images/Makefile
 data/y-web/jquery/Makefile
 data/y-web/languages/Makefile
+data/y-web/lcd4linux/Makefile
+data/y-web/prototype/Makefile
 data/y-web/scripts/Makefile
 data/y-web/styles/Makefile
 data/zapit/Makefile

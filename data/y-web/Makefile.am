@@ -1,4 +1,4 @@
-SUBDIRS = images scripts languages styles
+SUBDIRS = images scripts languages styles prototype
 
 SUBDIRS += jquery
 
@@ -8,7 +8,6 @@ install_DATA =	channels.js \
 		extensions.txt \
 		favicon.ico \
 		index.html \
-		prototype.js \
 		robots.txt \
 		Y_About.yhtm \
 		Y_Baselib.js \
@@ -77,9 +76,7 @@ install_DATA =	channels.js \
 		Y_yweb.js
 
 # file manager
-install_DATA +=	accordion.js \
-		effects.js \
-		Y_Blocks_Filemgr.txt \
+install_DATA +=	Y_Blocks_Filemgr.txt \
 		Y_Filemgr.yhtm \
 		Y_Filemgr_Edit.yhtm
 
