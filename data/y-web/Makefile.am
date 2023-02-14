@@ -4,8 +4,7 @@ SUBDIRS += jquery
 
 installdir = $(PRIVATE_HTTPDDIR)
 
-install_DATA =	channels.js \
-		extensions.txt \
+install_DATA =	extensions.txt \
 		favicon.ico \
 		index.html \
 		robots.txt \
