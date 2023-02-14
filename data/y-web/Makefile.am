@@ -13,6 +13,7 @@ install_DATA =	channels.js \
 		Y_Baselib.js \
 		Y_Blank.yhtm \
 		Y_Blocks.txt \
+		Y_Blocks_Filemgr.txt \
 		Y_Blocks_Neutrino.txt \
 		Y_Boxcontrol_Bouquet_Editor_Edit.yhtm \
 		Y_Boxcontrol_Bouquet_Editor_Main.yhtm \
@@ -29,25 +30,27 @@ install_DATA =	channels.js \
 		Y_Ext_Settings.yhtm \
 		Y_Ext_Uninstall.yhtm \
 		Y_Ext_Update.js \
-		Y_Ext_Update_refresh.yhtm \
 		Y_Ext_Update.yhtm \
+		Y_Ext_Update_refresh.yhtm \
+		Y_Filemgr.yhtm \
+		Y_Filemgr_Edit.yhtm \
 		Y_Info_Help.yhtm \
 		Y_Info_Menue.yhtm \
 		Y_Info_Updates.yhtm \
-		Y_Live_EPG_Info.yhtm \
 		Y_Live_EPG.yhtm \
+		Y_Live_EPG_Info.yhtm \
 		Y_Main.css \
 		Y_Menue.yhtm \
 		Y_Refresh.yhtm \
-		Y_Settings_automount_list.yhtm \
-		Y_Settings_automount.yhtm \
 		Y_Settings_Backup.yhtm \
+		Y_Settings_Menue.yhtm \
+		Y_Settings_automount.yhtm \
+		Y_Settings_automount_list.yhtm \
 		Y_Settings_buttons.yhtm \
 		Y_Settings_glcd.yhtm \
 		Y_Settings_lcd.yhtm \
-		Y_Settings_Menue.yhtm \
-		Y_Settings_mount_list.yhtm \
 		Y_Settings_mount.yhtm \
+		Y_Settings_mount_list.yhtm \
 		Y_Settings_neutrino_forms.yhtm \
 		Y_Settings_nhttpd.yhtm \
 		Y_Settings_personalize.yhtm \
@@ -74,11 +77,6 @@ install_DATA =	channels.js \
 		Y_Version.txt \
 		Y_Wait.yhtm \
 		Y_yweb.js
-
-# file manager
-install_DATA +=	Y_Blocks_Filemgr.txt \
-		Y_Filemgr.yhtm \
-		Y_Filemgr_Edit.yhtm
 
 install_DATA +=	lcd4linux.html \
 		Y_Tools_m3uConvert.yhtm
