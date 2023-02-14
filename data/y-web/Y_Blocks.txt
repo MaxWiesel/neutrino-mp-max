@@ -515,6 +515,11 @@ start-block~frame_live_epg
 </html>
 end-block~frame_live_epg
 
+# ------- Filemgr
+start-block~filemgr_edit_save_settings
+{=file-action:{=file=};add;{=editfile=}=}
+end-block~filemgr_edit_save_settings
+
 # ------- Remote control variables
 start-block~rc_variables
 {=var-set:_fb_dbox_philips=2=}
