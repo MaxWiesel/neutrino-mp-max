@@ -1,6 +1,5 @@
-{=include-block:Y_Blocks.txt;head=}
-<script type="text/javascript" src="/Y_Baselib.js"></script>
-	<style type="text/css">
+{=include-block:Y_Blocks.txt;head_ni=}
+	<style>
 		#InputOutputField
 		{
 			display: none;
@@ -40,10 +39,10 @@
 	<div class="work_box_body">
 		<br/>
 		<table class="y_invisible_table" cellpadding="5" width="85%">
-		  <tr>
-		    <td>Mit <b>m3uConvert</b> ist es möglich, m3u-Playlisten in das webtv.xml Format zu konvertieren.<br>
-		    <br><b>Vorsicht !</b> Eventuell vorhanden Dateien werden überschrieben !!</td>
-		  </tr>
+			<tr>
+				<td>Mit <b>m3uConvert</b> ist es möglich, m3u-Playlisten in das webtv.xml Format zu konvertieren.<br>
+				<br><b>Vorsicht !</b> Eventuell vorhanden Dateien werden überschrieben !!</td>
+			</tr>
 			<tr><td class="y_form_header" colspan="2">1. Streams einfügen:</td></tr>
 			<tr>
 				<td colspan="2">
@@ -55,7 +54,8 @@ http://www.xyz.com:8000/live/test/test/377.ts
 #EXTINF:0,DE:ZDF
 http://www.xyz.com:8000/live/test/test/372.ts
 #EXTINF:0,DE:TNT_SERIE
-http://www.xyz.com:8000/live/test/test/376.ts"></textarea>
+http://www.xyz.com:8000/live/test/test/376.ts">
+						</textarea>
 					</form>
 				</td>
 			</tr>
@@ -108,11 +108,12 @@ http://www.xyz.com:8000/live/test/test/376.ts"></textarea>
 	</div>
 
 <script>
-   var sel = document.getElementById('inputDescription');
-   sel.onchange = function() {
-      var show = document.getElementById('inputFileNameToSaveAs');
-      show.value = 'webtv_'+this.value+'.xml';
-   }
+	var sel = document.getElementById('inputDescription');
+	sel.onchange = function()
+	{
+		var show = document.getElementById('inputFileNameToSaveAs');
+		show.value = 'webtv_'+this.value+'.xml';
+	}
 </script>
 
 <script language="javascript">
@@ -181,7 +182,7 @@ http://www.xyz.com:8000/live/test/test/376.ts"></textarea>
 		}
 		return false;
 	}
-	
+
 	function save2box()
 	{
 		document.getElementById("savetxt").value = document.getElementById("InputOutputField").value;
@@ -196,7 +197,7 @@ http://www.xyz.com:8000/live/test/test/376.ts"></textarea>
 		var form = document.createElement('form');
 		form.setAttribute('method', 'post');
 		form.target = 'Map';
-		form.setAttribute('action', '/Y_Filemgr_Edit.yhtm?file=/var/tuxbox/config/' +
+		form.setAttribute('action', '/Y_Filemgr_Edit.yhtm?file=%(WEBTVDIR_VAR)/' +
 			fileNameToSaveAs);
 		document.body.appendChild(form);
 		window.open('', 'Map', 'status=0,title=0,height=0,width=1000,scrollbars=0');
