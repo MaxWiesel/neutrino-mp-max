@@ -107,7 +107,7 @@ http://www.xyz.com:8000/live/test/test/376.ts"></textarea>
 		</table>   
 	</div>
 
-<script type="text/javascript">
+<script>
    var sel = document.getElementById('inputDescription');
    sel.onchange = function() {
       var show = document.getElementById('inputFileNameToSaveAs');
@@ -115,7 +115,7 @@ http://www.xyz.com:8000/live/test/test/376.ts"></textarea>
    }
 </script>
 
-<script language="javascript" type="text/javascript">
+<script language="javascript">
 	var textAreas = document.getElementsByTagName('textarea');
 	Array.prototype.forEach.call(textAreas, function(elem)
 	{
