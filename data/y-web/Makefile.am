@@ -74,7 +74,7 @@ install_DATA =	extensions.txt \
 		Y_User.css \
 		Y_Version.txt \
 		Y_Wait.yhtm \
-		Y_yweb.js
+		Y_yWeb.js
 
 install_DATA +=	lcd4linux.html \
 		Y_Tools_m3uConvert.yhtm
