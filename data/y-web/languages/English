@@ -129,6 +129,14 @@ bc.screenshot.checkenable=OSD and/or TV must be enabled!
 bc.screenshot.checkpip=PiP requires TV enabled!
 bc.screenshot.reload_desc=Reload interval in seconds
 
+# ===== Boxcontrol - PZapit
+bc.pzapit=PZapit
+bc.pzapit.title=PZapit-Control
+bc.pzapit.resolution=Resolution
+bc.pzapit.43mode=4:3 mode
+bc.pzapit.channellists=Channellists
+bc.pzapit.tuner=Tuner
+
 # ===== Boxcontrol - Others
 bc.channels=Channels
 
@@ -136,7 +144,7 @@ bc.channels=Channels
 ext.installer_updater=Installer/Updater
 ext.uninstaller=Extensions Uninstaller
 ext.search_for_ext=Search for Extensions ...
-ext.installed_extensions=installed extensions
+ext.installed_extensions=Installed extensions
 ext.type=Type
 ext.extension=Extension
 ext.version=Version
@@ -154,6 +162,7 @@ ext.update_install=update/install
 ext.site=Site
 ext.refresh_now=Settings saved. Refreshing Menue now.
 ext.ext_saved=Extensions Settings saved
+ext.tag=Tag
 
 # ===== Bouquet
 bou.bouquet=Bouquet
@@ -297,6 +306,7 @@ set.yweb.box_color=Color
 set.yweb.start_page=Start page
 set.yweb.remote=Remote
 set.yweb.screenshot_rc=RC in screenshot menu
+set.yweb.screenshot_timeout=Screenshot timeout
 
 # ===== Settings Picture viewer
 set.pv.pictureviewer=Pictureviewer
@@ -330,6 +340,39 @@ set.settings.warning=Backup & Restore is only useful for the same image with the
 
 # ===== Settings XMLTV
 set.xmltv.header=XMLTV Settings
+
+# ===== Settings Plugins
+set.plugins=Plugincontrol
+set.plugins.title=Manage plugins and services
+
+set.plugin-tools.fcm-addr=Edit Phonebook
+set.plugin-tools.pat-rules=Edit Rules
+set.plugin-tools.epgscan-dat=Edit Transponderlist
+set.plugin-tools.rssreader-conf=Edit RSS-Feeds
+set.plugin-tools.2webtvxmlurls-conf=Edit WebTV-URLs
+
+set.plugins_hide=Hide plugins
+set.plugins_hide.title=Show and hide plugins
+
+# ===== Settings camds
+set.camds=Softcams
+set.camds.title=Softcam-Control
+
+set.camd-tools=Tools for
+set.camd-tools.line=----------------------------------
+set.camd-tools.ecminfo=ECM-Informations
+set.camd-tools.countcards=Count available cards
+set.camd-tools.sc01info=Card-details from slot1
+set.camd-tools.sc02info=Card-details from slot2
+set.camd-tools.shareinfo=CS-Informations
+set.camd-tools.shareonl=Online-Share-Informations
+set.camd-tools.mginfo=CS-Informations
+set.camd-tools.cccamdinfo=CCCamd Lines
+set.camd-tools.pidinfo=PID-Informations
+set.camd-tools.mgshareinfo=NewCamd Lines
+set.camd-tools.oscamversion=Common Informations
+set.camd-tools.ncamversion=Common Informations
+set.camd-tools.doscamversion=Common Informations
 
 # ===== Tools Info
 tools.info.show_messages=Kernel Messages

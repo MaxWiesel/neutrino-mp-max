@@ -283,7 +283,8 @@ do_cmd()
 
 # -----------------------------------------------------------
 # yInstaller
-# un-tar uploaded file to /tmp. Execute included install.sh
+# un-tar uploaded file to /tmp/y-install.
+# Execute included install.sh.
 # -----------------------------------------------------------
 do_installer()
 {
@@ -295,16 +296,16 @@ do_installer()
 
 	if [ -s "$y_upload_file" ]
 	then
-		# unpack /tmp/upload.tmp
-		cd $y_path_tmp
+		mkdir -p $y_path_install
+		cd $y_path_install
 		tar -xf "$y_upload_file"
 		rm $y_upload_file
-		if [ -s "$y_install" ] #look for install.sh
+		if [ -s "$y_install" ] # look for install.sh
 		then
 			chmod 755 $y_install
 			o=`$y_install` # execute
 			rm -f $y_install # clean up
-			if [ -s "$y_out_html" ] #html - output?
+			if [ -s "$y_out_html" ] # html - output?
 			then
 				echo '<html><head>'
 				echo '<link rel="stylesheet" href="/Y_Main.css">'
@@ -345,10 +346,11 @@ do_ext_installer()
 	fi
 	wgetlog=`wget -O $y_upload_file $1 2>&1`
 	if [ -s "$y_upload_file" ];then
-		cd $y_path_tmp
+		mkdir -p $y_path_install
+		cd $y_path_install
 		tar -xf "$y_upload_file"
 		rm $y_upload_file
-		if [ -s "$y_install" ] #look for install.sh
+		if [ -s "$y_install" ] # look for install.sh
 		then
 			chmod 755 $y_install
 			o=`$y_install` # execute
@@ -363,7 +365,7 @@ do_ext_installer()
 
 do_ext_uninstaller()
 {
-	uinst="%(CONFIGDIR)/ext/uninstall.sh"
+	uinst="%(CONFIGDIR)/y-ext/uninstall.sh"
 	if [ -e "$uinst"  ]; then
 		chmod 755 "$uinst"
 		`$uinst $1_uninstall.inc`
@@ -492,6 +494,7 @@ case "$1" in
 	fbshot_clear)			do_fbshot_clear ;;
 	screenshot_clear)		do_screenshot_clear ;;
 	get_update_version)		wget -O /tmp/version.txt "https://raw.githubusercontent.com/MaxWiesel/neutrino-max/master/data/y-web/Y_Version.txtt" ;;
+	rm_update_version)		rm -f /tmp/version.txt ;;
 	settings_backup_restore)	shift 1; do_settings_backup_restore $* ;;
 	exec_cmd)			shift 1; $* ;;
 	automount_list)			shift 1; do_automount_list $* ;;
@@ -531,11 +534,17 @@ case "$1" in
 		res=`wget -O /tmp/$2 "$1" >/tmp/url.log 2>&1`
 		cat /tmp/$2
 	;;
-	mtd_space|var_space)
-		df | while read fs rest; do
+	mtd_space)
+		df | while read filesystem blocks used available percent mounted ; do
 			case ${fs:0:3} in
 				mtd)
-					echo "$fs" "$rest"
+					echo "$filesystem" "$blocks" "$used" "$available" "$percent" "$mounted"
+					break
+				;;
+			esac
+			case $mounted in
+				"/")
+					echo "$filesystem" "$blocks" "$used" "$available" "$percent" "$mounted"
 					break
 				;;
 			esac

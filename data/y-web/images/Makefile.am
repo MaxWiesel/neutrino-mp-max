@@ -74,6 +74,19 @@ images_DATA += \
 	upload.png \
 	work.gif
 
+# extensions
+images_DATA += \
+	ext_add.png \
+	ext_delete.png \
+	ext_edit.png \
+	ext_error.png \
+	ext_ex.png \
+	ext_menu.png \
+	ext_mgr.png \
+	ext_normal.png \
+	ext_plugin.png \
+	ext_script.png
+
 # remote controls
 imagesrcdir = $(PRIVATE_HTTPDDIR)/images/rc
 

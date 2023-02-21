@@ -76,8 +76,22 @@ install_DATA =	extensions.txt \
 		Y_Wait.yhtm \
 		Y_yWeb.js
 
+<<<<<<< HEAD
 install_DATA +=	lcd4linux.html \
 		Y_Tools_m3uConvert.yhtm
+=======
+# NI-yWeb
+install_DATA += Y_NI_About.yhtm \
+		Y_NI_Camd-control.yhtm \
+		Y_NI_Infoicons-control.yhtm \
+		Y_NI_m3uConInfo.yhtm \
+		Y_NI_m3uConvert.yhtm \
+		Y_NI_NetFS-control.yhtm \
+		Y_NI_NetFS-edit.yhtm \
+		Y_NI_NetFS-init.yhtm \
+		Y_NI_Plugin-control.yhtm \
+		Y_NI_PZapit-control.yhtm
+>>>>>>> 7b0e62f4e... - yWeb: move Y_NI_Tools() away from Y_NIlib.js; drop Y_NIlib.js
 
 install-data-hook:
 	@# Badass hack, I know. If anyone knows a better way -- please send patch!
