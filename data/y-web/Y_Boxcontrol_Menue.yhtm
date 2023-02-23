@@ -164,17 +164,17 @@ function init() {
 				</li>
 				<ul>
 					<li>
-						<a target="work" title="OSD-{=L:bc.menue.screenshot=}" href="Y_Tools_Screenshot.yhtm?osd=1&rc={=ini-get:/var/tuxbox/config/yWeb.conf;screenshot_rc;false=}">OSD</a>
+						<a target="work" title="OSD-{=L:bc.menue.screenshot=}" href="Y_Tools_Screenshot.yhtm?osd=1&rc={=ini-get:%(CONFIGDIR)/yWeb.conf;screenshot_rc;false=}">OSD</a>
 					</li>
 					<li>
-						<a target="work" title="TV-{=L:bc.menue.screenshot=}" href="Y_Tools_Screenshot.yhtm?video=1&rc={=ini-get:/var/tuxbox/config/yWeb.conf;screenshot_rc;false=}">TV</a>
+						<a target="work" title="TV-{=L:bc.menue.screenshot=}" href="Y_Tools_Screenshot.yhtm?video=1&rc={=ini-get:%(CONFIGDIR)/yWeb.conf;screenshot_rc;false=}">TV</a>
 					</li>
-					{=if-equal:{=ini-get:/var/tuxbox/config/neutrino.conf;lcd4l_screenshots;0=}~1~
+					{=if-equal:{=ini-get:%(CONFIGDIR)/neutrino.conf;lcd4l_screenshots;0=}~1~
 					<li>
 						<a target="work" title="LCD4Linux-{=L:bc.menue.screenshot=}" href="Y_Tools_Screenshot_LCD4Linux.yhtm">LCD4Linux</a>
 					</li>
 					~=}
-					{=if-equal:{=ini-get:/var/tuxbox/config/neutrino.conf;glcd_enable;0=}~1~
+					{=if-equal:{=ini-get:%(CONFIGDIR)/neutrino.conf;glcd_enable;0=}~1~
 					<li>
 						<a target="work" title="GraphLCD-{=L:bc.menue.screenshot=}" href="Y_Tools_Screenshot_GraphLCD.yhtm">GraphLCD</a>
 					</li>
@@ -182,6 +182,9 @@ function init() {
 				</ul>
 				<li>
 					<a target="work" href="Y_Timer_List.yhtm">{=L:live.timer=}</a>
+				</li>
+				<li>
+					<a target="work" href="Y_Boxcontrol_PZapit.yhtm">{=L:bc.pzapit=}</a>
 				</li>
 			</ul>
 		</div>

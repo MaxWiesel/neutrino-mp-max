@@ -548,3 +548,17 @@ rc.key_picsize=Pic Size
 rc.key_picmode=Pic Mode
 rc.key_pos=Pos
 rc.key_recall=Recall
+
+# ===== NI
+ni.save=Speichern
+ni.cancel=Abbrechen
+ni.edit=Bearbeiten
+ni.remove=L&ouml;schen
+ni.create=Anlegen
+ni.start=Start
+ni.stop=Stopp
+ni.reset=Reset
+ni.reload=Neu laden
+ni.configure=Konfigurieren
+ni.dblclick=Doppelklick erforderlich
+ni.infopage=NI Infoseite
