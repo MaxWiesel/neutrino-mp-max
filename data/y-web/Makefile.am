@@ -42,6 +42,7 @@ install_DATA =	extensions.txt \
 		Y_Menue.yhtm \
 		Y_Refresh.yhtm \
 		Y_Settings_Backup.yhtm \
+		Y_Settings_Camds.yhtm \
 		Y_Settings_Menue.yhtm \
 		Y_Settings_automount.yhtm \
 		Y_Settings_automount_list.yhtm \
