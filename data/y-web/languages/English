@@ -342,6 +342,7 @@ set.settings.warning=Backup & Restore is only useful for the same image with the
 set.xmltv.header=XMLTV Settings
 
 # ===== Settings Plugins
+<<<<<<< HEAD
 set.plugins=Plugincontrol
 set.plugins.title=Manage plugins and services
 
@@ -350,10 +351,21 @@ set.plugin-tools.pat-rules=Edit Rules
 set.plugin-tools.epgscan-dat=Edit Transponderlist
 set.plugin-tools.rssreader-conf=Edit RSS-Feeds
 set.plugin-tools.2webtvxmlurls-conf=Edit WebTV-URLs
+=======
+set.plugincontrol=Plugincontrol
+set.plugincontrol.title=Manage plugins and services
+
+set.plugintools.fcm-addr=Edit Phonebook
+set.plugintools.pat-rules=Edit Rules
+set.plugintools.epgscan-dat=Edit Transponderlist
+set.plugintools.rssreader-conf=Edit RSS-Feeds
+set.plugintools.2webtvxmlurls-conf=Edit WebTV-URLs
+>>>>>>> 63e90c1a5... - yWeb: rename Y_NI_Plugin-control.yhtm => Y_Settings_Plugincontrol.yhtm
 
 set.plugins_hide=Hide plugins
 set.plugins_hide.title=Show and hide plugins
 
+<<<<<<< HEAD
 # ===== Settings camds
 set.camds=Softcams
 set.camds.title=Softcam-Control
@@ -374,6 +386,8 @@ set.camd-tools.oscamversion=Common Informations
 set.camd-tools.ncamversion=Common Informations
 set.camd-tools.doscamversion=Common Informations
 
+=======
+>>>>>>> 63e90c1a5... - yWeb: rename Y_NI_Plugin-control.yhtm => Y_Settings_Plugincontrol.yhtm
 # ===== Tools Info
 tools.info.show_messages=Kernel Messages
 tools.info.processes=Processes
