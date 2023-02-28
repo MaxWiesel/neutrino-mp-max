@@ -342,7 +342,6 @@ set.settings.warning=Sichern &amp; Wiederherstellen ist nur bei einem gleichen I
 set.xmltv.header=XMLTV Einstellungen
 
 # ===== Settings Plugins
-<<<<<<< HEAD
 set.plugins=Plugin-Steuerung
 set.plugins.title=Plugins und Services verwalten
 
@@ -351,21 +350,10 @@ set.plugin-tools.pat-rules=Regeln bearbeiten
 set.plugin-tools.epgscan-dat=Transponderliste bearbeiten
 set.plugin-tools.rssreader-conf=RSS-Feeds bearbeiten
 set.plugin-tools.2webtvxmlurls-conf=WebTV-URLs bearbeiten
-=======
-set.plugincontrol=Plugin-Steuerung
-set.plugincontrol.title=Plugins und Services verwalten
-
-set.plugintools.fcm-addr=Telefonbuch bearbeiten
-set.plugintools.pat-rules=Regeln bearbeiten
-set.plugintools.epgscan-dat=Transponderliste bearbeiten
-set.plugintools.rssreader-conf=RSS-Feeds bearbeiten
-set.plugintools.2webtvxmlurls-conf=WebTV-URLs bearbeiten
->>>>>>> 63e90c1a5... - yWeb: rename Y_NI_Plugin-control.yhtm => Y_Settings_Plugincontrol.yhtm
 
 set.plugins_hide=Plugins verstecken
 set.plugins_hide.title=Plugins anzeigen und verstecken
 
-<<<<<<< HEAD
 # ===== Settings camds
 set.camds=Softcams
 set.camds.title=Softcam-Steuerung
@@ -386,8 +374,6 @@ set.camd-tools.oscamversion=Allgemeine Informationen
 set.camd-tools.ncamversion=Allgemeine Informationen
 set.camd-tools.doscamversion=Allgemeine Informationen
 
-=======
->>>>>>> 63e90c1a5... - yWeb: rename Y_NI_Plugin-control.yhtm => Y_Settings_Plugincontrol.yhtm
 # ===== Tools Info
 tools.info.show_messages=Kernel Meldungen
 tools.info.processes=Prozesse
