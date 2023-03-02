@@ -73,6 +73,9 @@ install_DATA =	extensions.txt \
 		Y_Tools_Menue.yhtm \
 		Y_Tools_m3uConvert.yhtm \
 		Y_Tools_m3uConvert_help.yhtm \
+		Y_Tools_NetFS.yhtm \
+		Y_Tools_NetFS_edit.yhtm \
+		Y_Tools_NetFS_init.yhtm \
 		Y_Tools_Rcsim.yhtm \
 		Y_Tools_Screenshot.yhtm  \
 		Y_Tools_Screenshot_GraphLCD.yhtm \
