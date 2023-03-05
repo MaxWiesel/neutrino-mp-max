@@ -284,28 +284,6 @@ start-block~head_frame_iso
 <title>yWeb</title>
 end-block~head_frame_iso
 
-# ------- Lay-HEAD NI
-start-block~head_ni
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="author" content="Neutino-MP">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<meta http-equiv="cache-control" content="no-cache" />
-<meta http-equiv="expires" content="Thu, 01 Jan 1970 00:00:00 GMT" />
-<title>yWeb</title>
-<link rel="stylesheet" href="/Y_Main.css" />
-<link rel="stylesheet" href="/Y_Dist.css" />
-<link rel="stylesheet" href="/Y_User.css" />
-{=include-block:Y_Blocks.txt;js_prototype=}
-{=include-block:Y_Blocks.txt;js_jquery=}
-{=include-block:Y_Blocks.txt;js_jquery_ui=}
-<script>
-	// Clear y-Cache in our pages
-	yhttpd_cache_clear('');
-</script>
-end-block~head_ni
-
 # ------- Lay-HEAD close
 start-block~head_close
 </head>
@@ -526,13 +504,13 @@ start-block~netfs_table_row
 				</a>
 				{=if-equal:{=mount_type=}~0~
 				{=if-equal:{=var-get:is_mount_{=var-get:nr=}=}~false~
-				<a href="javascript:Y_NI_Tools('do_mount {=var-get:local_dir_{=var-get:nr=}=}', 5000);" title="{=L:tools.netfscontrol.mount=}">
+				<a href="javascript:Y_NI_Tools('do_mount {=var-get:local_dir_{=var-get:nr=}=}', 5000);" title="{=L:tools.netfs.mount=}">
 					<img src="/images/server_add.png">
 				</a>
 				<img src="/images/blank.png">
 				~
 				<img src="/images/blank.png">
-				<a href="javascript:Y_NI_Tools('do_umount {=var-get:local_dir_{=var-get:nr=}=}', 5000);" title="{=L:tools.netfscontrol.umount=}">
+				<a href="javascript:Y_NI_Tools('do_umount {=var-get:local_dir_{=var-get:nr=}=}', 5000);" title="{=L:tools.netfs.umount=}">
 					<img src="/images/server_delete.png">
 				</a>
 				=}

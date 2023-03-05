@@ -9,6 +9,7 @@ install_DATA =	extensions.txt \
 		index.html \
 		robots.txt \
 		Y_About.yhtm \
+		Y_About_Image.yhtm \
 		Y_Baselib.js \
 		Y_Blank.yhtm \
 		Y_Blocks.txt \
