@@ -365,14 +365,7 @@ void CImageInfo::InitInfoData()
 		v_info.push_back({g_Locale->getText(LOCALE_IMAGEINFO_CREATOR), creator});
 
 	//gui
-	v_info.push_back({g_Locale->getText(LOCALE_IMAGEINFO_GUI), config.getString("gui", PACKAGE_NAME)});
-
-#ifdef VCS
-	//gui vcs
-	v_info.push_back({g_Locale->getText(LOCALE_IMAGEINFO_VCS),	VCS});
-#else
-	v_info.push_back({g_Locale->getText(LOCALE_IMAGEINFO_VCS),	PACKAGE_VERSION_GIT});
-#endif
+	initGuiInfo();
 
 	//stb info
 	initHalInfo();
@@ -395,6 +388,25 @@ void CImageInfo::initBuildDateInfo()
 	if (builddate.empty())
 		builddate = PACKAGE_VERSION_DATE;
 	v_info.push_back({g_Locale->getText(LOCALE_IMAGEINFO_DATE),	builddate});
+}
+
+void CImageInfo::initGuiInfo()
+{
+	string gui_info = PACKAGE_NAME;
+#if ENABLE_PKG_MANAGEMENT
+	if (file_exists("/tmp/.neutrino.version"))
+		gui_info += " " + CComponentsText::getTextFromFile("/tmp/.neutrino.version");
+#endif
+	v_info.push_back({g_Locale->getText(LOCALE_IMAGEINFO_GUI), config.getString("gui", gui_info)});
+
+#ifndef ENABLE_PKG_MANAGEMENT
+# ifdef VCS
+	//gui vcs
+	v_info.push_back({g_Locale->getText(LOCALE_IMAGEINFO_VCS),	VCS});
+# else
+	v_info.push_back({g_Locale->getText(LOCALE_IMAGEINFO_VCS),	PACKAGE_VERSION_GIT});
+# endif
+#endif
 }
 
 void CImageInfo::initHalInfo()
