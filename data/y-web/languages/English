@@ -51,6 +51,16 @@ automatic=automatically
 unknown=unknown
 show=show
 hide=hide
+edit=Edit
+remove=Remove
+create=Create
+start=Start
+stop=Stop
+reset=Reset
+reload=Reload
+configure=Configure
+dblclick=Doubleclick required
+infopage=Infopage
 
 # ===== Dates
 date.su=Su
@@ -305,7 +315,7 @@ set.yweb.box_color_desc=Box Name color in Top-Menue. e.g. enter 2188e0 without #
 set.yweb.box_color=Color
 set.yweb.start_page=Start page
 set.yweb.remote=Remote
-set.yweb.screenshot_rc=RC in screenshot menu
+set.yweb.screenshot_rc=RC in screenshot page
 set.yweb.screenshot_timeout=Screenshot timeout
 
 # ===== Settings Picture viewer
@@ -553,17 +563,3 @@ rc.key_picsize=Pic Size
 rc.key_picmode=Pic Mode
 rc.key_pos=Pos
 rc.key_recall=Recall
-
-# ===== NI
-ni.save=Save
-ni.cancel=Cancel
-ni.edit=Edit
-ni.remove=Remove
-ni.create=Create
-ni.start=Start
-ni.stop=Stop
-ni.reset=Reset
-ni.reload=Reload
-ni.configure=Configure
-ni.dblclick=Doubleclick required
-ni.infopage=NMP Infopage

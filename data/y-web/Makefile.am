@@ -123,5 +123,5 @@ install-data-hook:
 			-e 's|%(HOSTED_HTTPDDIR)|$(HOSTED_HTTPDDIR)|g' \
 			-e 's|%(FLAGDIR)|$(FLAGDIR)|g' \
 	;
-	@# NI-yWeb
+	@# install GreyBlue style
 	cp $(DESTDIR)$(PRIVATE_HTTPDDIR)/styles/Y_Dist-GreyBlue.css $(DESTDIR)$(PRIVATE_HTTPDDIR)/Y_Dist.css
