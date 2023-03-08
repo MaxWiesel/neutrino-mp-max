@@ -62,7 +62,6 @@ date.fr=Fr
 date.sa=Sa
 
 # ===== Main Menue
-main.blank=yWeb
 main.boxcontrol=Boxsteuerung
 main.boxcontrol_desc=Boxcontrol & Bouquets
 main.tools=Werkzeuge
@@ -75,6 +74,7 @@ main.info=Info
 main.info_desc=Information &uuml;ber das yWeb, Version
 main.remote_full_desc=Fernbedienung & OSD Vollbild
 main.stream_to_vlc_client_desc=Live TV direkt im VLC Client
+main.ni=NMP-yWeb
 
 # ===== Boxcontrol Menue
 bc.menue.bouquets_desc=Sender ausw&auml;hlen
@@ -489,7 +489,12 @@ live.timer-sync.status=Status
 
 # ===== INFO
 info.help=Hilfe
-info.about=&Uuml;ber
+info.about_yweb=&Uuml;ber yWeb
+info.about_image=&Uuml;ber NMP-Image
+info.about.your_image=Dein NMP-Image
+info.about.actual_image=Aktuelles NMP-Image
+info.about.image_upd_no=Kein Update verf&uuml;gbar
+info.about.image_upd_yes=Update verf&uuml;gbar
 info.check_for_updates=Auf Updates pr&uuml;fen
 info.your_version=Deine Version
 info.actual_version=Aktuelle Version
@@ -561,4 +566,4 @@ ni.reset=Reset
 ni.reload=Neu laden
 ni.configure=Konfigurieren
 ni.dblclick=Doppelklick erforderlich
-ni.infopage=NI Infoseite
+ni.infopage=NMP Infoseite

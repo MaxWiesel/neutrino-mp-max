@@ -162,7 +162,8 @@ libneutrino_gui2_a_SOURCES = \
 	color.cpp \
 	hdd_menu.cpp \
 	infoclock.cpp \
-	motorcontrol.cpp
+	motorcontrol.cpp \
+	netfs_setup.cpp
 
 if ENABLE_UPNP
 libneutrino_gui2_a_SOURCES += \

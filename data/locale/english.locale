@@ -1584,6 +1584,7 @@ menu.hint_net_netmask Enter network mask\nif unsure, use 255.255.255.0
 menu.hint_net_nfs_mount Configure and mount network shares
 menu.hint_net_nfs_umount Un-mount mounted shares
 menu.hint_net_ntp Configure time sync
+menu.hint_net_ntpatboot Enable time sync using NTP protocol while booting
 menu.hint_net_ntpenable Enable time sync using NTP protocol\nIf NTP sync not successfull, DVB will be used
 menu.hint_net_ntprefresh Time sync interval
 menu.hint_net_ntpserver Enter NTP server name
@@ -1602,6 +1603,14 @@ menu.hint_net_telnet Enable telnet login to your box
 menu.hint_net_test Test network connection: ping gateway,\n name server and external IP
 menu.hint_net_ushare Share connected HDD over uPnp
 menu.hint_net_xupnpd Share live channels over UPNP
+menu.hint_netfs_automount_write Save automount entries and write %s
+menu.hint_netfs_fstab_domount Mount fstab entries
+menu.hint_netfs_fstab_doumount Umount fstab entries
+menu.hint_netfs_fstab_write Save fstab entries and write %s
+menu.hint_netfs_menu_main_automount Configure automount entries
+menu.hint_netfs_menu_main_fstab Configure fstab entries
+menu.hint_netfs_menu_main_head Fstab and automount configuration
+menu.hint_netfs_mounts NetFS entry
 menu.hint_network IP address, gateway, DNS, Time sync\nNetwork shares and services
 menu.hint_new_zap_mode Allow channel switch while browsing\n(toggle mode with 'mute' in channel list)
 menu.hint_next Continue to next menu\nPress menu key to close all menus
@@ -2252,6 +2261,28 @@ mpkey.rewind Rewind
 mpkey.stop Stop
 mpkey.subtitle Subtitles
 mpkey.time Show time
+netfs.active_onoff Entry active
+netfs.automount_edit Edit auto.net
+netfs.automount_head NetFS settings
+netfs.automount_intro auto.net entries
+netfs.automount_intro_mounts Edit NetFS mounts
+netfs.automount_write Save settings and write auto.net
+netfs.automount_write_info auto.net written
+netfs.dump Dump
+netfs.fstab_domount Mount NetFS directory
+netfs.fstab_domount_info Running '/etc/init.d/fstab start_netfs'
+netfs.fstab_doumount Unmount NetFS directory
+netfs.fstab_doumount_info Running '/etc/init.d/fstab stop_netfs'
+netfs.fstab_edit Edit fstab
+netfs.fstab_head NetFS settings
+netfs.fstab_intro fstab entries
+netfs.fstab_intro_mounts Edit NetFS mounts
+netfs.fstab_write Save settings and write fstab
+netfs.fstab_write_info fstab written
+netfs.menu_main_edit Edit entries
+netfs.menu_main_head NetFS settings
+netfs.menu_main_intro Configuration of fstab and auto.net
+netfs.pass Pass
 networkmenu.apply_settings Changes are applied
 networkmenu.apply_settings_now Do you want to apply settings now?
 networkmenu.broadcast Broadcast
@@ -2266,6 +2297,7 @@ networkmenu.ipaddress IP address
 networkmenu.mount Edit network shares
 networkmenu.nameserver Name server
 networkmenu.netmask Netmask
+networkmenu.ntpatboot Syncronize time at boot
 networkmenu.ntpenable Syncronisation via
 networkmenu.ntprefresh NTP/DVB refresh
 networkmenu.ntprefresh_hint1 NTP/DVB time sync in minutes

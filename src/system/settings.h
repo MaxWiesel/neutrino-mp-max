@@ -577,6 +577,31 @@ struct SNeutrinoSettings
 		std::string username;
 		std::string password;
 	} network_nfs[NETWORK_NFS_NR_OF_ENTRIES];
+
+#define NETFS_NR_OF_ENTRIES NETWORK_NFS_NR_OF_ENTRIES
+	typedef enum
+	{
+		FSTAB = 0,
+		AUTOMOUNT = 1,
+
+		NETFS_MOUNT_TYPE_COUNT
+	} NETFS_MOUNT_TYPE;
+
+	struct
+	{
+		std::string ip;
+		std::string dir;
+		std::string local_dir;
+		int type;
+		std::string username;
+		std::string password;
+		std::string options1;
+		std::string options2;
+		int active;
+		std::string dump;
+		std::string pass;
+	} netfs[NETFS_MOUNT_TYPE_COUNT][NETFS_NR_OF_ENTRIES];
+
 	std::string network_nfs_audioplayerdir;
 	std::string network_nfs_moviedir;
 	std::string network_nfs_picturedir;
@@ -616,6 +641,11 @@ struct SNeutrinoSettings
 	int recording_audio_pids_alt;
 	int recording_audio_pids_std;
 
+	// streaming;
+	int streaming_ecmmode;
+	int streaming_decryptmode;
+	int streaming_port;
+
 	// timeshift
 	std::string timeshiftdir;
 	int timeshift_auto;
@@ -628,6 +658,7 @@ struct SNeutrinoSettings
 	int network_ntpenable;
 	std::string network_ntpserver;
 	std::string network_ntprefresh;
+	int network_ntpatboot;
 
 	// personalize
 	enum PERSONALIZE_SETTINGS // settings.h
@@ -757,11 +788,6 @@ struct SNeutrinoSettings
 	std::string plugins_lua;
 	std::string plugins_script;
 	std::string plugins_tool;
-
-	// streaming;
-	int streaming_ecmmode;
-	int streaming_decryptmode;
-	int streaming_port;
 
 	// default plugin for movieplayer
 	std::string movieplayer_plugin;

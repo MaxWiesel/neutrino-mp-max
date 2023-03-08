@@ -87,6 +87,15 @@ images_DATA += \
 	ext_plugin.png \
 	ext_script.png
 
+# NI-yWeb
+images_DATA += \
+	cancel.png \
+	colored_bar.png \
+	server_add.png \
+	server_delete.png \
+	server_edit.png \
+	server_link.png
+
 # remote controls
 imagesrcdir = $(PRIVATE_HTTPDDIR)/images/rc
 

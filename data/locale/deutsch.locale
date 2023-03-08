@@ -1584,6 +1584,7 @@ menu.hint_net_netmask Geben Sie eine Netzwerkmaske ein\nStandart ist 255.255.255
 menu.hint_net_nfs_mount Bearbeiten Sie die Netzwerkfreigaben und deren Einhängepunkte
 menu.hint_net_nfs_umount Hängen Sie eingehängte Netzwerkfreigaben wieder aus
 menu.hint_net_ntp Ändern Sie den Zeitserver für die Zeitsynchronisation via Internet
+menu.hint_net_ntpatboot Aktiviert die Zeitsynchronisierung via NTP beim Hochfahren der Box
 menu.hint_net_ntpenable Aktiviert die Zeitsynchronisierung via NTP.\nWenn das NTP nicht erfolgreich ist, verwenden Sie DVB
 menu.hint_net_ntprefresh Stellen Sie den Interval zur Zeitsynchronisation ein
 menu.hint_net_ntpserver Geben Sie den NTP-Server ein
@@ -1602,6 +1603,14 @@ menu.hint_net_telnet Aktiviert Telnet auf Ihrer Box
 menu.hint_net_test Testet die Netzwerkverbindung:\nPing auf Gateway, Name-Server und externe IP-Adressen
 menu.hint_net_ushare Freigabe verbundener Datenträger über UPnP
 menu.hint_net_xupnpd Freigabe von Live Channels über UPNP
+menu.hint_netfs_automount_write automount Einträge speichern und %s schreiben
+menu.hint_netfs_fstab_domount fstab Einträge einhängen
+menu.hint_netfs_fstab_doumount fstab Einträge aushängen
+menu.hint_netfs_fstab_write fstab Einstellungen speichern und %s schreiben
+menu.hint_netfs_menu_main_automount Bearbeiten der automounter Einträge
+menu.hint_netfs_menu_main_fstab Bearbeiten der fstab Einträge
+menu.hint_netfs_menu_main_head Konfiguration von fstab und automounter
+menu.hint_netfs_mounts NetFS Eintrag
 menu.hint_network IP-Adresse, Gateway, DNS, Zeit-Sync, Netzwerk-Freigaben, Dienste usw.
 menu.hint_new_zap_mode Aktiviert Quickzap in der Kanalliste. Nach Betätigen der Mute-Taste wird mit den Hoch/Runter-Tasten direkt umgeschalten
 menu.hint_next Weiter zum nächsten Menü.\nDie Taste 'Menü' schließt alle Menüs
@@ -2252,6 +2261,28 @@ mpkey.rewind Rücklauf
 mpkey.stop Stopp
 mpkey.subtitle Untertitel
 mpkey.time Zeitanzeige
+netfs.active_onoff Eintrag aktiv
+netfs.automount_edit auto.net bearbeiten
+netfs.automount_head NetFS Einstellungen
+netfs.automount_intro Einträge für auto.net
+netfs.automount_intro_mounts NetFS-Mounts bearbeiten
+netfs.automount_write Einstellungen speichern und auto.net schreiben
+netfs.automount_write_info auto.net wurde geschrieben
+netfs.dump Dump
+netfs.fstab_domount NetFS-Verzeichnisse anhängen (mount)
+netfs.fstab_domount_info '/etc/init.d/fstab start_netfs' wird ausgeführt
+netfs.fstab_doumount NetFS-Verzeichnisse aushängen (umount)
+netfs.fstab_doumount_info '/etc/init.d/fstab stop_netfs' wird ausgeführt
+netfs.fstab_edit fstab bearbeiten
+netfs.fstab_head NetFS Einstellungen
+netfs.fstab_intro Einträge für fstab
+netfs.fstab_intro_mounts NetFS-Mounts bearbeiten
+netfs.fstab_write Einstellungen speichern und fstab schreiben
+netfs.fstab_write_info fstab wurde geschrieben
+netfs.menu_main_edit Einträge bearbeiten
+netfs.menu_main_head NetFS Einstellungen
+netfs.menu_main_intro Konfiguration von fstab und auto.net
+netfs.pass Pass
 networkmenu.apply_settings Änderungen werden übernommen ...
 networkmenu.apply_settings_now Änderungen jetzt zuweisen?
 networkmenu.broadcast Broadcast
@@ -2266,6 +2297,7 @@ networkmenu.ipaddress IP
 networkmenu.mount Netzwerkfreigaben bearbeiten
 networkmenu.nameserver Nameserver
 networkmenu.netmask Netzmaske
+networkmenu.ntpatboot Zeit beim Booten synchronisieren
 networkmenu.ntpenable Zeit synchronisieren per
 networkmenu.ntprefresh NTP/DVB-Aktualisierung
 networkmenu.ntprefresh_hint1 NTP/DVB-Time-Sync [min]

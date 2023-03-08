@@ -8,8 +8,8 @@ install_DATA =	extensions.txt \
 		favicon.ico \
 		index.html \
 		robots.txt \
-		Y_About.yhtm \
 		Y_About_Image.yhtm \
+		Y_About_yWeb.yhtm \
 		Y_Baselib.js \
 		Y_Blank.yhtm \
 		Y_Blocks.txt \
@@ -123,3 +123,5 @@ install-data-hook:
 			-e 's|%(HOSTED_HTTPDDIR)|$(HOSTED_HTTPDDIR)|g' \
 			-e 's|%(FLAGDIR)|$(FLAGDIR)|g' \
 	;
+	@# NI-yWeb
+	cp $(DESTDIR)$(PRIVATE_HTTPDDIR)/styles/Y_Dist-GreyBlue.css $(DESTDIR)$(PRIVATE_HTTPDDIR)/Y_Dist.css
