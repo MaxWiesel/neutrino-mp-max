@@ -484,6 +484,16 @@ bool CFlashUpdate::checkVersion4Update()
 		}
 		hide();
 
+#if HAVE_ARM_HARDWARE || HAVE_MIPS_HARDWARE
+		// tgz or zip package install:
+		if (file_selected->getType() == CFile::FILE_TGZ_PACKAGE || file_selected->getType() == CFile::FILE_ZIP_PACKAGE)
+		{
+			fileType = 'Z';
+			// !always leave here!
+			return true;
+		}
+#endif
+
 		// set internal filetype
 		char const *ptr = rindex(filename.c_str(), '.');
 		if (ptr)
