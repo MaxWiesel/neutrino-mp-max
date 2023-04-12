@@ -1088,8 +1088,8 @@ imdb.data_title Originaltitel
 imdb.data_votes Stimmen
 imdb.data_website Webseite
 imdb.data_writer Drehbuchautor
-inetradio.autostart Internetradio Auto-Start
 inetradio.name Internetradio
+inetradio.autostart Internetradio Auto-Start
 infoviewer.epgnotload Informationen noch nicht geladen ...
 infoviewer.epgwait Warte auf EPG-Informationen ...
 infoviewer.motor_moving Antennenpositionierung
@@ -1423,8 +1423,8 @@ menu.hint_imageinfo Informationen über die installierte Software
 menu.hint_inact_timer Ausschalten der Box nach Inaktivität in Minuten.\nDie Box geht automatisch in den Standby-Modus
 menu.hint_inactive_back Ändern Sie die Hintergrundfarbe für deaktivierte Fensterinhalte
 menu.hint_inactive_textcolor Ändern Sie die Textfarbe für deaktivierte Fensterinhalte
-menu.hint_inet_radio Internetradio
-menu.hint_inet_radio_autostart Spielt automatisch den ersten Eintrag der Favoriten-Liste ab
+menu.hint_inetradio Internetradio
+menu.hint_inetradio_autostart Spielt automatisch den ersten Eintrag der Favoriten-Liste ab
 menu.hint_info Systeminformationen anzeigen.
 menu.hint_infobar_analogclock Zeigt eine Analoguhr anstatt der digitalen Anzeige der Zeit
 menu.hint_infobar_back Ändern Sie die Hintergrundfarbe für die Infobar
