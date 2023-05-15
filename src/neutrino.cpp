@@ -1037,7 +1037,7 @@ int CNeutrinoApp::loadSetup(const char *fname)
 	g_settings.flashupdate_createimage_add_uldr = configfile.getInt32("flashupdate_createimage_add_uldr", 1);
 	g_settings.flashupdate_createimage_add_var = configfile.getInt32("flashupdate_createimage_add_var", 1);
 
-	g_settings.backup_dir = configfile.getString("backup_dir", "/media");
+	g_settings.backup_dir = configfile.getString("backup_dir", TARGET_ROOT "/media");
 	g_settings.update_dir = configfile.getString("update_dir", "/tmp");
 	g_settings.update_dir_opkg = configfile.getString("update_dir_opkg", g_settings.update_dir);
 
@@ -5627,7 +5627,7 @@ void CNeutrinoApp::loadKeys(const char *fname)
 	g_settings.key_subchannel_down = tconfig->getInt32("key_subchannel_down", CRCInput::RC_left);
 	g_settings.key_subchannel_up = tconfig->getInt32("key_subchannel_up", CRCInput::RC_right);
 	g_settings.key_switchformat = tconfig->getInt32("key_switchformat", CRCInput::RC_nokey);
-#if BOXMODEL_HD51 || BOXMODEL_BRE2ZE4K || BOXMODEL_H7 || BOXMODEL_E4HDULTRA || BOXMODEL_PROTEK4K || BOXMODEL_HD60 || BOXMODEL_HD61 || BOXMODEL_MULTIBOX || BOXMODEL_MULTIBOXSE
+#if BOXMODEL_BRE2ZE4K || BOXMODEL_HD51 || BOXMODEL_HD60 || BOXMODEL_HD61 || BOXMODEL_H7 || BOXMODEL_PROTEK4K
 	g_settings.key_timeshift = tconfig->getInt32("key_timeshift", CRCInput::RC_playpause_long); // FIXME
 #elif BOXMODEL_VUPLUS_ALL
 	g_settings.key_timeshift = tconfig->getInt32("key_timeshift", CRCInput::RC_playpause);
