@@ -1009,6 +1009,7 @@ struct SNeutrinoSettings
 	// movieplayer
 	int movieplayer_bisection_jump;
 	int movieplayer_display_playtime;
+	int movieplayer_eof_cnt;
 	int movieplayer_repeat_on;
 	int movieplayer_timeosd_while_searching;
 
