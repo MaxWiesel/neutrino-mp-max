@@ -184,8 +184,8 @@ void CMoviePlayerGui::Init(void)
 
 	frameBuffer = CFrameBuffer::getInstance();
 
-	if (playback == NULL)
-		playback = new cPlayback(0);
+	// init playback instance
+	playback = getPlayback();
 	if (moviebrowser == NULL)
 		moviebrowser = new CMovieBrowser();
 	if (bookmarkmanager == NULL)
@@ -717,7 +717,7 @@ void CMoviePlayerGui::fillPids()
 
 void CMoviePlayerGui::Cleanup()
 {
-	/*clear audiopids */
+	// clear audiopids
 	for (unsigned int i = 0; i < REC_MAX_APIDS; i++) {
 		apids[i] = 0;
 		ac3flags[i] = 0;
@@ -866,8 +866,9 @@ bool CMoviePlayerGui::SelectFile()
 	}
 
 	printf("CMoviePlayerGui::SelectFile: isBookmark %d timeshift %d isMovieBrowser %d is_audio_playing %d\n", isBookmark, timeshift, isMovieBrowser, is_audio_playing);
-	//wakeup_hdd(g_settings.network_nfs_recordingdir.c_str());
-
+#if 0
+	wakeup_hdd(g_settings.network_nfs_recordingdir.c_str());
+#endif
 	if (timeshift != TSHIFT_MODE_OFF) {
 		t_channel_id live_channel_id = CZapit::getInstance()->GetCurrentChannelID();
 		p_movie_info = CRecordManager::getInstance()->GetMovieInfo(live_channel_id);
@@ -3756,4 +3757,12 @@ size_t CMoviePlayerGui::GetReadCount()
 		res = this_read - last_read;
 	last_read = this_read;
 	return (size_t) res;
+}
+
+cPlayback *CMoviePlayerGui::getPlayback()
+{
+	if (playback == NULL) // mutex needed ?
+		playback = new cPlayback(0);
+
+	return playback;
 }

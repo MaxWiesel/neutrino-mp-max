@@ -303,7 +303,7 @@ class CMoviePlayerGui : public CMenuTarget
 	void deleteTimeshift() { timeshift_deletion = true; }
 	void moveTimeshift() { timeshift_to_record = true; }
 	int file_prozent;
-	cPlayback *getPlayback() { return playback; }
+	static cPlayback *getPlayback();
 	void SetFile(std::string &name, std::string &file, std::string info1="", std::string info2="", std::string file2="") { pretty_name = name; file_name = file; info_1 = info1; info_2 = info2; second_file_name = file2; }
 	unsigned int getAPID(void);
 	unsigned int getAPID(unsigned int i);
