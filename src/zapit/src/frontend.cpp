@@ -121,6 +121,8 @@ static fe_sec_voltage_t unicable_lowvolt = SEC_VOLTAGE_13;
 #define TIME_STEP 200
 #define TIMEOUT_MAX_MS (feTimeout*100)
 
+#define CMDTIMING 120
+
 /*********************************************************************************************************/
 
 CFrontend::CFrontend(int Number, int Adapter)
@@ -1529,6 +1531,7 @@ int CFrontend::setFrontend(const FrontendParameters *feparams, bool nowait)
 		{
 			p[cmdseq.num].cmd = DTV_ROLLOFF,		p[cmdseq.num].u.data = feparams->rolloff,						cmdseq.num++;
 			p[cmdseq.num].cmd = DTV_PILOT,			p[cmdseq.num].u.data = pilot,									cmdseq.num++;
+#if !HAVE_CST_HARDWARE
 			if (fe_can_multistream)
 			{
 #if (DVB_API_VERSION >= 5 && DVB_API_VERSION_MINOR >= 11)
@@ -1539,6 +1542,7 @@ int CFrontend::setFrontend(const FrontendParameters *feparams, bool nowait)
 #endif
 			}
 			p[cmdseq.num].cmd = DTV_ISDBT_SB_SEGMENT_IDX, p[cmdseq.num].u.data = (feparams->plp_id == NO_STREAM_ID_FILTER ? 0 : (0x80000000 | (T2MI_Default_Pid << 16) | feparams->plp_id)), cmdseq.num++;
+#endif
 		}
 		if (fe_can_multistream)
 			INFO("[fe%d/%d] tuner pilot %d (feparams %d) streamid (%d/%d/%d)\n", adapter, fenumber, pilot, feparams->pilot, feparams->plp_id, feparams->pls_code, feparams->pls_mode );
@@ -1887,7 +1891,7 @@ uint32_t CFrontend::sendEN50494TuningCommand(const uint32_t frequency, const int
 		adapter, fenumber, horizontal, high_band, frequency, bpf, config.uni_scr, bank, pin, ret);
 	if (!slave && info.type == FE_QPSK) {
 		cmd.msg[3] = (config.uni_scr << 5);		/* adress */
-		if (bank < 2) { /* bank = 0/1 => tune, bank = 2 => standby */
+		if (bank < 2) {					/* bank = 0/1 => tune, bank = 2 => standby */
 			cmd.msg[3] |= (t >> 8)		|	/* highest 2 bits of t */
 				(bank << 4)		|	/* input 0/1 */
 				(horizontal << 3)	|	/* horizontal == 0x08 */
@@ -1895,8 +1899,8 @@ uint32_t CFrontend::sendEN50494TuningCommand(const uint32_t frequency, const int
 			cmd.msg[4] = t & 0xFF;
 		}
 		fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_18);
-		usleep(20 * 1000);		/* en50494 says: >4ms and < 22 ms */
-		sendDiseqcCommand(&cmd, 80);	/* en50494 says: >2ms and < 60 ms -- it seems we must add the lengthe of telegramm itself (~65ms) */
+		usleep(20 * 1000);				/* en50494 says: >4ms and < 22 ms */
+		sendDiseqcCommand(&cmd, CMDTIMING);		/* en50494 says: >2ms and < 60 ms -- it seems we must add the length of telegramm itself (~65ms)*/
 		fop(ioctl, FE_SET_VOLTAGE, unicable_lowvolt);
 	}
 	return ret;
@@ -1933,7 +1937,7 @@ uint32_t CFrontend::sendEN50607TuningCommand(const uint32_t frequency, const int
 				high_band;					/* high_band  == 0x01 */
 			fop(ioctl, FE_SET_VOLTAGE, SEC_VOLTAGE_18);
 			usleep(20 * 1000);					/* en50494 says: >4ms and < 22 ms */
-			sendDiseqcCommand(&cmd, 80);				/* en50494 says: >2ms and < 60 ms -- it seems we must add the lengthe of telegramm itself (~65ms) */
+			sendDiseqcCommand(&cmd, CMDTIMING);			/* en50494 says: >2ms and < 60 ms -- it seems we must add the length of telegramm itself (~65ms)*/
 			fop(ioctl, FE_SET_VOLTAGE, unicable_lowvolt);
 		}
 		return ret;
