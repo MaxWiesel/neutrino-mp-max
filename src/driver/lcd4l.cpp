@@ -397,8 +397,10 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 {
 	SNeutrinoTheme &t = g_settings.theme;
 
+	std::string EOL = "\n";
+
 	std::string font = g_settings.font_file;
-	font += "\n" + g_settings.font_file_monospace;
+	font += EOL + g_settings.font_file_monospace;
 
 	if (m_font.compare(font))
 	{
@@ -508,7 +510,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		y_res = 1080;
 
 	std::string Resolution = to_string(x_res) + "x" + to_string(y_res);
-	//Resolution += "\n" + to_string(framerate); //TODO
+	//Resolution += EOL + to_string(framerate); //TODO
 
 	if (m_Resolution.compare(Resolution))
 	{
@@ -659,7 +661,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 	int RecordCount = CRecordManager::getInstance()->GetRecordCount();
 
 	std::string _ModeRec = (ModeRec ? "on" : "off");
-	_ModeRec += "\n" + to_string(RecordCount);
+	_ModeRec += EOL + to_string(RecordCount);
 
 	if ((m_ModeRec != ModeRec) || (m_RecordCount != RecordCount))
 	{
@@ -969,9 +971,9 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		}
 
 		std::string Layout = DisplayType + "_" + DisplayMode;
-		Layout += "\n" + DisplayDriver;
-		Layout += "\n" + DisplayRes;
-		Layout += "\n" + DisplayMode;
+		Layout += EOL + DisplayDriver;
+		Layout += EOL + DisplayRes;
+		Layout += EOL + DisplayMode;
 
 		if (m_Layout.compare(Layout))
 		{
@@ -1014,7 +1016,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 			else
 			{
 				Event = g_InfoViewer->get_livestreamInfo1();
-				Event += "\n" + g_InfoViewer->get_livestreamInfo2();
+				Event += EOL + g_InfoViewer->get_livestreamInfo2();
 			}
 		}
 
@@ -1066,7 +1068,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 
 		if (CurrentNext.flags & CSectionsdClient::epgflags::has_next)
 		{
-			Event += "\n" + CurrentNext.next_name;
+			Event += EOL + CurrentNext.next_name;
 			time_t next_start_time = CurrentNext.next_zeit.startzeit;
 			tm_struct = localtime(&next_start_time);
 			snprintf(End, sizeof(End), "%02d:%02d", tm_struct->tm_hour, tm_struct->tm_min);
@@ -1175,7 +1177,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 #endif
 	/* ----------------------------------------------------------------- */
 
-	Event += "\n"; // make sure we have at least two lines in event-file
+	Event += EOL; // make sure we have at least two lines in event-file
 
 	if (m_Event.compare(Event))
 	{
@@ -1239,7 +1241,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		std::string wtimestamp = to_string((int)CWeather::getInstance()->getCurrentTimestamp());
 		for (int i = 0; i < forecast; i++) // 0 is current day
 		{
-			wtimestamp += "\n" + to_string(CWeather::getInstance()->getForecastWeekday(i));
+			wtimestamp += EOL + to_string(CWeather::getInstance()->getForecastWeekday(i));
 		}
 		if (m_wtimestamp.compare(wtimestamp))
 		{
@@ -1250,7 +1252,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		std::string wtemp = CWeather::getInstance()->getCurrentTemperature();
 		for (int i = 0; i < forecast; i++) // 0 is current day
 		{
-			wtemp += "\n" + CWeather::getInstance()->getForecastTemperatureMin(i);
+			wtemp += EOL + CWeather::getInstance()->getForecastTemperatureMin(i);
 			wtemp += "|" + CWeather::getInstance()->getForecastTemperatureMax(i);
 		}
 		if (m_wtemp.compare(wtemp))
@@ -1264,7 +1266,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 		wwind += "|" + CWeather::getInstance()->getCurrentWindDirection();
 		for (int i = 0; i < forecast; i++) // 0 is current day
 		{
-			wwind += "\n" + CWeather::getInstance()->getForecastWindSpeed(i);
+			wwind += EOL + CWeather::getInstance()->getForecastWindSpeed(i);
 			wwind += "|" + CWeather::getInstance()->getForecastWindBearing(i);
 			wwind += "|" + CWeather::getInstance()->getForecastWindDirection(i);
 		}
@@ -1276,7 +1278,7 @@ void CLCD4l::ParseInfo(uint64_t parseID, bool newID, bool firstRun)
 
 		std::string wicon = CWeather::getInstance()->getCurrentIcon();
 		for (int i = 0; i < forecast; i++)
-			wicon += "\n" + CWeather::getInstance()->getForecastIcon(i);
+			wicon += EOL + CWeather::getInstance()->getForecastIcon(i);
 		if (m_wicon.compare(wicon))
 		{
 			WriteFile(WEATHER_ICON, wicon);
