@@ -86,6 +86,7 @@ extern CPictureViewer *g_PicViewer;
 #define MODE_TSHIFT		LCD_DATADIR "mode_tshift"
 #define MODE_TIMER		LCD_DATADIR "mode_timer"
 #define MODE_ECM		LCD_DATADIR "mode_ecm"
+#define MODE_CAM		LCD_DATADIR "mode_cam"
 
 #define SERVICE			LCD_DATADIR "service"
 #define CHANNELNR		LCD_DATADIR "channelnr"
@@ -312,6 +313,8 @@ void CLCD4l::Init()
 	m_ModeTshift	= -1;
 	m_ModeTimer	= -1;
 	m_ModeEcm	= -1;
+	m_ModeCamPresent = false;
+	m_ModeCam	= -1;
 
 	m_Service	= "n/a";
 	m_ChannelNr	= -1;
