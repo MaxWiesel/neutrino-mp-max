@@ -2111,6 +2111,7 @@ std::string GetSpecialName(std::string name)
 	name = str_replace("ö", "oe", name);
 	name = str_replace("ü", "ue", name);
 	name = str_replace("ß", "ss", name);
+	name = str_replace("ø", "o", name);
 	name = str_replace("+", "-", name);
 	name = str_replace("&", "-", name);
 	name = str_replace("!", "-", name);
