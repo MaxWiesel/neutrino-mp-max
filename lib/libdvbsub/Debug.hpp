@@ -3,23 +3,24 @@
 
 #include <cstdio>
 
-class Debug {
-public:
-	Debug();
-	~Debug();
+class Debug
+{
+	public:
+		Debug();
+		~Debug();
 
-	void set_level(int level);
-	FILE* set_file(char* file);
-	void print(int level, const char *fmt, ...);
+		void set_level(int level);
+		FILE *set_file(char *file);
+		void print(int level, const char *fmt, ...);
 
-	static const int ERROR = 0;
-	static const int INFO = 1;
-	static const int VERBOSE = 2;
+		static const int ERROR = 0;
+		static const int INFO = 1;
+		static const int VERBOSE = 2;
 
-private:
-	char* file_;
-	int level_;
-	FILE* fp_;
+	private:
+		char *file_;
+		int level_;
+		FILE *fp_;
 
 };
 

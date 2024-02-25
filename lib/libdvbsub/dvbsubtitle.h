@@ -25,7 +25,7 @@ extern "C" {
 
 #include "tools.h"
 
-class cDvbSubtitleBitmaps : public cListObject 
+class cDvbSubtitleBitmaps : public cListObject
 {
 	private:
 		int64_t pts;
@@ -38,37 +38,36 @@ class cDvbSubtitleBitmaps : public cListObject
 		int Timeout(void) { return sub.end_display_time; }
 		void Draw(int &min_x, int &min_y, int &max_x, int &max_y);
 		int Count(void) { return sub.num_rects; }
-		AVSubtitle * GetSub(void) { return &sub; }
+		AVSubtitle *GetSub(void) { return &sub; }
 		void SetSub(AVSubtitle *s) { sub = *s; }
 };
 
-
-class cDvbSubtitleConverter  /*: public cThread */{
-private:
-  bool running;
-  pthread_mutex_t mutex;
-  cList<cDvbSubtitleBitmaps> *bitmaps;
-  AVCodecContext * avctx;
+class cDvbSubtitleConverter  /*: public cThread */
+{
+	private:
+		bool running;
+		pthread_mutex_t mutex;
+		cList<cDvbSubtitleBitmaps> *bitmaps;
+		AVCodecContext *avctx;
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(59, 0, 100)
-	AVCodec *avcodec;
+		AVCodec *avcodec;
 #else
-	const AVCodec *avcodec;
+		const AVCodec *avcodec;
 #endif
-  int min_x, min_y, max_x, max_y;
-  cTimeMs Timeout;
-public:
-  cDvbSubtitleConverter(void);
-  virtual ~cDvbSubtitleConverter();
-  int Action(void);
-  void Reset(void);
-  void Clear(void);
-  void Pause(bool pause);
-  void Lock();
-  void Unlock();
-  int Convert(const uchar *Data, int Length, int64_t pts);
-  int Convert(AVSubtitle *sub, int64_t pts);
-  bool Running() { return running; };
+		int min_x, min_y, max_x, max_y;
+		cTimeMs Timeout;
+	public:
+		cDvbSubtitleConverter(void);
+		virtual ~cDvbSubtitleConverter();
+		int Action(void);
+		void Reset(void);
+		void Clear(void);
+		void Pause(bool pause);
+		void Lock();
+		void Unlock();
+		int Convert(const uchar *Data, int Length, int64_t pts);
+		int Convert(AVSubtitle *sub, int64_t pts);
+		bool Running() { return running; };
 };
-
 
 #endif //__DVBSUBTITLE_H
