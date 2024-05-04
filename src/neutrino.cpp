@@ -1092,12 +1092,12 @@ int CNeutrinoApp::loadSetup(const char *fname)
 	g_settings.weather_location = configfile.getString("weather_location", WEATHER_DEFAULT_LOCATION);
 	g_settings.weather_postalcode = configfile.getString("weather_postalcode", WEATHER_DEFAULT_POSTALCODE);
 
-	g_settings.youtube_dev_id = YOUTUBE_DEV_KEY;
+	g_settings.youtube_api_key = YOUTUBE_API_KEY;
 #if ENABLE_YOUTUBE_KEY_MANAGE
-	g_settings.youtube_dev_id = configfile.getString("youtube_dev_id", g_settings.youtube_dev_id.empty() ? "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" : g_settings.youtube_dev_id);
+	g_settings.youtube_api_key = configfile.getString("youtube_api_key", g_settings.youtube_api_key.empty() ? "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" : g_settings.youtube_api_key);
 #endif
 	g_settings.youtube_enabled = configfile.getInt32("youtube_enabled", 1);
-	g_settings.youtube_enabled = g_settings.youtube_enabled && CApiKey::check_youtube_dev_id();
+	g_settings.youtube_enabled = g_settings.youtube_enabled && CApiKey::check_youtube_api_key();
 
 	g_settings.tmdb_api_key = TMDB_API_KEY;
 #if ENABLE_TMDB_KEY_MANAGE
@@ -1900,7 +1900,7 @@ void CNeutrinoApp::saveSetup(const char *fname)
 	configfile.setString("weather_postalcode", g_settings.weather_postalcode);
 
 #if ENABLE_YOUTUBE_KEY_MANAGE
-	configfile.setString("youtube_dev_id", g_settings.youtube_dev_id);
+	configfile.setString("youtube_api_key", g_settings.youtube_api_key);
 #endif
 	configfile.setInt32("youtube_enabled", g_settings.youtube_enabled);
 
