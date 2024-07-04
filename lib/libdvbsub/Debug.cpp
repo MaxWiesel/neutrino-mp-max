@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include <sys/time.h>
 #include <time.h>
 #include <cstdio>
@@ -45,13 +46,11 @@ void Debug::print(int level, const char *fmt, ...)
 	{
 		gettimeofday(&tv, NULL);
 		strftime(tbuf, sizeof(tbuf), "%H:%M:%S", localtime(&tv.tv_sec));
-		len = sprintf(buf, "[ %s.%03ld ] ", tbuf, tv.tv_usec / 1000);
+		len = sprintf(buf, "[ %s.%03" PRIdMAX " ] ", tbuf, static_cast<intmax_t>(tv.tv_usec / 1000));
 
 		va_start(argp, fmt);
-		//vfprintf(fp_, fmt, argp);
-		vsnprintf(&buf[len], 512, fmt, argp);
+		vsnprintf(&buf[len], sizeof(buf) - len, fmt, argp);
 		va_end(argp);
 		fprintf(fp_, "%s", buf);
 	}
 }
-
