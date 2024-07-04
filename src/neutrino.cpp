@@ -411,6 +411,9 @@ int CNeutrinoApp::loadSetup(const char *fname)
 	g_settings.lcd4l_screenshots = configfile.getInt32("lcd4l_screenshots", 0);
 #endif
 
+	g_settings.show_ecm = configfile.getInt32("show_ecm", 0);
+	g_settings.show_ecm_pos = configfile.getInt32("show_ecm_pos", 0);
+
 	// video
 	int video_Mode_default = VIDEO_STD_720P50;
 #if HAVE_ARM_HARDWARE
